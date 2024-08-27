@@ -5,5 +5,6 @@ using UnityEngine;
 [CreateAssetMenu]
 public class MapData : ScriptableObject
 {
-    public int m_width, m_height;
+    public List<GameObject> roomTypes;
+    public int noOfRooms;
 }
