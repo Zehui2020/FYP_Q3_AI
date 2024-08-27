@@ -12,9 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0242e226ba52b374d9becd55e90393c6, type: 3}
   m_Name: DefaultMap
   m_EditorClassIdentifier: 
+  startRoom: {fileID: 4097362674208073615, guid: 0248ccb49b12eb047a66e82b9bebc611, type: 3}
+  endRoom: {fileID: 4097362674208073615, guid: 035b6539717076344a0dcf4fc0902aa6, type: 3}
+  noOfRooms: 15
+  roomSpacing: 5
   roomTypes:
-  - {fileID: 4097362674208073615, guid: 01aa54e2e42584b4e8eb2636110c68e0, type: 3}
   - {fileID: 4097362674208073615, guid: f5b6d9abb855ba141bd371d716f9ba5f, type: 3}
-  - {fileID: 4097362674208073615, guid: b68590378b0523540ab810a1c446dde7, type: 3}
-  - {fileID: 4097362674208073615, guid: 0f1f5c4bf41169e419b0abb9fc0235a1, type: 3}
-  noOfRooms: 10
+  roomType0:
+  - {fileID: 4097362674208073615, guid: 0248ccb49b12eb047a66e82b9bebc611, type: 3}
+  roomType1:
+  - {fileID: 4097362674208073615, guid: f5b6d9abb855ba141bd371d716f9ba5f, type: 3}
+  roomType2:
+  - {fileID: 4097362674208073615, guid: 035b6539717076344a0dcf4fc0902aa6, type: 3}
+  roomType3:
+  - {fileID: 4097362674208073615, guid: 035b6539717076344a0dcf4fc0902aa6, type: 3}
+  mapSize: {x: 5, y: 5}

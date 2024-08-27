@@ -7,6 +7,7 @@ public class MapGenerator : MonoBehaviour
 {
     [SerializeField] private MapData mData;
     [SerializeField] private GameObject mapContainer;
+    [SerializeField] private int mapSeed = 0;
 
     private List<RoomData> roomData = new List<RoomData>();
     private List<GameObject> roomList = new List<GameObject>();
@@ -19,29 +20,18 @@ public class MapGenerator : MonoBehaviour
             new Vector2(-1, 0)
         };
 
-    private float temp = 0;
-
     private void Start()
     {
+        //Random.seed = mapSeed;
         SpawnRooms();
     }
 
     private void Update()
     {
         // debug inputs
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             SpawnRooms();
-        }
-
-        if (temp < 1)
-        {
-            temp += Time.deltaTime;
-        }
-        else
-        {
-            SpawnRooms();
-            temp = 0;
         }
     }
 
@@ -63,26 +53,36 @@ public class MapGenerator : MonoBehaviour
         roomList.Clear();
         roomData.Clear();
         spaceTaken.Clear();
+        Vector2 dir;
         Vector2 roomPos = Vector2.zero;
-        // get random room and place it
-        GameObject roomToSpawn = GetRandomRoom();
-        GameObject obj = Instantiate(mData.roomTypes[0]);
+        GameObject obj = Instantiate(mData.startRoom);
         obj.transform.SetParent(mapContainer.transform);
         obj.transform.position = roomPos;
         spaceTaken.Add(Vector2.zero);
         roomList.Add(obj);
         // spawn other rooms
-        for (int i = 1; i < mData.noOfRooms; i++)
+        for (int i = 1; i < mData.noOfRooms - 1; i++)
         {
-            roomToSpawn = GetRandomRoom();
-            Vector2 dir = GetRandomDirection(0);
+            // get random room and place it
+            GameObject roomToSpawn = GetRandomRoom();
+            dir = GetRandomDirection(0);
             obj = Instantiate(roomToSpawn);
             obj.transform.SetParent(mapContainer.transform);
-            obj.transform.position = roomPos + (dir * (roomData[i].roomSize + roomData[i - 1].roomSize / 2));
+            //obj.transform.position = roomPos + (dir * (roomData[i].roomSize + roomData[i - 1].roomSize));
+            obj.transform.position = roomPos + (dir * mData.roomSpacing);
             spaceTaken.Add(spaceTaken[spaceTaken.Count - 1] + dir);
             roomList.Add(obj);
             roomPos = obj.transform.position;
         }
+        // place end room
+        dir = GetRandomDirection(0);
+        obj = Instantiate(mData.endRoom);
+        obj.transform.SetParent(mapContainer.transform);
+        //obj.transform.position = roomPos + (dir * (roomData[i].roomSize + roomData[i - 1].roomSize));
+        obj.transform.position = roomPos + (dir * mData.roomSpacing);
+        spaceTaken.Add(spaceTaken[spaceTaken.Count - 1] + dir);
+        roomList.Add(obj);
+        roomPos = obj.transform.position;
     }
 
     private Vector2 GetRandomDirection(int num)
