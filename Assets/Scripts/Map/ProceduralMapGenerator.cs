@@ -203,6 +203,7 @@ public class ProceduralMapGenerator : MonoBehaviour
             createdObj = Instantiate(GetRandomRoomFromType((int)takenPosList[j].z));
             createdObj.transform.SetParent(mapContainer.transform);
             createdObj.transform.localPosition = takenPosList[j];
+            createdObj.transform.localScale = new Vector3(1, 1, 1);
             takenObjectsList.Add(createdObj);
         }
         // place remaining type 0 rooms
@@ -212,6 +213,7 @@ public class ProceduralMapGenerator : MonoBehaviour
             createdObj = Instantiate(GetRandomRoomFromType(0));
             createdObj.transform.SetParent(mapContainer.transform);
             createdObj.transform.localPosition = availablePosList[i];
+            createdObj.transform.localScale = new Vector3(1, 1, 1);
             availableObjectsList.Add(createdObj);
         }
         // position indicator

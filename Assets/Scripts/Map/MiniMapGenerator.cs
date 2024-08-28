@@ -59,6 +59,7 @@ public class MiniMapGenerator : MonoBehaviour
             createdObj = Instantiate(GetRandomRoomFromType(1));
             createdObj.transform.SetParent(mapContainer.transform);
             createdObj.transform.localPosition = takenRooms[j];
+            createdObj.transform.localScale = new Vector3(1, 1, 1);
             pathObjectsList.Add(createdObj);
         }
         // place remaining type 0 rooms
@@ -67,6 +68,7 @@ public class MiniMapGenerator : MonoBehaviour
             createdObj = Instantiate(GetRandomRoomFromType(0));
             createdObj.transform.SetParent(mapContainer.transform);
             createdObj.transform.localPosition = availableRooms[i];
+            createdObj.transform.localScale = new Vector3(1, 1, 1);
             spaceObjectsList.Add(createdObj);
         }
         // position indicator
