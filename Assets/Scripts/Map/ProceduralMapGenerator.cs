@@ -9,10 +9,8 @@ public class ProceduralMapGenerator : MonoBehaviour
     [SerializeField] private GameObject mapContainer;
     [SerializeField] private int mapSeed = 0;
 
-    private GameObject createdObj;
-    private Vector2 startPos;
-    private Vector2 currPos;
     private List<Vector2> availableRoomPosList = new List<Vector2>();
+    [SerializeField] private List<Vector3> takenRoomPosList = new List<Vector3>();
     private List<GameObject> mainpathList = new List<GameObject>();
     private List<GameObject> fillSpaceList = new List<GameObject>();
     private List<int> stepDirList = new List<int>
@@ -20,6 +18,9 @@ public class ProceduralMapGenerator : MonoBehaviour
         -1, -1, 1, 1, 0
     };
     private int currDir;
+    private GameObject createdObj;
+    private Vector2 startPos;
+    private Vector2 currPos;
     private bool isPathDone = false;
 
     private void Start()
@@ -54,16 +55,18 @@ public class ProceduralMapGenerator : MonoBehaviour
         startPos = new Vector2(randX, 0);
         currPos = startPos;
         // place room
-        createdObj = Instantiate(GetRandomRoomFromType(1));
-        createdObj.transform.SetParent(mapContainer.transform);
-        createdObj.transform.position = currPos;
-        mainpathList.Add(createdObj);
+        //createdObj = Instantiate(GetRandomRoomFromType(1));
+        //createdObj.transform.SetParent(mapContainer.transform);
+        //createdObj.transform.position = currPos;
+        //mainpathList.Add(createdObj);
+        takenRoomPosList.Add(new Vector3(currPos.x, currPos.y, 1));
         availableRoomPosList.Remove(currPos);
         // get random step
         currDir = GetRandomStepDir();
+        // plot out rooms
         DoStep();
-        //fill spaces
-        FillRemainingSpaces();
+        // place rooms
+        PlaceRooms();
     }
 
     private void ResetMap()
@@ -78,6 +81,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         }
         mainpathList.Clear();
         fillSpaceList.Clear();
+        takenRoomPosList.Clear();
         availableRoomPosList.Clear();
         isPathDone = false;
     }
@@ -111,12 +115,13 @@ public class ProceduralMapGenerator : MonoBehaviour
             }
             else
             {
-                // place room
-                createdObj = Instantiate(GetRandomRoomFromType(1));
-                createdObj.transform.SetParent(mapContainer.transform);
                 currPos = new Vector2(tempPosX, currPos.y);
-                createdObj.transform.position = currPos;
-                mainpathList.Add(createdObj);
+                // place room
+                //createdObj = Instantiate(GetRandomRoomFromType(1));
+                //createdObj.transform.SetParent(mapContainer.transform);
+                //createdObj.transform.position = currPos;
+                //mainpathList.Add(createdObj);
+                takenRoomPosList.Add(new Vector3(currPos.x, currPos.y, 1));
                 availableRoomPosList.Remove(currPos);
                 // get random step
                 if (Random.Range(0, 3) == 0)
@@ -136,21 +141,24 @@ public class ProceduralMapGenerator : MonoBehaviour
             return;
         }
         // change type 1 room to type 2 room
-        Destroy(createdObj);
-        createdObj = Instantiate(GetRandomRoomFromType(2));
-        createdObj.transform.SetParent(mapContainer.transform);
-        createdObj.transform.position = currPos;
-        mainpathList.Add(createdObj);
-        // place room
-        createdObj = Instantiate(GetRandomRoomFromType(1));
-        createdObj.transform.SetParent(mapContainer.transform);
+        //Destroy(createdObj);
+        //createdObj = Instantiate(GetRandomRoomFromType(2));
+        //createdObj.transform.SetParent(mapContainer.transform);
+        //createdObj.transform.position = currPos;
+        //mainpathList.Add(createdObj);
+        takenRoomPosList[takenRoomPosList.Count - 1] = new Vector3(currPos.x, currPos.y, 2);
+        // check if able to go down
         currPos += new Vector2(0, -mData.roomSpacing);
         if (currPos.y < -(mData.mapSize.y - 2) * mData.roomSpacing)
         {
             isPathDone = true;
         }
-        createdObj.transform.position = currPos;
-        mainpathList.Add(createdObj);
+        // place room
+        //createdObj = Instantiate(GetRandomRoomFromType(3));
+        //createdObj.transform.SetParent(mapContainer.transform);
+        //createdObj.transform.position = currPos;
+        //mainpathList.Add(createdObj);
+        takenRoomPosList.Add(new Vector3(currPos.x, currPos.y, 3));
         availableRoomPosList.Remove(currPos);
         if (currDir == 0)
         {
@@ -166,8 +174,18 @@ public class ProceduralMapGenerator : MonoBehaviour
         DoStep();
     }
 
-    private void FillRemainingSpaces()
+    private void PlaceRooms()
     {
+        // place normal rooms
+        for (int j = 0; j < takenRoomPosList.Count; j++)
+        {
+            // place room
+            createdObj = Instantiate(GetRandomRoomFromType((int)takenRoomPosList[j].z));
+            createdObj.transform.SetParent(mapContainer.transform);
+            createdObj.transform.position = takenRoomPosList[j];
+            mainpathList.Add(createdObj);
+        }
+        // place remaining type 0 rooms
         for (int i = 0; i < availableRoomPosList.Count; i++)
         {
             // place room
