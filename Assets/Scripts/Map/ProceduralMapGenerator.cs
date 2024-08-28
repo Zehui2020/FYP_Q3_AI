@@ -39,7 +39,7 @@ public class ProceduralMapGenerator : MonoBehaviour
     private void Update()
     {
         // debug inputs
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             if (!CompareTag("MiniMap"))
             {
