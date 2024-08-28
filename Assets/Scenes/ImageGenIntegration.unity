@@ -328,14 +328,15 @@ MonoBehaviour:
     "CLIPTextEncode",     "_meta": {       "title": "CLIP Text Encode (Prompt)"    
     }   },   "7": {     "inputs": {       "text": "Nprompt",       "clip": [        
     "4",         1       ]     },     "class_type": "CLIPTextEncode",     "_meta":
-    {       "title": "CLIP Text Encode (Prompt)"     }   },   "8": {     "inputs":
-    {       "samples": [         "3",         0       ],       "vae": [         "4",        
+    {       "title": "CLIP Text Encode (Prompt)"     }   },   "9": {     "inputs":
+    {       "filename_prefix": "ComfyUI",       "images": [         "11",        
+    0       ]     },     "class_type": "SaveImage",     "_meta": {       "title":
+    "Save Image"     }   },   "11": {     "inputs": {       "pixel_size": 4,      
+    "image": [         "13",         0       ]     },     "class_type": "Pixelization",    
+    "_meta": {       "title": "Pixelization"     }   },   "13": {     "inputs": {      
+    "samples": [         "3",         0       ],       "vae": [         "4",        
     2       ]     },     "class_type": "VAEDecode",     "_meta": {       "title":
-    "VAE Decode"     }   },   "9": {     "inputs": {       "filename_prefix": "ComfyUI",      
-    "images": [         "11",         0       ]     },     "class_type": "SaveImage",    
-    "_meta": {       "title": "Save Image"     }   },   "11": {     "inputs": {      
-    "pixel_size": 4,       "image": [         "8",         0       ]     },     "class_type":
-    "Pixelization",     "_meta": {       "title": "Pixelization"     }   } }'
+    "VAE Decode"     }   } }'
 --- !u!114 &192966824
 MonoBehaviour:
   m_ObjectHideFlags: 0
