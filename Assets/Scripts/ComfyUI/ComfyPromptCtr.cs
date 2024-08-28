@@ -3,32 +3,40 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using System.Collections.Generic;
+using TMPro;
 
 [System.Serializable]
 public class ResponseData
 {
     public string prompt_id;
 }
+
 public class ComfyPromptCtr : MonoBehaviour
 {
-    public InputField pInput,nInput,promptJsonInput;
-    public string promptJSON;
+    public List<TextMeshProUGUI> Pprompts;
 
-    private void Start()
-    {
-       // QueuePrompt("pretty man","watermark");
-    }
+    public string setPrompts;
+    public string promptJSON;
 
     public void QueuePrompt()
     {
-        StartCoroutine(QueuePromptCoroutine(pInput.text,nInput.text));
+        string finalPrompt = setPrompts;
+        foreach (var inputField in Pprompts)
+        {
+            finalPrompt += ", " + inputField.text;
+        }
+
+        Debug.Log(finalPrompt);
+
+        StartCoroutine(QueuePromptCoroutine(finalPrompt));
     }
-    private IEnumerator QueuePromptCoroutine(string positivePrompt,string negativePrompt)
+
+    private IEnumerator QueuePromptCoroutine(string positivePrompt)
     {
         string url = "http://127.0.0.1:8188/prompt";
         string promptText = GeneratePromptJson();
         promptText = promptText.Replace("Pprompt", positivePrompt);
-        promptText = promptText.Replace("Nprompt", negativePrompt);
         Debug.Log("Prompt Text: " + promptText);
 
         UnityWebRequest request = new UnityWebRequest(url, "POST");
@@ -50,7 +58,6 @@ public class ComfyPromptCtr : MonoBehaviour
             ResponseData data = JsonUtility.FromJson<ResponseData>(request.downloadHandler.text);
             Debug.Log("Prompt ID: " + data.prompt_id);
             GetComponent<ComfyWebsocket>().promptID = data.prompt_id;
-           // GetComponent<ComfyImageCtr>().RequestFileName(data.prompt_id);
         }
     }
 

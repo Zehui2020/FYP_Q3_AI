@@ -23,7 +23,7 @@ public class MovementData : ScriptableObject
     public float rollColliderSize;
 
     public float dashIFrames;
-    public float rollFrames;
+    public float rollDuration;
 
     public float grappleSpeed;
 
