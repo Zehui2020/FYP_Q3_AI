@@ -16,7 +16,7 @@ public class AnimationManager : MonoBehaviour
     public readonly int Idle = Animator.StringToHash("Idle");
 
     // Movements
-    public readonly int Walking = Animator.StringToHash("Walking");
+    public readonly int Running = Animator.StringToHash("Running");
 
     private void Awake()
     {
