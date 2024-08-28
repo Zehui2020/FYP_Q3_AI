@@ -13,4 +13,5 @@ public class MapData : ScriptableObject
     public List<GameObject> roomType3;
     public int roomSpacing;
     public Vector2 mapSize;
+    public Vector2 minMaxRoomAmt;
 }
