@@ -10,7 +10,7 @@ public class ProceduralMapGenerator : MonoBehaviour
     [SerializeField] private int mapSeed = 0;
 
     private List<Vector2> availableRoomPosList = new List<Vector2>();
-    [SerializeField] private List<Vector3> takenRoomPosList = new List<Vector3>();
+    private List<Vector3> takenRoomPosList = new List<Vector3>();
     private List<GameObject> mainpathList = new List<GameObject>();
     private List<GameObject> fillSpaceList = new List<GameObject>();
     private List<int> stepDirList = new List<int>
@@ -194,6 +194,8 @@ public class ProceduralMapGenerator : MonoBehaviour
             createdObj.transform.position = availableRoomPosList[i];
             fillSpaceList.Add(createdObj);
         }
+        // offset map container to fit in middle of screen
+        mapContainer.transform.position -= new Vector3((mData.mapSize.x - 1) * mData.roomSpacing / 2, -(mData.mapSize.y - 1) * mData.roomSpacing / 2, 0);
     }
 
     private GameObject GetRandomRoomFromType(int type)
