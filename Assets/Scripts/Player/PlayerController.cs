@@ -1,7 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : PlayerStats
@@ -25,7 +22,7 @@ public class PlayerController : PlayerStats
         float vertical = Input.GetAxisRaw("Vertical");
 
         if (Input.GetKeyDown(KeyCode.Space))
-            movementController.HandleJump(horizontal);
+            movementController.HandleJump();
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
             movementController.HandleDash(horizontal);

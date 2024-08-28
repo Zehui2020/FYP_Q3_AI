@@ -45,7 +45,7 @@ public class ComfyWebsocket : MonoBehaviour
                 result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+                    return;
                 }
                 else
                 {
@@ -116,12 +116,21 @@ public class ComfyWebsocket : MonoBehaviour
         }
     }
 
+    public void CloseSocket()
+    {
+        StartCoroutine(CloseRoutine());
+    }
 
-    void OnDestroy()
+    private IEnumerator CloseRoutine()
     {
         if (ws != null && ws.State == WebSocketState.Open)
-        {
             ws.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
+
+        while (ws.State == WebSocketState.Open)
+        {
+            yield return null;
         }
+
+        SceneLoader.Instance.LoadScene("PlayerMovementScene");
     }
 }

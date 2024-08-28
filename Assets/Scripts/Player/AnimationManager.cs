@@ -4,24 +4,15 @@ using UnityEngine;
 
 public class AnimationManager : MonoBehaviour
 {
-    // Singleton
-    public static AnimationManager Instance;
-
     private Animator animator;
     private int currentState;
     private float transitionDelay;
-
 
     // Idles
     public readonly int Idle = Animator.StringToHash("Idle");
 
     // Movements
     public readonly int Running = Animator.StringToHash("Running");
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     public void InitAnimationController()
     {
