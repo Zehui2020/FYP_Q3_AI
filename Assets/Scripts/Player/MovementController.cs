@@ -1,6 +1,5 @@
 using System.Collections;
-using System.Linq;
-using Unity.VisualScripting;
+using System.Drawing;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour
@@ -29,11 +28,17 @@ public class MovementController : MonoBehaviour
 
     private float fallingDuration;
 
+    public int jumpCount;
+    public int maxJumpCount;
+
     public int wallJumpCount;
     public int maxWallJumps;
 
+    private Coroutine jumpRoutine;
     private Coroutine burstDragRoutine;
     private Coroutine dashRoutine;
+    private Coroutine rollRoutine;
+    private Coroutine plungeRoutine;
 
     public void InitializeMovementController()
     {
@@ -72,45 +77,79 @@ public class MovementController : MonoBehaviour
         if (!isGrounded)
             fallingDuration += Time.deltaTime;
 
+        if (playerRB.velocity.y < 0 && wallJumpCount <= 0)
+            lockMomentum = false;
+
         SpeedControl();
+
+        Debug.DrawRay(groundCheckPosition.position, Vector3.down * movementData.plungeThreshold, UnityEngine.Color.red);
     }
 
-    public void HandleGrappling(float vertical)
+    public void HandleGrappling(float vertical, float posX)
     {
-        if (!canGrapple || vertical == 0)
+        if (plungeRoutine != null)
             return;
+
+        if (!isGrappling)
+        {
+            if (!canGrapple || vertical == 0)
+                return;
+        }
+
+        transform.position = new Vector3(Mathf.Lerp(transform.position.x, posX, Time.deltaTime * 10f),
+            transform.position.y,
+            transform.position.z);
 
         isGrappling = true;
         playerRB.gravityScale = 0;
         playerRB.velocity = Vector2.zero;
+        playerCol.isTrigger = true;
 
-        transform.position = new Vector3(transform.position.x, transform.position.y + Time.deltaTime * 5 * vertical, transform.position.z);
+        transform.position = new Vector3(transform.position.x, transform.position.y + Time.deltaTime * movementData.grappleSpeed * vertical, transform.position.z);
     }
 
     public void StopGrappling()
     {
         playerRB.gravityScale = 2;
         isGrappling = false;
+        playerCol.isTrigger = false;
     }
 
-    public void HandleJump()
+    public void HandleJump(float horizontal)
     {
+        if (plungeRoutine != null)
+            return;
+
         if (isGrappling)
         {
             StopGrappling();
+
+            Vector2 dir = Vector2.up;
+
+            if (transform.localScale.x > 0)
+                dir = new Vector2(0.2f, 0.5f);
+            else
+                dir = new Vector2(-0.2f, 0.5f);
+
+            playerRB.AddForce(dir * movementData.baseJumpForce, ForceMode2D.Impulse);
             return;
         }
 
         Collider2D col = Physics2D.OverlapCircle(wallCheckPosition.position, 0.2f, ~playerLayer);
+        if (col != null && col.isTrigger)
+            col = null;
 
-        if (col == null)
+        if (col == null || wallJumpCount <= 0)
         {
-            if (!isGrounded && fallingDuration > movementData.cyoteTime)
+            // Normal Jump
+            if (fallingDuration > movementData.cyoteTime && jumpCount == maxJumpCount)
                 return;
 
-            // Normal Jump
-            playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
-            playerRB.AddForce(transform.up * movementData.baseJumpForce, ForceMode2D.Impulse);
+            if (jumpCount <= 0 && !isGrounded)
+                return;
+
+            if (jumpRoutine == null)
+                jumpRoutine = StartCoroutine(JumpRoutine());
         }
         else if (wallJumpCount > 0)
         {
@@ -121,15 +160,27 @@ public class MovementController : MonoBehaviour
             transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
 
             if (col.transform.position.x < transform.position.x)
-                dir = new Vector2(0.5f, 1.1f);
+                dir = new Vector2(movementData.wallJumpForceX, movementData.wallJumpForceY);
             else
-                dir = new Vector2(-0.5f, 1.1f);
+                dir = new Vector2(-movementData.wallJumpForceX, movementData.wallJumpForceY);
 
             playerRB.AddForce(dir * movementData.baseJumpForce, ForceMode2D.Impulse);
 
             wallJumpCount--;
             lockMomentum = true;
         }
+    }
+
+    private IEnumerator JumpRoutine()
+    {
+        // Normal Jump
+        playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
+        playerRB.AddForce(transform.up * movementData.baseJumpForce, ForceMode2D.Impulse);
+        jumpCount--;
+
+        yield return new WaitForSeconds(0.1f);
+
+        jumpRoutine = null;
     }
 
     public void HandleDash(float direction)
@@ -146,6 +197,15 @@ public class MovementController : MonoBehaviour
         while (timer > 0)
         {
             timer -= Time.deltaTime;
+
+            if (direction == 0)
+            {
+                if (transform.localScale.x > 0)
+                    direction = 1;
+                else
+                    direction = -1;
+            }
+
             playerRB.velocity = new Vector2(movementData.dashSpeed * direction, 0);
             yield return null;
         }
@@ -155,9 +215,58 @@ public class MovementController : MonoBehaviour
         dashRoutine = null;
     }
 
+    public void HandleRoll()
+    {
+        if (rollRoutine == null)
+            rollRoutine = StartCoroutine(RollRoutine());
+    }
+
+    private IEnumerator RollRoutine()
+    {
+        Vector2 originalSize = playerCol.size;
+        Vector2 originalOffset = playerCol.offset;
+
+        float change = movementData.rollColliderSize - playerCol.size.y;
+
+        playerCol.size = new Vector2(playerCol.size.x, movementData.rollColliderSize);
+        playerCol.offset = new Vector2(playerCol.offset.x, -(Mathf.Abs(change) / 2));
+
+        yield return new WaitForSeconds(movementData.rollFrames);
+
+        playerCol.size = originalSize;
+        playerCol.offset = originalOffset;
+
+        yield return new WaitForSeconds(1f);
+
+        rollRoutine = null;
+    }
+
+    public bool HandlePlunge()
+    {
+        RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, movementData.plungeThreshold, groundLayer);
+        if (groundHit)
+            return false;
+
+        StopGrappling();
+        plungeRoutine = StartCoroutine(PlungeRoutine());
+
+        return true;
+    }
+
+    private IEnumerator PlungeRoutine()
+    {
+        playerRB.velocity = Vector2.zero;
+        playerRB.gravityScale = 0;
+
+        yield return new WaitForSeconds(movementData.plungeDelay);
+
+        playerRB.gravityScale = 2;
+        playerRB.AddForce(Vector2.down * movementData.plungeForce, ForceMode2D.Impulse);
+    }
+
     public void MovePlayer()
     {
-        if (!isMoving || lockMomentum || isGrappling)
+        if (!isMoving || lockMomentum || isGrappling || plungeRoutine != null)
             return;
 
         Vector3 force;
@@ -186,8 +295,13 @@ public class MovementController : MonoBehaviour
             isGrounded = true;
             playerRB.drag = movementData.groundDrag;
             fallingDuration = 0;
-            wallJumpCount = maxWallJumps;
+
             lockMomentum = false;
+            wallJumpCount = maxWallJumps;
+            if (jumpRoutine == null)
+                jumpCount = maxJumpCount;
+
+            plungeRoutine = null;
 
             if (isGrappling)
                 StopGrappling();

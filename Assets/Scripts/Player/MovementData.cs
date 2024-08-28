@@ -17,5 +17,19 @@ public class MovementData : ScriptableObject
     public float maxSlopeAngle;
     public float minGroundDist;
 
+    public float wallJumpForceX;
+    public float wallJumpForceY;
+
+    public float rollColliderSize;
+
+    public float dashIFrames;
+    public float rollFrames;
+
+    public float grappleSpeed;
+
+    public float plungeThreshold;
+    public float plungeDelay;
+    public float plungeForce;
+
     public float cyoteTime;
 }
