@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5928900819955238283
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2624696449088097677}
+  - component: {fileID: 5546075966349791932}
+  - component: {fileID: 4426666934578282586}
+  - component: {fileID: 7958897382964795840}
+  m_Layer: 0
+  m_Name: ComfyUIctr
+  m_TagString: MainCamera
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2624696449088097677
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5928900819955238283}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5546075966349791932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5928900819955238283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f79945781b6eb3b469512ff72c92081f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pInput: {fileID: 0}
+  nInput: {fileID: 0}
+  promptJsonInput: {fileID: 0}
+  promptJSON: '{   "3": {     "inputs": {       "seed": 348767479144880,       "steps":
+    20,       "cfg": 8,       "sampler_name": "euler",       "scheduler": "normal",      
+    "denoise": 1,       "model": [         "4",         0       ],       "positive":
+    [         "6",         0       ],       "negative": [         "7",         0      
+    ],       "latent_image": [         "5",         0       ]     },     "class_type":
+    "KSampler",     "_meta": {       "title": "KSampler"     }   },   "4": {    
+    "inputs": {       "ckpt_name": "pixhell_v20.safetensors"     },     "class_type":
+    "CheckpointLoaderSimple",     "_meta": {       "title": "Load Checkpoint"    
+    }   },   "5": {     "inputs": {       "width": 1920,       "height": 1080,      
+    "batch_size": 1     },     "class_type": "EmptyLatentImage",     "_meta": {      
+    "title": "Empty Latent Image"     }   },   "6": {     "inputs": {       "text":
+    "Pprompt",       "clip": [         "4",         1       ]     },     "class_type":
+    "CLIPTextEncode",     "_meta": {       "title": "CLIP Text Encode (Prompt)"    
+    }   },   "7": {     "inputs": {       "text": "Nprompt",       "clip": [        
+    "4",         1       ]     },     "class_type": "CLIPTextEncode",     "_meta":
+    {       "title": "CLIP Text Encode (Prompt)"     }   },   "9": {     "inputs":
+    {       "filename_prefix": "ComfyUI",       "images": [         "11",        
+    0       ]     },     "class_type": "SaveImage",     "_meta": {       "title":
+    "Save Image"     }   },   "11": {     "inputs": {       "pixel_size": 4,      
+    "image": [         "13",         0       ]     },     "class_type": "Pixelization",    
+    "_meta": {       "title": "Pixelization"     }   },   "13": {     "inputs": {      
+    "samples": [         "3",         0       ],       "vae": [         "4",        
+    2       ]     },     "class_type": "VAEDecode",     "_meta": {       "title":
+    "VAE Decode"     }   } }'
+--- !u!114 &4426666934578282586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5928900819955238283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c8341c5dc26d3e4bbb6cc0c655ae5ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outputImage: {fileID: 0}
+--- !u!114 &7958897382964795840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5928900819955238283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ebcfd1775a21944b232b6724737c2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  comfyImageCtr: {fileID: 4426666934578282586}
+  promptID: 0
