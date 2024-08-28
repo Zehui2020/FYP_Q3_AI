@@ -117,7 +117,7 @@ public class MovementController : MonoBehaviour
 
     public void HandleJump(float horizontal)
     {
-        if (plungeRoutine != null)
+        if (plungeRoutine != null || rollRoutine != null)
             return;
 
         if (isGrappling)
@@ -217,27 +217,33 @@ public class MovementController : MonoBehaviour
 
     public void HandleRoll()
     {
+        if (!isGrounded)
+            return;
+
         if (rollRoutine == null)
             rollRoutine = StartCoroutine(RollRoutine());
     }
 
     private IEnumerator RollRoutine()
     {
+        lockMomentum = true;
+
         Vector2 originalSize = playerCol.size;
         Vector2 originalOffset = playerCol.offset;
 
         float change = movementData.rollColliderSize - playerCol.size.y;
+        playerRB.drag = 0;
 
         playerCol.size = new Vector2(playerCol.size.x, movementData.rollColliderSize);
         playerCol.offset = new Vector2(playerCol.offset.x, -(Mathf.Abs(change) / 2));
 
-        yield return new WaitForSeconds(movementData.rollFrames);
+        yield return new WaitForSeconds(movementData.rollDuration);
 
         playerCol.size = originalSize;
         playerCol.offset = originalOffset;
 
-        yield return new WaitForSeconds(1f);
-
+        playerRB.drag = movementData.groundDrag;
+        lockMomentum = false;
         rollRoutine = null;
     }
 
@@ -293,10 +299,14 @@ public class MovementController : MonoBehaviour
         if (dist <= movementData.minGroundDist)
         {
             isGrounded = true;
-            playerRB.drag = movementData.groundDrag;
             fallingDuration = 0;
 
-            lockMomentum = false;
+            if (rollRoutine == null)
+            {
+                playerRB.drag = movementData.groundDrag;
+                lockMomentum = false;
+            }
+
             wallJumpCount = maxWallJumps;
             if (jumpRoutine == null)
                 jumpCount = maxJumpCount;
