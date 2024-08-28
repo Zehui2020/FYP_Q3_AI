@@ -1,9 +1,8 @@
-using System.Collections.Generic; 
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
-using System;
 using System.Collections;
+using UnityEngine.Events;
 
 [System.Serializable]
 public class ImageData
@@ -27,12 +26,19 @@ public class PromptData
 
 public class ComfyImageCtr: MonoBehaviour
 {
+    [SerializeField] private GameObject imageDisplay; 
+    public ImageSaver imageSaver;
+    public Image outputImage;
+    public string fileName;
 
-public void RequestFileName(string id){
-    StartCoroutine(RequestFileNameRoutine(id));
-}
+    public UnityEvent ObtainImage;
 
- IEnumerator RequestFileNameRoutine(string promptID)
+    public void RequestFileName(string id)
+    {
+        StartCoroutine(RequestFileNameRoutine(id));
+    }
+
+    private IEnumerator RequestFileNameRoutine(string promptID)
     {
         string url = "http://127.0.0.1:8188/history/" + promptID;
         
@@ -53,14 +59,13 @@ public void RequestFileName(string id){
                 case UnityWebRequest.Result.Success:
                     Debug.Log(":\nReceived: " + webRequest.downloadHandler.text);
                     string imageURL = "http://127.0.0.1:8188/view?filename=" +ExtractFilename(webRequest.downloadHandler.text);
-                    Debug.Log(imageURL);
                     StartCoroutine(DownloadImage(imageURL));
                     break;
             }
         }
     }
     
-    string ExtractFilename(string jsonString)
+    private string ExtractFilename(string jsonString)
     {
         // Step 1: Identify the part of the string that contains the "filename" key
         string keyToLookFor = "\"filename\":";
@@ -85,15 +90,12 @@ public void RequestFileName(string id){
 
         // Removing leading and trailing quotes from the extracted value
         string filename = filenameWithQuotes.Trim('"');
-        Debug.Log(filename);
         return filename;
     }
-
-    public Image outputImage;
     
-     IEnumerator DownloadImage(string imageUrl)
+    private IEnumerator DownloadImage(string imageUrl)
     {
-         yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.5f);
         using (UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(imageUrl))
         {
             yield return webRequest.SendWebRequest();
@@ -102,14 +104,31 @@ public void RequestFileName(string id){
             {
                 // Get the downloaded texture
                 Texture2D texture = ((DownloadHandlerTexture)webRequest.downloadHandler).texture;
-
                 outputImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-    
+                ObtainImage?.Invoke();
             }
             else
             {
                 Debug.Log("Image download failed: " + webRequest.error);
             }
         }
+    }
+
+    public void SaveImageToDisk()
+    {
+        imageSaver.SaveImageToLocalDisk(outputImage.sprite.texture, fileName);
+    }
+
+    public void SetImageFromLocalDisk()
+    {
+        Texture2D loadTexture = imageSaver.GetTextureFromLocalDisk(fileName);
+
+        if (loadTexture == null)
+        {
+            Debug.Log("Error when trying to get texture!");
+            return;
+        }
+
+        outputImage.sprite = Sprite.Create(loadTexture, new Rect(0f, 0f, loadTexture.width, loadTexture.height), Vector2.zero);
     }
 }
