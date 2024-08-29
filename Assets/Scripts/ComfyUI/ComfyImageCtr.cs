@@ -26,7 +26,6 @@ public class PromptData
 
 public class ComfyImageCtr: MonoBehaviour
 {
-    [SerializeField] private GameObject imageDisplay; 
     public ImageSaver imageSaver;
     public Image outputImage;
     public string fileName;
@@ -130,5 +129,10 @@ public class ComfyImageCtr: MonoBehaviour
         }
 
         outputImage.sprite = Sprite.Create(loadTexture, new Rect(0f, 0f, loadTexture.width, loadTexture.height), Vector2.zero);
+    }
+
+    private void OnDisable()
+    {
+        ObtainImage = null;
     }
 }

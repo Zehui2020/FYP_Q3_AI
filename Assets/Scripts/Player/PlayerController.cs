@@ -1,16 +1,20 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : PlayerStats
 {
+    public static PlayerController Instance;
+
     private MovementController movementController;
     private float ropeX;
 
     [SerializeField] private float plungeHoldDuration;
     private Coroutine checkPlungeRoutine;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -25,7 +29,7 @@ public class PlayerController : PlayerStats
         float vertical = Input.GetAxisRaw("Vertical");
 
         if (Input.GetKeyDown(KeyCode.Space))
-            movementController.HandleJump(horizontal);
+            movementController.HandleJump();
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
             movementController.HandleDash(horizontal);

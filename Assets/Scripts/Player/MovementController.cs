@@ -5,6 +5,7 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
     [SerializeField] private MovementData movementData;
+    private AnimationManager animationManager;
 
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask playerLayer;
@@ -45,6 +46,9 @@ public class MovementController : MonoBehaviour
         moveSpeed = movementData.walkSpeed;
         playerCol = GetComponent<CapsuleCollider2D>();
         playerRB = GetComponent<Rigidbody2D>();
+        animationManager = GetComponent<AnimationManager>();
+
+        animationManager.InitAnimationController();
     }
 
     public void HandleMovment(float horizontal)
@@ -72,6 +76,7 @@ public class MovementController : MonoBehaviour
             if (burstDragRoutine != null)
                 StartCoroutine(BurstDrag());
             moveSpeed = movementData.walkSpeed;
+            animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f);
         }
 
         if (!isGrounded)
@@ -115,7 +120,7 @@ public class MovementController : MonoBehaviour
         playerCol.isTrigger = false;
     }
 
-    public void HandleJump(float horizontal)
+    public void HandleJump()
     {
         if (plungeRoutine != null || rollRoutine != null)
             return;
@@ -206,7 +211,7 @@ public class MovementController : MonoBehaviour
                     direction = -1;
             }
 
-            playerRB.velocity = new Vector2(movementData.dashSpeed * direction, 0);
+            playerRB.velocity = new Vector2(movementData.dashSpeed * direction, playerRB.velocity.y);
             yield return null;
         }
 
@@ -287,6 +292,7 @@ public class MovementController : MonoBehaviour
 
         // Move player
         playerRB.AddForce(force * moveSpeedModifier, ForceMode2D.Force);
+        animationManager.ChangeAnimation(animationManager.Running, 0f, 0f);
     }
 
     public void CheckGroundCollision()
