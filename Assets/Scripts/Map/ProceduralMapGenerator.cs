@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ProceduralMapGenerator : MonoBehaviour
@@ -18,7 +19,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         -1, -1, 1, 1, 0
     };
     private int currDir;
-    private MiniMapGenerator miniMap;
+    private List<MiniMapGenerator> miniMap = new List<MiniMapGenerator>();
     private GameObject createdObj;
     private Vector2 startPos;
     private Vector2 currPos;
@@ -28,14 +29,13 @@ public class ProceduralMapGenerator : MonoBehaviour
 
     private void Start()
     {
-        miniMap = GameObject.FindGameObjectWithTag("MiniMap").GetComponent<MiniMapGenerator>();
-
-        if (!CompareTag("MiniMap"))
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MiniMap"))
         {
-            SetSeed(mapSeed);
-            StartMapGeneration();
-            miniMap.StartMapGeneration(mapSeed, ConfigureListForMiniMap(takenPosList));
+            miniMap.Add(obj.GetComponent<MiniMapGenerator>());
         }
+
+        SetSeed(mapSeed);
+        StartMapGeneration();
     }
 
     private void Update()
@@ -45,7 +45,6 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             RandomizeSeed();
             StartMapGeneration();
-            miniMap.StartMapGeneration(mapSeed, ConfigureListForMiniMap(takenPosList));
         }
 
         HandleMapIndicator();
@@ -78,6 +77,11 @@ public class ProceduralMapGenerator : MonoBehaviour
         ConfigureRoomDoors();
         // position indicator
         currIndicatorNode = 0;
+        // pass info to mini map
+        for (int i = 0; i < miniMap.Count; i++)
+        {
+            miniMap[i].StartMapGeneration(mapSeed, ConfigureListForMiniMap(takenPosList, i), roomsAdded);
+        }
     }
 
     private void ResetMap()
@@ -362,13 +366,13 @@ public class ProceduralMapGenerator : MonoBehaviour
         return false;
     }
 
-    private List<Vector2> ConfigureListForMiniMap(List<Vector3> listToBeConfigured)
+    private List<Vector2> ConfigureListForMiniMap(List<Vector3> listToBeConfigured, int miniMapNum)
     {
         List<Vector2> newList = new List<Vector2>();
 
         for (int i = 0; i < listToBeConfigured.Count; i++)
         {
-            newList.Add(new Vector2(listToBeConfigured[i].x * miniMap.mData.roomSpacing / mData.roomSpacing, listToBeConfigured[i].y * miniMap.mData.roomSpacing / mData.roomSpacing));
+            newList.Add(new Vector2(listToBeConfigured[i].x * miniMap[miniMapNum].mData.roomSpacing / mData.roomSpacing, listToBeConfigured[i].y * miniMap[miniMapNum].mData.roomSpacing / mData.roomSpacing));
         }
 
         return newList;
