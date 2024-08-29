@@ -181,17 +181,17 @@ namespace Pathfinding {
 		/// the AIDestinationSetter component directly.
 		/// </summary>
 		[System.Obsolete("Use the destination property or the AIDestinationSetter component instead")]
-		public Transform target {
+		public Vector3 target {
 			get {
 				var setter = GetComponent<AIDestinationSetter>();
-				return setter != null ? setter.target : null;
+				return setter != null ? setter.target : Vector3.zero;
 			}
 			set {
 				targetCompatibility = null;
 				var setter = GetComponent<AIDestinationSetter>();
 				if (setter == null) setter = gameObject.AddComponent<AIDestinationSetter>();
 				setter.target = value;
-				destination = value != null ? value.position : new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
+				destination = value != null ? value : new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 			}
 		}
 
@@ -683,7 +683,7 @@ namespace Pathfinding {
 
 		protected override int OnUpgradeSerializedData (int version, bool unityThread) {
 			#pragma warning disable 618
-			if (unityThread && targetCompatibility != null) target = targetCompatibility;
+			if (unityThread && targetCompatibility != null) target = targetCompatibility.position;
 			#pragma warning restore 618
 
 			if (version <= 3) {

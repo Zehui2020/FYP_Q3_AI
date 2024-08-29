@@ -3,11 +3,18 @@ using UnityEngine;
 
 public class PlayerController : PlayerStats
 {
+    public static PlayerController Instance;
+
     private MovementController movementController;
     private float ropeX;
 
     [SerializeField] private float plungeHoldDuration;
     private Coroutine checkPlungeRoutine;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
