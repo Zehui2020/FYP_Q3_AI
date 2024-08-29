@@ -1,3 +1,4 @@
+using DesignPatterns.ObjectPool;
 using System.Collections;
 using UnityEngine;
 
@@ -13,9 +14,11 @@ public class BaseStats : MonoBehaviour
 
     private Coroutine immuneRoutine;
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int damage, Vector3 closestPoint)
     {
-        health -= amount;
+        health -= damage;
+        DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+        damagePopup.SetupPopup(damage, closestPoint, DamagePopup.DamageType.Normal);
     }
 
     public void Heal(int amount)

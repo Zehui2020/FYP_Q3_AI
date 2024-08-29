@@ -12,6 +12,7 @@ public class Enemy : EnemyStats
     protected AINavigation aiNavigation;
     protected Collider2D enemyCol;
     protected Rigidbody2D enemyRB;
+    protected CombatCollisionController collisionController;
     [SerializeField] protected Animator animator;
 
     [SerializeField] protected List<Transform> waypoints = new();
@@ -34,6 +35,7 @@ public class Enemy : EnemyStats
         aiNavigation = GetComponent<AINavigation>();
         enemyCol = GetComponent<Collider2D>();
         enemyRB = GetComponent<Rigidbody2D>();
+        collisionController = GetComponent<CombatCollisionController>();
 
         aiNavigation.InitPathfindingAgent();
         player = PlayerController.Instance;
@@ -47,6 +49,16 @@ public class Enemy : EnemyStats
     private void Update()
     {
         UpdateEnemy();
+    }
+
+    public void OnDamageEventStart(int col)
+    {
+        collisionController.EnableCollider(attack, col);
+    }
+
+    public void OnDamageEventEnd(int col)
+    {
+        collisionController.DisableCollider(col);
     }
 
     protected void PatrolUpdate()
@@ -65,10 +77,9 @@ public class Enemy : EnemyStats
 
     protected void ChaseUpdate()
     {
-        StopIdleRoutine();
-        aiNavigation.SetPathfindingTarget(PlayerController.Instance.transform, chaseMovementSpeed, true);
+        aiNavigation.SetPathfindingTarget(player.transform, chaseMovementSpeed, true);
 
-        if (Mathf.Abs(Vector2.Distance(transform.position, waypoints[currentWaypoint].position)) > attackRange)
+        if (Mathf.Abs(Vector2.Distance(transform.position, player.transform.position)) > attackRange)
             return;
 
         onReachChaseTarget?.Invoke();
@@ -76,7 +87,7 @@ public class Enemy : EnemyStats
 
     protected bool CheckChasePlayer()
     {
-        if (Mathf.Abs(Vector2.Distance(transform.position, PlayerController.Instance.transform.position)) > chaseRange)
+        if (Mathf.Abs(Vector2.Distance(transform.position, player.transform.position)) > chaseRange)
             return false;
 
         onPlayerInChaseRange?.Invoke();
