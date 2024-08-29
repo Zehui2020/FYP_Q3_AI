@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ProceduralMapGenerator : MonoBehaviour
@@ -22,6 +23,7 @@ public class ProceduralMapGenerator : MonoBehaviour
     private Vector2 startPos;
     private Vector2 currPos;
     private int currIndicatorNode;
+    [SerializeField] private int roomsAdded = 0;
     private bool isPathDone = false;
 
     private void Start()
@@ -32,7 +34,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             SetSeed(mapSeed);
             StartMapGeneration();
-            miniMap.StartMapGeneration(mapSeed, availablePosList, takenPosList);
+            miniMap.StartMapGeneration(mapSeed, ConfigureListForMiniMap(takenPosList));
         }
     }
 
@@ -41,15 +43,12 @@ public class ProceduralMapGenerator : MonoBehaviour
         // debug inputs
         if (Input.GetKeyDown(KeyCode.R))
         {
-            if (!CompareTag("MiniMap"))
-            {
-                RandomizeSeed();
-                StartMapGeneration();
-                miniMap.StartMapGeneration(mapSeed, availablePosList, takenPosList);
-            }
+            RandomizeSeed();
+            StartMapGeneration();
+            miniMap.StartMapGeneration(mapSeed, ConfigureListForMiniMap(takenPosList));
         }
 
-        HandleMinimapIndicator();
+        HandleMapIndicator();
     }
 
     public void StartMapGeneration()
@@ -74,8 +73,11 @@ public class ProceduralMapGenerator : MonoBehaviour
         // plot out rooms
         DoStep();
         // place rooms
+        RegulateRoomAmount();
         PlaceRooms();
         ConfigureRoomDoors();
+        // position indicator
+        currIndicatorNode = 0;
     }
 
     private void ResetMap()
@@ -93,18 +95,19 @@ public class ProceduralMapGenerator : MonoBehaviour
         takenPosList.Clear();
         availablePosList.Clear();
         isPathDone = false;
+        roomsAdded = 0;
     }
 
     private void RandomizeSeed()
     {
         mapSeed = Random.Range(0, 1000000000);
-        Random.seed = mapSeed;
+        Random.InitState(mapSeed);
     }
 
     public void SetSeed(int seed)
     {
         mapSeed = seed;
-        Random.seed = mapSeed;
+        Random.InitState(mapSeed);
     }
 
     private void DoStep()
@@ -174,14 +177,13 @@ public class ProceduralMapGenerator : MonoBehaviour
         DoStep();
     }
 
-    private void PlaceRooms()
+    private void RegulateRoomAmount()
     {
         // delete rooms if too many
-        for (int j = 0; j < takenPosList.Count; j++)
+        if (takenPosList.Count > mData.minMaxRoomAmt.y)
         {
-            if (j > mData.minMaxRoomAmt.y)
+            for (int j = takenPosList.Count - 1; j > (int)mData.minMaxRoomAmt.y - 1; j--)
             {
-                // place room
                 availablePosList.Add(takenPosList[j]);
                 takenPosList.RemoveAt(j);
             }
@@ -189,24 +191,60 @@ public class ProceduralMapGenerator : MonoBehaviour
         // add rooms if too little
         for (int i = 0; i < availablePosList.Count; i++)
         {
+            // check if not enough rooms
             if (takenPosList.Count < mData.minMaxRoomAmt.x)
             {
-                // place room
-                takenPosList.Add(new Vector3(availablePosList[i].x, availablePosList[i].y, 1));
-                availablePosList.RemoveAt(i);
+                if (CheckAdjacentSpaceTaken(availablePosList[i], 5))
+                {
+                    takenPosList.Add(new Vector3(availablePosList[i].x, availablePosList[i].y, 1));
+                    availablePosList.RemoveAt(i);
+                    roomsAdded++;
+                }
             }
         }
+    }
+
+    private void PlaceRooms()
+    {
+        // randomize shop room location (1-2 spaces before end room)
+        int shopIndex = Random.Range(2, 4);
+        // place starting room
+        CreateRoom(0, mData.startRoom);
         // place normal rooms
-        for (int j = 0; j < takenPosList.Count; j++)
+        for (int j = 1; j < takenPosList.Count; j++)
         {
-            // place room
-            createdObj = Instantiate(GetRandomRoomFromType((int)takenPosList[j].z));
-            createdObj.transform.SetParent(mapContainer.transform);
-            createdObj.transform.localPosition = takenPosList[j];
-            createdObj.transform.localScale = new Vector3(1, 1, 1);
-            takenObjectsList.Add(createdObj);
+            // place end room
+            if (j == takenPosList.Count - 1 - roomsAdded)
+            {
+                CreateRoom(j, mData.endRoom);
+            }
+            // place shop room
+            else if (j == takenPosList.Count - shopIndex - roomsAdded)
+            {
+                CreateRoom(j, mData.shopRoom);
+            }
+            // place other rooms
+            else
+            {
+                CreateRoom(j, GetRandomRoomFromType((int)takenPosList[j].z));
+            }
         }
         // place remaining type 0 rooms
+        CreateSpace();
+    }
+
+    private void CreateRoom(int posInList, GameObject roomObject)
+    {
+        // place room
+        createdObj = Instantiate(roomObject);
+        createdObj.transform.SetParent(mapContainer.transform);
+        createdObj.transform.localPosition = takenPosList[posInList];
+        createdObj.transform.localScale = new Vector3(1, 1, 1);
+        takenObjectsList.Add(createdObj);
+    }
+
+    private void CreateSpace()
+    {
         for (int i = 0; i < availablePosList.Count; i++)
         {
             // place room
@@ -216,8 +254,6 @@ public class ProceduralMapGenerator : MonoBehaviour
             createdObj.transform.localScale = new Vector3(1, 1, 1);
             availableObjectsList.Add(createdObj);
         }
-        // position indicator
-        currIndicatorNode = 0;
     }
 
     private void ConfigureRoomDoors()
@@ -227,30 +263,22 @@ public class ProceduralMapGenerator : MonoBehaviour
             RoomController rData = takenObjectsList[i].GetComponent<RoomController>();
             // check all directions for spaces or rooms
             // up
-            if (takenPosList.Contains(new Vector3(takenPosList[i].x, takenPosList[i].y + mData.roomSpacing, 1)) ||
-                takenPosList.Contains(new Vector3(takenPosList[i].x, takenPosList[i].y + mData.roomSpacing, 2)) ||
-                takenPosList.Contains(new Vector3(takenPosList[i].x, takenPosList[i].y + mData.roomSpacing, 3)))
+            if (CheckAdjacentSpaceTaken(takenPosList[i], 1))
             {
                 rData.isSpaceOccupied[0] = true;
             }
             // down
-            if (takenPosList.Contains(new Vector3(takenPosList[i].x, takenPosList[i].y - mData.roomSpacing, 1)) ||
-                takenPosList.Contains(new Vector3(takenPosList[i].x, takenPosList[i].y - mData.roomSpacing, 2)) ||
-                takenPosList.Contains(new Vector3(takenPosList[i].x, takenPosList[i].y - mData.roomSpacing, 3)))
+            if (CheckAdjacentSpaceTaken(takenPosList[i], 2))
             {
                 rData.isSpaceOccupied[1] = true;
             }
             // left
-            if (takenPosList.Contains(new Vector3(takenPosList[i].x - mData.roomSpacing, takenPosList[i].y, 1)) ||
-                takenPosList.Contains(new Vector3(takenPosList[i].x - mData.roomSpacing, takenPosList[i].y, 2)) ||
-                takenPosList.Contains(new Vector3(takenPosList[i].x - mData.roomSpacing, takenPosList[i].y, 3)))
+            if (CheckAdjacentSpaceTaken(takenPosList[i], 3))
             {
                 rData.isSpaceOccupied[2] = true;
             }
             // right
-            if (takenPosList.Contains(new Vector3(takenPosList[i].x + mData.roomSpacing, takenPosList[i].y, 1)) ||
-                takenPosList.Contains(new Vector3(takenPosList[i].x + mData.roomSpacing, takenPosList[i].y, 2)) ||
-                takenPosList.Contains(new Vector3(takenPosList[i].x + mData.roomSpacing, takenPosList[i].y, 3)))
+            if (CheckAdjacentSpaceTaken(takenPosList[i], 4))
             {
                 rData.isSpaceOccupied[3] = true;
             }
@@ -260,7 +288,93 @@ public class ProceduralMapGenerator : MonoBehaviour
         }
     }
 
-    private void HandleMinimapIndicator()
+    private bool CheckAdjacentSpaceTaken(Vector2 pos, int dir)
+    {
+        switch (dir)
+        {
+            case 1:
+                // up
+                if (takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 1)) ||
+                    takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 2)) ||
+                    takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 3)))
+                {
+                    return true;
+                }
+                break;
+            case 2:
+                // down
+                if (takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 1)) ||
+                    takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 2)) ||
+                    takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 3)))
+                {
+                    return true;
+                }
+                break;
+            case 3:
+                // left
+                if (takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 1)) ||
+                    takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 2)) ||
+                    takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 3)))
+                {
+                    return true;
+                }
+                break;
+            case 4:
+                // right
+                if (takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 1)) ||
+                    takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 2)) ||
+                    takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 3)))
+                {
+                    return true;
+                }
+                break;
+            case 5:
+                // up
+                if (takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 1)) ||
+                    takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 2)) ||
+                    takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 3)))
+                {
+                    return true;
+                }
+                // down
+                if (takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 1)) ||
+                    takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 2)) ||
+                    takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 3)))
+                {
+                    return true;
+                }
+                // left
+                if (takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 1)) ||
+                    takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 2)) ||
+                    takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 3)))
+                {
+                    return true;
+                }
+                // right
+                if (takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 1)) ||
+                    takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 2)) ||
+                    takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 3)))
+                {
+                    return true;
+                }
+                break;
+        }
+        return false;
+    }
+
+    private List<Vector2> ConfigureListForMiniMap(List<Vector3> listToBeConfigured)
+    {
+        List<Vector2> newList = new List<Vector2>();
+
+        for (int i = 0; i < listToBeConfigured.Count; i++)
+        {
+            newList.Add(new Vector2(listToBeConfigured[i].x * miniMap.mData.roomSpacing / mData.roomSpacing, listToBeConfigured[i].y * miniMap.mData.roomSpacing / mData.roomSpacing));
+        }
+
+        return newList;
+    }
+
+    private void HandleMapIndicator()
     {
         if (Input.GetKeyDown(KeyCode.W))
         {

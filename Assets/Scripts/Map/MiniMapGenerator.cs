@@ -4,29 +4,31 @@ using UnityEngine;
 
 public class MiniMapGenerator : MonoBehaviour
 {
-    [SerializeField] private MapData mData;
+    [SerializeField] public MapData mData;
     [SerializeField] private GameObject mapContainer;
     [SerializeField] private GameObject mapIndicator;
 
-    [SerializeField] private List<GameObject> pathObjectsList = new List<GameObject>();
-    [SerializeField] private List<GameObject> spaceObjectsList = new List<GameObject>();
-    [SerializeField] private List<Vector3> takenRooms = new List<Vector3>();
+    private List<GameObject> pathObjectsList = new List<GameObject>();
+    private List<GameObject> spaceObjectsList = new List<GameObject>();
+    private List<Vector2> takenRooms = new List<Vector2>();
     private int mapSeed = 0;
     private GameObject createdObj;
-    [SerializeField] private int currIndicatorNode;
+    private int currIndicatorNode;
+    private bool isShowMap = true;
 
     private void Update()
     {
         HandleMinimapIndicator(takenRooms);
+        HandleMinimap();
     }
 
-    public void StartMapGeneration(int seed, List<Vector2> availableRooms, List<Vector3> takenRooms)
+    public void StartMapGeneration(int seed, List<Vector2> takenRooms)
     {
         ResetMap();
         SetSeed(seed);
-        this.takenRooms = new List<Vector3>(takenRooms);
+        this.takenRooms = new List<Vector2>(takenRooms);
         // place rooms
-        PlaceRooms(availableRooms, takenRooms);
+        PlaceRooms(takenRooms);
         ConfigureRoomDoors();
     }
 
@@ -48,10 +50,10 @@ public class MiniMapGenerator : MonoBehaviour
     public void SetSeed(int seed)
     {
         mapSeed = seed;
-        Random.seed = mapSeed;
+        Random.InitState(mapSeed);
     }
 
-    private void PlaceRooms(List<Vector2> availableRooms, List<Vector3> takenRooms)
+    private void PlaceRooms(List<Vector2> takenRooms)
     {
         // place normal rooms
         for (int j = 0; j < takenRooms.Count; j++)
@@ -62,19 +64,10 @@ public class MiniMapGenerator : MonoBehaviour
             createdObj.transform.localScale = new Vector3(1, 1, 1);
             pathObjectsList.Add(createdObj);
         }
-        // place remaining type 0 rooms
-        for (int i = 0; i < availableRooms.Count; i++)
-        {
-            createdObj = Instantiate(GetRandomRoomFromType(0));
-            createdObj.transform.SetParent(mapContainer.transform);
-            createdObj.transform.localPosition = availableRooms[i];
-            createdObj.transform.localScale = new Vector3(1, 1, 1);
-            spaceObjectsList.Add(createdObj);
-        }
         // position indicator
         mapIndicator.transform.localPosition = takenRooms[0];
         currIndicatorNode = 0;
-        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(false);
+        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(true);
     }
 
     private void ConfigureRoomDoors()
@@ -116,9 +109,9 @@ public class MiniMapGenerator : MonoBehaviour
         }
     }
 
-    private void HandleMinimapIndicator(List<Vector3> takenRooms)
+    private void HandleMinimapIndicator(List<Vector2> takenRooms)
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             RoomController rData = pathObjectsList[currIndicatorNode].GetComponent<RoomController>();
             if (rData.isSpaceOccupied[0])
@@ -129,14 +122,14 @@ public class MiniMapGenerator : MonoBehaviour
                         takenRooms[i].y == takenRooms[currIndicatorNode].y + mData.roomSpacing)
                     {
                         currIndicatorNode = i;
-                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(false);
+                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(true);
                         break;
                     }
                 }
             }
             mapIndicator.transform.localPosition = takenRooms[currIndicatorNode];
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             RoomController rData = pathObjectsList[currIndicatorNode].GetComponent<RoomController>();
             if (rData.isSpaceOccupied[1])
@@ -147,14 +140,14 @@ public class MiniMapGenerator : MonoBehaviour
                         takenRooms[i].y == takenRooms[currIndicatorNode].y - mData.roomSpacing)
                     {
                         currIndicatorNode = i;
-                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(false);
+                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(true);
                         break;
                     }
                 }
             }
             mapIndicator.transform.localPosition = takenRooms[currIndicatorNode];
         }
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             RoomController rData = pathObjectsList[currIndicatorNode].GetComponent<RoomController>();
             if (rData.isSpaceOccupied[2])
@@ -165,14 +158,14 @@ public class MiniMapGenerator : MonoBehaviour
                         takenRooms[i].y == takenRooms[currIndicatorNode].y)
                     {
                         currIndicatorNode = i;
-                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(false);
+                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(true);
                         break;
                     }
                 }
             }
             mapIndicator.transform.localPosition = takenRooms[currIndicatorNode];
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             RoomController rData = pathObjectsList[currIndicatorNode].GetComponent<RoomController>();
             if (rData.isSpaceOccupied[3])
@@ -183,12 +176,21 @@ public class MiniMapGenerator : MonoBehaviour
                         takenRooms[i].y == takenRooms[currIndicatorNode].y)
                     {
                         currIndicatorNode = i;
-                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(false);
+                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(true);
                         break;
                     }
                 }
             }
             mapIndicator.transform.localPosition = takenRooms[currIndicatorNode];
+        }
+    }
+
+    private void HandleMinimap()
+    {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            isShowMap = !isShowMap;
+            mapContainer.SetActive(isShowMap);
         }
     }
 
