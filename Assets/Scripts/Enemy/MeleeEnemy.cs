@@ -96,6 +96,9 @@ public class MeleeEnemy : Enemy
             case State.Die:
                 break;
         }
+
+        if (currentState != State.Attack)
+            UpdatePlayerDirection();
     }
 
     //private void JumpCheck()

@@ -30,7 +30,7 @@ public class DamagePopup : PooledObject
         switch (damageType)
         {
             case DamageType.Normal:
-                textMesh.color = Color.white;
+                textMesh.color = Color.yellow;
                 textMesh.SetText(damage.ToString());
                 break;
             case DamageType.Crit:
@@ -38,6 +38,17 @@ public class DamagePopup : PooledObject
                 textMesh.SetText(damage.ToString() + "!");
                 break;
         }
+
+        Deactivate();
+    }
+
+    public void SetupPopup(string text, Vector3 position, Color color)
+    {
+        transform.position = position;
+        transform.forward = Camera.main.transform.forward;
+
+        textMesh.color = color;
+        textMesh.SetText(text);
 
         Deactivate();
     }

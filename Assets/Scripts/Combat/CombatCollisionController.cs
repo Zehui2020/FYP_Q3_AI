@@ -52,8 +52,6 @@ public class CombatCollisionController : MonoBehaviour
         GameObject hitGameObject = col.gameObject;
         EnemyStats enemyStats = Utility.Instance.GetTopmostParent(hitGameObject.transform).GetComponent<EnemyStats>();
         PlayerStats playerStats = hitGameObject.GetComponent<PlayerStats>();
-        Debug.Log(hitGameObject.name);
-        Debug.Log(playerStats);
 
         if (enemyStats != null)
         {

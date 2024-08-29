@@ -34,6 +34,9 @@ public class ComfyImageCtr: MonoBehaviour
 
     public void RequestFileName(string id)
     {
+        if (this == null)
+            return;
+
         StartCoroutine(RequestFileNameRoutine(id));
     }
 

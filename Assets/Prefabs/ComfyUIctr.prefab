@@ -51,24 +51,24 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  setPrompts: pixelart, beautiful scenary
-  promptJSON: '{   "3": {     "inputs": {       "seed": 410550432815074,       "steps":
+  setPrompts: pixelart, beautiful scenary, pixelsprite, 16bitscene
+  promptJSON: '{   "3": {     "inputs": {       "seed": 999333962792074,       "steps":
     20,       "cfg": 8,       "sampler_name": "euler",       "scheduler": "normal",      
     "denoise": 1,       "model": [         "18",         0       ],       "positive":
     [         "6",         0       ],       "negative": [         "7",         0      
     ],       "latent_image": [         "5",         0       ]     },     "class_type":
     "KSampler",     "_meta": {       "title": "KSampler"     }   },   "4": {    
-    "inputs": {       "ckpt_name": "SDXL-TURBO\\sd_xl_turbo_1.0.safetensors"    
-    },     "class_type": "CheckpointLoaderSimple",     "_meta": {       "title":
-    "Load Checkpoint"     }   },   "5": {     "inputs": {       "width": 1920,      
-    "height": 1080,       "batch_size": 1     },     "class_type": "EmptyLatentImage",    
-    "_meta": {       "title": "Empty Latent Image"     }   },   "6": {     "inputs":
-    {       "text": "Pprompt",       "clip": [         "4",         1       ]    
-    },     "class_type": "CLIPTextEncode",     "_meta": {       "title": "CLIP Text
-    Encode (Prompt)"     }   },   "7": {     "inputs": {       "text": "Nprompt",      
-    "clip": [         "4",         1       ]     },     "class_type": "CLIPTextEncode",    
-    "_meta": {       "title": "CLIP Text Encode (Prompt)"     }   },   "9": {    
-    "inputs": {       "filename_prefix": "ComfyUI",       "images": [         "11",        
+    "inputs": {       "ckpt_name": "allInOnePixelModel_v1.ckpt"     },     "class_type":
+    "CheckpointLoaderSimple",     "_meta": {       "title": "Load Checkpoint"    
+    }   },   "5": {     "inputs": {       "width": 1920,       "height": 1080,      
+    "batch_size": 1     },     "class_type": "EmptyLatentImage",     "_meta": {      
+    "title": "Empty Latent Image"     }   },   "6": {     "inputs": {       "text":
+    "Pprompt",       "clip": [         "20",         1       ]     },     "class_type":
+    "CLIPTextEncode",     "_meta": {       "title": "CLIP Text Encode (Prompt)"    
+    }   },   "7": {     "inputs": {       "text": "Nprompt",       "clip": [        
+    "4",         1       ]     },     "class_type": "CLIPTextEncode",     "_meta":
+    {       "title": "CLIP Text Encode (Prompt)"     }   },   "9": {     "inputs":
+    {       "filename_prefix": "ComfyUI",       "images": [         "11",        
     0       ]     },     "class_type": "SaveImage",     "_meta": {       "title":
     "Save Image"     }   },   "11": {     "inputs": {       "pixel_size": 4,      
     "image": [         "13",         0       ]     },     "class_type": "Pixelization",    
@@ -76,9 +76,12 @@ MonoBehaviour:
     "samples": [         "3",         0       ],       "vae": [         "4",        
     2       ]     },     "class_type": "VAEDecode",     "_meta": {       "title":
     "VAE Decode"     }   },   "18": {     "inputs": {       "tiling": "x_only",      
-    "copy_model": "Modify in place",       "model": [         "4",         0      
+    "copy_model": "Modify in place",       "model": [         "20",         0      
     ]     },     "class_type": "SeamlessTile",     "_meta": {       "title": "Seamless
-    Tile"     }   } }'
+    Tile"     }   },   "20": {     "inputs": {       "lora_name": "Pixhell_Lora_SD21.safetensors",      
+    "strength_model": 1,       "strength_clip": 1,       "model": [         "4",        
+    0       ],       "clip": [         "4",         1       ]     },     "class_type":
+    "LoraLoader",     "_meta": {       "title": "Load LoRA"     }   } }'
 --- !u!114 &4426666934578282586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,21 +97,7 @@ MonoBehaviour:
   imageSaver: {fileID: 2913095516336933096}
   outputImage: {fileID: 0}
   fileName: background
---- !u!114 &7958897382964795840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5928900819955238283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7ebcfd1775a21944b232b6724737c2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  loadingSlider: {fileID: 0}
-  loadingText: {fileID: 0}
-  FinishGenerating:
+  ObtainImage:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
@@ -135,6 +124,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &7958897382964795840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5928900819955238283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ebcfd1775a21944b232b6724737c2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loadingSlider: {fileID: 0}
+  loadingText: {fileID: 0}
   comfyImageCtr: {fileID: 4426666934578282586}
   promptID: 0
 --- !u!114 &2913095516336933096

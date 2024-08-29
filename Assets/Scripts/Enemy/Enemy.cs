@@ -43,7 +43,7 @@ public class Enemy : EnemyStats
 
     public virtual void UpdateEnemy()
     {
-        UpdatePlayerDirection();
+
     }
 
     private void Update()
