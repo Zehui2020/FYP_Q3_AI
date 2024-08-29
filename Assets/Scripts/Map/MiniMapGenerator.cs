@@ -117,19 +117,4 @@ public class MiniMapGenerator : MonoBehaviour
             rData.UpdateDoors();
         }
     }
-
-    private GameObject GetRandomRoomFromType(int type)
-    {
-        switch (type)
-        {
-            case 1:
-                return mData.roomType1[Random.Range(0, mData.roomType1.Count)];
-            case 2:
-                return mData.roomType2[Random.Range(0, mData.roomType2.Count)];
-            case 3:
-                return mData.roomType3[Random.Range(0, mData.roomType3.Count)];
-            default:
-                return null;
-        }
-    }
 }
