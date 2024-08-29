@@ -6,10 +6,9 @@ public class Enemy : EnemyStats
 {
     public enum EnemyType { Normal, Elite, Boss }
     public EnemyType enemyType;
-    [SerializeField] protected LayerMask enemyLayer;
-    [SerializeField] protected LayerMask playerLayer;
 
     protected AINavigation aiNavigation;
+    protected Collider2D enemyCol;
     [SerializeField] protected Animator animator;
 
     [SerializeField] protected List<Transform> waypoints = new();
@@ -30,6 +29,7 @@ public class Enemy : EnemyStats
     public virtual void InitializeEnemy()
     {
         aiNavigation = GetComponent<AINavigation>();
+        enemyCol = GetComponent<Collider2D>();
 
         aiNavigation.InitPathfindingAgent();
     }
