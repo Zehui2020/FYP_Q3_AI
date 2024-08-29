@@ -56,13 +56,10 @@ public class MovementController : MonoBehaviour
         isMoving = horizontal != 0;
 
         // Update player facing dir
-        if (!lockMomentum)
-        {
-            if (horizontal > 0)
-                transform.localScale = new Vector3(1, 1, 1);
-            else if (horizontal < 0)
-                transform.localScale = new Vector3(-1, 1, 1);
-        }
+        if (horizontal > 0)
+            transform.localScale = new Vector3(1, 1, 1);
+        else if (horizontal < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
 
         if (isMoving)
         {
@@ -184,7 +181,7 @@ public class MovementController : MonoBehaviour
         if (maxJumpCount - jumpCount > 1)
         {
             animationManager.ChangeAnimation(animationManager.DoubleJump, 0, 0, true);
-            velX /= 1.5f;
+            velX /= 1.25f;
         }
         else
         {
@@ -265,6 +262,9 @@ public class MovementController : MonoBehaviour
 
     public bool HandlePlunge()
     {
+        if (plungeRoutine != null)
+            return false;
+
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, movementData.plungeThreshold, groundLayer);
         if (groundHit)
             return false;
