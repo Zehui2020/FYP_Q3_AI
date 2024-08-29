@@ -151,11 +151,12 @@ public class MovementController : MonoBehaviour
             Vector2 dir;
             transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
 
-            if (col.transform.position.x < transform.position.x)
+            if (col.ClosestPoint(transform.position).x < transform.position.x)
                 dir = new Vector2(movementData.wallJumpForceX, movementData.wallJumpForceY);
             else
                 dir = new Vector2(-movementData.wallJumpForceX, movementData.wallJumpForceY);
 
+            Debug.Log(dir);
             playerRB.AddForce(dir * movementData.baseJumpForce, ForceMode2D.Impulse);
 
             wallJumpCount--;
