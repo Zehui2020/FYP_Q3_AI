@@ -122,8 +122,6 @@ public class MiniMapGenerator : MonoBehaviour
     {
         switch (type)
         {
-            case 0:
-                return mData.roomType0[Random.Range(0, mData.roomType0.Count)];
             case 1:
                 return mData.roomType1[Random.Range(0, mData.roomType1.Count)];
             case 2:

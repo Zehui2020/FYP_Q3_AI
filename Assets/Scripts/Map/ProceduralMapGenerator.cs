@@ -12,7 +12,6 @@ public class ProceduralMapGenerator : MonoBehaviour
 
     private List<Vector2> availablePosList = new List<Vector2>();
     private List<Vector3> takenPosList = new List<Vector3>();
-    private List<GameObject> availableObjectsList = new List<GameObject>();
     private List<GameObject> takenObjectsList = new List<GameObject>();
     private List<int> stepDirList = new List<int>
     {
@@ -90,12 +89,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             Destroy(obj);
         }
-        foreach (GameObject obj in availableObjectsList)
-        {
-            Destroy(obj);
-        }
         takenObjectsList.Clear();
-        availableObjectsList.Clear();
         takenPosList.Clear();
         availablePosList.Clear();
         isPathDone = false;
@@ -233,8 +227,6 @@ public class ProceduralMapGenerator : MonoBehaviour
                 CreateRoom(j, GetRandomRoomFromType((int)takenPosList[j].z));
             }
         }
-        // place remaining type 0 rooms
-        CreateSpace();
     }
 
     private void CreateRoom(int posInList, GameObject roomObject)
@@ -245,19 +237,6 @@ public class ProceduralMapGenerator : MonoBehaviour
         createdObj.transform.localPosition = takenPosList[posInList];
         createdObj.transform.localScale = new Vector3(1, 1, 1);
         takenObjectsList.Add(createdObj);
-    }
-
-    private void CreateSpace()
-    {
-        for (int i = 0; i < availablePosList.Count; i++)
-        {
-            // place room
-            createdObj = Instantiate(GetRandomRoomFromType(0));
-            createdObj.transform.SetParent(mapContainer.transform);
-            createdObj.transform.localPosition = availablePosList[i];
-            createdObj.transform.localScale = new Vector3(1, 1, 1);
-            availableObjectsList.Add(createdObj);
-        }
     }
 
     private void ConfigureRoomDoors()
@@ -450,8 +429,6 @@ public class ProceduralMapGenerator : MonoBehaviour
     {
         switch (type)
         {
-            case 0:
-                return mData.roomType0[Random.Range(0, mData.roomType0.Count)];
             case 1:
                 return mData.roomType1[Random.Range(0, mData.roomType1.Count)];
             case 2:
