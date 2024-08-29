@@ -13,15 +13,24 @@ public class AnimationManager : MonoBehaviour
 
     // Movements
     public readonly int Running = Animator.StringToHash("Running");
+    public readonly int Jumping = Animator.StringToHash("Jumping");
+    public readonly int DoubleJump = Animator.StringToHash("DoubleJump");
+    public readonly int Land = Animator.StringToHash("Land");
 
     public void InitAnimationController()
     {
         animator = GetComponent<Animator>();
     }
 
-    public void ChangeAnimation(int state, float transitionDuration, float delayDuration)
+    public void ChangeAnimation(int state, float transitionDuration, float delayDuration, bool resetAnimationIfSame)
     {
-        if (state == currentState || Time.time < transitionDelay)
+        if (state == currentState && resetAnimationIfSame)
+        {
+            animator.Play(state);
+            return;
+        }
+
+        if (Time.time < transitionDelay)
             return;
 
         // Add transition delay
