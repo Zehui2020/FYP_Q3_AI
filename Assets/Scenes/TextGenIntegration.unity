@@ -495,7 +495,7 @@ GameObject:
   - component: {fileID: 1074774551}
   - component: {fileID: 1074774550}
   m_Layer: 5
-  m_Name: Execute Prompt
+  m_Name: Execute Prompt (Weapon)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -567,7 +567,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2121227470}
         m_TargetAssemblyTypeName: LlamaCPP, Assembly-CSharp
-        m_MethodName: ReadUserPrompt
+        m_MethodName: ReadUserPrompt_Weapon
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1333,7 +1333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cmd_Output: {fileID: 790259790}
-  user_Input: {fileID: 1422766584}
+  user_Input_Equipment: {fileID: 1422766584}
 --- !u!4 &2121227471
 Transform:
   m_ObjectHideFlags: 0
