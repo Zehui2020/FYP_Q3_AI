@@ -22,13 +22,13 @@ public class MiniMapGenerator : MonoBehaviour
         HandleMinimap();
     }
 
-    public void StartMapGeneration(int seed, List<Vector2> availableRooms, List<Vector2> takenRooms)
+    public void StartMapGeneration(int seed, List<Vector2> takenRooms)
     {
         ResetMap();
         SetSeed(seed);
         this.takenRooms = new List<Vector2>(takenRooms);
         // place rooms
-        PlaceRooms(availableRooms, takenRooms);
+        PlaceRooms(takenRooms);
         ConfigureRoomDoors();
     }
 
@@ -50,10 +50,10 @@ public class MiniMapGenerator : MonoBehaviour
     public void SetSeed(int seed)
     {
         mapSeed = seed;
-        Random.seed = mapSeed;
+        Random.InitState(mapSeed);
     }
 
-    private void PlaceRooms(List<Vector2> availableRooms, List<Vector2> takenRooms)
+    private void PlaceRooms(List<Vector2> takenRooms)
     {
         // place normal rooms
         for (int j = 0; j < takenRooms.Count; j++)
@@ -64,19 +64,10 @@ public class MiniMapGenerator : MonoBehaviour
             createdObj.transform.localScale = new Vector3(1, 1, 1);
             pathObjectsList.Add(createdObj);
         }
-        // place remaining type 0 rooms
-        for (int i = 0; i < availableRooms.Count; i++)
-        {
-            createdObj = Instantiate(GetRandomRoomFromType(0));
-            createdObj.transform.SetParent(mapContainer.transform);
-            createdObj.transform.localPosition = availableRooms[i];
-            createdObj.transform.localScale = new Vector3(1, 1, 1);
-            spaceObjectsList.Add(createdObj);
-        }
         // position indicator
         mapIndicator.transform.localPosition = takenRooms[0];
         currIndicatorNode = 0;
-        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(false);
+        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(true);
     }
 
     private void ConfigureRoomDoors()
@@ -131,7 +122,7 @@ public class MiniMapGenerator : MonoBehaviour
                         takenRooms[i].y == takenRooms[currIndicatorNode].y + mData.roomSpacing)
                     {
                         currIndicatorNode = i;
-                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(false);
+                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(true);
                         break;
                     }
                 }
@@ -149,7 +140,7 @@ public class MiniMapGenerator : MonoBehaviour
                         takenRooms[i].y == takenRooms[currIndicatorNode].y - mData.roomSpacing)
                     {
                         currIndicatorNode = i;
-                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(false);
+                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(true);
                         break;
                     }
                 }
@@ -167,7 +158,7 @@ public class MiniMapGenerator : MonoBehaviour
                         takenRooms[i].y == takenRooms[currIndicatorNode].y)
                     {
                         currIndicatorNode = i;
-                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(false);
+                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(true);
                         break;
                     }
                 }
@@ -185,7 +176,7 @@ public class MiniMapGenerator : MonoBehaviour
                         takenRooms[i].y == takenRooms[currIndicatorNode].y)
                     {
                         currIndicatorNode = i;
-                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(false);
+                        pathObjectsList[currIndicatorNode].GetComponent<RoomController>().ToggleRoomCover(true);
                         break;
                     }
                 }

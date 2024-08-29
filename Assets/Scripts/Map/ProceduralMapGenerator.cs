@@ -34,7 +34,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             SetSeed(mapSeed);
             StartMapGeneration();
-            miniMap.StartMapGeneration(mapSeed, ConfigureListForMiniMap(availablePosList), ConfigureListForMiniMap(takenPosList));
+            miniMap.StartMapGeneration(mapSeed, ConfigureListForMiniMap(takenPosList));
         }
     }
 
@@ -45,7 +45,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             RandomizeSeed();
             StartMapGeneration();
-            miniMap.StartMapGeneration(mapSeed, ConfigureListForMiniMap(availablePosList), ConfigureListForMiniMap(takenPosList));
+            miniMap.StartMapGeneration(mapSeed, ConfigureListForMiniMap(takenPosList));
         }
 
         HandleMapIndicator();
@@ -101,13 +101,13 @@ public class ProceduralMapGenerator : MonoBehaviour
     private void RandomizeSeed()
     {
         mapSeed = Random.Range(0, 1000000000);
-        Random.seed = mapSeed;
+        Random.InitState(mapSeed);
     }
 
     public void SetSeed(int seed)
     {
         mapSeed = seed;
-        Random.seed = mapSeed;
+        Random.InitState(mapSeed);
     }
 
     private void DoStep()
@@ -360,18 +360,6 @@ public class ProceduralMapGenerator : MonoBehaviour
                 break;
         }
         return false;
-    }
-
-    private List<Vector2> ConfigureListForMiniMap(List<Vector2> listToBeConfigured)
-    {
-        List<Vector2> newList = new List<Vector2>();
-
-        for (int i = 0; i < listToBeConfigured.Count; i++)
-        {
-            newList.Add(new Vector2(listToBeConfigured[i].x * miniMap.mData.roomSpacing / mData.roomSpacing, listToBeConfigured[i].y * miniMap.mData.roomSpacing / mData.roomSpacing));
-        }
-
-        return newList;
     }
 
     private List<Vector2> ConfigureListForMiniMap(List<Vector3> listToBeConfigured)
