@@ -5,6 +5,7 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
     [SerializeField] private MovementData movementData;
+    private AnimationManager animationManager;
 
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask playerLayer;
@@ -45,6 +46,9 @@ public class MovementController : MonoBehaviour
         moveSpeed = movementData.walkSpeed;
         playerCol = GetComponent<CapsuleCollider2D>();
         playerRB = GetComponent<Rigidbody2D>();
+        animationManager = GetComponent<AnimationManager>();
+
+        animationManager.InitAnimationController();
     }
 
     public void HandleMovment(float horizontal)
@@ -72,6 +76,7 @@ public class MovementController : MonoBehaviour
             if (burstDragRoutine != null)
                 StartCoroutine(BurstDrag());
             moveSpeed = movementData.walkSpeed;
+            animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f);
         }
 
         if (!isGrounded)
@@ -115,9 +120,9 @@ public class MovementController : MonoBehaviour
         playerCol.isTrigger = false;
     }
 
-    public void HandleJump(float horizontal)
+    public void HandleJump()
     {
-        if (plungeRoutine != null)
+        if (plungeRoutine != null || rollRoutine != null)
             return;
 
         if (isGrappling)
@@ -206,7 +211,7 @@ public class MovementController : MonoBehaviour
                     direction = -1;
             }
 
-            playerRB.velocity = new Vector2(movementData.dashSpeed * direction, 0);
+            playerRB.velocity = new Vector2(movementData.dashSpeed * direction, playerRB.velocity.y);
             yield return null;
         }
 
@@ -217,27 +222,33 @@ public class MovementController : MonoBehaviour
 
     public void HandleRoll()
     {
+        if (!isGrounded)
+            return;
+
         if (rollRoutine == null)
             rollRoutine = StartCoroutine(RollRoutine());
     }
 
     private IEnumerator RollRoutine()
     {
+        lockMomentum = true;
+
         Vector2 originalSize = playerCol.size;
         Vector2 originalOffset = playerCol.offset;
 
         float change = movementData.rollColliderSize - playerCol.size.y;
+        playerRB.drag = 0;
 
         playerCol.size = new Vector2(playerCol.size.x, movementData.rollColliderSize);
         playerCol.offset = new Vector2(playerCol.offset.x, -(Mathf.Abs(change) / 2));
 
-        yield return new WaitForSeconds(movementData.rollFrames);
+        yield return new WaitForSeconds(movementData.rollDuration);
 
         playerCol.size = originalSize;
         playerCol.offset = originalOffset;
 
-        yield return new WaitForSeconds(1f);
-
+        playerRB.drag = movementData.groundDrag;
+        lockMomentum = false;
         rollRoutine = null;
     }
 
@@ -281,6 +292,7 @@ public class MovementController : MonoBehaviour
 
         // Move player
         playerRB.AddForce(force * moveSpeedModifier, ForceMode2D.Force);
+        animationManager.ChangeAnimation(animationManager.Running, 0f, 0f);
     }
 
     public void CheckGroundCollision()
@@ -293,10 +305,14 @@ public class MovementController : MonoBehaviour
         if (dist <= movementData.minGroundDist)
         {
             isGrounded = true;
-            playerRB.drag = movementData.groundDrag;
             fallingDuration = 0;
 
-            lockMomentum = false;
+            if (rollRoutine == null)
+            {
+                playerRB.drag = movementData.groundDrag;
+                lockMomentum = false;
+            }
+
             wallJumpCount = maxWallJumps;
             if (jumpRoutine == null)
                 jumpCount = maxJumpCount;
