@@ -22,7 +22,6 @@ public class ProceduralMapGenerator : MonoBehaviour
     private GameObject createdObj;
     private Vector2 startPos;
     private Vector2 currPos;
-    private int currIndicatorNode;
     private int roomsAdded = 0;
     private bool isPathDone = false;
 
@@ -72,8 +71,6 @@ public class ProceduralMapGenerator : MonoBehaviour
         RegulateRoomAmount();
         PlaceRooms();
         ConfigureRoomDoors();
-        // position indicator
-        currIndicatorNode = 0;
         // pass info to mini map
         for (int i = 0; i < miniMap.Count; i++)
         {
@@ -373,15 +370,5 @@ public class ProceduralMapGenerator : MonoBehaviour
     private int GetRandomStepDir()
     {
         return stepDirList[Random.Range(0, stepDirList.Count)];
-    }
-
-    public int GetCurrIndicatorNode()
-    {
-        return currIndicatorNode;
-    }
-
-    public void SetIndicatorNode(int node)
-    {
-        currIndicatorNode = node;
     }
 }

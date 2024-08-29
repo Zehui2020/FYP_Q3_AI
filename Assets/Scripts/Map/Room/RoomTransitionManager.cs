@@ -24,7 +24,7 @@ public class RoomTransitionManager : MonoBehaviour
         // move indicator on mini map
         miniMap.MoveNode(dir);
         // find new room to tp to
-        RoomController roomToTP = rooms[miniMap.map.GetCurrIndicatorNode()];
+        RoomController roomToTP = rooms[miniMap.GetCurrIndicatorNode()];
         // teleport player to room
         player.transform.position = roomToTP.GetTPPoint(dir).position;
     }
