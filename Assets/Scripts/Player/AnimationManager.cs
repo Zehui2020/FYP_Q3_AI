@@ -26,7 +26,7 @@ public class AnimationManager : MonoBehaviour
     {
         if (state == currentState && resetAnimationIfSame)
         {
-            animator.Play(state);
+            animator.Play(state, -1, 0f);
             return;
         }
 
