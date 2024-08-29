@@ -8,16 +8,18 @@ public class MiniMapGenerator : MonoBehaviour
     [SerializeField] private GameObject mapContainer;
     [SerializeField] private GameObject mapIndicator;
 
-    [SerializeField] private List<GameObject> pathObjectsList = new List<GameObject>();
-    [SerializeField] private List<GameObject> spaceObjectsList = new List<GameObject>();
-    [SerializeField] private List<Vector3> takenRooms = new List<Vector3>();
+    private List<GameObject> pathObjectsList = new List<GameObject>();
+    private List<GameObject> spaceObjectsList = new List<GameObject>();
+    private List<Vector3> takenRooms = new List<Vector3>();
     private int mapSeed = 0;
     private GameObject createdObj;
-    [SerializeField] private int currIndicatorNode;
+    private int currIndicatorNode;
+    private bool isShowMap = true;
 
     private void Update()
     {
         HandleMinimapIndicator(takenRooms);
+        HandleMinimap();
     }
 
     public void StartMapGeneration(int seed, List<Vector2> availableRooms, List<Vector3> takenRooms)
@@ -118,7 +120,7 @@ public class MiniMapGenerator : MonoBehaviour
 
     private void HandleMinimapIndicator(List<Vector3> takenRooms)
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             RoomController rData = pathObjectsList[currIndicatorNode].GetComponent<RoomController>();
             if (rData.isSpaceOccupied[0])
@@ -136,7 +138,7 @@ public class MiniMapGenerator : MonoBehaviour
             }
             mapIndicator.transform.localPosition = takenRooms[currIndicatorNode];
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             RoomController rData = pathObjectsList[currIndicatorNode].GetComponent<RoomController>();
             if (rData.isSpaceOccupied[1])
@@ -154,7 +156,7 @@ public class MiniMapGenerator : MonoBehaviour
             }
             mapIndicator.transform.localPosition = takenRooms[currIndicatorNode];
         }
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             RoomController rData = pathObjectsList[currIndicatorNode].GetComponent<RoomController>();
             if (rData.isSpaceOccupied[2])
@@ -172,7 +174,7 @@ public class MiniMapGenerator : MonoBehaviour
             }
             mapIndicator.transform.localPosition = takenRooms[currIndicatorNode];
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             RoomController rData = pathObjectsList[currIndicatorNode].GetComponent<RoomController>();
             if (rData.isSpaceOccupied[3])
@@ -189,6 +191,15 @@ public class MiniMapGenerator : MonoBehaviour
                 }
             }
             mapIndicator.transform.localPosition = takenRooms[currIndicatorNode];
+        }
+    }
+
+    private void HandleMinimap()
+    {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            isShowMap = !isShowMap;
+            mapContainer.SetActive(isShowMap);
         }
     }
 
