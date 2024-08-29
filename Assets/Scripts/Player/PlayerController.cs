@@ -29,7 +29,7 @@ public class PlayerController : PlayerStats
         float vertical = Input.GetAxisRaw("Vertical");
 
         if (Input.GetKeyDown(KeyCode.Space))
-            movementController.HandleJump();
+            movementController.HandleJump(horizontal);
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
             movementController.HandleDash(horizontal);

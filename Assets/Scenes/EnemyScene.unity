@@ -147,7 +147,7 @@ Transform:
   m_GameObject: {fileID: 139467669}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.973, z: 0}
+  m_LocalPosition: {x: 0.215, y: 0.88, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -733,9 +733,9 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  playerLayer:
+  wallJumpCheck:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 8
   groundCheckPosition: {fileID: 1388778614}
   wallCheckPosition: {fileID: 1918324848}
   isMoving: 0
@@ -743,8 +743,8 @@ MonoBehaviour:
   lockMomentum: 0
   canGrapple: 0
   isGrappling: 0
-  jumpCount: 2
-  maxJumpCount: 2
+  jumpCount: 3
+  maxJumpCount: 3
   wallJumpCount: 3
   maxWallJumps: 3
 --- !u!114 &526969668
@@ -1511,9 +1511,11 @@ MonoBehaviour:
   currentState: 0
   jumpCheckPos: {fileID: 139467670}
   jumpHeight: 2
-  jumpCheckLayers:
+  jumpThreshold: 4
+  playerLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 64
+  marker: {fileID: 3069998399725336865, guid: 1dd9360cb65d86c4cbdd55b2cc42770b, type: 3}
 --- !u!114 &1694679016
 MonoBehaviour:
   m_ObjectHideFlags: 0

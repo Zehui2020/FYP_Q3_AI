@@ -5,6 +5,7 @@ public class MovementData : ScriptableObject
 {
     public float walkSpeed;
     public float baseJumpForce;
+    public float jumpInterval;
 
     public float airMultiplier;
     public float groundDrag;

@@ -8,7 +8,7 @@ public class MovementController : MonoBehaviour
     private AnimationManager animationManager;
 
     [SerializeField] private LayerMask groundLayer;
-    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private LayerMask wallJumpCheck;
     [SerializeField] private Transform groundCheckPosition;
 
     [SerializeField] private Transform wallCheckPosition;
@@ -76,7 +76,9 @@ public class MovementController : MonoBehaviour
             if (burstDragRoutine != null)
                 StartCoroutine(BurstDrag());
             moveSpeed = movementData.walkSpeed;
-            animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f);
+
+            if (jumpRoutine == null)
+                animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f, false);
         }
 
         if (!isGrounded)
@@ -120,27 +122,15 @@ public class MovementController : MonoBehaviour
         playerCol.isTrigger = false;
     }
 
-    public void HandleJump()
+    public void HandleJump(float horizontal)
     {
         if (plungeRoutine != null || rollRoutine != null)
             return;
 
         if (isGrappling)
-        {
             StopGrappling();
 
-            Vector2 dir = Vector2.up;
-
-            if (transform.localScale.x > 0)
-                dir = new Vector2(0.2f, 0.5f);
-            else
-                dir = new Vector2(-0.2f, 0.5f);
-
-            playerRB.AddForce(dir * movementData.baseJumpForce, ForceMode2D.Impulse);
-            return;
-        }
-
-        Collider2D col = Physics2D.OverlapCircle(wallCheckPosition.position, 0.2f, ~playerLayer);
+        Collider2D col = Physics2D.OverlapCircle(wallCheckPosition.position, 0.2f, wallJumpCheck);
         if (col != null && col.isTrigger)
             col = null;
 
@@ -154,14 +144,14 @@ public class MovementController : MonoBehaviour
                 return;
 
             if (jumpRoutine == null)
-                jumpRoutine = StartCoroutine(JumpRoutine());
+                jumpRoutine = StartCoroutine(JumpRoutine(horizontal));
         }
         else if (wallJumpCount > 0)
         {
             // Wall Jump
             playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
 
-            Vector2 dir = Vector2.up;
+            Vector2 dir;
             transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
 
             if (col.transform.position.x < transform.position.x)
@@ -176,14 +166,35 @@ public class MovementController : MonoBehaviour
         }
     }
 
-    private IEnumerator JumpRoutine()
+    private IEnumerator JumpRoutine(float horizontal)
     {
-        // Normal Jump
-        playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
-        playerRB.AddForce(transform.up * movementData.baseJumpForce, ForceMode2D.Impulse);
         jumpCount--;
 
-        yield return new WaitForSeconds(0.1f);
+        float velX = playerRB.velocity.x;
+        if (horizontal < 0)
+        {
+            if (velX > 0)
+                velX = -velX;
+        }
+        else if (horizontal > 0)
+        {
+            velX = Mathf.Abs(velX);
+        }
+
+        if (maxJumpCount - jumpCount > 1)
+        {
+            animationManager.ChangeAnimation(animationManager.DoubleJump, 0, 0, true);
+            velX /= 1.5f;
+        }
+        else
+        {
+            animationManager.ChangeAnimation(animationManager.Jumping, 0, 0, true);
+        }
+
+        playerRB.velocity = new Vector2(velX, 0);
+        playerRB.AddForce(transform.up * movementData.baseJumpForce, ForceMode2D.Impulse);
+
+        yield return new WaitForSeconds(movementData.jumpInterval);
 
         jumpRoutine = null;
     }
@@ -292,7 +303,9 @@ public class MovementController : MonoBehaviour
 
         // Move player
         playerRB.AddForce(force * moveSpeedModifier, ForceMode2D.Force);
-        animationManager.ChangeAnimation(animationManager.Running, 0f, 0f);
+
+        if (isGrounded && jumpRoutine == null)
+            animationManager.ChangeAnimation(animationManager.Running, 0f, 0f, false);
     }
 
     public void CheckGroundCollision()
@@ -302,6 +315,10 @@ public class MovementController : MonoBehaviour
             return;
 
         float dist = Vector3.Distance(groundCheckPosition.position, groundHit.point);
+
+        if (!isGrounded && playerRB.velocity.y < 0 && dist <= 2f)
+            animationManager.ChangeAnimation(animationManager.Land, 0, 0, false);
+
         if (dist <= movementData.minGroundDist)
         {
             isGrounded = true;

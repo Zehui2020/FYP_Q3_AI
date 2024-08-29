@@ -17,8 +17,12 @@ public class MeleeEnemy : Enemy
 
     [SerializeField] private Transform jumpCheckPos;
     [SerializeField] private float jumpHeight;
-    [SerializeField] protected LayerMask jumpCheckLayers;
+    [SerializeField] private float jumpThreshold;
+    [SerializeField] private LayerMask playerLayer;
     private Coroutine jumpRoutine;
+    private Vector3 lastSeenPos = Vector3.zero;
+
+    public GameObject marker;
 
     private readonly int IdleAnim = Animator.StringToHash("EnemyIdle");
     private readonly int RunAnim = Animator.StringToHash("EnemyRun");
@@ -82,12 +86,10 @@ public class MeleeEnemy : Enemy
                 break;
             case State.Chase:
                 if (jumpRoutine != null)
-                    break;
+                    return;
 
                 JumpCheck();
-
-                if (jumpRoutine == null)
-                    ChaseUpdate();
+                ChaseUpdate();
                 break;
             case State.Attack:
                 break;
@@ -96,52 +98,43 @@ public class MeleeEnemy : Enemy
         }
     }
 
-    private bool JumpCheck()
+    private void JumpCheck()
     {
-        if (jumpRoutine != null)
-            return true;
+        Collider2D hit = Physics2D.OverlapCircle(jumpCheckPos.position, chaseRange, playerLayer);
 
-        Vector2 dir = (PlayerController.Instance.transform.position - transform.position).normalized;
-        float dist = Vector2.Distance(transform.position, PlayerController.Instance.transform.position);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(jumpCheckPos.position, dir, dist, jumpCheckLayers);
+        if (!hit && lastSeenPos == Vector3.zero)
+            lastSeenPos = player.transform.position;
 
-        Debug.DrawLine(jumpCheckPos.position, dir, Color.red);
+        if (Mathf.Abs(Mathf.Abs(transform.position.x) - Mathf.Abs(lastSeenPos.x)) > jumpThreshold ||
+            lastSeenPos == Vector3.zero)
+            return;
 
-        if (hits.Length == 0)
-            return false;
+        Instantiate(marker, lastSeenPos, Quaternion.identity);
+        jumpRoutine = StartCoroutine(DoJumpRoutine(lastSeenPos));
 
-        Debug.Log(hits[0].collider.name);
-
-        Vector3 targetPoint = hits[hits.Length - 1].point;
-        jumpRoutine = StartCoroutine(DoJumpRoutine(targetPoint));
-        return true;
+        return;
     }
 
     private IEnumerator DoJumpRoutine(Vector3 targetPos)
     {
         aiNavigation.StopNavigation();
         enemyCol.isTrigger = true;
-
-        Vector3 jumpDist = (transform.position - PlayerController.Instance.transform.position) / 3f;
-        Vector3 peakPoint = new Vector3(jumpDist.x, transform.position.y + jumpHeight, transform.position.z);
+        enemyRB.isKinematic = true;
 
         float dist = 100f;
 
         while (dist > 1f)
         {
             dist = Vector2.Distance(transform.position, targetPos);
-            transform.position = BezierCurve(peakPoint, targetPos) / 2f;
+            transform.position = Vector3.Slerp(transform.position, targetPos, Time.deltaTime);
 
             yield return null;
         }
 
         jumpRoutine = null;
+        lastSeenPos = Vector3.zero;
         aiNavigation.ResumeNavigation();
         enemyCol.isTrigger = false;
-    }
-
-    private Vector3 BezierCurve(Vector3 peakPos, Vector3 targetPos)
-    {
-        return Mathf.Pow((1 - Time.deltaTime), 2) * transform.position + 2 * (1 - Time.deltaTime) * Time.deltaTime * peakPos + Mathf.Pow(Time.deltaTime, 2) * targetPos;
+        enemyRB.isKinematic = false;
     }
 }
