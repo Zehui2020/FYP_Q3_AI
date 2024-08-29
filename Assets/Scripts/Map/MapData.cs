@@ -8,7 +8,6 @@ public class MapData : ScriptableObject
     public GameObject startRoom;
     public GameObject endRoom;
     public GameObject shopRoom;
-    public List<GameObject> roomType0;
     public List<GameObject> roomType1;
     public List<GameObject> roomType2;
     public List<GameObject> roomType3;
