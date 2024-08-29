@@ -7,8 +7,11 @@ public class Enemy : EnemyStats
     public enum EnemyType { Normal, Elite, Boss }
     public EnemyType enemyType;
 
+    protected PlayerController player;
+
     protected AINavigation aiNavigation;
     protected Collider2D enemyCol;
+    protected Rigidbody2D enemyRB;
     [SerializeField] protected Animator animator;
 
     [SerializeField] protected List<Transform> waypoints = new();
@@ -30,8 +33,10 @@ public class Enemy : EnemyStats
     {
         aiNavigation = GetComponent<AINavigation>();
         enemyCol = GetComponent<Collider2D>();
+        enemyRB = GetComponent<Rigidbody2D>();
 
         aiNavigation.InitPathfindingAgent();
+        player = PlayerController.Instance;
     }
 
     public virtual void UpdateEnemy()
