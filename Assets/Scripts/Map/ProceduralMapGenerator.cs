@@ -23,10 +23,10 @@ public class ProceduralMapGenerator : MonoBehaviour
     private Vector2 startPos;
     private Vector2 currPos;
     private int currIndicatorNode;
-    [SerializeField] private int roomsAdded = 0;
+    private int roomsAdded = 0;
     private bool isPathDone = false;
 
-    private void Start()
+    private void Awake()
     {
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MiniMap"))
         {
@@ -45,8 +45,6 @@ public class ProceduralMapGenerator : MonoBehaviour
             RandomizeSeed();
             StartMapGeneration();
         }
-
-        HandleMapIndicator();
     }
 
     public void StartMapGeneration()
@@ -357,74 +355,6 @@ public class ProceduralMapGenerator : MonoBehaviour
         return newList;
     }
 
-    private void HandleMapIndicator()
-    {
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            RoomController rData = takenObjectsList[currIndicatorNode].GetComponent<RoomController>();
-            if (rData.isSpaceOccupied[0])
-            {
-                for (int i = 0; i < takenPosList.Count; i++)
-                {
-                    if (takenPosList[i].x == takenPosList[currIndicatorNode].x &&
-                        takenPosList[i].y == takenPosList[currIndicatorNode].y + mData.roomSpacing)
-                    {
-                        currIndicatorNode = i;
-                        break;
-                    }
-                }
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            RoomController rData = takenObjectsList[currIndicatorNode].GetComponent<RoomController>();
-            if (rData.isSpaceOccupied[1])
-            {
-                for (int i = 0; i < takenPosList.Count; i++)
-                {
-                    if (takenPosList[i].x == takenPosList[currIndicatorNode].x &&
-                        takenPosList[i].y == takenPosList[currIndicatorNode].y - mData.roomSpacing)
-                    {
-                        currIndicatorNode = i;
-                        break;
-                    }
-                }
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            RoomController rData = takenObjectsList[currIndicatorNode].GetComponent<RoomController>();
-            if (rData.isSpaceOccupied[2])
-            {
-                for (int i = 0; i < takenPosList.Count; i++)
-                {
-                    if (takenPosList[i].x == takenPosList[currIndicatorNode].x - mData.roomSpacing &&
-                        takenPosList[i].y == takenPosList[currIndicatorNode].y)
-                    {
-                        currIndicatorNode = i;
-                        break;
-                    }
-                }
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            RoomController rData = takenObjectsList[currIndicatorNode].GetComponent<RoomController>();
-            if (rData.isSpaceOccupied[3])
-            {
-                for (int i = 0; i < takenPosList.Count; i++)
-                {
-                    if (takenPosList[i].x == takenPosList[currIndicatorNode].x + mData.roomSpacing &&
-                        takenPosList[i].y == takenPosList[currIndicatorNode].y)
-                    {
-                        currIndicatorNode = i;
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
     private GameObject GetRandomRoomFromType(int type)
     {
         switch (type)
@@ -443,5 +373,15 @@ public class ProceduralMapGenerator : MonoBehaviour
     private int GetRandomStepDir()
     {
         return stepDirList[Random.Range(0, stepDirList.Count)];
+    }
+
+    public int GetCurrIndicatorNode()
+    {
+        return currIndicatorNode;
+    }
+
+    public void SetIndicatorNode(int node)
+    {
+        currIndicatorNode = node;
     }
 }
