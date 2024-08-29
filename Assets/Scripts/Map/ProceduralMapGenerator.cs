@@ -34,7 +34,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             SetSeed(mapSeed);
             StartMapGeneration();
-            miniMap.StartMapGeneration(mapSeed, availablePosList, takenPosList);
+            miniMap.StartMapGeneration(mapSeed, ConfigureListForMiniMap(availablePosList), ConfigureListForMiniMap(takenPosList));
         }
     }
 
@@ -43,15 +43,12 @@ public class ProceduralMapGenerator : MonoBehaviour
         // debug inputs
         if (Input.GetKeyDown(KeyCode.R))
         {
-            if (!CompareTag("MiniMap"))
-            {
-                RandomizeSeed();
-                StartMapGeneration();
-                miniMap.StartMapGeneration(mapSeed, availablePosList, takenPosList);
-            }
+            RandomizeSeed();
+            StartMapGeneration();
+            miniMap.StartMapGeneration(mapSeed, ConfigureListForMiniMap(availablePosList), ConfigureListForMiniMap(takenPosList));
         }
 
-        HandleMinimapIndicator();
+        HandleMapIndicator();
     }
 
     public void StartMapGeneration()
@@ -365,7 +362,31 @@ public class ProceduralMapGenerator : MonoBehaviour
         return false;
     }
 
-    private void HandleMinimapIndicator()
+    private List<Vector2> ConfigureListForMiniMap(List<Vector2> listToBeConfigured)
+    {
+        List<Vector2> newList = new List<Vector2>();
+
+        for (int i = 0; i < listToBeConfigured.Count; i++)
+        {
+            newList.Add(new Vector2(listToBeConfigured[i].x * miniMap.mData.roomSpacing / mData.roomSpacing, listToBeConfigured[i].y * miniMap.mData.roomSpacing / mData.roomSpacing));
+        }
+
+        return newList;
+    }
+
+    private List<Vector2> ConfigureListForMiniMap(List<Vector3> listToBeConfigured)
+    {
+        List<Vector2> newList = new List<Vector2>();
+
+        for (int i = 0; i < listToBeConfigured.Count; i++)
+        {
+            newList.Add(new Vector2(listToBeConfigured[i].x * miniMap.mData.roomSpacing / mData.roomSpacing, listToBeConfigured[i].y * miniMap.mData.roomSpacing / mData.roomSpacing));
+        }
+
+        return newList;
+    }
+
+    private void HandleMapIndicator()
     {
         if (Input.GetKeyDown(KeyCode.W))
         {

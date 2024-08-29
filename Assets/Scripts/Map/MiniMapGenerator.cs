@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class MiniMapGenerator : MonoBehaviour
 {
-    [SerializeField] private MapData mData;
+    [SerializeField] public MapData mData;
     [SerializeField] private GameObject mapContainer;
     [SerializeField] private GameObject mapIndicator;
 
     private List<GameObject> pathObjectsList = new List<GameObject>();
     private List<GameObject> spaceObjectsList = new List<GameObject>();
-    private List<Vector3> takenRooms = new List<Vector3>();
+    private List<Vector2> takenRooms = new List<Vector2>();
     private int mapSeed = 0;
     private GameObject createdObj;
     private int currIndicatorNode;
@@ -22,11 +22,11 @@ public class MiniMapGenerator : MonoBehaviour
         HandleMinimap();
     }
 
-    public void StartMapGeneration(int seed, List<Vector2> availableRooms, List<Vector3> takenRooms)
+    public void StartMapGeneration(int seed, List<Vector2> availableRooms, List<Vector2> takenRooms)
     {
         ResetMap();
         SetSeed(seed);
-        this.takenRooms = new List<Vector3>(takenRooms);
+        this.takenRooms = new List<Vector2>(takenRooms);
         // place rooms
         PlaceRooms(availableRooms, takenRooms);
         ConfigureRoomDoors();
@@ -53,7 +53,7 @@ public class MiniMapGenerator : MonoBehaviour
         Random.seed = mapSeed;
     }
 
-    private void PlaceRooms(List<Vector2> availableRooms, List<Vector3> takenRooms)
+    private void PlaceRooms(List<Vector2> availableRooms, List<Vector2> takenRooms)
     {
         // place normal rooms
         for (int j = 0; j < takenRooms.Count; j++)
@@ -118,7 +118,7 @@ public class MiniMapGenerator : MonoBehaviour
         }
     }
 
-    private void HandleMinimapIndicator(List<Vector3> takenRooms)
+    private void HandleMinimapIndicator(List<Vector2> takenRooms)
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
