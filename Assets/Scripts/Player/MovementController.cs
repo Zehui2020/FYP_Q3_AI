@@ -93,7 +93,7 @@ public class MovementController : MonoBehaviour
 
         SpeedControl();
 
-        if (playerRB.velocity.y < 0 && !isLanding && !isDashing)
+        if (playerRB.velocity.y < 0 && !isLanding)
             animationManager.ChangeAnimation(animationManager.Falling, 0, 0, false);
 
         Debug.DrawRay(groundCheckPosition.position, Vector3.down * movementData.plungeThreshold, UnityEngine.Color.red);
@@ -156,6 +156,8 @@ public class MovementController : MonoBehaviour
         else if (wallJumpCount > 0)
         {
             // Wall Jump
+            animationManager.ChangeAnimation(animationManager.WallJump, 0, 0, false);
+
             playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
 
             Vector2 dir;
@@ -217,15 +219,25 @@ public class MovementController : MonoBehaviour
     private IEnumerator DashRoutine(float direction)
     {
         lockMomentum = false;
-        float timer = movementData.dashDuration;
+        float timer;
         PlayerController.Instance.ApplyImmune(movementData.dashIFrames, BaseStats.ImmuneType.Dodge);
         playerRB.gravityScale = 0;
         playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
 
+        float dashSpeed;
+
         if (!isGrounded)
+        {
             animationManager.ChangeAnimation(animationManager.AirDash, 0, 0, true);
+            dashSpeed = movementData.dashSpeed;
+            timer = movementData.dashDuration;
+        }
         else
+        {
             animationManager.ChangeAnimation(animationManager.GroundDash, 0, 0, true);
+            dashSpeed = movementData.groundDashSpeed;
+            timer = movementData.groundDashDuration;
+        }
 
         while (timer > 0)
         {
@@ -240,7 +252,7 @@ public class MovementController : MonoBehaviour
             }
 
             isDashing = true;
-            playerRB.velocity = new Vector2(movementData.dashSpeed * direction, playerRB.velocity.y);
+            playerRB.velocity = new Vector2(dashSpeed * direction, playerRB.velocity.y);
             yield return null;
         }
 

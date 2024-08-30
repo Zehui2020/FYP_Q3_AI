@@ -13,6 +13,8 @@ public class MovementData : ScriptableObject
 
     public float dashDuration;
     public float dashSpeed;
+    public float groundDashDuration;
+    public float groundDashSpeed;
     public float dashCooldown;
     public float dashIFrames;
 

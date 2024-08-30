@@ -7,6 +7,7 @@ public class PlayerController : PlayerStats
 
     private MovementController movementController;
     private FadeTransition fadeTransition;
+    private ItemManager itemManager;
 
     private IInteractable currentInteractable;
 
@@ -24,7 +25,9 @@ public class PlayerController : PlayerStats
     {
         movementController = GetComponent<MovementController>();
         fadeTransition = GetComponent<FadeTransition>();
+        itemManager = GetComponent<ItemManager>();
 
+        itemManager.InitItemManager();
         movementController.InitializeMovementController();
     }
 

@@ -21,6 +21,7 @@ public class AnimationManager : MonoBehaviour
     public readonly int Falling = Animator.StringToHash("FallingLoop");
     public readonly int AirDash = Animator.StringToHash("AirDash");
     public readonly int GroundDash = Animator.StringToHash("GroundDash");
+    public readonly int WallJump = Animator.StringToHash("WallJump");
 
     public void InitAnimationController()
     {

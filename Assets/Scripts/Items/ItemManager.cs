@@ -1,10 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class ItemManager : MonoBehaviour
 {
+    public static ItemManager Instance;
     public List<Item> itemList;
+    public List<Item> allItems;
+    [SerializeField] private ItemPickupAlert itemPickupAlert;
+
+    [SerializeField] private ItemUI itemUIPrefab;
+    [SerializeField] private Transform itemUIParent;
+    private List<ItemUI> itemUIs = new List<ItemUI>();
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public void InitItemManager()
     {
@@ -22,7 +35,28 @@ public class ItemManager : MonoBehaviour
         {
             itemToAdd.IncrementStack();
         }
+
+        OnPickupItem(itemToAdd);
     }
+
+    public void OnPickupItem(Item item)
+    {
+        itemPickupAlert.DisplayAlert(item);
+
+        foreach (ItemUI itemUI in itemUIs)
+        {
+            if (itemUI.item.itemType == item.itemType)
+            {
+                itemUI.AddItemCount();
+                return;
+            }
+        }
+
+        ItemUI newItemUI = Instantiate(itemUIPrefab, itemUIParent);
+        newItemUI.SetupItemUI(item);
+        itemUIs.Add(newItemUI);
+    }
+
 
     public void DecreaseStack(Item itemToRemove)
     {
@@ -59,5 +93,31 @@ public class ItemManager : MonoBehaviour
     {
         if (itemToCheck.itemStack <= 0)
             itemList.Remove(itemToCheck);
+    }
+
+    public List<Item> GetItemsFrom(Item.ItemCatagory itemCatagory, Item.Rarity rarity)
+    {
+        List<Item> items = new();
+
+        foreach (Item item in allItems)
+        {
+            if (item.itemCatagory.Equals(itemCatagory) && item.itemRarity.Equals(rarity))
+                items.Add(item);
+        }
+
+        return items;
+    }
+
+    public List<Item> GetItemsFrom(Item.Rarity rarity)
+    {
+        List<Item> items = new();
+
+        foreach (Item item in allItems)
+        {
+            if (item.itemRarity.Equals(rarity))
+                items.Add(item);
+        }
+
+        return items;
     }
 }

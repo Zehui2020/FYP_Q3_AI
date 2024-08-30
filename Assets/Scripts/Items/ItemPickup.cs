@@ -5,25 +5,20 @@ using DesignPatterns.ObjectPool;
 
 public class ItemPickup : PooledObject
 {
-    public enum RotateAxis
-    {
-        Up,
-        Forward,
-        Right
-    }
-    public RotateAxis rotateAxis;
-
     [SerializeField] private Item item;
-    [SerializeField] private float rotationSpeed;
+    [SerializeField] private float bobIntensity = 0.5f;
+    [SerializeField] private float bobSpeed = 2f;
+    private Vector3 startPos;
 
     public override void InitPrefab()
     {
         objectName = item.title;
+        startPos = transform.position;
     }
 
     public void PickupItem()
     {
-        //PlayerController.Instance.AddItem(item);
+        ItemManager.Instance.AddItem(item);
 
         Release();
         gameObject.SetActive(false);
@@ -31,17 +26,13 @@ public class ItemPickup : PooledObject
 
     private void Update()
     {
-        switch (rotateAxis)
-        {
-            case RotateAxis.Up:
-                transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime);
-                break;
-            case RotateAxis.Forward:
-                transform.Rotate(Vector3.forward * rotationSpeed * Time.deltaTime);
-                break;
-            case RotateAxis.Right:
-                transform.Rotate(Vector3.right * rotationSpeed * Time.deltaTime);
-                break;
-        }
+        float newY = startPos.y + Mathf.Sin(Time.time * bobSpeed) * bobIntensity;
+        transform.position = new Vector3(startPos.x, newY, startPos.z);
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.CompareTag("Player"))
+            PickupItem();
     }
 }

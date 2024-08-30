@@ -10,9 +10,8 @@ public class ItemPickupAlert : MonoBehaviour
     [SerializeField] private Image itemIcon;
     [SerializeField] private TextMeshProUGUI title;
     [SerializeField] private TextMeshProUGUI description;
-    [SerializeField] private int defaultFontSize;
 
-    private List<Item> itemsToDisplay = new List<Item>();
+    [SerializeField] private List<Item> itemsToDisplay = new List<Item>();
 
     public void DisplayAlert(Item item)
     {
@@ -31,23 +30,16 @@ public class ItemPickupAlert : MonoBehaviour
         title.text = itemsToDisplay[0].title;
         description.text = itemsToDisplay[0].description;
 
-        // Check for overflow
-        description.ForceMeshUpdate();
-        if (description.isTextOverflowing)
-            description.enableAutoSizing = true;
-
-        animator.SetTrigger("show");
+        animator.SetTrigger("FadeIn");
 
         yield return new WaitForSeconds(itemsToDisplay[0].alertDuration);
 
-        animator.SetTrigger("hide");
+        animator.SetTrigger("FadeOut");
     }
 
     public void RemoveItem()
     {
         itemsToDisplay.RemoveAt(0);
-        description.enableAutoSizing = false;
-        description.fontSize = defaultFontSize;
 
         if (itemsToDisplay.Count > 0)
             ShowItem();
