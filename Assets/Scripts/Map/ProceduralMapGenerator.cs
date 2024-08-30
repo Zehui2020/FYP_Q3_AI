@@ -229,7 +229,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         // place room
         createdObj = Instantiate(roomObject);
         createdObj.transform.SetParent(mapContainer.transform);
-        createdObj.transform.localPosition = takenPosList[posInList];
+        createdObj.transform.localPosition = new Vector3(takenPosList[posInList].x, takenPosList[posInList].y, 0);
         createdObj.transform.localScale = new Vector3(1, 1, 1);
         takenObjectsList.Add(createdObj);
     }
