@@ -1992,7 +1992,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 50, y: 20, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -2255,9 +2255,9 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  playerLayer:
+  wallJumpCheck:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 1
   groundCheckPosition: {fileID: 1094652694}
   wallCheckPosition: {fileID: 659460888}
   isMoving: 0
@@ -2285,9 +2285,9 @@ MonoBehaviour:
   shield: 0
   attack: 0
   attackSpeed: 0
-  movementSpeed: 0
   critRate: 0
   critDamage: 0
+  isImmune: 0
   plungeHoldDuration: 0.25
 --- !u!50 &713886143
 Rigidbody2D:
