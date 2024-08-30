@@ -23,6 +23,7 @@ public class MiniMapGenerator : MonoBehaviour
         // place rooms
         PlaceRooms(roomsAdded);
         ConfigureRoomDoors();
+        pathObjectsList[0].GetComponent<RoomController>().ToggleRoomCover(true);
     }
 
     private void ResetMap()
@@ -66,7 +67,6 @@ public class MiniMapGenerator : MonoBehaviour
                 CreateRoom(j, GetRandomRoomFromType((int)takenRooms[j].z));
             }
         }
-        pathObjectsList[0].GetComponent<RoomController>().ToggleRoomCover(true);
     }
 
     private void CreateRoom(int posInList, GameObject roomObject)
@@ -86,36 +86,87 @@ public class MiniMapGenerator : MonoBehaviour
             RoomController rData = pathObjectsList[i].GetComponent<RoomController>();
             // check all directions for spaces or rooms
             // up
-            if (takenRooms.Contains(new Vector3(takenRooms[i].x, takenRooms[i].y + mData.roomSpacing, 1)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x, takenRooms[i].y + mData.roomSpacing, 2)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x, takenRooms[i].y + mData.roomSpacing, 3)))
+            if (CheckAdjacentSpaceTaken(takenRooms[i], 1))
             {
                 rData.isSpaceOccupied[0] = true;
             }
             // down
-            if (takenRooms.Contains(new Vector3(takenRooms[i].x, takenRooms[i].y - mData.roomSpacing, 1)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x, takenRooms[i].y - mData.roomSpacing, 2)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x, takenRooms[i].y - mData.roomSpacing, 3)))
+            if (CheckAdjacentSpaceTaken(takenRooms[i], 2))
             {
                 rData.isSpaceOccupied[1] = true;
             }
             // left
-            if (takenRooms.Contains(new Vector3(takenRooms[i].x - mData.roomSpacing, takenRooms[i].y, 1)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x - mData.roomSpacing, takenRooms[i].y, 2)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x - mData.roomSpacing, takenRooms[i].y, 3)))
+            if (CheckAdjacentSpaceTaken(takenRooms[i], 3))
             {
                 rData.isSpaceOccupied[2] = true;
             }
             // right
-            if (takenRooms.Contains(new Vector3(takenRooms[i].x + mData.roomSpacing, takenRooms[i].y, 1)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x + mData.roomSpacing, takenRooms[i].y, 2)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x + mData.roomSpacing, takenRooms[i].y, 3)))
+            if (CheckAdjacentSpaceTaken(takenRooms[i], 4))
             {
                 rData.isSpaceOccupied[3] = true;
             }
             // update doors
             rData.UpdateDoors();
+            rData.ToggleRoomCover(false);
         }
+    }
+
+    private bool CheckAdjacentSpaceTaken(Vector2 pos, int dir)
+    {
+        switch (dir)
+        {
+            case 1:
+                // up
+                if (takenRooms.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 0)))
+                {
+                    return true;
+                }
+                break;
+            case 2:
+                // down
+                if (takenRooms.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 0)))
+                {
+                    return true;
+                }
+                break;
+            case 3:
+                // left
+                if (takenRooms.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 0)))
+                {
+                    return true;
+                }
+                break;
+            case 4:
+                // right
+                if (takenRooms.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 0)))
+                {
+                    return true;
+                }
+                break;
+            case 5:
+                // up
+                if (takenRooms.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 0)))
+                {
+                    return true;
+                }
+                // down
+                if (takenRooms.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 0)))
+                {
+                    return true;
+                }
+                // left
+                if (takenRooms.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 0)))
+                {
+                    return true;
+                }
+                // right
+                if (takenRooms.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 0)))
+                {
+                    return true;
+                }
+                break;
+        }
+        return false;
     }
 
     private GameObject GetRandomRoomFromType(int type)
