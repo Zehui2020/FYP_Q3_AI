@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class MiniMapController : MonoBehaviour
 {
-    public ProceduralMapGenerator map;
-
     private List<MiniMapGenerator> miniMap = new List<MiniMapGenerator>();
     private int currIndicatorNode = 0;
 
     private void Start()
     {
-        map = GameObject.FindGameObjectWithTag("MainMap").GetComponent<ProceduralMapGenerator>();
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MiniMap"))
         {
             miniMap.Add(obj.GetComponent<MiniMapGenerator>());
@@ -108,6 +105,11 @@ public class MiniMapController : MonoBehaviour
         }
     }
 
+    public Vector2 GetStartPos()
+    {
+        return miniMap[0].takenRooms[currIndicatorNode];
+    }
+
     public int GetCurrIndicatorNode()
     {
         return currIndicatorNode;
@@ -116,5 +118,15 @@ public class MiniMapController : MonoBehaviour
     public void SetIndicatorNode(int node)
     {
         currIndicatorNode = node;
+    }
+
+    public void ResetIndicatorNode()
+    {
+        currIndicatorNode = 0;
+        ShowMiniMapTile();
+        for (int j = 0; j < miniMap.Count; j++)
+        {
+            miniMap[j].mapIndicator.transform.localPosition = miniMap[j].takenRooms[currIndicatorNode];
+        }
     }
 }

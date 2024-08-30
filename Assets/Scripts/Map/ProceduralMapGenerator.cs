@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ProceduralMapGenerator : MonoBehaviour
@@ -19,6 +17,8 @@ public class ProceduralMapGenerator : MonoBehaviour
     };
     private int currDir;
     private List<MiniMapGenerator> miniMap = new List<MiniMapGenerator>();
+    private MiniMapController mmController;
+    private RoomTransitionManager rtManager;
     private GameObject createdObj;
     private Vector2 startPos;
     private Vector2 currPos;
@@ -31,6 +31,8 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             miniMap.Add(obj.GetComponent<MiniMapGenerator>());
         }
+        mmController = GameObject.FindGameObjectWithTag("MiniMapController").GetComponent<MiniMapController>();
+        rtManager = GetComponentInParent<RoomTransitionManager>();
 
         SetSeed(mapSeed);
         StartMapGeneration();
@@ -76,6 +78,8 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             miniMap[i].StartMapGeneration(mapSeed, ConfigureListForMiniMap(takenPosList, i), roomsAdded);
         }
+        mmController.ResetIndicatorNode();
+        rtManager.ResetRooms(takenObjectsList);
     }
 
     private void ResetMap()
