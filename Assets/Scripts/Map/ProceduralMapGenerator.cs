@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ProceduralMapGenerator : MonoBehaviour
@@ -19,10 +17,11 @@ public class ProceduralMapGenerator : MonoBehaviour
     };
     private int currDir;
     private List<MiniMapGenerator> miniMap = new List<MiniMapGenerator>();
+    private MiniMapController mmController;
+    private RoomTransitionManager rtManager;
     private GameObject createdObj;
     private Vector2 startPos;
     private Vector2 currPos;
-    private int currIndicatorNode;
     private int roomsAdded = 0;
     private bool isPathDone = false;
 
@@ -32,6 +31,8 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             miniMap.Add(obj.GetComponent<MiniMapGenerator>());
         }
+        mmController = GameObject.FindGameObjectWithTag("MiniMapController").GetComponent<MiniMapController>();
+        rtManager = GetComponentInParent<RoomTransitionManager>();
 
         SetSeed(mapSeed);
         StartMapGeneration();
@@ -72,13 +73,13 @@ public class ProceduralMapGenerator : MonoBehaviour
         RegulateRoomAmount();
         PlaceRooms();
         ConfigureRoomDoors();
-        // position indicator
-        currIndicatorNode = 0;
         // pass info to mini map
         for (int i = 0; i < miniMap.Count; i++)
         {
             miniMap[i].StartMapGeneration(mapSeed, ConfigureListForMiniMap(takenPosList, i), roomsAdded);
         }
+        mmController.ResetIndicatorNode();
+        rtManager.ResetRooms(takenObjectsList);
     }
 
     private void ResetMap()
@@ -232,7 +233,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         // place room
         createdObj = Instantiate(roomObject);
         createdObj.transform.SetParent(mapContainer.transform);
-        createdObj.transform.localPosition = takenPosList[posInList];
+        createdObj.transform.localPosition = new Vector3(takenPosList[posInList].x, takenPosList[posInList].y, 0);
         createdObj.transform.localScale = new Vector3(1, 1, 1);
         takenObjectsList.Add(createdObj);
     }
@@ -373,15 +374,5 @@ public class ProceduralMapGenerator : MonoBehaviour
     private int GetRandomStepDir()
     {
         return stepDirList[Random.Range(0, stepDirList.Count)];
-    }
-
-    public int GetCurrIndicatorNode()
-    {
-        return currIndicatorNode;
-    }
-
-    public void SetIndicatorNode(int node)
-    {
-        currIndicatorNode = node;
     }
 }

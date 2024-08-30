@@ -7,6 +7,7 @@ public class RoomController : MonoBehaviour
     [SerializeField] private GameObject cover;
     [SerializeField] private List<GameObject> doors;
     [SerializeField] private List<Transform> tpPoints;
+    [SerializeField] private Transform spawnPoint;
 
     public List<bool> isSpaceOccupied = new List<bool> { false, false, false, false };
     public RoomTransitionManager roomTransitionManager;
@@ -50,5 +51,10 @@ public class RoomController : MonoBehaviour
                 return tpPoints[2];
         }
         return null;
+    }
+
+    public Transform GetSpawnPoint()
+    {
+        return spawnPoint;
     }
 }
