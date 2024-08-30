@@ -18,6 +18,7 @@ public class MovementController : MonoBehaviour
 
     public bool isMoving = false;
     public bool isGrounded = true;
+    public bool isDashing = false;
 
     public bool lockMomentum = false;
     public bool lockDirection = false;
@@ -90,10 +91,9 @@ public class MovementController : MonoBehaviour
         if (playerRB.velocity.y < 0 && wallJumpCount <= 0)
             lockMomentum = false;
 
-        if (rollRoutine == null)
-            SpeedControl();
-        
-        if (playerRB.velocity.y < 0 && !isLanding)
+        SpeedControl();
+
+        if (playerRB.velocity.y < 0 && !isLanding && !isDashing)
             animationManager.ChangeAnimation(animationManager.Falling, 0, 0, false);
 
         Debug.DrawRay(groundCheckPosition.position, Vector3.down * movementData.plungeThreshold, UnityEngine.Color.red);
@@ -175,9 +175,11 @@ public class MovementController : MonoBehaviour
 
     private IEnumerator JumpRoutine(float horizontal)
     {
+        CancelDash();
         jumpCount--;
-
         float velX = playerRB.velocity.x;
+        lockMomentum = false;
+
         if (horizontal < 0)
         {
             if (velX > 0)
@@ -217,6 +219,11 @@ public class MovementController : MonoBehaviour
         lockMomentum = false;
         float timer = movementData.dashDuration;
         PlayerController.Instance.ApplyImmune(movementData.dashIFrames, BaseStats.ImmuneType.Dodge);
+        playerRB.gravityScale = 0;
+        playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
+
+        if (!isGrounded)
+            animationManager.ChangeAnimation(animationManager.AirDash, 0, 0, true);
 
         while (timer > 0)
         {
@@ -230,13 +237,27 @@ public class MovementController : MonoBehaviour
                     direction = -1;
             }
 
+            isDashing = true;
             playerRB.velocity = new Vector2(movementData.dashSpeed * direction, playerRB.velocity.y);
             yield return null;
         }
 
+        isDashing = false;
+        playerRB.gravityScale = 2;
+
         yield return new WaitForSeconds(movementData.dashCooldown);
 
         dashRoutine = null;
+    }
+
+    private void CancelDash()
+    {
+        if (dashRoutine != null)
+            StopCoroutine(dashRoutine);
+
+        dashRoutine = null;
+        isDashing = false;
+        playerRB.gravityScale = 2;
     }
 
     public void HandleRoll()
@@ -250,6 +271,8 @@ public class MovementController : MonoBehaviour
 
     private IEnumerator RollRoutine()
     {
+        CancelDash();
+
         lockMomentum = true;
         lockDirection = true;
 
@@ -269,6 +292,7 @@ public class MovementController : MonoBehaviour
         }
         else
         {
+            animationManager.ChangeAnimation(animationManager.LungeRoll, 0, 0, false);
             playerRB.AddForce(-playerRB.velocity.normalized * movementData.rollFriction, ForceMode2D.Impulse);
         }
 

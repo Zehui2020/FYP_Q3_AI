@@ -8,6 +8,8 @@ public class PlayerController : PlayerStats
     private MovementController movementController;
     private FadeTransition fadeTransition;
 
+    private IInteractable currentInteractable;
+
     private float ropeX;
 
     [SerializeField] private float plungeHoldDuration;
@@ -39,6 +41,9 @@ public class PlayerController : PlayerStats
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
             movementController.HandleRoll();
+
+        if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
+            currentInteractable.OnInteract();
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
@@ -85,6 +90,12 @@ public class PlayerController : PlayerStats
             ropeX = collision.transform.position.x;
             movementController.canGrapple = true;
         }
+
+        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
+        {
+            currentInteractable = interactable;
+            currentInteractable.OnEnterRange();
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -93,6 +104,12 @@ public class PlayerController : PlayerStats
         {
             movementController.StopGrappling();
             movementController.canGrapple = false;
+        }
+
+        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
+        {
+            currentInteractable.OnLeaveRange();
+            currentInteractable = null;
         }
     }
 
