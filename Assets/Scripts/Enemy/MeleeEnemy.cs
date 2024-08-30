@@ -85,10 +85,10 @@ public class MeleeEnemy : Enemy
                 PatrolUpdate();
                 break;
             case State.Chase:
-                if (jumpRoutine != null)
-                    return;
+                //if (jumpRoutine != null)
+                //    return;
 
-                JumpCheck();
+                //JumpCheck();
                 ChaseUpdate();
                 break;
             case State.Attack:
@@ -96,45 +96,48 @@ public class MeleeEnemy : Enemy
             case State.Die:
                 break;
         }
+
+        if (currentState != State.Attack)
+            UpdatePlayerDirection();
     }
 
-    private void JumpCheck()
-    {
-        Collider2D hit = Physics2D.OverlapCircle(jumpCheckPos.position, chaseRange, playerLayer);
+    //private void JumpCheck()
+    //{
+    //    Collider2D hit = Physics2D.OverlapCircle(jumpCheckPos.position, chaseRange, playerLayer);
 
-        if (!hit && lastSeenPos == Vector3.zero)
-            lastSeenPos = player.transform.position;
+    //    if (!hit && lastSeenPos == Vector3.zero)
+    //        lastSeenPos = player.transform.position;
 
-        if (Mathf.Abs(Mathf.Abs(transform.position.x) - Mathf.Abs(lastSeenPos.x)) > jumpThreshold ||
-            lastSeenPos == Vector3.zero)
-            return;
+    //    if (Mathf.Abs(Mathf.Abs(transform.position.x) - Mathf.Abs(lastSeenPos.x)) > jumpThreshold ||
+    //        lastSeenPos == Vector3.zero)
+    //        return;
 
-        Instantiate(marker, lastSeenPos, Quaternion.identity);
-        jumpRoutine = StartCoroutine(DoJumpRoutine(lastSeenPos));
+    //    Instantiate(marker, lastSeenPos, Quaternion.identity);
+    //    jumpRoutine = StartCoroutine(DoJumpRoutine(lastSeenPos));
 
-        return;
-    }
+    //    return;
+    //}
 
-    private IEnumerator DoJumpRoutine(Vector3 targetPos)
-    {
-        aiNavigation.StopNavigation();
-        enemyCol.isTrigger = true;
-        enemyRB.isKinematic = true;
+    //private IEnumerator DoJumpRoutine(Vector3 targetPos)
+    //{
+    //    aiNavigation.StopNavigation();
+    //    enemyCol.isTrigger = true;
+    //    enemyRB.isKinematic = true;
 
-        float dist = 100f;
+    //    float dist = 100f;
 
-        while (dist > 1f)
-        {
-            dist = Vector2.Distance(transform.position, targetPos);
-            transform.position = Vector3.Slerp(transform.position, targetPos, Time.deltaTime);
+    //    while (dist > 1f)
+    //    {
+    //        dist = Vector2.Distance(transform.position, targetPos);
+    //        transform.position = Vector3.Slerp(transform.position, targetPos, Time.deltaTime);
 
-            yield return null;
-        }
+    //        yield return null;
+    //    }
 
-        jumpRoutine = null;
-        lastSeenPos = Vector3.zero;
-        aiNavigation.ResumeNavigation();
-        enemyCol.isTrigger = false;
-        enemyRB.isKinematic = false;
-    }
+    //    jumpRoutine = null;
+    //    lastSeenPos = Vector3.zero;
+    //    aiNavigation.ResumeNavigation();
+    //    enemyCol.isTrigger = false;
+    //    enemyRB.isKinematic = false;
+    //}
 }

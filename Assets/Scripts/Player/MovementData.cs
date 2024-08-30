@@ -14,6 +14,7 @@ public class MovementData : ScriptableObject
     public float dashDuration;
     public float dashSpeed;
     public float dashCooldown;
+    public float dashIFrames;
 
     public float maxSlopeAngle;
     public float minGroundDist;
@@ -22,9 +23,8 @@ public class MovementData : ScriptableObject
     public float wallJumpForceY;
 
     public float rollColliderSize;
-
-    public float dashIFrames;
     public float rollDuration;
+    public float rollFriction;
 
     public float grappleSpeed;
 

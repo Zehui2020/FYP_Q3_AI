@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Networking;
-using System.Collections.Generic;
 using TMPro;
 
 [System.Serializable]
@@ -14,22 +12,28 @@ public class ResponseData
 
 public class ComfyPromptCtr : MonoBehaviour
 {
-    public List<TextMeshProUGUI> Pprompts;
-
+    [SerializeField] private TextMeshProUGUI promptText;
+    public string prompts;
     public string setPrompts;
     public string promptJSON;
 
+    private void Start()
+    {
+        prompts += setPrompts;
+        promptText.text = prompts;
+    }
+    public void ResetPrompts()
+    {
+        prompts = string.Empty;
+        prompts += setPrompts;
+        promptText.text = prompts;
+    }
+
     public void QueuePrompt()
     {
-        string finalPrompt = setPrompts;
-        foreach (var inputField in Pprompts)
-        {
-            finalPrompt += ", " + inputField.text;
-        }
+        Debug.Log(prompts);
 
-        Debug.Log(finalPrompt);
-
-        StartCoroutine(QueuePromptCoroutine(finalPrompt));
+        StartCoroutine(QueuePromptCoroutine(prompts));
     }
 
     private IEnumerator QueuePromptCoroutine(string positivePrompt)
@@ -72,5 +76,11 @@ public class ComfyPromptCtr : MonoBehaviour
         }}";
 
         return promptJsonWithGuid;
+    }
+
+    public void AddPrompt(string newPrompt)
+    {
+        prompts += ", " + newPrompt;
+        promptText.text = prompts;
     }
 }
