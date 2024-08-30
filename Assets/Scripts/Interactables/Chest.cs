@@ -11,7 +11,6 @@ public class Chest : MonoBehaviour, IInteractable
 
     public void OnInteract()
     {
-        Debug.Log("INTETACT!!!");
     }
 
     public void OnEnterRange()

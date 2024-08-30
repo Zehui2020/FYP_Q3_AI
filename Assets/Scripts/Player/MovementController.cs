@@ -81,7 +81,7 @@ public class MovementController : MonoBehaviour
                 StartCoroutine(BurstDrag());
             moveSpeed = movementData.walkSpeed;
 
-            if (jumpRoutine == null && rollRoutine == null)
+            if (jumpRoutine == null && rollRoutine == null && !isDashing)
                 animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f, false);
         }
 
@@ -224,6 +224,8 @@ public class MovementController : MonoBehaviour
 
         if (!isGrounded)
             animationManager.ChangeAnimation(animationManager.AirDash, 0, 0, true);
+        else
+            animationManager.ChangeAnimation(animationManager.GroundDash, 0, 0, true);
 
         while (timer > 0)
         {
@@ -351,7 +353,7 @@ public class MovementController : MonoBehaviour
         // Move player
         playerRB.AddForce(force * moveSpeedModifier, ForceMode2D.Force);
 
-        if (isGrounded && jumpRoutine == null)
+        if (isGrounded && jumpRoutine == null && !isDashing)
             animationManager.ChangeAnimation(animationManager.Running, 0f, 0f, false);
     }
 
