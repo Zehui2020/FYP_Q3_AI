@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.Events;
+using UnityEngine.U2D;
 
 [System.Serializable]
 public class ImageData
@@ -27,7 +28,7 @@ public class PromptData
 public class ComfyImageCtr: MonoBehaviour
 {
     public ImageSaver imageSaver;
-    public Image outputImage;
+    public MenuBackground menuBackground;
     public string fileName;
 
     public UnityEvent ObtainImage;
@@ -106,32 +107,15 @@ public class ComfyImageCtr: MonoBehaviour
             {
                 // Get the downloaded texture
                 Texture2D texture = ((DownloadHandlerTexture)webRequest.downloadHandler).texture;
-                outputImage.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
-                ObtainImage?.Invoke();
+                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+                imageSaver.SaveImageToLocalDisk(sprite.texture, fileName);
+                menuBackground.SetupBackground(imageSaver.GetSpriteFromLocalDisk(fileName)); ObtainImage?.Invoke();
             }
             else
             {
                 Debug.Log("Image download failed: " + webRequest.error);
             }
         }
-    }
-
-    public void SaveImageToDisk()
-    {
-        imageSaver.SaveImageToLocalDisk(outputImage.sprite.texture, fileName);
-    }
-
-    public void SetImageFromLocalDisk()
-    {
-        Texture2D loadTexture = imageSaver.GetTextureFromLocalDisk(fileName);
-
-        if (loadTexture == null)
-        {
-            Debug.Log("Error when trying to get texture!");
-            return;
-        }
-
-        outputImage.sprite = Sprite.Create(loadTexture, new Rect(0f, 0f, loadTexture.width, loadTexture.height), Vector2.zero);
     }
 
     private void OnDisable()

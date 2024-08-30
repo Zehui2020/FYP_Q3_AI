@@ -22,6 +22,7 @@ public class ComfyWebsocket : MonoBehaviour
 
     [SerializeField] private Slider loadingSlider;
     [SerializeField] private TextMeshProUGUI loadingText;
+    [SerializeField] private Collider2D killBoxTrigger;
 
     public ComfyImageCtr comfyImageCtr;
     async void Start()
@@ -66,8 +67,11 @@ public class ComfyWebsocket : MonoBehaviour
 
             if (currentValue >= 20)
                 loadingText.text = "Polishing Image...";
-            else
+            else if (ignoreCount <= 0)
+            {
+                killBoxTrigger.isTrigger = false;
                 loadingText.text = "Generating Image (" + currentValue + " / " + maxValue + ")";
+            }
 
             if (response.Contains("\"queue_remaining\": 0"))
             {
@@ -77,6 +81,7 @@ public class ComfyWebsocket : MonoBehaviour
                     continue;
                 }
 
+                killBoxTrigger.isTrigger = true;
                 comfyImageCtr.RequestFileName(promptID);
             }
         }
