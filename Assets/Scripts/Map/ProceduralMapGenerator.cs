@@ -205,10 +205,10 @@ public class ProceduralMapGenerator : MonoBehaviour
     {
         // randomize shop room location (1-2 spaces before end room)
         int shopIndex = Random.Range(2, 4);
-        //// randomize amount of elite rooms
-        //int eliteRoomAmt = Random.Range(mData.minMaxRoomTypeAmt[2].x, mData.minMaxRoomTypeAmt[2].y);
-        //// keep track of rooms placed
-        //List<int> roomAmts = new List<int>{ 0, 0, 0 };
+        // randomize amount of elite rooms
+        int eliteRoomAmt = Random.Range((int)mData.minMaxRoomTypeAmt[2].x, (int)mData.minMaxRoomTypeAmt[2].y);
+        // keep track of rooms placed
+        List<int> roomAmts = new List<int> { 0, 0, 0 };
         // place starting room
         CreateRoom(0, mData.startRoom);
         // place normal rooms
@@ -227,29 +227,24 @@ public class ProceduralMapGenerator : MonoBehaviour
             // place other rooms
             else
             {
-                //// get random room type enemy / puzzle
-                //int randomRoomType = Random.Range(0, 2);
-                //// if random room is enemy room and need place elite room
-                //if (roomAmts[2] < eliteRoomAmt && randomRoomType == 0)
-                //{
-                //    roomAmts[2]++;
-                //    roomAmts[randomRoomType]++;
-                //    SetRoomType(takenPosList[j], 2);
-                //}
-                //else
-                //{
-                //    // if random room type hasn't hit the min amount
-                //    if (roomAmts[randomRoomType] < mData.minMaxRoomTypeAmt[randomRoomType].x)
-                //    {
-                //        roomAmts[randomRoomType]++;
-                //        SetRoomType(takenPosList[j], randomRoomType);
-                //    }
-                //    else if (roomAmts[randomRoomType] < mData.minMaxRoomTypeAmt[randomRoomType].y)
-                //    {
-                //        roomAmts[randomRoomType]++;
-                //        SetRoomType(takenPosList[j], randomRoomType);
-                //    }
-                //}
+                // get random room type enemy / puzzle
+                int randomRoomType = Random.Range(0, 2);
+                // if random room is enemy room and need place elite room
+                if (roomAmts[2] < eliteRoomAmt && randomRoomType == 0)
+                {
+                    roomAmts[2]++;
+                    roomAmts[randomRoomType]++;
+                    SetRoomType(takenPosList[j], 2);
+                }
+                else
+                {
+                    // if random room type hasn't hit the min amount
+                    if (roomAmts[randomRoomType] < mData.minMaxRoomTypeAmt[randomRoomType].x)
+                    {
+                        roomAmts[randomRoomType]++;
+                        SetRoomType(takenPosList[j], randomRoomType);
+                    }
+                }
                 CreateRoom(j, GetRandomRoomFromType((int)takenPosList[j].z));
             }
         }
