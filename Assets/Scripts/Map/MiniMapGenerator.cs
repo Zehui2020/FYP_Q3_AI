@@ -117,54 +117,66 @@ public class MiniMapGenerator : MonoBehaviour
         {
             case 1:
                 // up
-                if (takenRooms.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(0, mData.roomSpacing)))
                 {
                     return true;
                 }
                 break;
             case 2:
                 // down
-                if (takenRooms.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(0, -mData.roomSpacing)))
                 {
                     return true;
                 }
                 break;
             case 3:
                 // left
-                if (takenRooms.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(-mData.roomSpacing, 0)))
                 {
                     return true;
                 }
                 break;
             case 4:
                 // right
-                if (takenRooms.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(mData.roomSpacing, 0)))
                 {
                     return true;
                 }
                 break;
             case 5:
                 // up
-                if (takenRooms.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(0, mData.roomSpacing)))
                 {
                     return true;
                 }
                 // down
-                if (takenRooms.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(0, -mData.roomSpacing)))
                 {
                     return true;
                 }
                 // left
-                if (takenRooms.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(-mData.roomSpacing, 0)))
                 {
                     return true;
                 }
                 // right
-                if (takenRooms.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(mData.roomSpacing, 0)))
                 {
                     return true;
                 }
                 break;
+        }
+        return false;
+    }
+
+    private bool CheckAllRoomTypes(Vector2 pos, Vector2 offset)
+    {
+        for (int i = 0; i < mData.minMaxRoomTypeAmt.Count; i++)
+        {
+            if (takenRooms.Contains(new Vector3(pos.x + offset.x, pos.y + offset.y, i)))
+            {
+                return true;
+            }
         }
         return false;
     }

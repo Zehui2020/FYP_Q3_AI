@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class ProceduralMapGenerator : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class ProceduralMapGenerator : MonoBehaviour
     [SerializeField] public int mapSeed = 0;
 
     private List<Vector2> availablePosList = new List<Vector2>();
-    private List<Vector3> takenPosList = new List<Vector3>();
+    [SerializeField] private List<Vector3> takenPosList = new List<Vector3>();
     private List<GameObject> takenObjectsList = new List<GameObject>();
     private List<int> stepDirList = new List<int>
     {
@@ -227,6 +228,7 @@ public class ProceduralMapGenerator : MonoBehaviour
             // place other rooms
             else
             {
+                Debug.Log(roomAmts[0] + " " + roomAmts[1] + " " + roomAmts[2]);
                 // get random room type enemy / puzzle
                 int randomRoomType = Random.Range(0, 2);
                 // if random room is enemy room and need place elite room
@@ -234,7 +236,7 @@ public class ProceduralMapGenerator : MonoBehaviour
                 {
                     roomAmts[2]++;
                     roomAmts[randomRoomType]++;
-                    SetRoomType(takenPosList[j], 2);
+                    takenPosList[j] = SetRoomType(takenPosList[j], 2);
                 }
                 else
                 {
@@ -242,7 +244,7 @@ public class ProceduralMapGenerator : MonoBehaviour
                     if (roomAmts[randomRoomType] < mData.minMaxRoomTypeAmt[randomRoomType].x)
                     {
                         roomAmts[randomRoomType]++;
-                        SetRoomType(takenPosList[j], randomRoomType);
+                        takenPosList[j] = SetRoomType(takenPosList[j], randomRoomType);
                     }
                 }
                 CreateRoom(j, GetRandomRoomFromType((int)takenPosList[j].z));
@@ -298,54 +300,66 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             case 1:
                 // up
-                if (takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(0, mData.roomSpacing)))
                 {
                     return true;
                 }
                 break;
             case 2:
                 // down
-                if (takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(0, -mData.roomSpacing)))
                 {
                     return true;
                 }
                 break;
             case 3:
                 // left
-                if (takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(-mData.roomSpacing, 0)))
                 {
                     return true;
                 }
                 break;
             case 4:
                 // right
-                if (takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(mData.roomSpacing, 0)))
                 {
                     return true;
                 }
                 break;
             case 5:
                 // up
-                if (takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(0, mData.roomSpacing)))
                 {
                     return true;
                 }
                 // down
-                if (takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(0, -mData.roomSpacing)))
                 {
                     return true;
                 }
                 // left
-                if (takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(-mData.roomSpacing, 0)))
                 {
                     return true;
                 }
                 // right
-                if (takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 0)))
+                if (CheckAllRoomTypes(pos, new Vector2(mData.roomSpacing, 0)))
                 {
                     return true;
                 }
                 break;
+        }
+        return false;
+    }
+
+    private bool CheckAllRoomTypes(Vector2 pos, Vector2 offset)
+    {
+        for (int i = 0; i < mData.minMaxRoomTypeAmt.Count; i++)
+        {
+            if (takenPosList.Contains(new Vector3(pos.x + offset.x, pos.y + offset.y, i)))
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -382,8 +396,8 @@ public class ProceduralMapGenerator : MonoBehaviour
         return stepDirList[Random.Range(0, stepDirList.Count)];
     }
 
-    private void SetRoomType(Vector3 roomPos, int roomType)
+    private Vector3 SetRoomType(Vector3 roomPos, int roomType)
     {
-        roomPos = new Vector3(roomPos.x, roomPos.y, roomType);
+        return new Vector3(roomPos.x, roomPos.y, roomType);
     }
 }
