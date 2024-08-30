@@ -17,12 +17,22 @@ public class RoomTransitionManager : MonoBehaviour
 
     public void TeleportPlayer(int dir)
     {
+        StartCoroutine(TeleportRoutine(dir));
+    }
+
+    private IEnumerator TeleportRoutine(int dir)
+    {
         // move indicator on mini map
         mmController.MoveNode(dir);
         // find new room to tp to
         RoomController roomToTP = rooms[mmController.GetCurrIndicatorNode()];
+        PlayerController.Instance.FadeOut();
+
+        yield return new WaitForSeconds(0.3f);
+
         // teleport player to room
         player.transform.position = roomToTP.GetTPPoint(dir).position;
+        PlayerController.Instance.FadeIn();
     }
 
     public void ResetRooms(List<GameObject> list)
