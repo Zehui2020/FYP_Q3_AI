@@ -280,7 +280,6 @@ public class ProceduralMapGenerator : MonoBehaviour
                 CreateRoom(j, GetRandomRoomFromType((int)takenPosList[j].z));
             }
         }
-        Debug.Log(roomAmts[0] + ", " + roomAmts[1] + ", " + roomAmts[2]);
     }
 
     private void CreateRoom(int posInList, GameObject roomObject)
