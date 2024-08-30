@@ -20,6 +20,7 @@ public class AINavigation : MonoBehaviour
         if (!aiPath.enabled)
             return;
 
+        aiPath.canMove = true;
         aiPath.maxSpeed = speed;
 
         if (ignoreY)

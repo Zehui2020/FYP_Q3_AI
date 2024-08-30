@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ProceduralMapGenerator : MonoBehaviour
@@ -12,7 +10,6 @@ public class ProceduralMapGenerator : MonoBehaviour
 
     private List<Vector2> availablePosList = new List<Vector2>();
     private List<Vector3> takenPosList = new List<Vector3>();
-    private List<GameObject> availableObjectsList = new List<GameObject>();
     private List<GameObject> takenObjectsList = new List<GameObject>();
     private List<int> stepDirList = new List<int>
     {
@@ -20,19 +17,22 @@ public class ProceduralMapGenerator : MonoBehaviour
     };
     private int currDir;
     private List<MiniMapGenerator> miniMap = new List<MiniMapGenerator>();
+    private MiniMapController mmController;
+    private RoomTransitionManager rtManager;
     private GameObject createdObj;
     private Vector2 startPos;
     private Vector2 currPos;
-    private int currIndicatorNode;
-    [SerializeField] private int roomsAdded = 0;
+    private int roomsAdded = 0;
     private bool isPathDone = false;
 
-    private void Start()
+    private void Awake()
     {
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MiniMap"))
         {
             miniMap.Add(obj.GetComponent<MiniMapGenerator>());
         }
+        mmController = GameObject.FindGameObjectWithTag("MiniMapController").GetComponent<MiniMapController>();
+        rtManager = GetComponentInParent<RoomTransitionManager>();
 
         SetSeed(mapSeed);
         StartMapGeneration();
@@ -46,8 +46,6 @@ public class ProceduralMapGenerator : MonoBehaviour
             RandomizeSeed();
             StartMapGeneration();
         }
-
-        HandleMapIndicator();
     }
 
     public void StartMapGeneration()
@@ -65,7 +63,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         int randX = (int)Random.Range(0, mData.mapSize.x) * mData.roomSpacing;
         startPos = new Vector2(randX, 0);
         currPos = startPos;
-        takenPosList.Add(new Vector3(currPos.x, currPos.y, 1));
+        takenPosList.Add(new Vector3(currPos.x, currPos.y, 0));
         availablePosList.Remove(currPos);
         // get random step
         currDir = GetRandomStepDir();
@@ -75,13 +73,13 @@ public class ProceduralMapGenerator : MonoBehaviour
         RegulateRoomAmount();
         PlaceRooms();
         ConfigureRoomDoors();
-        // position indicator
-        currIndicatorNode = 0;
         // pass info to mini map
         for (int i = 0; i < miniMap.Count; i++)
         {
             miniMap[i].StartMapGeneration(mapSeed, ConfigureListForMiniMap(takenPosList, i), roomsAdded);
         }
+        mmController.ResetIndicatorNode();
+        rtManager.ResetRooms(takenObjectsList);
     }
 
     private void ResetMap()
@@ -90,12 +88,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             Destroy(obj);
         }
-        foreach (GameObject obj in availableObjectsList)
-        {
-            Destroy(obj);
-        }
         takenObjectsList.Clear();
-        availableObjectsList.Clear();
         takenPosList.Clear();
         availablePosList.Clear();
         isPathDone = false;
@@ -138,7 +131,7 @@ public class ProceduralMapGenerator : MonoBehaviour
             else
             {
                 currPos = new Vector2(tempPosX, currPos.y);
-                takenPosList.Add(new Vector3(currPos.x, currPos.y, 1));
+                takenPosList.Add(new Vector3(currPos.x, currPos.y, 0));
                 availablePosList.Remove(currPos);
                 // get random step
                 if (GetRandomStepDir() == 0)
@@ -158,14 +151,14 @@ public class ProceduralMapGenerator : MonoBehaviour
             return;
         }
         // change type 1 room to type 2 room
-        takenPosList[takenPosList.Count - 1] = new Vector3(currPos.x, currPos.y, 2);
+        takenPosList[takenPosList.Count - 1] = new Vector3(currPos.x, currPos.y, 0);
         // check if able to go down
         currPos += new Vector2(0, -mData.roomSpacing);
         if (currPos.y < -(mData.mapSize.y - 2) * mData.roomSpacing)
         {
             isPathDone = true;
         }
-        takenPosList.Add(new Vector3(currPos.x, currPos.y, 3));
+        takenPosList.Add(new Vector3(currPos.x, currPos.y, 0));
         availablePosList.Remove(currPos);
         if (currDir == 0)
         {
@@ -186,7 +179,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         // delete rooms if too many
         if (takenPosList.Count > mData.minMaxRoomAmt.y)
         {
-            for (int j = takenPosList.Count - 1; j > (int)mData.minMaxRoomAmt.y - 1; j--)
+            for (int j = takenPosList.Count - 1; j > mData.minMaxRoomAmt.y - 1; j--)
             {
                 availablePosList.Add(takenPosList[j]);
                 takenPosList.RemoveAt(j);
@@ -200,7 +193,7 @@ public class ProceduralMapGenerator : MonoBehaviour
             {
                 if (CheckAdjacentSpaceTaken(availablePosList[i], 5))
                 {
-                    takenPosList.Add(new Vector3(availablePosList[i].x, availablePosList[i].y, 1));
+                    takenPosList.Add(new Vector3(availablePosList[i].x, availablePosList[i].y, 0));
                     availablePosList.RemoveAt(i);
                     roomsAdded++;
                 }
@@ -212,6 +205,10 @@ public class ProceduralMapGenerator : MonoBehaviour
     {
         // randomize shop room location (1-2 spaces before end room)
         int shopIndex = Random.Range(2, 4);
+        // randomize amount of elite rooms
+        int eliteRoomAmt = Random.Range((int)mData.minMaxRoomTypeAmt[2].x, (int)mData.minMaxRoomTypeAmt[2].y);
+        // keep track of rooms placed
+        List<int> roomAmts = new List<int> { 0, 0, 0 };
         // place starting room
         CreateRoom(0, mData.startRoom);
         // place normal rooms
@@ -230,11 +227,27 @@ public class ProceduralMapGenerator : MonoBehaviour
             // place other rooms
             else
             {
+                // get random room type enemy / puzzle
+                int randomRoomType = Random.Range(0, 2);
+                // if random room is enemy room and need place elite room
+                if (roomAmts[2] < eliteRoomAmt && randomRoomType == 0)
+                {
+                    roomAmts[2]++;
+                    roomAmts[randomRoomType]++;
+                    SetRoomType(takenPosList[j], 2);
+                }
+                else
+                {
+                    // if random room type hasn't hit the min amount
+                    if (roomAmts[randomRoomType] < mData.minMaxRoomTypeAmt[randomRoomType].x)
+                    {
+                        roomAmts[randomRoomType]++;
+                        SetRoomType(takenPosList[j], randomRoomType);
+                    }
+                }
                 CreateRoom(j, GetRandomRoomFromType((int)takenPosList[j].z));
             }
         }
-        // place remaining type 0 rooms
-        CreateSpace();
     }
 
     private void CreateRoom(int posInList, GameObject roomObject)
@@ -242,22 +255,9 @@ public class ProceduralMapGenerator : MonoBehaviour
         // place room
         createdObj = Instantiate(roomObject);
         createdObj.transform.SetParent(mapContainer.transform);
-        createdObj.transform.localPosition = takenPosList[posInList];
+        createdObj.transform.localPosition = new Vector3(takenPosList[posInList].x, takenPosList[posInList].y, 0);
         createdObj.transform.localScale = new Vector3(1, 1, 1);
         takenObjectsList.Add(createdObj);
-    }
-
-    private void CreateSpace()
-    {
-        for (int i = 0; i < availablePosList.Count; i++)
-        {
-            // place room
-            createdObj = Instantiate(GetRandomRoomFromType(0));
-            createdObj.transform.SetParent(mapContainer.transform);
-            createdObj.transform.localPosition = availablePosList[i];
-            createdObj.transform.localScale = new Vector3(1, 1, 1);
-            availableObjectsList.Add(createdObj);
-        }
     }
 
     private void ConfigureRoomDoors()
@@ -298,66 +298,50 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             case 1:
                 // up
-                if (takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 1)) ||
-                    takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 2)) ||
-                    takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 3)))
+                if (takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 0)))
                 {
                     return true;
                 }
                 break;
             case 2:
                 // down
-                if (takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 1)) ||
-                    takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 2)) ||
-                    takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 3)))
+                if (takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 0)))
                 {
                     return true;
                 }
                 break;
             case 3:
                 // left
-                if (takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 1)) ||
-                    takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 2)) ||
-                    takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 3)))
+                if (takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 0)))
                 {
                     return true;
                 }
                 break;
             case 4:
                 // right
-                if (takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 1)) ||
-                    takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 2)) ||
-                    takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 3)))
+                if (takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 0)))
                 {
                     return true;
                 }
                 break;
             case 5:
                 // up
-                if (takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 1)) ||
-                    takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 2)) ||
-                    takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 3)))
+                if (takenPosList.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 0)))
                 {
                     return true;
                 }
                 // down
-                if (takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 1)) ||
-                    takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 2)) ||
-                    takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 3)))
+                if (takenPosList.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 0)))
                 {
                     return true;
                 }
                 // left
-                if (takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 1)) ||
-                    takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 2)) ||
-                    takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 3)))
+                if (takenPosList.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 0)))
                 {
                     return true;
                 }
                 // right
-                if (takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 1)) ||
-                    takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 2)) ||
-                    takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 3)))
+                if (takenPosList.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 0)))
                 {
                     return true;
                 }
@@ -366,84 +350,16 @@ public class ProceduralMapGenerator : MonoBehaviour
         return false;
     }
 
-    private List<Vector2> ConfigureListForMiniMap(List<Vector3> listToBeConfigured, int miniMapNum)
+    private List<Vector3> ConfigureListForMiniMap(List<Vector3> listToBeConfigured, int miniMapNum)
     {
-        List<Vector2> newList = new List<Vector2>();
+        List<Vector3> newList = new List<Vector3>();
 
         for (int i = 0; i < listToBeConfigured.Count; i++)
         {
-            newList.Add(new Vector2(listToBeConfigured[i].x * miniMap[miniMapNum].mData.roomSpacing / mData.roomSpacing, listToBeConfigured[i].y * miniMap[miniMapNum].mData.roomSpacing / mData.roomSpacing));
+            newList.Add(new Vector3(listToBeConfigured[i].x * miniMap[miniMapNum].mData.roomSpacing / mData.roomSpacing, listToBeConfigured[i].y * miniMap[miniMapNum].mData.roomSpacing / mData.roomSpacing, listToBeConfigured[i].z));
         }
 
         return newList;
-    }
-
-    private void HandleMapIndicator()
-    {
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            RoomController rData = takenObjectsList[currIndicatorNode].GetComponent<RoomController>();
-            if (rData.isSpaceOccupied[0])
-            {
-                for (int i = 0; i < takenPosList.Count; i++)
-                {
-                    if (takenPosList[i].x == takenPosList[currIndicatorNode].x &&
-                        takenPosList[i].y == takenPosList[currIndicatorNode].y + mData.roomSpacing)
-                    {
-                        currIndicatorNode = i;
-                        break;
-                    }
-                }
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            RoomController rData = takenObjectsList[currIndicatorNode].GetComponent<RoomController>();
-            if (rData.isSpaceOccupied[1])
-            {
-                for (int i = 0; i < takenPosList.Count; i++)
-                {
-                    if (takenPosList[i].x == takenPosList[currIndicatorNode].x &&
-                        takenPosList[i].y == takenPosList[currIndicatorNode].y - mData.roomSpacing)
-                    {
-                        currIndicatorNode = i;
-                        break;
-                    }
-                }
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            RoomController rData = takenObjectsList[currIndicatorNode].GetComponent<RoomController>();
-            if (rData.isSpaceOccupied[2])
-            {
-                for (int i = 0; i < takenPosList.Count; i++)
-                {
-                    if (takenPosList[i].x == takenPosList[currIndicatorNode].x - mData.roomSpacing &&
-                        takenPosList[i].y == takenPosList[currIndicatorNode].y)
-                    {
-                        currIndicatorNode = i;
-                        break;
-                    }
-                }
-            }
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            RoomController rData = takenObjectsList[currIndicatorNode].GetComponent<RoomController>();
-            if (rData.isSpaceOccupied[3])
-            {
-                for (int i = 0; i < takenPosList.Count; i++)
-                {
-                    if (takenPosList[i].x == takenPosList[currIndicatorNode].x + mData.roomSpacing &&
-                        takenPosList[i].y == takenPosList[currIndicatorNode].y)
-                    {
-                        currIndicatorNode = i;
-                        break;
-                    }
-                }
-            }
-        }
     }
 
     private GameObject GetRandomRoomFromType(int type)
@@ -451,13 +367,11 @@ public class ProceduralMapGenerator : MonoBehaviour
         switch (type)
         {
             case 0:
-                return mData.roomType0[Random.Range(0, mData.roomType0.Count)];
+                return mData.enemyRoom[Random.Range(0, mData.enemyRoom.Count)];
             case 1:
-                return mData.roomType1[Random.Range(0, mData.roomType1.Count)];
+                return mData.eliteRoom[Random.Range(0, mData.eliteRoom.Count)];
             case 2:
-                return mData.roomType2[Random.Range(0, mData.roomType2.Count)];
-            case 3:
-                return mData.roomType3[Random.Range(0, mData.roomType3.Count)];
+                return mData.puzzleRoom[Random.Range(0, mData.puzzleRoom.Count)];
             default:
                 return null;
         }
@@ -466,5 +380,10 @@ public class ProceduralMapGenerator : MonoBehaviour
     private int GetRandomStepDir()
     {
         return stepDirList[Random.Range(0, stepDirList.Count)];
+    }
+
+    private void SetRoomType(Vector3 roomPos, int roomType)
+    {
+        roomPos = new Vector3(roomPos.x, roomPos.y, roomType);
     }
 }

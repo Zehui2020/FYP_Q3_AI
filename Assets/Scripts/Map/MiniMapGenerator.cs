@@ -9,20 +9,21 @@ public class MiniMapGenerator : MonoBehaviour
     public GameObject mapContainer;
     public GameObject mapIndicator;
     public List<GameObject> pathObjectsList = new List<GameObject>();
-    public List<Vector2> takenRooms;
+    public List<Vector3> takenRooms;
     public bool isShowMap = false;
 
     private int mapSeed = 0;
     private GameObject createdObj;
 
-    public void StartMapGeneration(int seed, List<Vector2> takenRooms, int roomsAdded)
+    public void StartMapGeneration(int seed, List<Vector3> takenRooms, int roomsAdded)
     {
         ResetMap();
         SetSeed(seed);
-        this.takenRooms = new List<Vector2>(takenRooms);
+        this.takenRooms = new List<Vector3>(takenRooms);
         // place rooms
         PlaceRooms(roomsAdded);
         ConfigureRoomDoors();
+        pathObjectsList[0].GetComponent<RoomController>().ToggleRoomCover(true);
     }
 
     private void ResetMap()
@@ -63,10 +64,9 @@ public class MiniMapGenerator : MonoBehaviour
             // place other rooms
             else
             {
-                CreateRoom(j, mData.roomType1[Random.Range(0, mData.roomType1.Count)]);
+                CreateRoom(j, GetRandomRoomFromType((int)takenRooms[j].z));
             }
         }
-        pathObjectsList[0].GetComponent<RoomController>().ToggleRoomCover(true);
     }
 
     private void CreateRoom(int posInList, GameObject roomObject)
@@ -74,7 +74,7 @@ public class MiniMapGenerator : MonoBehaviour
         // place room
         createdObj = Instantiate(roomObject);
         createdObj.transform.SetParent(mapContainer.transform);
-        createdObj.transform.localPosition = takenRooms[posInList];
+        createdObj.transform.localPosition = new Vector3(takenRooms[posInList].x, takenRooms[posInList].y, 0);
         createdObj.transform.localScale = new Vector3(1, 1, 1); 
         pathObjectsList.Add(createdObj);
     }
@@ -86,36 +86,87 @@ public class MiniMapGenerator : MonoBehaviour
             RoomController rData = pathObjectsList[i].GetComponent<RoomController>();
             // check all directions for spaces or rooms
             // up
-            if (takenRooms.Contains(new Vector3(takenRooms[i].x, takenRooms[i].y + mData.roomSpacing, 1)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x, takenRooms[i].y + mData.roomSpacing, 2)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x, takenRooms[i].y + mData.roomSpacing, 3)))
+            if (CheckAdjacentSpaceTaken(takenRooms[i], 1))
             {
                 rData.isSpaceOccupied[0] = true;
             }
             // down
-            if (takenRooms.Contains(new Vector3(takenRooms[i].x, takenRooms[i].y - mData.roomSpacing, 1)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x, takenRooms[i].y - mData.roomSpacing, 2)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x, takenRooms[i].y - mData.roomSpacing, 3)))
+            if (CheckAdjacentSpaceTaken(takenRooms[i], 2))
             {
                 rData.isSpaceOccupied[1] = true;
             }
             // left
-            if (takenRooms.Contains(new Vector3(takenRooms[i].x - mData.roomSpacing, takenRooms[i].y, 1)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x - mData.roomSpacing, takenRooms[i].y, 2)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x - mData.roomSpacing, takenRooms[i].y, 3)))
+            if (CheckAdjacentSpaceTaken(takenRooms[i], 3))
             {
                 rData.isSpaceOccupied[2] = true;
             }
             // right
-            if (takenRooms.Contains(new Vector3(takenRooms[i].x + mData.roomSpacing, takenRooms[i].y, 1)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x + mData.roomSpacing, takenRooms[i].y, 2)) ||
-                takenRooms.Contains(new Vector3(takenRooms[i].x + mData.roomSpacing, takenRooms[i].y, 3)))
+            if (CheckAdjacentSpaceTaken(takenRooms[i], 4))
             {
                 rData.isSpaceOccupied[3] = true;
             }
             // update doors
             rData.UpdateDoors();
+            rData.ToggleRoomCover(false);
         }
+    }
+
+    private bool CheckAdjacentSpaceTaken(Vector2 pos, int dir)
+    {
+        switch (dir)
+        {
+            case 1:
+                // up
+                if (takenRooms.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 0)))
+                {
+                    return true;
+                }
+                break;
+            case 2:
+                // down
+                if (takenRooms.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 0)))
+                {
+                    return true;
+                }
+                break;
+            case 3:
+                // left
+                if (takenRooms.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 0)))
+                {
+                    return true;
+                }
+                break;
+            case 4:
+                // right
+                if (takenRooms.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 0)))
+                {
+                    return true;
+                }
+                break;
+            case 5:
+                // up
+                if (takenRooms.Contains(new Vector3(pos.x, pos.y + mData.roomSpacing, 0)))
+                {
+                    return true;
+                }
+                // down
+                if (takenRooms.Contains(new Vector3(pos.x, pos.y - mData.roomSpacing, 0)))
+                {
+                    return true;
+                }
+                // left
+                if (takenRooms.Contains(new Vector3(pos.x - mData.roomSpacing, pos.y, 0)))
+                {
+                    return true;
+                }
+                // right
+                if (takenRooms.Contains(new Vector3(pos.x + mData.roomSpacing, pos.y, 0)))
+                {
+                    return true;
+                }
+                break;
+        }
+        return false;
     }
 
     private GameObject GetRandomRoomFromType(int type)
@@ -123,13 +174,11 @@ public class MiniMapGenerator : MonoBehaviour
         switch (type)
         {
             case 0:
-                return mData.roomType0[Random.Range(0, mData.roomType0.Count)];
+                return mData.enemyRoom[Random.Range(0, mData.enemyRoom.Count)];
             case 1:
-                return mData.roomType1[Random.Range(0, mData.roomType1.Count)];
+                return mData.eliteRoom[Random.Range(0, mData.eliteRoom.Count)];
             case 2:
-                return mData.roomType2[Random.Range(0, mData.roomType2.Count)];
-            case 3:
-                return mData.roomType3[Random.Range(0, mData.roomType3.Count)];
+                return mData.puzzleRoom[Random.Range(0, mData.puzzleRoom.Count)];
             default:
                 return null;
         }

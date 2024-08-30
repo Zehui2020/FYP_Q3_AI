@@ -16,6 +16,10 @@ public class AnimationManager : MonoBehaviour
     public readonly int Jumping = Animator.StringToHash("Jumping");
     public readonly int DoubleJump = Animator.StringToHash("DoubleJump");
     public readonly int Land = Animator.StringToHash("Land");
+    public readonly int Roll = Animator.StringToHash("Roll");
+    public readonly int LungeRoll = Animator.StringToHash("LungeRoll");
+    public readonly int Falling = Animator.StringToHash("FallingLoop");
+    public readonly int AirDash = Animator.StringToHash("AirDash");
 
     public void InitAnimationController()
     {
@@ -26,7 +30,7 @@ public class AnimationManager : MonoBehaviour
     {
         if (state == currentState && resetAnimationIfSame)
         {
-            animator.Play(state);
+            animator.Play(state, -1, 0f);
             return;
         }
 

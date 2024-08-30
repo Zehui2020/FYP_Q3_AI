@@ -684,7 +684,7 @@ GameObject:
   - component: {fileID: 8214758139916133535}
   m_Layer: 5
   m_Name: MM_start_room
-  m_TagString: Room
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -717,13 +717,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f28bd662ad54e834e8737557db64d064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cover: {fileID: 7749700852589740637}
   doors:
   - {fileID: 4006026252299006776}
   - {fileID: 894292213438676987}
   - {fileID: 3765378115584902821}
   - {fileID: 4791876172001244084}
-  cover: {fileID: 7749700852589740637}
+  tpPoints: []
+  spawnPoint: {fileID: 0}
   isSpaceOccupied: 00000000
+  roomTransitionManager: {fileID: 0}
 --- !u!1 &4791876172001244084
 GameObject:
   m_ObjectHideFlags: 0
@@ -1159,7 +1162,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2196970283113965507
 Transform:
   m_ObjectHideFlags: 0
@@ -1261,7 +1264,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 578561647, guid: af8a0434b46e7b44c950cd63d3053758, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

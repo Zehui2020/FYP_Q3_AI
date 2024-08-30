@@ -18,7 +18,10 @@ public class MovementController : MonoBehaviour
 
     public bool isMoving = false;
     public bool isGrounded = true;
+    public bool isDashing = false;
+
     public bool lockMomentum = false;
+    public bool lockDirection = false;
 
     public bool canGrapple = false;
     public bool isGrappling = false;
@@ -28,6 +31,7 @@ public class MovementController : MonoBehaviour
     private float moveSpeedModifier = 1;
 
     private float fallingDuration;
+    private bool isLanding = false;
 
     public int jumpCount;
     public int maxJumpCount;
@@ -56,7 +60,7 @@ public class MovementController : MonoBehaviour
         isMoving = horizontal != 0;
 
         // Update player facing dir
-        if (!lockMomentum)
+        if (!lockDirection)
         {
             if (horizontal > 0)
                 transform.localScale = new Vector3(1, 1, 1);
@@ -77,7 +81,7 @@ public class MovementController : MonoBehaviour
                 StartCoroutine(BurstDrag());
             moveSpeed = movementData.walkSpeed;
 
-            if (jumpRoutine == null)
+            if (jumpRoutine == null && rollRoutine == null)
                 animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f, false);
         }
 
@@ -88,6 +92,9 @@ public class MovementController : MonoBehaviour
             lockMomentum = false;
 
         SpeedControl();
+
+        if (playerRB.velocity.y < 0 && !isLanding && !isDashing)
+            animationManager.ChangeAnimation(animationManager.Falling, 0, 0, false);
 
         Debug.DrawRay(groundCheckPosition.position, Vector3.down * movementData.plungeThreshold, UnityEngine.Color.red);
     }
@@ -154,7 +161,7 @@ public class MovementController : MonoBehaviour
             Vector2 dir;
             transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
 
-            if (col.transform.position.x < transform.position.x)
+            if (col.ClosestPoint(transform.position).x < transform.position.x)
                 dir = new Vector2(movementData.wallJumpForceX, movementData.wallJumpForceY);
             else
                 dir = new Vector2(-movementData.wallJumpForceX, movementData.wallJumpForceY);
@@ -168,9 +175,11 @@ public class MovementController : MonoBehaviour
 
     private IEnumerator JumpRoutine(float horizontal)
     {
+        CancelDash();
         jumpCount--;
-
         float velX = playerRB.velocity.x;
+        lockMomentum = false;
+
         if (horizontal < 0)
         {
             if (velX > 0)
@@ -184,7 +193,7 @@ public class MovementController : MonoBehaviour
         if (maxJumpCount - jumpCount > 1)
         {
             animationManager.ChangeAnimation(animationManager.DoubleJump, 0, 0, true);
-            velX /= 1.5f;
+            velX /= 1.25f;
         }
         else
         {
@@ -209,6 +218,12 @@ public class MovementController : MonoBehaviour
     {
         lockMomentum = false;
         float timer = movementData.dashDuration;
+        PlayerController.Instance.ApplyImmune(movementData.dashIFrames, BaseStats.ImmuneType.Dodge);
+        playerRB.gravityScale = 0;
+        playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
+
+        if (!isGrounded)
+            animationManager.ChangeAnimation(animationManager.AirDash, 0, 0, true);
 
         while (timer > 0)
         {
@@ -222,13 +237,27 @@ public class MovementController : MonoBehaviour
                     direction = -1;
             }
 
+            isDashing = true;
             playerRB.velocity = new Vector2(movementData.dashSpeed * direction, playerRB.velocity.y);
             yield return null;
         }
 
+        isDashing = false;
+        playerRB.gravityScale = 2;
+
         yield return new WaitForSeconds(movementData.dashCooldown);
 
         dashRoutine = null;
+    }
+
+    private void CancelDash()
+    {
+        if (dashRoutine != null)
+            StopCoroutine(dashRoutine);
+
+        dashRoutine = null;
+        isDashing = false;
+        playerRB.gravityScale = 2;
     }
 
     public void HandleRoll()
@@ -242,7 +271,10 @@ public class MovementController : MonoBehaviour
 
     private IEnumerator RollRoutine()
     {
+        CancelDash();
+
         lockMomentum = true;
+        lockDirection = true;
 
         Vector2 originalSize = playerCol.size;
         Vector2 originalOffset = playerCol.offset;
@@ -253,6 +285,17 @@ public class MovementController : MonoBehaviour
         playerCol.size = new Vector2(playerCol.size.x, movementData.rollColliderSize);
         playerCol.offset = new Vector2(playerCol.offset.x, -(Mathf.Abs(change) / 2));
 
+        if (playerRB.velocity.magnitude < 2f)
+        {
+            animationManager.ChangeAnimation(animationManager.Roll, 0, 0, false);
+            playerRB.AddForce(new Vector3(transform.localScale.x, 0, 0) * 2, ForceMode2D.Impulse);
+        }
+        else
+        {
+            animationManager.ChangeAnimation(animationManager.LungeRoll, 0, 0, false);
+            playerRB.AddForce(-playerRB.velocity.normalized * movementData.rollFriction, ForceMode2D.Impulse);
+        }
+
         yield return new WaitForSeconds(movementData.rollDuration);
 
         playerCol.size = originalSize;
@@ -260,11 +303,15 @@ public class MovementController : MonoBehaviour
 
         playerRB.drag = movementData.groundDrag;
         lockMomentum = false;
+        lockDirection = false;
         rollRoutine = null;
     }
 
     public bool HandlePlunge()
     {
+        if (plungeRoutine != null)
+            return false;
+
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, movementData.plungeThreshold, groundLayer);
         if (groundHit)
             return false;
@@ -317,10 +364,14 @@ public class MovementController : MonoBehaviour
         float dist = Vector3.Distance(groundCheckPosition.position, groundHit.point);
 
         if (!isGrounded && playerRB.velocity.y < 0 && dist <= 2f)
+        {
+            isLanding = true;
             animationManager.ChangeAnimation(animationManager.Land, 0, 0, false);
+        }
 
         if (dist <= movementData.minGroundDist)
         {
+            isLanding = false;
             isGrounded = true;
             fallingDuration = 0;
 
@@ -378,6 +429,6 @@ public class MovementController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawSphere(wallCheckPosition.position, 0.2f);
+        Gizmos.DrawWireSphere(wallCheckPosition.position, 0.2f);
     }
 }
