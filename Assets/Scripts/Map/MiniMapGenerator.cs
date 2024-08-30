@@ -9,17 +9,17 @@ public class MiniMapGenerator : MonoBehaviour
     public GameObject mapContainer;
     public GameObject mapIndicator;
     public List<GameObject> pathObjectsList = new List<GameObject>();
-    public List<Vector2> takenRooms;
+    public List<Vector3> takenRooms;
     public bool isShowMap = false;
 
     private int mapSeed = 0;
     private GameObject createdObj;
 
-    public void StartMapGeneration(int seed, List<Vector2> takenRooms, int roomsAdded)
+    public void StartMapGeneration(int seed, List<Vector3> takenRooms, int roomsAdded)
     {
         ResetMap();
         SetSeed(seed);
-        this.takenRooms = new List<Vector2>(takenRooms);
+        this.takenRooms = new List<Vector3>(takenRooms);
         // place rooms
         PlaceRooms(roomsAdded);
         ConfigureRoomDoors();
@@ -63,7 +63,7 @@ public class MiniMapGenerator : MonoBehaviour
             // place other rooms
             else
             {
-                CreateRoom(j, mData.roomType1[Random.Range(0, mData.roomType1.Count)]);
+                CreateRoom(j, GetRandomRoomFromType((int)takenRooms[j].z));
             }
         }
         pathObjectsList[0].GetComponent<RoomController>().ToggleRoomCover(true);
@@ -74,7 +74,7 @@ public class MiniMapGenerator : MonoBehaviour
         // place room
         createdObj = Instantiate(roomObject);
         createdObj.transform.SetParent(mapContainer.transform);
-        createdObj.transform.localPosition = takenRooms[posInList];
+        createdObj.transform.localPosition = new Vector3(takenRooms[posInList].x, takenRooms[posInList].y, 0);
         createdObj.transform.localScale = new Vector3(1, 1, 1); 
         pathObjectsList.Add(createdObj);
     }
@@ -115,6 +115,21 @@ public class MiniMapGenerator : MonoBehaviour
             }
             // update doors
             rData.UpdateDoors();
+        }
+    }
+
+    private GameObject GetRandomRoomFromType(int type)
+    {
+        switch (type)
+        {
+            case 0:
+                return mData.enemyRoom[Random.Range(0, mData.enemyRoom.Count)];
+            case 1:
+                return mData.eliteRoom[Random.Range(0, mData.eliteRoom.Count)];
+            case 2:
+                return mData.puzzleRoom[Random.Range(0, mData.puzzleRoom.Count)];
+            default:
+                return null;
         }
     }
 }
