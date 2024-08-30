@@ -207,13 +207,13 @@ public class ProceduralMapGenerator : MonoBehaviour
         // randomize shop room location (1-2 spaces before end room)
         int shopIndex = Random.Range(2, 4);
         // randomize amount of elite rooms
-        int eliteRoomAmt = Random.Range((int)mData.minMaxRoomTypeAmt[2].x, (int)mData.minMaxRoomTypeAmt[2].y);
+        int eliteRoomAmt = Random.Range((int)mData.minMaxRoomTypeAmt[2].x, (int)mData.minMaxRoomTypeAmt[2].y + 1);
         // keep track of rooms placed
         List<int> roomAmts = new List<int> { 0, 0, 0 };
         // place starting room
         CreateRoom(0, mData.startRoom);
         // place normal rooms
-        for (int j = 1; j < takenPosList.Count; j++)
+        for (int j = takenPosList.Count - 1; j > 0; j--)
         {
             // place end room
             if (j == takenPosList.Count - 1 - roomsAdded)
@@ -228,17 +228,28 @@ public class ProceduralMapGenerator : MonoBehaviour
             // place other rooms
             else
             {
-                Debug.Log(roomAmts[0] + " " + roomAmts[1] + " " + roomAmts[2]);
                 // get random room type enemy / puzzle
-                int randomRoomType = Random.Range(0, 2);
+                int randomRoomType = Random.Range(0, 3);
                 // if random room is enemy room and need place elite room
-                if (roomAmts[2] < eliteRoomAmt && randomRoomType == 0)
+                if (randomRoomType == 0)
                 {
-                    roomAmts[2]++;
-                    roomAmts[randomRoomType]++;
-                    takenPosList[j] = SetRoomType(takenPosList[j], 2);
+                    if (roomAmts[2] < eliteRoomAmt)
+                    {
+                        roomAmts[2]++;
+                        roomAmts[randomRoomType]++;
+                        takenPosList[j] = SetRoomType(takenPosList[j], 2);
+                    }
+                    else if (roomAmts[randomRoomType] < mData.minMaxRoomTypeAmt[randomRoomType].x)
+                    {
+                        roomAmts[randomRoomType]++;
+                        takenPosList[j] = SetRoomType(takenPosList[j], randomRoomType);
+                    }
+                    else
+                    {
+                        randomRoomType++;
+                    }
                 }
-                else
+                if (randomRoomType != 0)
                 {
                     // if random room type hasn't hit the min amount
                     if (roomAmts[randomRoomType] < mData.minMaxRoomTypeAmt[randomRoomType].x)
@@ -246,6 +257,25 @@ public class ProceduralMapGenerator : MonoBehaviour
                         roomAmts[randomRoomType]++;
                         takenPosList[j] = SetRoomType(takenPosList[j], randomRoomType);
                     }
+                    else
+                    {
+                        randomRoomType = 0;
+                        if (roomAmts[randomRoomType] < mData.minMaxRoomTypeAmt[randomRoomType].x)
+                        {
+                            roomAmts[randomRoomType]++;
+                            takenPosList[j] = SetRoomType(takenPosList[j], randomRoomType);
+                        }
+                        else
+                        {
+                            randomRoomType = -1;
+                        }
+                    }
+                }
+                if (randomRoomType < 0)
+                {
+                    randomRoomType = Random.Range(0, 2);
+                    roomAmts[randomRoomType]++;
+                    takenPosList[j] = SetRoomType(takenPosList[j], randomRoomType);
                 }
                 CreateRoom(j, GetRandomRoomFromType((int)takenPosList[j].z));
             }
@@ -383,9 +413,9 @@ public class ProceduralMapGenerator : MonoBehaviour
             case 0:
                 return mData.enemyRoom[Random.Range(0, mData.enemyRoom.Count)];
             case 1:
-                return mData.eliteRoom[Random.Range(0, mData.eliteRoom.Count)];
+                return mData.puzzleRoom[Random.Range(0, mData.eliteRoom.Count)];
             case 2:
-                return mData.puzzleRoom[Random.Range(0, mData.puzzleRoom.Count)];
+                return mData.eliteRoom[Random.Range(0, mData.puzzleRoom.Count)];
             default:
                 return null;
         }
