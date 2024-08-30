@@ -6,6 +6,8 @@ public class PlayerController : PlayerStats
     public static PlayerController Instance;
 
     private MovementController movementController;
+    private FadeTransition fadeTransition;
+
     private float ropeX;
 
     [SerializeField] private float plungeHoldDuration;
@@ -19,6 +21,7 @@ public class PlayerController : PlayerStats
     private void Start()
     {
         movementController = GetComponent<MovementController>();
+        fadeTransition = GetComponent<FadeTransition>();
 
         movementController.InitializeMovementController();
     }
@@ -91,5 +94,15 @@ public class PlayerController : PlayerStats
             movementController.StopGrappling();
             movementController.canGrapple = false;
         }
+    }
+
+    public void FadeIn()
+    {
+        fadeTransition.FadeIn();
+    }
+
+    public void FadeOut()
+    {
+        fadeTransition.FadeOut();
     }
 }
