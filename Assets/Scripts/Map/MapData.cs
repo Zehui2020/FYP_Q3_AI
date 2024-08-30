@@ -8,9 +8,10 @@ public class MapData : ScriptableObject
     public GameObject startRoom;
     public GameObject endRoom;
     public GameObject shopRoom;
-    public List<GameObject> roomType1;
-    public List<GameObject> roomType2;
-    public List<GameObject> roomType3;
+    public List<GameObject> enemyRoom;
+    public List<GameObject> puzzleRoom;
+    public List<GameObject> eliteRoom;
+    public List<Vector2> minMaxRoomTypeAmt;
     public int roomSpacing;
     public Vector2 mapSize;
     public Vector2 minMaxRoomAmt;
