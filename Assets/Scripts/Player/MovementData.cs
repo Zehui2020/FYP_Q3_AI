@@ -30,6 +30,7 @@ public class MovementData : ScriptableObject
 
     public float rollColliderSize;
     public float rollDuration;
+    public float lungeRollDuration;
     public float rollFriction;
 
     public float grappleSpeed;

@@ -1,19 +1,12 @@
-using System.Collections.Generic;
 using System;
 using System.Collections;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Events;
 
-public class ResponseDataWebsocket
-{
-    public string prompt_id;
-}
 public class ComfyWebsocket : MonoBehaviour
 {
     private string serverAddress = "127.0.0.1:8188";

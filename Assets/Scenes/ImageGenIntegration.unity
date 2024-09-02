@@ -262,6 +262,91 @@ MonoBehaviour:
   minSpawnXRange: -9
   maxSpawnXRange: 9
   spawnY: 4
+--- !u!1 &30929362
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 30929363}
+  - component: {fileID: 30929364}
+  - component: {fileID: 30929365}
+  m_Layer: 0
+  m_Name: AsyncImageGeneration
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &30929363
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30929362}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1728010002}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &30929364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30929362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29ff43b15b0fca545a298270a25498de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prompts:
+  - prompt: pixelart, pixelsprite, goggles
+    fileName: HDHUD
+  promptJSON: '{   "3": {     "inputs": {       "seed": 999333962792074,       "steps":
+    20,       "cfg": 8,       "sampler_name": "euler",       "scheduler": "normal",      
+    "denoise": 1,       "model": [         "18",         0       ],       "positive":
+    [         "6",         0       ],       "negative": [         "7",         0      
+    ],       "latent_image": [         "5",         0       ]     },     "class_type":
+    "KSampler",     "_meta": {       "title": "KSampler"     }   },   "4": {    
+    "inputs": {       "ckpt_name": "allInOnePixelModel_v1.ckpt"     },     "class_type":
+    "CheckpointLoaderSimple",     "_meta": {       "title": "Load Checkpoint"    
+    }   },   "5": {     "inputs": {       "width": 1920,       "height": 1080,      
+    "batch_size": 1     },     "class_type": "EmptyLatentImage",     "_meta": {      
+    "title": "Empty Latent Image"     }   },   "6": {     "inputs": {       "text":
+    "Pprompt",       "clip": [         "4",         1       ]     },     "class_type":
+    "CLIPTextEncode",     "_meta": {       "title": "CLIP Text Encode (Prompt)"    
+    }   },   "7": {     "inputs": {       "text": "Nprompt",       "clip": [        
+    "4",         1       ]     },     "class_type": "CLIPTextEncode",     "_meta":
+    {       "title": "CLIP Text Encode (Prompt)"     }   },   "9": {     "inputs":
+    {       "filename_prefix": "ComfyUI",       "images": [         "13",        
+    0       ]     },     "class_type": "SaveImage",     "_meta": {       "title":
+    "Save Image"     }   },   "13": {     "inputs": {       "samples": [        
+    "3",         0       ],       "vae": [         "4",         2       ]     },    
+    "class_type": "VAEDecode",     "_meta": {       "title": "VAE Decode"     }  
+    },   "18": {     "inputs": {       "tiling": "x_only",       "copy_model": "Modify
+    in place",       "model": [         "4",         0       ]     },     "class_type":
+    "SeamlessTile",     "_meta": {       "title": "Seamless Tile"     }   } } }'
+  imageSaver: {fileID: 30929365}
+--- !u!114 &30929365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30929362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fb7b725e864671448e8c09318a3291e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &32123484
 GameObject:
   m_ObjectHideFlags: 0
@@ -3400,6 +3485,39 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1728010001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1728010002}
+  m_Layer: 0
+  m_Name: ComfyUIConroller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1728010002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1728010001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1841358809195562135}
+  - {fileID: 30929363}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2053820713
 GameObject:
   m_ObjectHideFlags: 0
@@ -3707,11 +3825,11 @@ Transform:
   m_GameObject: {fileID: 8045318398188915857}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1728010002}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6022076413256159450
 MonoBehaviour:
@@ -3801,12 +3919,12 @@ GameObject:
   - component: {fileID: 6022076413256159450}
   - component: {fileID: 1552753852955525618}
   m_Layer: 0
-  m_Name: ComfyUIctr
+  m_Name: BGController
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &8148849163969174438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3852,7 +3970,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1297894483}
   - {fileID: 950241947}
-  - {fileID: 1841358809195562135}
+  - {fileID: 1728010002}
   - {fileID: 14822879}
   - {fileID: 264889097}
   - {fileID: 205233803}

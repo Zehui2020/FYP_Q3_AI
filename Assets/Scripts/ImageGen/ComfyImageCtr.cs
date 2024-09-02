@@ -1,29 +1,7 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.Events;
-using UnityEngine.U2D;
-
-[System.Serializable]
-public class ImageData
-{
-    public string filename;
-    public string subfolder;
-    public string type;
-}
-
-[System.Serializable]
-public class OutputData
-{
-    public ImageData[] images;
-}
-
-[System.Serializable]
-public class PromptData
-{
-    public OutputData outputs;
-}
 
 public class ComfyImageCtr: MonoBehaviour
 {
@@ -62,6 +40,7 @@ public class ComfyImageCtr: MonoBehaviour
                 case UnityWebRequest.Result.Success:
                     Debug.Log(":\nReceived: " + webRequest.downloadHandler.text);
                     string imageURL = "http://127.0.0.1:8188/view?filename=" +ExtractFilename(webRequest.downloadHandler.text);
+                    Debug.Log(imageURL);
                     StartCoroutine(DownloadImage(imageURL));
                     break;
             }

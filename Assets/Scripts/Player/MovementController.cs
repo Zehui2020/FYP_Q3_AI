@@ -239,16 +239,9 @@ public class MovementController : MonoBehaviour
 
         transform.position = ledgePos1;
 
-        //animationManager.ChangeAnimation(animationManager.LedgeClimb, 0, 0, false);
+        animationManager.ChangeAnimation(animationManager.WallClimb, 0, 0, false);
 
-        StartCoroutine(PlaceholderLedgeClimb());
         isClimbingLedge = true;
-    }
-
-    private IEnumerator PlaceholderLedgeClimb()
-    {
-        yield return new WaitForSeconds(1f);
-        FinishLedgeClimb();
     }
 
     public void FinishLedgeClimb()
@@ -382,23 +375,26 @@ public class MovementController : MonoBehaviour
         Vector2 originalOffset = playerCol.offset;
 
         float change = movementData.rollColliderSize - playerCol.size.y;
+        float rollDuration;
         playerRB.drag = 0;
 
         playerCol.size = new Vector2(playerCol.size.x, movementData.rollColliderSize);
         playerCol.offset = new Vector2(playerCol.offset.x, -(Mathf.Abs(change) / 2));
 
-        if (playerRB.velocity.magnitude < 2f)
+        if (playerRB.velocity.magnitude < 5f)
         {
             animationManager.ChangeAnimation(animationManager.Roll, 0, 0, false);
             playerRB.AddForce(new Vector3(transform.localScale.x, 0, 0) * 2, ForceMode2D.Impulse);
+            rollDuration = movementData.rollDuration;
         }
         else
         {
             animationManager.ChangeAnimation(animationManager.LungeRoll, 0, 0, false);
             playerRB.AddForce(-playerRB.velocity.normalized * movementData.rollFriction, ForceMode2D.Impulse);
+            rollDuration = movementData.lungeRollDuration;
         }
 
-        yield return new WaitForSeconds(movementData.rollDuration);
+        yield return new WaitForSeconds(rollDuration);
 
         playerCol.size = originalSize;
         playerCol.offset = originalOffset;

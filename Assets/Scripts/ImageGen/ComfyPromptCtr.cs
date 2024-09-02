@@ -8,6 +8,7 @@ using TMPro;
 public class ResponseData
 {
     public string prompt_id;
+    public string file_name;
 }
 
 public class ComfyPromptCtr : MonoBehaviour
