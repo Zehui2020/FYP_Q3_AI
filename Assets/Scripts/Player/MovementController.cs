@@ -126,6 +126,11 @@ public class MovementController : MonoBehaviour
                 return;
         }
 
+        if (vertical == 0)
+            animationManager.ChangeAnimation(animationManager.GrappleIdle, 0, 0, false);
+        else
+            animationManager.ChangeAnimation(animationManager.Grappling, 0, 0, false);
+
         transform.position = new Vector3(Mathf.Lerp(transform.position.x, posX, Time.deltaTime * 10f),
             transform.position.y,
             transform.position.z);

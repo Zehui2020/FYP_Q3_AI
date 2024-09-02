@@ -279,7 +279,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &30929363
 Transform:
   m_ObjectHideFlags: 0
@@ -333,7 +333,7 @@ MonoBehaviour:
     "class_type": "VAEDecode",     "_meta": {       "title": "VAE Decode"     }  
     },   "18": {     "inputs": {       "tiling": "x_only",       "copy_model": "Modify
     in place",       "model": [         "4",         0       ]     },     "class_type":
-    "SeamlessTile",     "_meta": {       "title": "Seamless Tile"     }   } } }'
+    "SeamlessTile",     "_meta": {       "title": "Seamless Tile"     }   } }'
   imageSaver: {fileID: 30929365}
 --- !u!114 &30929365
 MonoBehaviour:
@@ -3924,7 +3924,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &8148849163969174438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3939,31 +3939,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   promptText: {fileID: 1471812009}
   prompts: 
-  setPrompts: Pixel Art, Pixel Sprite
-  promptJSON: '{   "3": {     "inputs": {       "seed": 999333962792074,       "steps":
+  setPrompts: Pixel Art, 64 bit, background
+  promptJSON: '{   "3": {     "inputs": {       "seed": 606370088429218,       "steps":
     20,       "cfg": 8,       "sampler_name": "euler",       "scheduler": "normal",      
     "denoise": 1,       "model": [         "18",         0       ],       "positive":
     [         "6",         0       ],       "negative": [         "7",         0      
     ],       "latent_image": [         "5",         0       ]     },     "class_type":
     "KSampler",     "_meta": {       "title": "KSampler"     }   },   "4": {    
-    "inputs": {       "ckpt_name": "allInOnePixelModel_v1.ckpt"     },     "class_type":
-    "CheckpointLoaderSimple",     "_meta": {       "title": "Load Checkpoint"    
-    }   },   "5": {     "inputs": {       "width": 1920,       "height": 1080,      
-    "batch_size": 1     },     "class_type": "EmptyLatentImage",     "_meta": {      
-    "title": "Empty Latent Image"     }   },   "6": {     "inputs": {       "text":
-    "Pprompt",       "clip": [         "4",         1       ]     },     "class_type":
-    "CLIPTextEncode",     "_meta": {       "title": "CLIP Text Encode (Prompt)"    
-    }   },   "7": {     "inputs": {       "text": "Nprompt",       "clip": [        
-    "4",         1       ]     },     "class_type": "CLIPTextEncode",     "_meta":
-    {       "title": "CLIP Text Encode (Prompt)"     }   },   "9": {     "inputs":
-    {       "filename_prefix": "ComfyUI",       "images": [         "13",        
+    "inputs": {       "ckpt_name": "pixelArtDiffusionXL_spriteShaper.safetensors"    
+    },     "class_type": "CheckpointLoaderSimple",     "_meta": {       "title":
+    "Load Checkpoint"     }   },   "5": {     "inputs": {       "width": 1920,      
+    "height": 1080,       "batch_size": 1     },     "class_type": "EmptyLatentImage",    
+    "_meta": {       "title": "Empty Latent Image"     }   },   "6": {     "inputs":
+    {       "text": "Pprompt",       "clip": [         "20",         1       ]    
+    },     "class_type": "CLIPTextEncode",     "_meta": {       "title": "CLIP Text
+    Encode (Prompt)"     }   },   "7": {     "inputs": {       "text": "Nprompt",      
+    "clip": [         "4",         1       ]     },     "class_type": "CLIPTextEncode",    
+    "_meta": {       "title": "CLIP Text Encode (Prompt)"     }   },   "9": {    
+    "inputs": {       "filename_prefix": "ComfyUI",       "images": [         "11",        
     0       ]     },     "class_type": "SaveImage",     "_meta": {       "title":
-    "Save Image"     }   },   "13": {     "inputs": {       "samples": [        
-    "3",         0       ],       "vae": [         "4",         2       ]     },    
-    "class_type": "VAEDecode",     "_meta": {       "title": "VAE Decode"     }  
-    },   "18": {     "inputs": {       "tiling": "x_only",       "copy_model": "Modify
-    in place",       "model": [         "4",         0       ]     },     "class_type":
-    "SeamlessTile",     "_meta": {       "title": "Seamless Tile"     }   } }'
+    "Save Image"     }   },   "11": {     "inputs": {       "pixel_size": 4,      
+    "image": [         "13",         0       ]     },     "class_type": "Pixelization",    
+    "_meta": {       "title": "Pixelization"     }   },   "13": {     "inputs": {      
+    "samples": [         "3",         0       ],       "vae": [         "4",        
+    2       ]     },     "class_type": "VAEDecode",     "_meta": {       "title":
+    "VAE Decode"     }   },   "18": {     "inputs": {       "tiling": "x_only",      
+    "copy_model": "Modify in place",       "model": [         "20",         0      
+    ]     },     "class_type": "SeamlessTile",     "_meta": {       "title": "Seamless
+    Tile"     }   },   "20": {     "inputs": {       "lora_name": "Pixhell_Lora_SD21.safetensors",      
+    "strength_model": 1,       "strength_clip": 1,       "model": [         "4",        
+    0       ],       "clip": [         "4",         1       ]     },     "class_type":
+    "LoraLoader",     "_meta": {       "title": "Load LoRA"     }   } }'
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

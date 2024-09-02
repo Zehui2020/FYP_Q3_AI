@@ -23,6 +23,8 @@ public class AnimationManager : MonoBehaviour
     public readonly int GroundDash = Animator.StringToHash("GroundDash");
     public readonly int WallJump = Animator.StringToHash("WallJump");
     public readonly int WallClimb = Animator.StringToHash("WallClimb");
+    public readonly int Grappling = Animator.StringToHash("Grappling");
+    public readonly int GrappleIdle = Animator.StringToHash("GrappleIdle");
 
     // Combat
     private int Attacking = Animator.StringToHash("Sword_Attack_1");
