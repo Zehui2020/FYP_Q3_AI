@@ -8,24 +8,62 @@ public class CombatController : MonoBehaviour
 
     private AnimationManager animationManager;
 
-    private Coroutine attackRoutine;
+    private int attackComboCount;
 
-    public void InitializeMovementController()
+    private Coroutine attackRoutine;
+    private Coroutine attackAnimRoutine;
+
+    public void InitializeCombatController()
     {
         animationManager = GetComponent<AnimationManager>();
+        attackComboCount = 0;
     }
     public void HandleAttack()
     {
-        if (attackRoutine == null)
-            attackRoutine = StartCoroutine(AttackRoutine());
+        if (attackAnimRoutine == null)
+        {
+            if (attackRoutine != null)
+            {
+                attackComboCount++;
+                if (attackComboCount >= wData.animations.Count)
+                {
+                    attackComboCount = 0;
+                }
+                StopCoroutine(attackRoutine);
+                attackRoutine = StartCoroutine(AttackRoutine());
+            }
+            else
+            {
+                attackComboCount = 0;
+                attackRoutine = StartCoroutine(AttackRoutine());
+            }
+        }
     }
 
     private IEnumerator AttackRoutine()
     {
-        animationManager.ChangeAnimation(animationManager.Attacking, 0, 0, true);
+        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.animations[attackComboCount].name));
+        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
+        attackAnimRoutine = StartCoroutine(AttackAnimRoutine());
 
-        yield return new WaitForSeconds(wData.attackSpeed);
+        yield return new WaitForSeconds(wData.attackSpeed + wData.animations[attackComboCount].length);
 
         attackRoutine = null;
+    }
+
+    private IEnumerator AttackAnimRoutine()
+    {
+        yield return new WaitForSeconds(wData.animations[attackComboCount].length);
+
+        attackAnimRoutine = null;
+    }
+
+    public bool CheckAttacking()
+    {
+        if (attackAnimRoutine == null)
+        {
+            return false;
+        }
+        return true;
     }
 }
