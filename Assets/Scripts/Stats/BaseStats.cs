@@ -22,7 +22,7 @@ public class BaseStats : MonoBehaviour
 
     private Coroutine immuneRoutine;
 
-    public void TakeDamage(int damage, Vector3 closestPoint)
+    public void TakeDamage(float damage, Vector3 closestPoint)
     {
         if (isImmune)
         {
@@ -40,10 +40,11 @@ public class BaseStats : MonoBehaviour
 
             return;
         }
-
-        health -= damage;
+        
+        //damage = damage * (add on multipliers)
+        health -= (int)damage;
         DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-        damagePopup.SetupPopup(damage, closestPoint, DamagePopup.DamageType.Normal);
+        damagePopup.SetupPopup((int)damage, closestPoint, DamagePopup.DamageType.Normal);
     }
 
     public void Heal(int amount)

@@ -7,6 +7,7 @@ public class CombatController : MonoBehaviour
     [SerializeField] private WeaponData wData;
 
     private AnimationManager animationManager;
+    private CombatCollisionController collisionController;
 
     private int attackComboCount;
 
@@ -16,6 +17,7 @@ public class CombatController : MonoBehaviour
     public void InitializeCombatController()
     {
         animationManager = GetComponent<AnimationManager>();
+        collisionController = GetComponent<CombatCollisionController>();
         attackComboCount = 0;
     }
     public void HandleAttack()
@@ -65,5 +67,15 @@ public class CombatController : MonoBehaviour
             return false;
         }
         return true;
+    }
+
+    public void OnDamageEventStart(int col)
+    {
+        collisionController.EnableCollider(wData.baseAttack * wData.attackMultipliers[attackComboCount], col);
+    }
+
+    public void OnDamageEventEnd(int col)
+    {
+        collisionController.DisableCollider(col);
     }
 }

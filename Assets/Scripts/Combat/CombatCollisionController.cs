@@ -7,7 +7,7 @@ public class CombatCollisionController : MonoBehaviour
     [SerializeField] private CombatCollisionTrigger[] colliders;
     [SerializeField] LayerMask targetLayer;
 
-    private int damage;
+    private float damage;
 
     private void Start()
     {
@@ -18,7 +18,7 @@ public class CombatCollisionController : MonoBehaviour
         }
     }
 
-    public void EnableCollider(int newDamage, int col)
+    public void EnableCollider(float newDamage, int col)
     {
         damage = newDamage;
         colliders[col].SetCollider(true);
@@ -37,7 +37,7 @@ public class CombatCollisionController : MonoBehaviour
             col.SetCollider(false);
     }
 
-    public void SetDamage(int newDamage)
+    public void SetDamage(float newDamage)
     {
         damage = newDamage;
     }
@@ -50,7 +50,7 @@ public class CombatCollisionController : MonoBehaviour
         Vector3 closestPoint = col.ClosestPoint(transform.position);
 
         GameObject hitGameObject = col.gameObject;
-        EnemyStats enemyStats = Utility.Instance.GetTopmostParent(hitGameObject.transform).GetComponent<EnemyStats>();
+        EnemyStats enemyStats = Utility.Instance.GetTopmostParent(hitGameObject.transform).GetComponentInChildren<EnemyStats>();
         PlayerStats playerStats = hitGameObject.GetComponent<PlayerStats>();
 
         if (enemyStats != null)

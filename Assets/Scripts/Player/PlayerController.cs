@@ -60,6 +60,7 @@ public class PlayerController : PlayerStats
                 checkPlungeRoutine = StartCoroutine(CheckPlungeRoutine());
 
             combatController.HandleAttack();
+            movementController.StopPlayer();
         }
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
@@ -68,12 +69,12 @@ public class PlayerController : PlayerStats
             checkPlungeRoutine = null;
         }
 
-        if (!combatController.CheckAttacking())
-        {
-            movementController.CheckGroundCollision();
-            movementController.HandleMovment(horizontal);
-            movementController.HandleGrappling(vertical, ropeX);
-        }
+        if (!combatController.CheckAttacking() && !movementController.canMove)
+            movementController.ResumePlayer();
+
+        movementController.CheckGroundCollision();
+        movementController.HandleMovment(horizontal);
+        movementController.HandleGrappling(vertical, ropeX);
     }
 
     public void OnPlayerOverlap(bool overlap)
@@ -83,8 +84,7 @@ public class PlayerController : PlayerStats
 
     private void FixedUpdate()
     {
-        if (!combatController.CheckAttacking())
-            movementController.MovePlayer();
+        movementController.MovePlayer();
     }
 
     private IEnumerator CheckPlungeRoutine()
