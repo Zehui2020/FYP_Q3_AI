@@ -14,6 +14,7 @@ public class Enemy : EnemyStats
     protected Rigidbody2D enemyRB;
     protected CombatCollisionController collisionController;
     [SerializeField] protected Animator animator;
+    [SerializeField] protected LayerMask playerLayer;
 
     [SerializeField] protected List<Transform> waypoints = new();
     protected int currentWaypoint = 0;
@@ -43,7 +44,7 @@ public class Enemy : EnemyStats
 
     public virtual void UpdateEnemy()
     {
-
+        CheckPlayerOverlap();
     }
 
     private void Update()
@@ -87,7 +88,15 @@ public class Enemy : EnemyStats
 
     protected bool CheckChasePlayer()
     {
-        if (Mathf.Abs(Vector2.Distance(transform.position, player.transform.position)) > chaseRange)
+        Vector2 dir;
+        if (transform.localScale.x < 0)
+            dir = -transform.right;
+        else
+            dir = transform.right;
+
+        Debug.DrawRay(transform.position, dir * chaseRange, Color.red);
+
+        if (!Physics2D.Raycast(transform.position, dir.normalized, chaseRange, playerLayer))
             return false;
 
         onPlayerInChaseRange?.Invoke();
@@ -123,6 +132,18 @@ public class Enemy : EnemyStats
             transform.localScale = Vector3.one;
         else
             transform.localScale = new Vector3(-1, 1, 1);
+    }
+
+    private void CheckPlayerOverlap()
+    {
+        Vector2 closestPoint = enemyCol.ClosestPoint(player.transform.position);
+        float distanceToPlayer = Vector2.Distance(closestPoint, player.transform.position);
+
+        // Check if the player is within the detection range (collider bounds + extra range)
+        if (distanceToPlayer <= 0)
+            player.OnPlayerOverlap(true);
+        else
+            player.OnPlayerOverlap(false);
     }
 
     private void OnDisable()

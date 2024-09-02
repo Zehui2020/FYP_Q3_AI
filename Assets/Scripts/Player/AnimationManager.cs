@@ -20,6 +20,12 @@ public class AnimationManager : MonoBehaviour
     public readonly int LungeRoll = Animator.StringToHash("LungeRoll");
     public readonly int Falling = Animator.StringToHash("FallingLoop");
     public readonly int AirDash = Animator.StringToHash("AirDash");
+    public readonly int GroundDash = Animator.StringToHash("GroundDash");
+    public readonly int WallJump = Animator.StringToHash("WallJump");
+    public readonly int WallClimb = Animator.StringToHash("WallClimb");
+
+    // Combat
+    private int Attacking = Animator.StringToHash("Sword_Attack_1");
 
     public void InitAnimationController()
     {
@@ -53,5 +59,15 @@ public class AnimationManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    public int GetAttackAnimation()
+    {
+        return Attacking;
+    }
+
+    public void SetAttackAnimationClip(int animation)
+    {
+        Attacking = animation;
     }
 }

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1baf2a7f57fad343b57d073b6132777, type: 3}
   m_Name: MovementData
   m_EditorClassIdentifier: 
+  gravityScale: 2
+  overlapSpeed: 3
   walkSpeed: 10
   baseJumpForce: 13
   jumpInterval: 0.1
@@ -20,17 +22,26 @@ MonoBehaviour:
   airDrag: 0
   dashDuration: 0.5
   dashSpeed: 15
-  dashCooldown: 1
+  groundDashDuration: 0.4
+  groundDashSpeed: 15
+  dashCooldown: 0.5
   dashIFrames: 0.2
   maxSlopeAngle: 100
   minGroundDist: 0.01
   wallJumpForceX: 0.5
   wallJumpForceY: 1.1
+  wallCheckDist: 0.3
   rollColliderSize: 1
-  rollDuration: 0.7
+  rollDuration: 0.9
+  lungeRollDuration: 1
   rollFriction: 1.5
   grappleSpeed: 10
   plungeThreshold: 5
   plungeDelay: 0.3
   plungeForce: 20
+  ledgeCheckDist: 0.3
+  ledgeXOffset1: 0
+  ledgeYOffset1: 0.3
+  ledgeXOffset2: 0.5
+  ledgeYOffset2: 1
   cyoteTime: 0.15

@@ -1,12 +1,16 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : PlayerStats
 {
     public static PlayerController Instance;
 
+    private Collider2D playerCol;
     private MovementController movementController;
+    private CombatController combatController;
     private FadeTransition fadeTransition;
+    private ItemManager itemManager;
 
     private IInteractable currentInteractable;
 
@@ -23,9 +27,14 @@ public class PlayerController : PlayerStats
     private void Start()
     {
         movementController = GetComponent<MovementController>();
+        combatController = GetComponent<CombatController>();
         fadeTransition = GetComponent<FadeTransition>();
+        itemManager = GetComponent<ItemManager>();
+        playerCol = GetComponent<Collider2D>();
 
+        itemManager.InitItemManager();
         movementController.InitializeMovementController();
+        combatController.InitializeCombatController();
     }
 
     private void Update()
@@ -49,6 +58,9 @@ public class PlayerController : PlayerStats
         {
             if (checkPlungeRoutine == null)
                 checkPlungeRoutine = StartCoroutine(CheckPlungeRoutine());
+
+            combatController.HandleAttack();
+            movementController.StopPlayer();
         }
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
@@ -57,9 +69,17 @@ public class PlayerController : PlayerStats
             checkPlungeRoutine = null;
         }
 
+        if (!combatController.CheckAttacking() && !movementController.canMove)
+            movementController.ResumePlayer();
+
         movementController.CheckGroundCollision();
         movementController.HandleMovment(horizontal);
         movementController.HandleGrappling(vertical, ropeX);
+    }
+
+    public void OnPlayerOverlap(bool overlap)
+    {
+        movementController.OnPlayerOverlap(overlap);
     }
 
     private void FixedUpdate()
