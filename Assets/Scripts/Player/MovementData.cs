@@ -3,6 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MovementData")]
 public class MovementData : ScriptableObject
 {
+    public float gravityScale;
+
     public float overlapSpeed;
     public float walkSpeed;
     public float baseJumpForce;
@@ -24,6 +26,7 @@ public class MovementData : ScriptableObject
 
     public float wallJumpForceX;
     public float wallJumpForceY;
+    public float wallCheckDist;
 
     public float rollColliderSize;
     public float rollDuration;
@@ -34,6 +37,11 @@ public class MovementData : ScriptableObject
     public float plungeThreshold;
     public float plungeDelay;
     public float plungeForce;
+
+    public float ledgeXOffset1;
+    public float ledgeYOffset1;
+    public float ledgeXOffset2;
+    public float ledgeYOffset2;
 
     public float cyoteTime;
 }
