@@ -5,7 +5,7 @@ using UnityEngine;
 public class MiniMapController : MonoBehaviour
 {
     private List<MiniMapGenerator> miniMap = new List<MiniMapGenerator>();
-    private int currIndicatorNode = 0;
+    [SerializeField] private int currIndicatorNode = 0;
 
     private void Start()
     {
