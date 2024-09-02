@@ -39,6 +39,7 @@ public class MovementData : ScriptableObject
     public float plungeDelay;
     public float plungeForce;
 
+    public float ledgeCheckDist;
     public float ledgeXOffset1;
     public float ledgeYOffset1;
     public float ledgeXOffset2;

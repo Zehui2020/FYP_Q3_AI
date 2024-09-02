@@ -208,28 +208,30 @@ public class MovementController : MonoBehaviour
         else
             dir = transform.right;
 
-        Debug.DrawRay(wallCheckPosition.position, dir * movementData.wallCheckDist, UnityEngine.Color.red);
-        Debug.DrawRay(ledgeCheckPosition.position, dir * movementData.wallCheckDist, UnityEngine.Color.red);
+        Debug.DrawRay(wallCheckPosition.position, dir * movementData.ledgeCheckDist, UnityEngine.Color.red);
+        Debug.DrawRay(ledgeCheckPosition.position, dir * movementData.ledgeCheckDist, UnityEngine.Color.red);
 
-        RaycastHit2D wallHit = Physics2D.Raycast(wallCheckPosition.position, dir, 0.2f, wallJumpCheck);
-        RaycastHit2D ledgeHit = Physics2D.Raycast(ledgeCheckPosition.position, dir, movementData.wallCheckDist, wallJumpCheck);
+        RaycastHit2D wallHit = Physics2D.Raycast(wallCheckPosition.position, dir, movementData.ledgeCheckDist, wallJumpCheck);
+        RaycastHit2D ledgeHit = Physics2D.Raycast(ledgeCheckPosition.position, dir, movementData.ledgeCheckDist, wallJumpCheck);
 
         // Check if player is touching wall but not touching ledge
         if (ledgeHit || !wallHit)
             return;
 
         ledgePosBot = wallHit.point;
+        playerCol.isTrigger = true;
+        playerRB.gravityScale = 0;
 
         // If facing right
         if (transform.localScale.x > 0)
         {
-            ledgePos1 = new Vector2(Mathf.Floor(ledgePosBot.x + movementData.wallCheckDist) - movementData.ledgeXOffset1, Mathf.Floor(ledgePosBot.y) + movementData.ledgeYOffset1);
-            ledgePos2 = new Vector2(Mathf.Floor(ledgePosBot.x + movementData.wallCheckDist) + movementData.ledgeXOffset2, Mathf.Floor(ledgePosBot.y) + movementData.ledgeYOffset2);
+            ledgePos1 = new Vector2(ledgePosBot.x - movementData.ledgeXOffset1, ledgePosBot.y + movementData.ledgeYOffset1);
+            ledgePos2 = new Vector2(ledgePosBot.x + movementData.ledgeXOffset2, ledgePosBot.y + movementData.ledgeYOffset2);
         }
         else
         {
-            ledgePos1 = new Vector2(Mathf.Ceil(ledgePosBot.x - movementData.wallCheckDist) + movementData.ledgeXOffset1, Mathf.Floor(ledgePosBot.y) + movementData.ledgeYOffset1);
-            ledgePos2 = new Vector2(Mathf.Ceil(ledgePosBot.x - movementData.wallCheckDist) - movementData.ledgeXOffset2, Mathf.Floor(ledgePosBot.y) + movementData.ledgeYOffset2);
+            ledgePos1 = new Vector2(ledgePosBot.x + movementData.ledgeXOffset1, ledgePosBot.y + movementData.ledgeYOffset1);
+            ledgePos2 = new Vector2(ledgePosBot.x - movementData.ledgeXOffset2, ledgePosBot.y + movementData.ledgeYOffset2);
         }
 
         lockMomentum = true;
@@ -251,6 +253,8 @@ public class MovementController : MonoBehaviour
         transform.position = ledgePos2;
         playerRB.gravityScale = movementData.gravityScale;
         isClimbingLedge = false;
+        playerCol.isTrigger = false;
+        playerRB.gravityScale = movementData.gravityScale;
     }
 
     private IEnumerator JumpRoutine(float horizontal)
@@ -456,7 +460,7 @@ public class MovementController : MonoBehaviour
     public void CheckGroundCollision()
     {
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, 100, groundLayer);
-        if (!groundHit)
+        if (!groundHit || isClimbingLedge)
             return;
 
         float dist = Vector3.Distance(groundCheckPosition.position, groundHit.point);

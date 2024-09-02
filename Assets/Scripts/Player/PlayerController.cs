@@ -71,7 +71,6 @@ public class PlayerController : PlayerStats
         if (!combatController.CheckAttacking())
         {
             movementController.CheckGroundCollision();
-
             movementController.HandleMovment(horizontal);
             movementController.HandleGrappling(vertical, ropeX);
         }
