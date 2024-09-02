@@ -71,7 +71,9 @@ public class CombatController : MonoBehaviour
 
     public void OnDamageEventStart(int col)
     {
-        collisionController.EnableCollider(wData.baseAttack * wData.attackMultipliers[attackComboCount], col);
+        float damage = wData.baseAttack * wData.attackMultipliers[attackComboCount];
+
+        collisionController.EnableCollider(damage, wData.critRate, wData.critMultiplier, col);
     }
 
     public void OnDamageEventEnd(int col)

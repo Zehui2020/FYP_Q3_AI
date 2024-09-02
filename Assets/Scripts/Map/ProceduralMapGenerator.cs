@@ -25,6 +25,7 @@ public class ProceduralMapGenerator : MonoBehaviour
     private Vector2 currPos;
     private int roomsAdded = 0;
     private bool isPathDone = false;
+    private float timePassed = 0;
 
     private void Awake()
     {
@@ -34,7 +35,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         }
         mmController = GameObject.FindGameObjectWithTag("MiniMapController").GetComponent<MiniMapController>();
         rtManager = GetComponentInParent<RoomTransitionManager>();
-
+        
         SetSeed(mapSeed);
         StartMapGeneration();
     }
