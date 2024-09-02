@@ -15,15 +15,6 @@ public class MeleeEnemy : Enemy
     }
     public State currentState;
 
-    [SerializeField] private Transform jumpCheckPos;
-    [SerializeField] private float jumpHeight;
-    [SerializeField] private float jumpThreshold;
-    [SerializeField] private LayerMask playerLayer;
-    private Coroutine jumpRoutine;
-    private Vector3 lastSeenPos = Vector3.zero;
-
-    public GameObject marker;
-
     private readonly int IdleAnim = Animator.StringToHash("EnemyIdle");
     private readonly int RunAnim = Animator.StringToHash("EnemyRun");
     private readonly int AttackAnim = Animator.StringToHash("EnemyAttack");
@@ -85,10 +76,6 @@ public class MeleeEnemy : Enemy
                 PatrolUpdate();
                 break;
             case State.Chase:
-                //if (jumpRoutine != null)
-                //    return;
-
-                //JumpCheck();
                 ChaseUpdate();
                 break;
             case State.Attack:
@@ -100,44 +87,4 @@ public class MeleeEnemy : Enemy
         if (currentState != State.Attack)
             UpdatePlayerDirection();
     }
-
-    //private void JumpCheck()
-    //{
-    //    Collider2D hit = Physics2D.OverlapCircle(jumpCheckPos.position, chaseRange, playerLayer);
-
-    //    if (!hit && lastSeenPos == Vector3.zero)
-    //        lastSeenPos = player.transform.position;
-
-    //    if (Mathf.Abs(Mathf.Abs(transform.position.x) - Mathf.Abs(lastSeenPos.x)) > jumpThreshold ||
-    //        lastSeenPos == Vector3.zero)
-    //        return;
-
-    //    Instantiate(marker, lastSeenPos, Quaternion.identity);
-    //    jumpRoutine = StartCoroutine(DoJumpRoutine(lastSeenPos));
-
-    //    return;
-    //}
-
-    //private IEnumerator DoJumpRoutine(Vector3 targetPos)
-    //{
-    //    aiNavigation.StopNavigation();
-    //    enemyCol.isTrigger = true;
-    //    enemyRB.isKinematic = true;
-
-    //    float dist = 100f;
-
-    //    while (dist > 1f)
-    //    {
-    //        dist = Vector2.Distance(transform.position, targetPos);
-    //        transform.position = Vector3.Slerp(transform.position, targetPos, Time.deltaTime);
-
-    //        yield return null;
-    //    }
-
-    //    jumpRoutine = null;
-    //    lastSeenPos = Vector3.zero;
-    //    aiNavigation.ResumeNavigation();
-    //    enemyCol.isTrigger = false;
-    //    enemyRB.isKinematic = false;
-    //}
 }

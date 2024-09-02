@@ -12,6 +12,7 @@ public class MovementController : MonoBehaviour
     [SerializeField] private Transform groundCheckPosition;
 
     [SerializeField] private Transform wallCheckPosition;
+    [SerializeField] private Transform ledgeCheckPosition;
 
     private CapsuleCollider2D playerCol;
     private Rigidbody2D playerRB;
@@ -19,12 +20,22 @@ public class MovementController : MonoBehaviour
     public bool isMoving = false;
     public bool isGrounded = true;
     public bool isDashing = false;
+    public bool isTouchingWall = false;
 
     public bool lockMomentum = false;
     public bool lockDirection = false;
 
     public bool canGrapple = false;
     public bool isGrappling = false;
+
+    private Vector2 ledgePosBot;
+    private Vector2 ledgePos1;
+    private Vector2 ledgePos2;
+
+    private float ledgeXOffset1;
+    private float ledgeYOffset1;
+    private float ledgeXOffset2;
+    private float ledgeYOffset2;
 
     private Vector2 direction;
     private float moveSpeed;
@@ -53,6 +64,8 @@ public class MovementController : MonoBehaviour
         animationManager = GetComponent<AnimationManager>();
 
         animationManager.InitAnimationController();
+
+        moveSpeed = movementData.walkSpeed;
     }
 
     public void HandleMovment(float horizontal)
@@ -79,7 +92,6 @@ public class MovementController : MonoBehaviour
         {
             if (burstDragRoutine != null)
                 StartCoroutine(BurstDrag());
-            moveSpeed = movementData.walkSpeed;
 
             if (jumpRoutine == null && rollRoutine == null && !isDashing)
                 animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f, false);
@@ -137,11 +149,7 @@ public class MovementController : MonoBehaviour
         if (isGrappling)
             StopGrappling();
 
-        Collider2D col = Physics2D.OverlapCircle(wallCheckPosition.position, 0.2f, wallJumpCheck);
-        if (col != null && col.isTrigger)
-            col = null;
-
-        if (col == null || wallJumpCount <= 0)
+        if (!isTouchingWall || wallJumpCount <= 0)
         {
             // Normal Jump
             if (fallingDuration > movementData.cyoteTime && jumpCount == maxJumpCount)
@@ -159,8 +167,6 @@ public class MovementController : MonoBehaviour
             animationManager.ChangeAnimation(animationManager.WallJump, 0, 0, false);
 
             playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
-
-            Vector2 dir;
             transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
 
             if (col.ClosestPoint(transform.position).x < transform.position.x)
@@ -172,6 +178,31 @@ public class MovementController : MonoBehaviour
 
             wallJumpCount--;
             lockMomentum = true;
+        }
+    }
+
+    private void HandleLedgeGrab()
+    {
+        float wallCheckDist = 0.2f;
+
+        Vector2 dir;
+        if (transform.localScale.x < 0)
+            dir = -transform.right;
+        else
+            dir = transform.right;
+
+        Debug.DrawRay(wallCheckPosition.position, dir * wallCheckDist, UnityEngine.Color.red);
+        Collider2D col = Physics2D.Raycast(wallCheckPosition.position, dir, 0.2f, wallJumpCheck).collider;
+        if (col != null)
+            isTouchingWall = true;
+        else
+            isTouchingWall = false;
+
+        // Check if player is touching wall but not touching ledge
+        if (!Physics2D.Raycast(ledgeCheckPosition.position, dir, wallCheckDist, wallJumpCheck) && isTouchingWall)
+        {
+            ledgePos1 = new Vector2(Mathf.Floor(ledgePosBot.x + wallCheckDist) - ledgeXOffset1, Mathf.Floor(ledgePosBot.y) + ledgeYOffset1);
+            ledgePos2 = new Vector2(Mathf.Floor(ledgePos2.x + wall))
         }
     }
 
@@ -422,6 +453,14 @@ public class MovementController : MonoBehaviour
         moveSpeedModifier = newModifier;
     }
 
+    public void OnPlayerOverlap(bool inRange)
+    {
+        if (inRange)
+            moveSpeed = movementData.overlapSpeed;
+        else
+            moveSpeed = movementData.walkSpeed;
+    }
+
     private void SpeedControl()
     {
         Vector2 currentVel = new Vector2(playerRB.velocity.x, 0);
@@ -439,10 +478,5 @@ public class MovementController : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         playerRB.drag = movementData.groundDrag;
         burstDragRoutine = null;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(wallCheckPosition.position, 0.2f);
     }
 }

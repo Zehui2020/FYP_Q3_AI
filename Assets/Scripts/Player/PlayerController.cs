@@ -5,6 +5,7 @@ public class PlayerController : PlayerStats
 {
     public static PlayerController Instance;
 
+    private Collider2D playerCol;
     private MovementController movementController;
     private FadeTransition fadeTransition;
     private ItemManager itemManager;
@@ -26,6 +27,7 @@ public class PlayerController : PlayerStats
         movementController = GetComponent<MovementController>();
         fadeTransition = GetComponent<FadeTransition>();
         itemManager = GetComponent<ItemManager>();
+        playerCol = GetComponent<Collider2D>();
 
         itemManager.InitItemManager();
         movementController.InitializeMovementController();
@@ -63,6 +65,11 @@ public class PlayerController : PlayerStats
         movementController.CheckGroundCollision();
         movementController.HandleMovment(horizontal);
         movementController.HandleGrappling(vertical, ropeX);
+    }
+
+    public void OnPlayerOverlap(bool overlap)
+    {
+        movementController.OnPlayerOverlap(overlap);
     }
 
     private void FixedUpdate()

@@ -3,6 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MovementData")]
 public class MovementData : ScriptableObject
 {
+    public float overlapSpeed;
     public float walkSpeed;
     public float baseJumpForce;
     public float jumpInterval;
