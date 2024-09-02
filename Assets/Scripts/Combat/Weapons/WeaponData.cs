@@ -9,6 +9,9 @@ public class WeaponData : ScriptableObject
     {
         Sword
     }
+
+    public WeaponType weaponType;
+    public List<AnimationClip> animations;
     public int attack;
     public int attackSpeed;
     public int critRate;

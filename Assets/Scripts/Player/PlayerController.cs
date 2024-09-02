@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : PlayerStats
@@ -7,6 +8,7 @@ public class PlayerController : PlayerStats
 
     private Collider2D playerCol;
     private MovementController movementController;
+    private CombatController combatController;
     private FadeTransition fadeTransition;
     private ItemManager itemManager;
 
@@ -25,12 +27,14 @@ public class PlayerController : PlayerStats
     private void Start()
     {
         movementController = GetComponent<MovementController>();
+        combatController = GetComponent<CombatController>();
         fadeTransition = GetComponent<FadeTransition>();
         itemManager = GetComponent<ItemManager>();
         playerCol = GetComponent<Collider2D>();
 
         itemManager.InitItemManager();
         movementController.InitializeMovementController();
+        combatController.InitializeCombatController();
     }
 
     private void Update()
@@ -54,6 +58,8 @@ public class PlayerController : PlayerStats
         {
             if (checkPlungeRoutine == null)
                 checkPlungeRoutine = StartCoroutine(CheckPlungeRoutine());
+
+            combatController.HandleAttack();
         }
         if (Input.GetKeyUp(KeyCode.Mouse0))
         {
@@ -62,9 +68,13 @@ public class PlayerController : PlayerStats
             checkPlungeRoutine = null;
         }
 
-        movementController.CheckGroundCollision();
-        movementController.HandleMovment(horizontal);
-        movementController.HandleGrappling(vertical, ropeX);
+        if (!combatController.CheckAttacking())
+        {
+            movementController.CheckGroundCollision();
+
+            movementController.HandleMovment(horizontal);
+            movementController.HandleGrappling(vertical, ropeX);
+        }
     }
 
     public void OnPlayerOverlap(bool overlap)
@@ -74,7 +84,8 @@ public class PlayerController : PlayerStats
 
     private void FixedUpdate()
     {
-        movementController.MovePlayer();
+        if (!combatController.CheckAttacking())
+            movementController.MovePlayer();
     }
 
     private IEnumerator CheckPlungeRoutine()
