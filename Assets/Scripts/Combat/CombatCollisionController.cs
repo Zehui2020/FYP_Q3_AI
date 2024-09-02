@@ -8,6 +8,8 @@ public class CombatCollisionController : MonoBehaviour
     [SerializeField] LayerMask targetLayer;
 
     private float damage;
+    private int critRate;
+    private float critMultiplier;
 
     private void Start()
     {
@@ -21,6 +23,16 @@ public class CombatCollisionController : MonoBehaviour
     public void EnableCollider(float newDamage, int col)
     {
         damage = newDamage;
+        critRate = 0;
+        critMultiplier = 0;
+        colliders[col].SetCollider(true);
+    }
+
+    public void EnableCollider(float newDamage, int critRate, float critMultiplier, int col)
+    {
+        damage = newDamage;
+        this.critRate = critRate;
+        this.critMultiplier = critMultiplier;
         colliders[col].SetCollider(true);
     }
 
@@ -55,12 +67,12 @@ public class CombatCollisionController : MonoBehaviour
 
         if (enemyStats != null)
         {
-            enemyStats.TakeDamage(damage, closestPoint);
+            enemyStats.TakeDamage(damage, critRate, critMultiplier, closestPoint);
             DisableAllCollider();
         }
         else if (playerStats != null)
         {
-            playerStats.TakeDamage(damage, closestPoint);
+            playerStats.TakeDamage(damage, critRate, critMultiplier, closestPoint);
         }
     }
 }
