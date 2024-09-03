@@ -16,7 +16,8 @@ public class WeaponData : ScriptableObject
     public int baseAttack;
     public List<float> attackMultipliers;
     public float plungeAttackMultiplier;
-    public float attackSpeed;
+    public float comboSpeed;
+    public float attackCoolDown;
     public int critRate;
     public float critMultiplier;
 }
