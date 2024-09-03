@@ -13,7 +13,7 @@ public class CombatController : MonoBehaviour
 
     private Coroutine attackRoutine;
     private Coroutine attackAnimRoutine;
-    private Coroutine attackCoolDownRoutine;
+    private Coroutine attackCooldownRoutine;
     private Coroutine plungeAttackRoutine;
 
     public void InitializeCombatController()
@@ -24,7 +24,7 @@ public class CombatController : MonoBehaviour
     }
     public void HandleAttack()
     {
-        if (attackAnimRoutine == null && attackCoolDownRoutine == null)
+        if (attackAnimRoutine == null && attackCooldownRoutine == null)
         {
             if (attackRoutine != null)
             {
@@ -35,7 +35,7 @@ public class CombatController : MonoBehaviour
                 }
                 else if (attackComboCount == wData.attackAnimations.Count - 1)
                 {
-                    HandleAttackCoolDown();
+                    HandleAttackCooldown();
                 }
                 StopCoroutine(attackRoutine);
                 attackRoutine = StartCoroutine(AttackRoutine());
@@ -54,7 +54,7 @@ public class CombatController : MonoBehaviour
         animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
         attackAnimRoutine = StartCoroutine(AttackAnimRoutine());
 
-        yield return new WaitForSeconds(wData.comboSpeed + wData.attackAnimations[attackComboCount].length);
+        yield return new WaitForSeconds(wData.comboCooldown + wData.attackAnimations[attackComboCount].length);
 
         attackRoutine = null;
     }
@@ -66,19 +66,19 @@ public class CombatController : MonoBehaviour
         attackAnimRoutine = null;
     }
 
-    public void HandleAttackCoolDown()
+    public void HandleAttackCooldown()
     {
-        if (attackCoolDownRoutine == null)
+        if (attackCooldownRoutine == null)
         {
-            attackCoolDownRoutine = StartCoroutine(AttackCoolDownRoutine());
+            attackCooldownRoutine = StartCoroutine(AttackCooldownRoutine());
         }
     }
 
-    private IEnumerator AttackCoolDownRoutine()
+    private IEnumerator AttackCooldownRoutine()
     {
-        yield return new WaitForSeconds(wData.attackCoolDown + wData.attackAnimations[attackComboCount].length);
+        yield return new WaitForSeconds(wData.attackCooldown + wData.attackAnimations[attackComboCount].length);
 
-        attackCoolDownRoutine = null;
+        attackCooldownRoutine = null;
     }
 
     public bool CheckAttacking()
