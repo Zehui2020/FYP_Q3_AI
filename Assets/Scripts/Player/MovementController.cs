@@ -299,7 +299,7 @@ public class MovementController : MonoBehaviour
 
     public void HandleDash(float direction)
     {
-        if (dashRoutine == null)
+        if (dashRoutine == null && !isClimbingLedge)
             dashRoutine = StartCoroutine(DashRoutine(direction));
     }
 

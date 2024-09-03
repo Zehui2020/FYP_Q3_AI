@@ -8,7 +8,6 @@ using TMPro;
 public class ResponseData
 {
     public string prompt_id;
-    public string file_name;
 }
 
 public class ComfyPromptCtr : MonoBehaviour
@@ -21,8 +20,36 @@ public class ComfyPromptCtr : MonoBehaviour
     private void Start()
     {
         prompts += setPrompts;
-        promptText.text = prompts;
+        ChangeSeedInJson();
+
+        if (promptText != null)
+            promptText.text = prompts;
     }
+
+    public void ChangeSeedInJson()
+    {
+        string seedPattern = "\"seed\": ";
+        int seedIndex = promptJSON.IndexOf(seedPattern);
+
+        if (seedIndex == -1)
+        {
+            Console.WriteLine("Seed field not found in JSON.");
+            return;
+        }
+
+        int valueStartIndex = seedIndex + seedPattern.Length;
+        int valueEndIndex = promptJSON.IndexOf(',', valueStartIndex);
+
+        if (valueEndIndex == -1)
+        {
+            Console.WriteLine("Could not determine the end of the seed value.");
+            return;
+        }
+
+        string oldSeed = promptJSON.Substring(valueStartIndex, valueEndIndex - valueStartIndex);
+        promptJSON = promptJSON.Replace(oldSeed, UnityEngine.Random.Range(1, 4294967294).ToString());
+    }
+
     public void ResetPrompts()
     {
         prompts = string.Empty;
@@ -32,9 +59,12 @@ public class ComfyPromptCtr : MonoBehaviour
 
     public void QueuePrompt()
     {
-        Debug.Log(prompts);
-
         StartCoroutine(QueuePromptCoroutine(prompts));
+    }
+
+    public void QueuePrompt(string positivePrompt)
+    {
+        StartCoroutine(QueuePromptCoroutine(positivePrompt));
     }
 
     private IEnumerator QueuePromptCoroutine(string positivePrompt)
@@ -42,7 +72,6 @@ public class ComfyPromptCtr : MonoBehaviour
         string url = "http://127.0.0.1:8188/prompt";
         string promptText = GeneratePromptJson();
         promptText = promptText.Replace("Pprompt", positivePrompt);
-        Debug.Log("Prompt Text: " + promptText);
 
         UnityWebRequest request = new UnityWebRequest(url, "POST");
         byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(promptText);
@@ -61,7 +90,6 @@ public class ComfyPromptCtr : MonoBehaviour
             Debug.Log("Prompt queued successfully." + request.downloadHandler.text);
 
             ResponseData data = JsonUtility.FromJson<ResponseData>(request.downloadHandler.text);
-            Debug.Log("Prompt ID: " + data.prompt_id);
             GetComponent<ComfyWebsocket>().promptID = data.prompt_id;
         }
     }

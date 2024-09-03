@@ -13,11 +13,14 @@ public class ComfyWebsocket : MonoBehaviour
     private string clientId = Guid.NewGuid().ToString();
     private ClientWebSocket ws = new ClientWebSocket();
 
+    [SerializeField] private bool isPlayerGeneration;
     [SerializeField] private Slider loadingSlider;
     [SerializeField] private TextMeshProUGUI loadingText;
     [SerializeField] private Collider2D killBoxTrigger;
 
+    [SerializeField] private ComfyFixedPromptCtr fixedPromptCtr;
     public ComfyImageCtr comfyImageCtr;
+
     async void Start()
     {
         await ws.ConnectAsync(new Uri($"ws://{serverAddress}/ws?clientId={clientId}"), CancellationToken.None);
@@ -25,6 +28,7 @@ public class ComfyWebsocket : MonoBehaviour
     }
 
     public string promptID;
+
     private async void StartListening()
     {
         var buffer = new byte[1024 * 4];
@@ -50,20 +54,23 @@ public class ComfyWebsocket : MonoBehaviour
             while (!result.EndOfMessage);
 
             string response = stringBuilder.ToString();
-            Debug.Log("Received: " + response);
+            //Debug.Log("Received: " + response);
 
-            int currentValue = ParseJsonValue(stringBuilder.ToString(), "value");
-            int maxValue = ParseJsonValue(stringBuilder.ToString(), "max");
-
-            loadingSlider.value = currentValue;
-            loadingSlider.maxValue = maxValue;
-
-            if (currentValue >= 20)
-                loadingText.text = "Polishing Image...";
-            else if (ignoreCount <= 0)
+            if (isPlayerGeneration)
             {
-                killBoxTrigger.isTrigger = false;
-                loadingText.text = "Generating Image (" + currentValue + " / " + maxValue + ")";
+                int currentValue = ParseJsonValue(stringBuilder.ToString(), "value");
+                int maxValue = ParseJsonValue(stringBuilder.ToString(), "max");
+
+                loadingSlider.value = currentValue;
+                loadingSlider.maxValue = maxValue;
+
+                if (currentValue >= 20)
+                    loadingText.text = "Polishing Image...";
+                else if (ignoreCount <= 0)
+                {
+                    killBoxTrigger.isTrigger = false;
+                    loadingText.text = "Generating Image (" + currentValue + " / " + maxValue + ")";
+                }
             }
 
             if (response.Contains("\"queue_remaining\": 0"))
@@ -74,8 +81,13 @@ public class ComfyWebsocket : MonoBehaviour
                     continue;
                 }
 
-                killBoxTrigger.isTrigger = true;
-                comfyImageCtr.RequestFileName(promptID);
+                if (isPlayerGeneration)
+                    killBoxTrigger.isTrigger = true;
+
+                if (isPlayerGeneration)
+                    comfyImageCtr.RequestFileName(promptID);
+                else
+                    comfyImageCtr.RequestFileName(promptID, fixedPromptCtr.GetFileName());
             }
         }
     }
