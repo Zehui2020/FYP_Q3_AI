@@ -18,7 +18,7 @@ public class MeleeEnemy : Enemy
     private readonly int IdleAnim = Animator.StringToHash("EnemyIdle");
     private readonly int RunAnim = Animator.StringToHash("EnemyRun");
     private readonly int AttackAnim = Animator.StringToHash("EnemyAttack");
-    private readonly int DieAnim = Animator.StringToHash("EnemyIdle");
+    private readonly int DieAnim = Animator.StringToHash("EnemyDie");
 
     public override void InitializeEnemy()
     {
@@ -86,5 +86,15 @@ public class MeleeEnemy : Enemy
 
         if (currentState != State.Attack)
             UpdatePlayerDirection();
+    }
+
+    public override void TakeDamage(float damage, int critRate, float critMultiplier, Vector3 closestPoint)
+    {
+        base.TakeDamage(damage, critRate, critMultiplier, closestPoint);
+
+        if (health <= 0)
+        {
+            ChangeState(State.Die);
+        }
     }
 }

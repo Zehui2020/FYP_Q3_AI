@@ -506,7 +506,6 @@ public class MovementController : MonoBehaviour
             {
                 isPlunging = false;
                 canPlungeDamage = true;
-
             }
             plungeRoutine = null;
 

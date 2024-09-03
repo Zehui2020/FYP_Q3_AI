@@ -13,6 +13,7 @@ public class CombatController : MonoBehaviour
 
     private Coroutine attackRoutine;
     private Coroutine attackAnimRoutine;
+    private Coroutine attackCooldownRoutine;
     private Coroutine plungeAttackRoutine;
 
     public void InitializeCombatController()
@@ -23,7 +24,7 @@ public class CombatController : MonoBehaviour
     }
     public void HandleAttack()
     {
-        if (attackAnimRoutine == null)
+        if (attackAnimRoutine == null && attackCooldownRoutine == null)
         {
             if (attackRoutine != null)
             {
@@ -31,6 +32,10 @@ public class CombatController : MonoBehaviour
                 if (attackComboCount >= wData.attackAnimations.Count)
                 {
                     attackComboCount = 0;
+                }
+                else if (attackComboCount == wData.attackAnimations.Count - 1)
+                {
+                    HandleAttackCooldown();
                 }
                 StopCoroutine(attackRoutine);
                 attackRoutine = StartCoroutine(AttackRoutine());
@@ -49,7 +54,7 @@ public class CombatController : MonoBehaviour
         animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
         attackAnimRoutine = StartCoroutine(AttackAnimRoutine());
 
-        yield return new WaitForSeconds(wData.attackSpeed + wData.attackAnimations[attackComboCount].length);
+        yield return new WaitForSeconds(wData.comboCooldown + wData.attackAnimations[attackComboCount].length);
 
         attackRoutine = null;
     }
@@ -59,6 +64,21 @@ public class CombatController : MonoBehaviour
         yield return new WaitForSeconds(wData.attackAnimations[attackComboCount].length);
 
         attackAnimRoutine = null;
+    }
+
+    public void HandleAttackCooldown()
+    {
+        if (attackCooldownRoutine == null)
+        {
+            attackCooldownRoutine = StartCoroutine(AttackCooldownRoutine());
+        }
+    }
+
+    private IEnumerator AttackCooldownRoutine()
+    {
+        yield return new WaitForSeconds(wData.attackCooldown + wData.attackAnimations[attackComboCount].length);
+
+        attackCooldownRoutine = null;
     }
 
     public bool CheckAttacking()
@@ -74,7 +94,6 @@ public class CombatController : MonoBehaviour
     {
         if (plungeAttackRoutine == null)
         {
-            Debug.Log("Plunge Attack");
             plungeAttackRoutine = StartCoroutine(PlungeAttackRoutine());
         }
     }
