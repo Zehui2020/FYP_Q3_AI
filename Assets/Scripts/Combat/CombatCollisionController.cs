@@ -7,12 +7,14 @@ public class CombatCollisionController : MonoBehaviour
     [SerializeField] private CombatCollisionTrigger[] colliders;
     [SerializeField] LayerMask targetLayer;
 
+    private BaseStats stats;
     private float damage;
     private int critRate;
     private float critMultiplier;
 
     private void Start()
     {
+        stats = GetComponent<BaseStats>();
         foreach (var collider in colliders)
         {
             collider.TriggerEvent += TriggerEvent;
@@ -23,8 +25,8 @@ public class CombatCollisionController : MonoBehaviour
     public void EnableCollider(float newDamage, int col)
     {
         damage = newDamage;
-        critRate = 0;
-        critMultiplier = 0;
+        critRate = stats.critRate;
+        critMultiplier = stats.critDamage;
         colliders[col].SetCollider(true);
     }
 

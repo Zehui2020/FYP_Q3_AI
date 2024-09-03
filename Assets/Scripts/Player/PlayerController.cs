@@ -149,4 +149,14 @@ public class PlayerController : PlayerStats
     {
         fadeTransition.FadeOut();
     }
+
+    public override void TakeDamage(float damage, int critRate, float critMultiplier, Vector3 closestPoint)
+    {
+        base.TakeDamage(damage, critRate, critMultiplier, closestPoint);
+
+        if (health <= 0)
+        {
+            Debug.Log("YOU DIED!");
+        }
+    }
 }
