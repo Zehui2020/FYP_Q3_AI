@@ -72,6 +72,13 @@ public class PlayerController : PlayerStats
         if (!combatController.CheckAttacking() && !movementController.canMove)
             movementController.ResumePlayer();
 
+        if (movementController.canPlungeDamage)
+        {
+            combatController.HandlePlungeAttack();
+            movementController.canPlungeDamage = false;
+            movementController.StopPlayer();
+        }
+
         movementController.CheckGroundCollision();
         movementController.HandleMovment(horizontal);
         movementController.HandleGrappling(vertical, ropeX);

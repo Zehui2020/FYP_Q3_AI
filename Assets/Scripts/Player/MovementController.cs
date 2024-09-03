@@ -23,6 +23,7 @@ public class MovementController : MonoBehaviour
     public bool isGrounded = true;
     public bool isDashing = false;
     public bool isClimbingLedge = false;
+    public bool isPlunging = false;
 
     public bool lockMomentum = false;
     public bool lockDirection = false;
@@ -46,6 +47,9 @@ public class MovementController : MonoBehaviour
 
     public int wallJumpCount;
     public int maxWallJumps;
+
+    public float plungeMultiplier;
+    public bool canPlungeDamage = false;
 
     private Coroutine jumpRoutine;
     private Coroutine burstDragRoutine;
@@ -431,6 +435,7 @@ public class MovementController : MonoBehaviour
 
     private IEnumerator PlungeRoutine()
     {
+        isPlunging = true;
         playerRB.velocity = Vector2.zero;
         playerRB.gravityScale = 0;
 
@@ -438,6 +443,7 @@ public class MovementController : MonoBehaviour
 
         playerRB.gravityScale = movementData.gravityScale;
         playerRB.AddForce(Vector2.down * movementData.plungeForce, ForceMode2D.Impulse);
+        plungeMultiplier = playerRB.velocity.magnitude;
     }
 
     public void MovePlayer()
@@ -496,6 +502,12 @@ public class MovementController : MonoBehaviour
             if (jumpRoutine == null)
                 jumpCount = maxJumpCount;
 
+            if (isPlunging)
+            {
+                isPlunging = false;
+                canPlungeDamage = true;
+
+            }
             plungeRoutine = null;
 
             if (isGrappling)

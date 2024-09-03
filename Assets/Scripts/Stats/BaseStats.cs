@@ -42,19 +42,20 @@ public class BaseStats : MonoBehaviour
         }
 
         // crit calculation
+        DamagePopup.DamageType isCrit;
         if (Random.Range(0, 100) < critRate)
         {
             damage *= critMultiplier;
-            health -= (int)damage;
-            DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-            damagePopup.SetupPopup((int)damage, closestPoint, DamagePopup.DamageType.Crit);
+            isCrit = DamagePopup.DamageType.Crit;
         }
         else
         {
-            health -= (int)damage;
-            DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-            damagePopup.SetupPopup((int)damage, closestPoint, DamagePopup.DamageType.Normal);
+            isCrit = DamagePopup.DamageType.Normal;
         }
+
+        health -= (int)damage;
+        DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+        damagePopup.SetupPopup((int)damage, closestPoint, isCrit);
     }
 
     public void Heal(int amount)
