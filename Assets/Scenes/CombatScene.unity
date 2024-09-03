@@ -1446,7 +1446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70579677df0549944a21ca957aa69697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 9999
   shield: 0
   attack: 5
   attackSpeed: 0
@@ -2382,8 +2382,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9104656562831867184, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
-      propertyPath: health
-      value: 100
+      propertyPath: attack
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 9209273340593868020, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2406,8 +2406,7 @@ PrefabInstance:
       value: -75
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 1396669704043455621, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
