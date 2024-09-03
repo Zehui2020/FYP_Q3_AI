@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class AbilityController : MonoBehaviour
@@ -7,13 +8,13 @@ public class AbilityController : MonoBehaviour
     [SerializeField] private List<BaseAbility> abilities;
 
     private List<Coroutine> abilityDurationRoutines = new List<Coroutine> { null, null };
-    private BaseStats baseStats = new BaseStats();
+    private int baseAttack, baseHealth;
     private List<float> statChanges = new List<float> { 0, 0 };
 
     public void InitializeAbilityController()
     {
-        baseStats.attack = GetComponent<PlayerController>().attack;
-        baseStats.health = GetComponent<PlayerController>().health;
+        baseAttack = GetComponent<PlayerController>().attack;
+        baseHealth = GetComponent<PlayerController>().health;
     }
 
     public void HandleAbility(PlayerController stats, int abilityNo)
@@ -29,19 +30,24 @@ public class AbilityController : MonoBehaviour
         // if ability for self
         if (ability.abilityUseType == BaseAbility.AbilityUseType.Self)
         {
-            statChanges[abilityNo] = ChangeStat(
-                baseStats.attack,
-                ability.abilityEffectValue,
-                ability.abilityEffectType,
-                ability.abilityEffectValueType
-                );
-
             switch (ability.abilityEffectStat)
             {
                 case BaseAbility.AbilityEffectStat.attack:
+                    statChanges[abilityNo] = ChangeStat(
+                        baseAttack,
+                        ability.abilityEffectValue,
+                        ability.abilityEffectType,
+                        ability.abilityEffectValueType
+                        );
                     stats.attack += (int)statChanges[abilityNo];
                     break;
                 case BaseAbility.AbilityEffectStat.health:
+                    statChanges[abilityNo] = ChangeStat(
+                        baseHealth,
+                        ability.abilityEffectValue,
+                        ability.abilityEffectType,
+                        ability.abilityEffectValueType
+                        );
                     stats.health += (int)statChanges[abilityNo];
                     break;
             }
