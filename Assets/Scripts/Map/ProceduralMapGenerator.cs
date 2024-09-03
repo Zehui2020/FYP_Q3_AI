@@ -10,8 +10,8 @@ public class ProceduralMapGenerator : MonoBehaviour
     [SerializeField] public int mapSeed = 0;
 
     private List<Vector2> availablePosList = new List<Vector2>();
-    [SerializeField] private List<Vector3> takenPosList = new List<Vector3>();
-    private List<GameObject> takenObjectsList = new List<GameObject>();
+    private List<Vector3> takenPosList = new List<Vector3>();
+    [SerializeField] private List<GameObject> takenObjectsList = new List<GameObject>();
     private List<int> stepDirList = new List<int>
     {
         -1, -1, 1, 1, 0
@@ -25,7 +25,6 @@ public class ProceduralMapGenerator : MonoBehaviour
     private Vector2 currPos;
     private int roomsAdded = 0;
     private bool isPathDone = false;
-    private float timePassed = 0;
 
     private void Awake()
     {
@@ -74,6 +73,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         // place rooms
         RegulateRoomAmount();
         PlaceRooms();
+        FlipTakenObjectsList();
         ConfigureRoomDoors();
         // pass info to mini map
         for (int i = 0; i < miniMap.Count; i++)
@@ -293,6 +293,24 @@ public class ProceduralMapGenerator : MonoBehaviour
         takenObjectsList.Add(createdObj);
     }
 
+    private void FlipTakenObjectsList()
+    {
+        for (int i = 1; i < takenObjectsList.Count; i++)
+        {
+            int j = takenObjectsList.Count - i;
+            if (i < j)
+            {
+                GameObject temp = takenObjectsList[i];
+                takenObjectsList[i] = takenObjectsList[j];
+                takenObjectsList[j] = temp;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
     private void ConfigureRoomDoors()
     {
         for (int i = 0; i < takenObjectsList.Count; i++)
@@ -321,7 +339,6 @@ public class ProceduralMapGenerator : MonoBehaviour
             }
             // update doors
             rData.UpdateDoors();
-            rData.ToggleRoomCover(false);
         }
     }
 
