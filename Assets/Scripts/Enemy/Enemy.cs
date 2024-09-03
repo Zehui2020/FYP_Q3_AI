@@ -62,6 +62,11 @@ public class Enemy : EnemyStats
         collisionController.DisableCollider(col);
     }
 
+    public void OnDie()
+    {
+        Destroy(transform.parent.gameObject);
+    }
+
     protected void PatrolUpdate()
     {
         aiNavigation.SetPathfindingTarget(waypoints[currentWaypoint], patrolMovementSpeed, true);

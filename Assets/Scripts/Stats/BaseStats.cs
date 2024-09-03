@@ -22,7 +22,7 @@ public class BaseStats : MonoBehaviour
 
     private Coroutine immuneRoutine;
 
-    public void TakeDamage(float damage, int critRate, float critMultiplier, Vector3 closestPoint)
+    public virtual void TakeDamage(float damage, int critRate, float critMultiplier, Vector3 closestPoint)
     {
         if (isImmune)
         {
