@@ -9,6 +9,7 @@ public class PlayerController : PlayerStats
     private Collider2D playerCol;
     private MovementController movementController;
     private CombatController combatController;
+    private AbilityController abilityController;
     private FadeTransition fadeTransition;
     private ItemManager itemManager;
 
@@ -28,6 +29,7 @@ public class PlayerController : PlayerStats
     {
         movementController = GetComponent<MovementController>();
         combatController = GetComponent<CombatController>();
+        abilityController = GetComponent<AbilityController>();
         fadeTransition = GetComponent<FadeTransition>();
         itemManager = GetComponent<ItemManager>();
         playerCol = GetComponent<Collider2D>();
@@ -35,6 +37,7 @@ public class PlayerController : PlayerStats
         itemManager.InitItemManager();
         movementController.InitializeMovementController();
         combatController.InitializeCombatController();
+        abilityController.InitializeAbilityController();
     }
 
     private void Update()
@@ -51,8 +54,13 @@ public class PlayerController : PlayerStats
         if (Input.GetKeyDown(KeyCode.LeftControl))
             movementController.HandleRoll();
 
-        if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
+        if (Input.GetKeyDown(KeyCode.F) && currentInteractable != null)
             currentInteractable.OnInteract();
+
+        if (Input.GetKeyDown(KeyCode.E))
+            abilityController.HandleAbility(this, 0);
+        if (Input.GetKeyDown(KeyCode.Q))
+            abilityController.HandleAbility(this, 1);
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {

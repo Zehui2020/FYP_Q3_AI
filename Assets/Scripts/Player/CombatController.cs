@@ -8,6 +8,7 @@ public class CombatController : MonoBehaviour
 
     private AnimationManager animationManager;
     private CombatCollisionController collisionController;
+    private PlayerController stats;
 
     private int attackComboCount;
 
@@ -20,6 +21,7 @@ public class CombatController : MonoBehaviour
     {
         animationManager = GetComponent<AnimationManager>();
         collisionController = GetComponent<CombatCollisionController>();
+        stats = GetComponent<PlayerController>();
         attackComboCount = 0;
     }
     public void HandleAttack()
@@ -113,9 +115,9 @@ public class CombatController : MonoBehaviour
         float damage;
 
         if (plungeAttackRoutine != null)
-            damage = wData.baseAttack * wData.plungeAttackMultiplier;
+            damage = stats.attack * wData.plungeAttackMultiplier;
         else
-            damage = wData.baseAttack * wData.attackMultipliers[attackComboCount];
+            damage = stats.attack * wData.attackMultipliers[attackComboCount];
 
         collisionController.EnableCollider(damage, wData.critRate, wData.critMultiplier, col);
     }
