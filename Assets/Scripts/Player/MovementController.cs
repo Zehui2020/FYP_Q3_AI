@@ -469,6 +469,20 @@ public class MovementController : MonoBehaviour
         plungeMultiplier = playerRB.velocity.magnitude;
     }
 
+    private void StopPlunge()
+    {
+        if (plungeRoutine == null)
+            return;
+
+        StopCoroutine(plungeRoutine);
+        playerRB.gravityScale = movementData.gravityScale;
+        playerRB.AddForce(Vector2.down * movementData.plungeForce, ForceMode2D.Impulse);
+        plungeMultiplier = playerRB.velocity.magnitude;
+        isPlunging = false;
+        canPlungeDamage = true;
+        plungeRoutine = null;
+    }
+
     public void MovePlayer()
     {
         if (!isMoving || lockMomentum || isGrappling || plungeRoutine != null || !canMove || isWallJumping)
@@ -528,11 +542,7 @@ public class MovementController : MonoBehaviour
                 jumpCount = maxJumpCount;
 
             if (isPlunging)
-            {
-                isPlunging = false;
-                canPlungeDamage = true;
-            }
-            plungeRoutine = null;
+                StopPlunge();
 
             if (isGrappling)
                 StopGrappling();
