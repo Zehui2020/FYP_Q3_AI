@@ -227,7 +227,8 @@ public class MovementController : MonoBehaviour
         if (ledgeHit || !wallHit)
             return;
 
-        if (wallHit.collider.tag == "Platform")
+        //Check if player is touching platform
+        if (wallHit.collider.gameObject.GetComponent<PlatformEffector2D>())
             return;
 
         ledgePosBot = wallHit.point;
