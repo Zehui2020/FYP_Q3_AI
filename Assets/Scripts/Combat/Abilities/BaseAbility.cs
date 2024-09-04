@@ -8,7 +8,8 @@ public class BaseAbility : ScriptableObject
     public enum AbilityName
     {
         Rage,
-        Heal
+        Heal,
+        Weaken
     }
     public AbilityName abilityName;
 

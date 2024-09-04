@@ -63,11 +63,29 @@ public class AbilityController : MonoBehaviour
             List<BaseStats> targetsInArea = new List<BaseStats>();
             foreach (Collider2D col in targetColliders)
             {
-                targetsInArea.Add(col.GetComponent<BaseStats>());
+                if (col.GetComponent<BaseStats>() != null)
+                    targetsInArea.Add(col.GetComponent<BaseStats>());
             }
-            for (int i = 0; targetsInArea.Count > 0; i++)
+            for (int i = 0; i < targetsInArea.Count; i++)
             {
-                
+                // update stat
+                switch (ability.abilityEffectStat)
+                {
+                    case BaseAbility.AbilityEffectStat.attack:
+                        StartCoroutine(targetsInArea[i].AttackChangeRoutine(
+                            ability.abilityEffectValue,
+                            ability.abilityEffectType,
+                            ability.abilityEffectValueType,
+                            ability.abilityDuration));
+                        break;
+                    case BaseAbility.AbilityEffectStat.health:
+                        StartCoroutine(targetsInArea[i].HealthChangeRoutine(
+                            ability.abilityEffectValue,
+                            ability.abilityEffectType,
+                            ability.abilityEffectValueType,
+                            ability.abilityDuration));
+                        break;
+                }
             }
         }
         abilityDurationRoutines[abilityNo] = StartCoroutine(AbilityDurationRoutine(stats, abilityNo, ability));

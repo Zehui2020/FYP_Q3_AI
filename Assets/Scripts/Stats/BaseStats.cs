@@ -1,5 +1,6 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class BaseStats : MonoBehaviour
@@ -110,16 +111,15 @@ public class BaseStats : MonoBehaviour
             else if (effectType == BaseAbility.AbilityEffectType.Decrease)
                 change = -(int)(value * baseAttack / 100);
         }
-        attack += (int)change;
+        attack += change;
 
         yield return new WaitForSeconds(duration);
 
-        attack -= (int)change;
+        attack -= change;
     }
 
     public IEnumerator HealthChangeRoutine(float value, BaseAbility.AbilityEffectType effectType, BaseAbility.AbilityEffectValueType valueType,  float duration)
     {
-        Debug.Log("health change start");
         int change = 0;
         if (valueType == BaseAbility.AbilityEffectValueType.Flat)
         {
@@ -135,23 +135,35 @@ public class BaseStats : MonoBehaviour
             else if (effectType == BaseAbility.AbilityEffectType.Decrease)
                 change = -(int)(value * maxHealth / 100);
         }
-        Debug.Log(change);
         int temp = health + change;
         temp = Mathf.Clamp(temp, 0, maxHealth);
         change = temp - health;
-        health += change;
-        Debug.Log(change);
-
-        DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-        popup.SetupPopup("+ " + change, transform.position, Color.green);
+        if (change < 0)
+        {
+            TakeDamage(-change, 0, 0, transform.position);
+        }
+        else
+        {
+            health += change;
+            DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+            popup.SetupPopup("+ " + change, transform.position, Color.green);
+        }
 
         yield return new WaitForSeconds(duration);
 
-        Debug.Log("health change end");
-
         if (duration > 0)
         {
-            health -= change;
+            change = -change;
+            if (change < 0)
+            {
+                TakeDamage(-change, 0, 0, transform.position);
+            }
+            else
+            {
+                health += change;
+                DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+                popup.SetupPopup("+ " + change, transform.position, Color.green);
+            }
         }
     }
 }
