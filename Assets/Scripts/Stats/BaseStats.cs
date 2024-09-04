@@ -1,5 +1,6 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class BaseStats : MonoBehaviour
@@ -137,16 +138,32 @@ public class BaseStats : MonoBehaviour
         int temp = health + change;
         temp = Mathf.Clamp(temp, 0, maxHealth);
         change = temp - health;
-        health += change;
-
-        DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-        popup.SetupPopup("+ " + change, transform.position, Color.green);
+        if (change < 0)
+        {
+            TakeDamage(-change, 0, 0, transform.position);
+        }
+        else
+        {
+            health += change;
+            DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+            popup.SetupPopup("+ " + change, transform.position, Color.green);
+        }
 
         yield return new WaitForSeconds(duration);
 
         if (duration > 0)
         {
-            health -= change;
+            change = -change;
+            if (change < 0)
+            {
+                TakeDamage(-change, 0, 0, transform.position);
+            }
+            else
+            {
+                health += change;
+                DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+                popup.SetupPopup("+ " + change, transform.position, Color.green);
+            }
         }
     }
 }
