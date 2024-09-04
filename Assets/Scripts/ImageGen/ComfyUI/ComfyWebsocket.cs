@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class ComfyWebsocket : MonoBehaviour
 {
@@ -13,27 +10,24 @@ public class ComfyWebsocket : MonoBehaviour
     private string clientId = Guid.NewGuid().ToString();
     private ClientWebSocket ws = new ClientWebSocket();
 
-    [SerializeField] private bool isPlayerGeneration;
-    [SerializeField] private Slider loadingSlider;
-    [SerializeField] private TextMeshProUGUI loadingText;
-    [SerializeField] private Collider2D killBoxTrigger;
-
-    [SerializeField] private ComfyFixedPromptCtr fixedPromptCtr;
     public ComfyImageCtr comfyImageCtr;
+    [HideInInspector] public string promptID;
 
-    async void Start()
+    [HideInInspector] public int currentProgress;
+    [HideInInspector] public int maxProgress;
+
+    private bool isConnected = false;
+
+    public async void InitWebsocket()
     {
         await ws.ConnectAsync(new Uri($"ws://{serverAddress}/ws?clientId={clientId}"), CancellationToken.None);
         StartListening();
     }
 
-    public string promptID;
-
     private async void StartListening()
     {
         var buffer = new byte[1024 * 4];
         WebSocketReceiveResult result = null;
-        int ignoreCount = 1;
 
         while (ws.State == WebSocketState.Open)
         {
@@ -43,7 +37,7 @@ public class ComfyWebsocket : MonoBehaviour
                 result = await ws.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    return;
+                    await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
                 }
                 else
                 {
@@ -56,38 +50,15 @@ public class ComfyWebsocket : MonoBehaviour
             string response = stringBuilder.ToString();
             //Debug.Log("Received: " + response);
 
-            if (isPlayerGeneration)
-            {
-                int currentValue = ParseJsonValue(stringBuilder.ToString(), "value");
-                int maxValue = ParseJsonValue(stringBuilder.ToString(), "max");
-
-                loadingSlider.value = currentValue;
-                loadingSlider.maxValue = maxValue;
-
-                if (currentValue >= 20)
-                    loadingText.text = "Polishing Image...";
-                else if (ignoreCount <= 0)
-                {
-                    killBoxTrigger.isTrigger = false;
-                    loadingText.text = "Generating Image (" + currentValue + " / " + maxValue + ")";
-                }
-            }
+            currentProgress = ParseJsonValue(response, "value");
+            maxProgress = ParseJsonValue(response, "max");
 
             if (response.Contains("\"queue_remaining\": 0"))
             {
-                if (ignoreCount > 0)
-                {
-                    ignoreCount--;
-                    continue;
-                }
-
-                if (isPlayerGeneration)
-                    killBoxTrigger.isTrigger = true;
-
-                if (isPlayerGeneration)
+                if (isConnected)
                     comfyImageCtr.RequestFileName(promptID);
                 else
-                    comfyImageCtr.RequestFileName(promptID, fixedPromptCtr.GetFileName());
+                    isConnected = true;
             }
         }
     }
@@ -126,21 +97,9 @@ public class ComfyWebsocket : MonoBehaviour
         }
     }
 
-    public void CloseSocket()
-    {
-        StartCoroutine(CloseRoutine());
-    }
-
-    private IEnumerator CloseRoutine()
+    void OnDestroy()
     {
         if (ws != null && ws.State == WebSocketState.Open)
             ws.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
-
-        while (ws.State == WebSocketState.Open)
-        {
-            yield return null;
-        }
-
-        SceneLoader.Instance.LoadScene("PlayerMovementScene");
     }
 }

@@ -6,10 +6,11 @@ public class MenuBackground : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Animator animator;
+    [SerializeField] private ImageSaver imageSaver;
 
-    public void SetupBackground(Sprite image)
+    public void SetupBackground()
     {
-        spriteRenderer.sprite = image;
+        spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk("background");
         animator.SetTrigger("FadeIn");
     }
 

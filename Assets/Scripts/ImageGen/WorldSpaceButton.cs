@@ -7,7 +7,7 @@ using System.Collections;
 public class WorldSpaceButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
     [SerializeField] private BoxCollider2D buttonCollider;
-    private ComfyPromptCtr promptCtr;
+    private ComfyUIManager uiManager;
     [SerializeField] private TextMeshPro promptText;
 
     private bool _isHovering = false;
@@ -58,10 +58,10 @@ public class WorldSpaceButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
         }
     }
 
-    public void SetPrompt(string prompt, ComfyPromptCtr promptCtr)
+    public void SetPrompt(string prompt, ComfyUIManager comfyUIManager)
     {
         this.prompt = prompt;
-        this.promptCtr = promptCtr;
+        uiManager = comfyUIManager;
         promptText.text = this.prompt;
     }
 
@@ -170,7 +170,7 @@ public class WorldSpaceButton : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        promptCtr.AddPrompt(prompt);
+        uiManager.AddPrompt(prompt);
         gameObject.SetActive(false);
         _hingeJoint.enabled = false;
         _isDragging = false;

@@ -7,7 +7,7 @@ public class WorldSpaceButtonController : MonoBehaviour
     [SerializeField] private List<string> prompts = new();
     private List<WorldSpaceButton> buttons = new();
     [SerializeField] private WorldSpaceButton worldSpaceButtonPrefab;
-    [SerializeField] private ComfyPromptCtr promptCtr;
+    [SerializeField] private ComfyUIManager uiManager;
     [SerializeField] private MenuBackground menuBackground;
 
     [SerializeField] private float minSpawnXRange;
@@ -25,7 +25,7 @@ public class WorldSpaceButtonController : MonoBehaviour
         {
             float randX = Random.Range(minSpawnXRange, maxSpawnXRange);
             WorldSpaceButton button = Instantiate(worldSpaceButtonPrefab, new Vector3(randX, spawnY, 0), Quaternion.identity);
-            button.SetPrompt(prompt, promptCtr);
+            button.SetPrompt(prompt, uiManager);
             buttons.Add(button);
         }
     }
@@ -34,7 +34,7 @@ public class WorldSpaceButtonController : MonoBehaviour
     {
         if (resetBG)
             menuBackground.ResetBackground();
-        promptCtr.ResetPrompts();
+        uiManager.ResetPrompt();
         foreach (WorldSpaceButton button in buttons)
         {
             if (button.isActiveAndEnabled)
