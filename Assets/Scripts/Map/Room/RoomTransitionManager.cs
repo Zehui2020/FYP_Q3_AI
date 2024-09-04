@@ -24,7 +24,8 @@ public class RoomTransitionManager : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
 
         // teleport player to room
-        player.transform.position = roomToTP.GetTPPoint(dir).position;
+        Vector3 targetPos = roomToTP.GetTPPoint(dir).position;
+        player.transform.position = new Vector3(targetPos.x, targetPos.y, 0);
         PlayerController.Instance.FadeIn();
     }
 
