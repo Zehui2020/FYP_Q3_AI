@@ -5,19 +5,19 @@ public class ProceduralMapGenerator : MonoBehaviour
 {
     [SerializeField] private MapData mData;
     [SerializeField] private GameObject mapContainer;
+    [SerializeField] private MiniMapController mmController;
+    [SerializeField] private List<MiniMapGenerator> miniMap = new List<MiniMapGenerator>();
+    [SerializeField] private RoomTransitionManager rtManager;
     [SerializeField] public int mapSeed = 0;
 
     private List<Vector2> availablePosList = new List<Vector2>();
     private List<Vector3> takenPosList = new List<Vector3>();
-    [SerializeField] private List<GameObject> takenObjectsList = new List<GameObject>();
+    private List<GameObject> takenObjectsList = new List<GameObject>();
     private List<int> stepDirList = new List<int>
     {
         -1, -1, 1, 1, 0
     };
     private int currDir;
-    private List<MiniMapGenerator> miniMap = new List<MiniMapGenerator>();
-    private MiniMapController mmController;
-    private RoomTransitionManager rtManager;
     private GameObject createdObj;
     private Vector2 startPos;
     private Vector2 currPos;
@@ -26,13 +26,6 @@ public class ProceduralMapGenerator : MonoBehaviour
 
     public void InitMapGenerator()
     {
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MiniMap"))
-        {
-            miniMap.Add(obj.GetComponent<MiniMapGenerator>());
-        }
-        mmController = GameObject.FindGameObjectWithTag("MiniMapController").GetComponent<MiniMapController>();
-        rtManager = GetComponentInParent<RoomTransitionManager>();
-
         SetSeed(mapSeed);
         StartMapGeneration();
     }

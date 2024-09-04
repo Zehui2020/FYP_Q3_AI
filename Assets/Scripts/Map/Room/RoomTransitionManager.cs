@@ -6,7 +6,7 @@ public class RoomTransitionManager : MonoBehaviour
 {
     [SerializeField] private MiniMapController mmController;
     [SerializeField] private GameObject player;
-    public List<RoomController> rooms = new List<RoomController>();
+    private List<RoomController> rooms = new List<RoomController>();
 
     public void TeleportPlayer(int dir)
     {
