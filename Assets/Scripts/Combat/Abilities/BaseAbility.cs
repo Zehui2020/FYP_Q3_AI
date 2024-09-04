@@ -5,7 +5,14 @@ using UnityEngine;
 [CreateAssetMenu]
 public class BaseAbility : ScriptableObject
 {
-    public string abilityEffectName;
+    public enum AbilityName
+    {
+        Rage,
+        Heal
+    }
+    public AbilityName abilityName;
+
+    public Sprite abilityIcon;
 
     public enum AbilityUseType
     {
