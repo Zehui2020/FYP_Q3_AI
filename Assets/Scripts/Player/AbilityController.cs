@@ -54,7 +54,7 @@ public class AbilityController : MonoBehaviour
                         ability.abilityDuration));
                     break;
             }
-        }
+        } 
         // if ability is Area
         else if (ability.abilityUseType == BaseAbility.AbilityUseType.Area)
         {

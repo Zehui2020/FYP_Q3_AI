@@ -31,12 +31,8 @@ public class ComfyTilesetGeneration : ComfyManager
 
         foreach (PromptChecker promptChecker in promptCheckers)
         {
-            Debug.Log(playerPrompt);
             if (playerPrompt.Contains(promptChecker.foundPrompts))
-            {
                 finalPrompt = setPrompts + ", " + promptChecker.endPrompt;
-                Debug.Log(promptChecker.endPrompt);
-            }
         }
 
         if (finalPrompt == string.Empty)

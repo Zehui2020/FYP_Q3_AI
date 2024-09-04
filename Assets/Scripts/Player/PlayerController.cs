@@ -17,9 +17,6 @@ public class PlayerController : PlayerStats
 
     private float ropeX;
 
-    [SerializeField] private float plungeHoldDuration;
-    private Coroutine checkPlungeRoutine;
-
     private void Awake()
     {
         Instance = this;
@@ -45,7 +42,7 @@ public class PlayerController : PlayerStats
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !Input.GetKey(KeyCode.S))
             movementController.HandleJump(horizontal);
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
@@ -62,19 +59,15 @@ public class PlayerController : PlayerStats
         if (Input.GetKeyDown(KeyCode.Q))
             abilityController.HandleAbility(this, 1);
 
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetMouseButton(0))
         {
-            if (checkPlungeRoutine == null)
-                checkPlungeRoutine = StartCoroutine(CheckPlungeRoutine());
-
             combatController.HandleAttack();
             movementController.StopPlayer();
         }
-        if (Input.GetKeyUp(KeyCode.Mouse0))
+
+        if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.Space))
         {
-            if (checkPlungeRoutine != null)
-                StopCoroutine(checkPlungeRoutine);
-            checkPlungeRoutine = null;
+            movementController.HandlePlunge();
         }
 
         if (!combatController.CheckAttacking() && !movementController.canMove)
@@ -100,22 +93,6 @@ public class PlayerController : PlayerStats
     private void FixedUpdate()
     {
         movementController.MovePlayer();
-    }
-
-    private IEnumerator CheckPlungeRoutine()
-    {
-        yield return new WaitForSeconds(plungeHoldDuration);
-
-        while (true)
-        {
-            if (movementController.HandlePlunge())
-            {
-                checkPlungeRoutine = null;
-                yield break;
-            }
-
-            yield return null;
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
