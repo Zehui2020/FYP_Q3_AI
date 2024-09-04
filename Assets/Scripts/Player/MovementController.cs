@@ -110,7 +110,7 @@ public class MovementController : MonoBehaviour
 
         SpeedControl();
 
-        if (playerRB.velocity.y < 0 && !isLanding)
+        if (playerRB.velocity.y < -0.1f && !isLanding)
         {
             lockMomentum = false;
             lockDirection = false;
@@ -250,6 +250,7 @@ public class MovementController : MonoBehaviour
 
     public void FinishLedgeClimb()
     {
+        animationManager.ChangeAnimation(animationManager.Idle, 0, 0, false);
         lockMomentum = false;
         lockDirection = false;
         transform.position = ledgePos2;
@@ -278,6 +279,11 @@ public class MovementController : MonoBehaviour
 
         if (maxJumpCount - jumpCount > 1)
         {
+            if (horizontal < 0)
+                transform.localScale = new Vector3(-1, 1, 1);
+            else
+                transform.localScale = new Vector3(1, 1, 1);
+
             animationManager.ChangeAnimation(animationManager.DoubleJump, 0, 0, true);
             velX /= 1.25f;
         }
@@ -443,7 +449,7 @@ public class MovementController : MonoBehaviour
 
     public bool HandlePlunge()
     {
-        if (plungeRoutine != null)
+        if (plungeRoutine != null || isClimbingLedge)
             return false;
 
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, movementData.plungeThreshold, groundLayer);

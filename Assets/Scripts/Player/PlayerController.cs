@@ -61,7 +61,7 @@ public class PlayerController : PlayerStats
         if (Input.GetKeyDown(KeyCode.Q))
             abilityController.HandleAbility(this, 1);
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && !movementController.isClimbingLedge)
         {
             combatController.HandleAttack();
             movementController.StopPlayer();
