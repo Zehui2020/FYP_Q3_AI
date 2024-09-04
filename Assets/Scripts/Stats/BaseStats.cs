@@ -13,8 +13,10 @@ public class BaseStats : MonoBehaviour
     private ImmuneType immuneType;
 
     public int health;
+    public int maxHealth;
     public int shield;
     public int attack;
+    public int baseAttack;
     public float attackSpeed;
     public int critRate;
     public float critDamage;
@@ -89,5 +91,67 @@ public class BaseStats : MonoBehaviour
         isImmune = false;
         immuneRoutine = null;
         immuneType = ImmuneType.None;
+    }
+
+    public IEnumerator AttackChangeRoutine(float value, BaseAbility.AbilityEffectType effectType, BaseAbility.AbilityEffectValueType valueType, float duration)
+    {
+        int change = 0;
+        if (valueType == BaseAbility.AbilityEffectValueType.Flat)
+        {
+            if (effectType == BaseAbility.AbilityEffectType.Increase)
+                change = (int)value;
+            else if (effectType == BaseAbility.AbilityEffectType.Decrease)
+                change = -(int)value;
+        }
+        else if (valueType == BaseAbility.AbilityEffectValueType.Percentage)
+        {
+            if (effectType == BaseAbility.AbilityEffectType.Increase)
+                change = (int)(value * baseAttack / 100);
+            else if (effectType == BaseAbility.AbilityEffectType.Decrease)
+                change = -(int)(value * baseAttack / 100);
+        }
+        attack += (int)change;
+
+        yield return new WaitForSeconds(duration);
+
+        attack -= (int)change;
+    }
+
+    public IEnumerator HealthChangeRoutine(float value, BaseAbility.AbilityEffectType effectType, BaseAbility.AbilityEffectValueType valueType,  float duration)
+    {
+        Debug.Log("health change start");
+        int change = 0;
+        if (valueType == BaseAbility.AbilityEffectValueType.Flat)
+        {
+            if (effectType == BaseAbility.AbilityEffectType.Increase)
+                change = (int)value;
+            else if (effectType == BaseAbility.AbilityEffectType.Decrease)
+                change = -(int)value;
+        }
+        else if (valueType == BaseAbility.AbilityEffectValueType.Percentage)
+        {
+            if (effectType == BaseAbility.AbilityEffectType.Increase)
+                change = (int)(value * maxHealth / 100);
+            else if (effectType == BaseAbility.AbilityEffectType.Decrease)
+                change = -(int)(value * maxHealth / 100);
+        }
+        Debug.Log(change);
+        int temp = health + change;
+        temp = Mathf.Clamp(temp, 0, maxHealth);
+        change = temp - health;
+        health += change;
+        Debug.Log(change);
+
+        DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+        popup.SetupPopup("+ " + change, transform.position, Color.green);
+
+        yield return new WaitForSeconds(duration);
+
+        Debug.Log("health change end");
+
+        if (duration > 0)
+        {
+            health -= change;
+        }
     }
 }

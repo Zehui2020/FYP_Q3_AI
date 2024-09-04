@@ -9,15 +9,14 @@ public class AbilityController : MonoBehaviour
 {
     [SerializeField] private List<BaseAbility> abilities;
     [SerializeField] private List<AbilityUIController> abilityUI;
+    [SerializeField] LayerMask targetLayer;
 
+    private PlayerController player;
     private List<Coroutine> abilityDurationRoutines = new List<Coroutine> { null, null };
-    private int baseAttack, baseHealth;
-    private List<float> statChanges = new List<float> { 0, 0 };
 
     public void InitializeAbilityController()
     {
-        baseAttack = GetComponent<PlayerController>().attack;
-        baseHealth = GetComponent<PlayerController>().health;
+        player = GetComponent<PlayerController>();
         for (int i = 0; i < abilities.Count; i++)
         {
             abilityUI[i].SetIcon(abilities[i].abilityIcon);
@@ -37,27 +36,38 @@ public class AbilityController : MonoBehaviour
         // if ability for self
         if (ability.abilityUseType == BaseAbility.AbilityUseType.Self)
         {
+            // update stat
             switch (ability.abilityEffectStat)
             {
                 case BaseAbility.AbilityEffectStat.attack:
-                    statChanges[abilityNo] = ChangeStat(
-                        baseAttack,
+                    StartCoroutine(player.AttackChangeRoutine(
                         ability.abilityEffectValue,
                         ability.abilityEffectType,
-                        ability.abilityEffectValueType
-                        );
-                    stats.attack += (int)statChanges[abilityNo];
+                        ability.abilityEffectValueType,
+                        ability.abilityDuration));
                     break;
                 case BaseAbility.AbilityEffectStat.health:
-                    statChanges[abilityNo] = ChangeStat(
-                        baseHealth,
+                    StartCoroutine(player.HealthChangeRoutine(
                         ability.abilityEffectValue,
                         ability.abilityEffectType,
-                        ability.abilityEffectValueType
-                        );
-                    stats.health += (int)statChanges[abilityNo];
-                    stats.health = Mathf.Clamp(stats.health, 0, baseHealth);
+                        ability.abilityEffectValueType,
+                        ability.abilityDuration));
                     break;
+            }
+        }
+        // if ability is Area
+        else if (ability.abilityUseType == BaseAbility.AbilityUseType.Area)
+        {
+            // get all target objects in area
+            Collider2D[] targetColliders = Physics2D.OverlapCircleAll(transform.position, ability.abilityRange, targetLayer);
+            List<BaseStats> targetsInArea = new List<BaseStats>();
+            foreach (Collider2D col in targetColliders)
+            {
+                targetsInArea.Add(col.GetComponent<BaseStats>());
+            }
+            for (int i = 0; targetsInArea.Count > 0; i++)
+            {
+                
             }
         }
         abilityDurationRoutines[abilityNo] = StartCoroutine(AbilityDurationRoutine(stats, abilityNo, ability));
@@ -65,8 +75,10 @@ public class AbilityController : MonoBehaviour
 
     public IEnumerator AbilityDurationRoutine(PlayerController stats, int abilityNo, BaseAbility ability)
     {
+        // track duration
         float timer = ability.abilityDuration;
         abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), true);
+        abilityUI[abilityNo].SetCooldown(1);
         while (timer > 0)
         {
             abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), true);
@@ -75,18 +87,7 @@ public class AbilityController : MonoBehaviour
         }
         timer = 0;
         abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), false);
-
-        if (ability.abilityDuration > 0)
-            switch (ability.abilityEffectStat)
-            {
-                case BaseAbility.AbilityEffectStat.attack:
-                    stats.attack -= (int)ResetStat(abilityNo);
-                    break;
-                case BaseAbility.AbilityEffectStat.health:
-                    stats.health -= (int)ResetStat(abilityNo);
-                    break;
-            }
-
+        // track cooldown
         timer = ability.abilityCooldown;
         while (timer > 0)
         {
@@ -98,30 +99,6 @@ public class AbilityController : MonoBehaviour
         abilityUI[abilityNo].SetCooldown(0);
 
         abilityDurationRoutines[abilityNo] = null;
-    }
-
-    private float ChangeStat(float stat, float change, BaseAbility.AbilityEffectType effectType, BaseAbility.AbilityEffectValueType valueType)
-    {
-        if (valueType == BaseAbility.AbilityEffectValueType.Flat)
-        {
-            if (effectType == BaseAbility.AbilityEffectType.Increase)
-                return change;
-            else if (effectType == BaseAbility.AbilityEffectType.Decrease)
-                return -change;
-        }
-        else if (valueType == BaseAbility.AbilityEffectValueType.Percentage)
-        {
-            if (effectType == BaseAbility.AbilityEffectType.Increase)
-                return stat * change / 100;
-            else if (effectType == BaseAbility.AbilityEffectType.Decrease)
-                return -stat * change / 100;
-        }
-        return 0;
-    }
-
-    private float ResetStat(int abilityNo)
-    {
-        return statChanges[abilityNo];
     }
 
     public void SetAbility(int abilityNo, BaseAbility ability)
