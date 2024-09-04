@@ -227,6 +227,9 @@ public class MovementController : MonoBehaviour
         if (ledgeHit || !wallHit)
             return;
 
+        if (wallHit.collider.tag == "Platform")
+            return;
+
         ledgePosBot = wallHit.point;
         playerCol.isTrigger = true;
         playerRB.gravityScale = 0;
