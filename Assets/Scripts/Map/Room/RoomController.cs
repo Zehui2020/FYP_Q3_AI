@@ -6,7 +6,6 @@ public class RoomController : MonoBehaviour
 {
     [SerializeField] private GameObject cover;
     [SerializeField] private List<GameObject> doors;
-    [SerializeField] private List<Transform> tpPoints;
     [SerializeField] private Transform spawnPoint;
 
     public List<bool> isSpaceOccupied = new List<bool> { false, false, false, false };
@@ -21,7 +20,7 @@ public class RoomController : MonoBehaviour
     {
         for (int i = 0; i < doors.Count; i++)
         {
-            doors[i].SetActive(!isSpaceOccupied[i]);
+            doors[i].SetActive(isSpaceOccupied[i]);
         }
     }
 
@@ -42,13 +41,13 @@ public class RoomController : MonoBehaviour
         switch (dir)
         {
             case 1:
-                return tpPoints[1];
+                return doors[1].transform;
             case 2:
-                return tpPoints[0];
+                return doors[0].transform;
             case 3:
-                return tpPoints[3];
+                return doors[3].transform;
             case 4:
-                return tpPoints[2];
+                return doors[2].transform;
         }
         return null;
     }
