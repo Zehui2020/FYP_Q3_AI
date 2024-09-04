@@ -1,20 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AbilityController : MonoBehaviour
 {
     [SerializeField] private List<BaseAbility> abilities;
+    [SerializeField] private List<AbilityUIController> abilityUI;
+    [SerializeField] LayerMask targetLayer;
 
+    private PlayerController player;
     private List<Coroutine> abilityDurationRoutines = new List<Coroutine> { null, null };
-    private int baseAttack, baseHealth;
-    private List<float> statChanges = new List<float> { 0, 0 };
 
     public void InitializeAbilityController()
     {
-        baseAttack = GetComponent<PlayerController>().attack;
-        baseHealth = GetComponent<PlayerController>().health;
+        player = GetComponent<PlayerController>();
+        for (int i = 0; i < abilities.Count; i++)
+        {
+            abilityUI[i].SetIcon(abilities[i].abilityIcon);
+        }
     }
 
     public void HandleAbility(PlayerController stats, int abilityNo)
@@ -30,72 +36,92 @@ public class AbilityController : MonoBehaviour
         // if ability for self
         if (ability.abilityUseType == BaseAbility.AbilityUseType.Self)
         {
+            // update stat
             switch (ability.abilityEffectStat)
             {
                 case BaseAbility.AbilityEffectStat.attack:
-                    statChanges[abilityNo] = ChangeStat(
-                        baseAttack,
+                    StartCoroutine(player.AttackChangeRoutine(
                         ability.abilityEffectValue,
                         ability.abilityEffectType,
-                        ability.abilityEffectValueType
-                        );
-                    stats.attack += (int)statChanges[abilityNo];
+                        ability.abilityEffectValueType,
+                        ability.abilityDuration));
                     break;
                 case BaseAbility.AbilityEffectStat.health:
-                    statChanges[abilityNo] = ChangeStat(
-                        baseHealth,
+                    StartCoroutine(player.HealthChangeRoutine(
                         ability.abilityEffectValue,
                         ability.abilityEffectType,
-                        ability.abilityEffectValueType
-                        );
-                    stats.health += (int)statChanges[abilityNo];
+                        ability.abilityEffectValueType,
+                        ability.abilityDuration));
                     break;
             }
+        } 
+        // if ability is Area
+        else if (ability.abilityUseType == BaseAbility.AbilityUseType.Area)
+        {
+            // get all target objects in area
+            Collider2D[] targetColliders = Physics2D.OverlapCircleAll(transform.position, ability.abilityRange, targetLayer);
+            List<BaseStats> targetsInArea = new List<BaseStats>();
+            foreach (Collider2D col in targetColliders)
+            {
+                if (col.GetComponent<BaseStats>() != null)
+                    targetsInArea.Add(col.GetComponent<BaseStats>());
+            }
+            for (int i = 0; i < targetsInArea.Count; i++)
+            {
+                // update stat
+                switch (ability.abilityEffectStat)
+                {
+                    case BaseAbility.AbilityEffectStat.attack:
+                        StartCoroutine(targetsInArea[i].AttackChangeRoutine(
+                            ability.abilityEffectValue,
+                            ability.abilityEffectType,
+                            ability.abilityEffectValueType,
+                            ability.abilityDuration));
+                        break;
+                    case BaseAbility.AbilityEffectStat.health:
+                        StartCoroutine(targetsInArea[i].HealthChangeRoutine(
+                            ability.abilityEffectValue,
+                            ability.abilityEffectType,
+                            ability.abilityEffectValueType,
+                            ability.abilityDuration));
+                        break;
+                }
+            }
         }
-        if (ability.abilityDuration > 0)
-            abilityDurationRoutines[abilityNo] = StartCoroutine(AbilityDurationRoutine(stats, abilityNo, ability));
+        abilityDurationRoutines[abilityNo] = StartCoroutine(AbilityDurationRoutine(stats, abilityNo, ability));
     }
 
     public IEnumerator AbilityDurationRoutine(PlayerController stats, int abilityNo, BaseAbility ability)
     {
-        yield return new WaitForSeconds(ability.abilityDuration);
-
-        switch (ability.abilityEffectStat)
+        // track duration
+        float timer = ability.abilityDuration;
+        abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), true);
+        abilityUI[abilityNo].SetCooldown(1);
+        while (timer > 0)
         {
-            case BaseAbility.AbilityEffectStat.attack:
-                stats.attack -= (int)ResetStat(abilityNo);
-                break;
-            case BaseAbility.AbilityEffectStat.health:
-                stats.health -= (int)ResetStat(abilityNo);
-                break;
+            abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), true);
+            timer -= Time.deltaTime;
+            yield return null;
         }
-
-        yield return new WaitForSeconds(ability.abilityCooldown);
+        timer = 0;
+        abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), false);
+        // track cooldown
+        timer = ability.abilityCooldown;
+        while (timer > 0)
+        {
+            float fill = timer / ability.abilityCooldown;
+            abilityUI[abilityNo].SetCooldown(fill);
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        abilityUI[abilityNo].SetCooldown(0);
 
         abilityDurationRoutines[abilityNo] = null;
     }
 
-    private float ChangeStat(float stat, float change, BaseAbility.AbilityEffectType effectType, BaseAbility.AbilityEffectValueType valueType)
+    public void SetAbility(int abilityNo, BaseAbility ability)
     {
-        if (valueType == BaseAbility.AbilityEffectValueType.Flat)
-        {
-            if (effectType == BaseAbility.AbilityEffectType.Increase)
-                return change;
-            else if (effectType == BaseAbility.AbilityEffectType.Decrease)
-                return -change;
-        }
-        else if (valueType == BaseAbility.AbilityEffectValueType.Percentage)
-        {
-            if (effectType == BaseAbility.AbilityEffectType.Increase)
-                return stat * change / 100;
-            else if (effectType == BaseAbility.AbilityEffectType.Decrease)
-                return -stat * change / 100;
-        }
-        return 0;
-    }
-
-    private float ResetStat(int abilityNo)
-    {
-        return statChanges[abilityNo];
+        abilities[abilityNo] = ability;
+        abilityUI[abilityNo].SetIcon(abilities[abilityNo].abilityIcon);
     }
 }

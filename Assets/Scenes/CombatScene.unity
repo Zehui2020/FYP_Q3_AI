@@ -1446,9 +1446,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70579677df0549944a21ca957aa69697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 9999
+  health: 100
+  maxHealth: 100
   shield: 0
   attack: 5
+  baseAttack: 5
   attackSpeed: 0
   critRate: 10
   critDamage: 1.5
@@ -2381,10 +2383,18 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9104656562831867184, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
-      propertyPath: attack
-      value: 10
+    - target: {fileID: 8706666873419560788, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
+      propertyPath: targetLayer.m_Bits
+      value: 128
       objectReference: {fileID: 0}
+    - target: {fileID: 8706666873419560788, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
+      propertyPath: abilities.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 80aa5f7e8b8df15498e3c6789bb7b3b5, type: 2}
+    - target: {fileID: 8706666873419560788, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
+      propertyPath: abilities.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: a0b3a49c02515314bbf942fde1c6a885, type: 2}
     - target: {fileID: 9209273340593868020, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1

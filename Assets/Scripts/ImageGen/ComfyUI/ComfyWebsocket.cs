@@ -16,8 +16,6 @@ public class ComfyWebsocket : MonoBehaviour
     [HideInInspector] public int currentProgress;
     [HideInInspector] public int maxProgress;
 
-    private bool isConnected = false;
-
     public async void InitWebsocket()
     {
         await ws.ConnectAsync(new Uri($"ws://{serverAddress}/ws?clientId={clientId}"), CancellationToken.None);
@@ -53,12 +51,9 @@ public class ComfyWebsocket : MonoBehaviour
             currentProgress = ParseJsonValue(response, "value");
             maxProgress = ParseJsonValue(response, "max");
 
-            if (response.Contains("\"queue_remaining\": 0"))
+            if (response.Contains("\"queue_remaining\": 0") && promptID != string.Empty && promptID != "0")
             {
-                if (isConnected)
-                    comfyImageCtr.RequestFileName(promptID);
-                else
-                    isConnected = true;
+                comfyImageCtr.RequestFileName(promptID);
             }
         }
     }

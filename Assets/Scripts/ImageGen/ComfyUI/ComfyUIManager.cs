@@ -25,7 +25,9 @@ public class ComfyUIManager : MonoBehaviour
         }
         else
         {
-            loadingText.text = "Polishing Image...";
+            loadingBar.maxValue = maxValue;
+            loadingBar.value = maxValue;
+            loadingText.text = "Saving Image...";
         }
     }
 

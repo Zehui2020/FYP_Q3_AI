@@ -24,6 +24,7 @@ public class MovementController : MonoBehaviour
     public bool isDashing = false;
     public bool isClimbingLedge = false;
     public bool isPlunging = false;
+    public bool isWallJumping = false;
 
     public bool lockMomentum = false;
     public bool lockDirection = false;
@@ -113,6 +114,7 @@ public class MovementController : MonoBehaviour
         {
             lockMomentum = false;
             lockDirection = false;
+            isWallJumping = false;
             animationManager.ChangeAnimation(animationManager.Falling, 0, 0, false);
         }
 
@@ -188,21 +190,8 @@ public class MovementController : MonoBehaviour
         else if (wallJumpCount > 0)
         {
             // Wall Jump
-            animationManager.ChangeAnimation(animationManager.WallJump, 0, 0, true);
-
-            playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
-            transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-
-            if (col.ClosestPoint(transform.position).x < transform.position.x)
-                dir = new Vector2(movementData.wallJumpForceX, movementData.wallJumpForceY);
-            else
-                dir = new Vector2(-movementData.wallJumpForceX, movementData.wallJumpForceY);
-
-            playerRB.AddForce(dir * movementData.baseJumpForce, ForceMode2D.Impulse);
-
-            wallJumpCount--;
-            lockMomentum = true;
-            lockDirection = true;
+            if (jumpRoutine == null)
+                jumpRoutine = StartCoroutine(WallJumpRoutine(col));
         }
     }
 
@@ -305,6 +294,31 @@ public class MovementController : MonoBehaviour
         jumpRoutine = null;
     }
 
+    private IEnumerator WallJumpRoutine(Collider2D col)
+    {
+        lockMomentum = true;
+        lockDirection = true;
+        isWallJumping = true;
+        wallJumpCount--;
+
+        Vector2 dir;
+        playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
+        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+
+        if (col.ClosestPoint(transform.position).x < transform.position.x)
+            dir = new Vector2(movementData.wallJumpForceX, movementData.wallJumpForceY);
+        else
+            dir = new Vector2(-movementData.wallJumpForceX, movementData.wallJumpForceY);
+
+        playerRB.AddForce(dir * movementData.baseJumpForce, ForceMode2D.Impulse);
+        animationManager.ChangeAnimation(animationManager.WallJump, 0, 0, true);
+
+
+        yield return new WaitForSeconds(movementData.jumpInterval);
+
+        jumpRoutine = null;
+    }
+
     public void HandleDash(float direction)
     {
         if (dashRoutine == null && !isClimbingLedge)
@@ -315,6 +329,11 @@ public class MovementController : MonoBehaviour
     {
         lockMomentum = false;
         lockDirection = true;
+
+        if (direction < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
+        else
+            transform.localScale = new Vector3(1, 1, 1);
 
         float timer;
         PlayerController.Instance.ApplyImmune(movementData.dashIFrames, BaseStats.ImmuneType.Dodge);
@@ -452,7 +471,7 @@ public class MovementController : MonoBehaviour
 
     public void MovePlayer()
     {
-        if (!isMoving || lockMomentum || isGrappling || plungeRoutine != null || !canMove)
+        if (!isMoving || lockMomentum || isGrappling || plungeRoutine != null || !canMove || isWallJumping)
             return;
 
         Vector3 force;

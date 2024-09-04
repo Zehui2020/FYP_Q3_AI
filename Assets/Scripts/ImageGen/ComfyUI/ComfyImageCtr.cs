@@ -8,6 +8,7 @@ public class ComfyImageCtr: MonoBehaviour
     public UnityEvent<string, Texture2D> OnRecieveImage;
 
     private string currentID;
+    [SerializeField] private bool isControlNet;
 
     public void RequestFileName(string id)
     {
@@ -17,6 +18,8 @@ public class ComfyImageCtr: MonoBehaviour
     private IEnumerator RequestFileNameRoutine(string promptID)
     {
         string url = "http://127.0.0.1:8188/history/" + promptID;
+
+        Debug.Log(url);
 
         using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
         {
@@ -35,7 +38,8 @@ public class ComfyImageCtr: MonoBehaviour
                 case UnityWebRequest.Result.Success:
                     //Debug.Log(":\nReceived: " + webRequest.downloadHandler.text);
                     currentID = promptID;
-                    string imageURL = "http://127.0.0.1:8188/view?filename=" +ExtractFilename(webRequest.downloadHandler.text);
+                    string imageURL = "http://127.0.0.1:8188/view?filename=" + ExtractFilename(webRequest.downloadHandler.text);
+                    Debug.Log(imageURL);
                     StartCoroutine(DownloadImage(imageURL));
                     break;
             }
@@ -45,7 +49,12 @@ public class ComfyImageCtr: MonoBehaviour
     string ExtractFilename(string jsonString)
     {
         // Step 1: Identify the part of the string that contains the "filename" key
-        string keyToLookFor = "\"filename\":";
+        string keyToLookFor;
+        if (!isControlNet)
+            keyToLookFor = "\"filename\":";
+        else
+            keyToLookFor = "\"24\": {\"images\": [{\"filename\":";
+
         int startIndex = jsonString.IndexOf(keyToLookFor);
 
         if (startIndex == -1)

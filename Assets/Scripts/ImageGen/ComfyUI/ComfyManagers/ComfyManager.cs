@@ -15,6 +15,7 @@ public class ComfyManager : MonoBehaviour
 
     public virtual void InitManager()
     {
+        DontDestroyOnLoad(this);
         comfyWebsocket.InitWebsocket();
 
         promptCtr.OnQueuePrompt.AddListener(SetCurrentPromptID);

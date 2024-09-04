@@ -9,6 +9,8 @@ public class ComfyBGManager : ComfyManager
     [SerializeField] private MenuBackground menuBackground;
     public UnityEvent OnRecieveBackground;
 
+    private bool recievedBG;
+
     private void Start()
     {
         InitManager();
@@ -16,7 +18,8 @@ public class ComfyBGManager : ComfyManager
 
     private void Update()
     {
-        uiManager.SetLoadingBar(comfyWebsocket.currentProgress, comfyWebsocket.maxProgress);
+        if (promptID == comfyWebsocket.promptID)
+            uiManager.SetLoadingBar(comfyWebsocket.currentProgress, comfyWebsocket.maxProgress);
     }
 
     public void QueueBGPrompt()
@@ -26,14 +29,20 @@ public class ComfyBGManager : ComfyManager
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
     {
-        if (base.OnRecieveImage(promptID, texture))
+        if (base.OnRecieveImage(promptID, texture) && !recievedBG)
         {
             menuBackground.SetupBackground();
             OnRecieveBackground?.Invoke();
-            Debug.Log("CALLED");
+            recievedBG = true;
+            Debug.Log("GOT BG!");
             return true;
         }
 
         return false;
+    }
+
+    private void OnDisable()
+    {
+        OnRecieveBackground = null;
     }
 }

@@ -29,6 +29,7 @@ public class ImageSaver : MonoBehaviour
         byte[] textureBytes = File.ReadAllBytes(Application.persistentDataPath + "_" + fileName);
         Texture2D loadTexture = new Texture2D(0, 0);
         loadTexture.LoadImage(textureBytes);
+        loadTexture.filterMode = FilterMode.Point;
         return Sprite.Create(loadTexture, new Rect(0f, 0f, loadTexture.width, loadTexture.height), new Vector2(0.5f, 0.5f));
     }
 
@@ -43,6 +44,7 @@ public class ImageSaver : MonoBehaviour
         byte[] textureBytes = File.ReadAllBytes(Application.persistentDataPath + "_" + fileName);
         Texture2D loadTexture = new Texture2D(0, 0);
         loadTexture.LoadImage(textureBytes);
+        loadTexture.filterMode = FilterMode.Point;
         return loadTexture;
     }
 }
