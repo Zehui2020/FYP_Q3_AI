@@ -12,6 +12,7 @@ public class PlayerController : PlayerStats
     private AbilityController abilityController;
     private FadeTransition fadeTransition;
     private ItemManager itemManager;
+    [SerializeField] private ProceduralMapGenerator proceduralMapGenerator;
 
     private IInteractable currentInteractable;
 
@@ -35,6 +36,7 @@ public class PlayerController : PlayerStats
         movementController.InitializeMovementController();
         combatController.InitializeCombatController();
         abilityController.InitializeAbilityController();
+        proceduralMapGenerator.InitMapGenerator();
     }
 
     private void Update()

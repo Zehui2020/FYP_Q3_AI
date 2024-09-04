@@ -763,7 +763,7 @@ Transform:
   m_GameObject: {fileID: 2877720491489773842}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.013, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -931,9 +931,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingLayerID: 597400361
+  m_SortingLayer: 2
+  m_SortingOrder: 0
   m_Sprite: {fileID: 578561647, guid: af8a0434b46e7b44c950cd63d3053758, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1049,7 +1049,7 @@ MonoBehaviour:
   critRate: 0
   critDamage: 0
   isImmune: 0
-  plungeHoldDuration: 0.25
+  proceduralMapGenerator: {fileID: 0}
 --- !u!114 &2521897448855207057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1078,6 +1078,7 @@ MonoBehaviour:
   isDashing: 0
   isClimbingLedge: 0
   isPlunging: 0
+  isWallJumping: 0
   lockMomentum: 0
   lockDirection: 0
   canGrapple: 0

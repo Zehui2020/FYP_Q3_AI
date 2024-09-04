@@ -1,19 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class RoomTransitionManager : MonoBehaviour
 {
-    private MiniMapController mmController;
-    private GameObject player;
+    [SerializeField] private MiniMapController mmController;
+    [SerializeField] private GameObject player;
     public List<RoomController> rooms = new List<RoomController>();
-
-    private void Awake()
-    {
-        mmController = GameObject.FindGameObjectWithTag("MiniMapController").GetComponent<MiniMapController>();
-        player = GameObject.FindGameObjectWithTag("Player");
-    }
 
     public void TeleportPlayer(int dir)
     {
@@ -48,6 +41,7 @@ public class RoomTransitionManager : MonoBehaviour
 
     public void ResetPlayer()
     {
-        player.transform.position = rooms[0].GetSpawnPoint().position;
+        Vector3 targetPos = rooms[0].GetSpawnPoint().position;
+        player.transform.position = new Vector3(targetPos.x, targetPos.y, 0);
     }
 }

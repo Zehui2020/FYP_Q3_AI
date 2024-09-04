@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class ProceduralMapGenerator : MonoBehaviour
 {
@@ -26,7 +24,7 @@ public class ProceduralMapGenerator : MonoBehaviour
     private int roomsAdded = 0;
     private bool isPathDone = false;
 
-    private void Awake()
+    public void InitMapGenerator()
     {
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MiniMap"))
         {
@@ -34,7 +32,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         }
         mmController = GameObject.FindGameObjectWithTag("MiniMapController").GetComponent<MiniMapController>();
         rtManager = GetComponentInParent<RoomTransitionManager>();
-        
+
         SetSeed(mapSeed);
         StartMapGeneration();
     }
