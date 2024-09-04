@@ -513,6 +513,8 @@ public class MovementController : MonoBehaviour
         {
             isLanding = false;
             isGrounded = true;
+            if (jumpRoutine == null)
+                isWallJumping = false;
             fallingDuration = 0;
 
             if (rollRoutine == null)
