@@ -2,23 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomTrigger : MonoBehaviour
+public class RoomTrigger : MonoBehaviour, IInteractable
 {
     [SerializeField] private int dir;
+    [SerializeField] private RoomController roomController;
 
-    private RoomController roomController;
-
-    private void Start()
+    public void OnInteract()
     {
-        roomController = GetComponentInParent<RoomController>();
+        roomController.OnTriggerTransition(dir);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void OnEnterRange()
     {
-        if (other.CompareTag("Player"))
-        {
-            // notify room to trigger transition
-            roomController.OnTriggerTransition(dir);
-        }
+    }
+
+    public void OnLeaveRange()
+    {
     }
 }
