@@ -14,6 +14,11 @@ public class ComfyItemGenration : ComfyManager
     public List<ItemPrompt> itemPrompts = new();
     private int currentPromptIndex = 0;
 
+    private void Start()
+    {
+        InitManager();
+    }
+
     public void QueueItems()
     {
         if (currentPromptIndex >= itemPrompts.Count)

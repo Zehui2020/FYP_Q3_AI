@@ -322,6 +322,7 @@ MonoBehaviour:
   OnRecieveImage:
     m_PersistentCalls:
       m_Calls: []
+  isControlNet: 0
 --- !u!114 &30929367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,9 +403,9 @@ MonoBehaviour:
   imageSaver: {fileID: 30929365}
   fileName: 
   itemPrompts:
-  - Pprompt: Pixel Art, game item, no humans, no characters, goggles
+  - Pprompt: Pixel Art, transparent background, solid color background, goggles
     filename: HDHUD
-  - Pprompt: Pixel Art, game item, no humans, no characters, gas mask
+  - Pprompt: Pixel Art, transparent background, solid color background, gas mask
     filename: GasMask
 --- !u!1 &32123484
 GameObject:
@@ -1816,6 +1817,7 @@ MonoBehaviour:
   OnRecieveImage:
     m_PersistentCalls:
       m_Calls: []
+  isControlNet: 1
 --- !u!114 &514285365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1858,12 +1860,14 @@ MonoBehaviour:
     "_meta": {       "title": "Input"     }   },   "16": {     "inputs": {      
     "images": [         "34",         0       ]     },     "class_type": "PreviewImage",    
     "_meta": {       "title": "Preview Image"     }   },   "24": {     "inputs":
-    {       "filename_prefix": "ComfyUI",       "images": [         "8",        
+    {       "filename_prefix": "ComfyUI",       "images": [         "35",        
     0       ]     },     "class_type": "SaveImage",     "_meta": {       "title":
     "Save Image"     }   },   "34": {     "inputs": {       "low_threshold": 0,      
     "high_threshold": 88,       "resolution": 512,       "image": [         "13",        
     0       ]     },     "class_type": "CannyEdgePreprocessor",     "_meta": {      
-    "title": "Canny Edge"     }   } }'
+    "title": "Canny Edge"     }   },   "35": {     "inputs": {       "pixel_size":
+    4,       "image": [         "8",         0       ]     },     "class_type": "Pixelization",    
+    "_meta": {       "title": "Pixelization"     }   } }'
   OnQueuePrompt:
     m_PersistentCalls:
       m_Calls: []
@@ -1927,6 +1931,8 @@ MonoBehaviour:
     endPrompt: stone themed
   - foundPrompts: Tavern
     endPrompt: wooden themed
+  setPrompts: pixel art, transparent background, border only, solid color, no characters,
+    empty background, no objects, consistent center, no shadows
 --- !u!1 &537629676
 GameObject:
   m_ObjectHideFlags: 0
@@ -4208,7 +4214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f79945781b6eb3b469512ff72c92081f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  promptJson: '{   "3": {     "inputs": {       "seed": 232130278987887,       "steps":
+  promptJson: '{   "3": {     "inputs": {       "seed": 255591070957890,       "steps":
     20,       "cfg": 8,       "sampler_name": "euler",       "scheduler": "normal",      
     "denoise": 1,       "model": [         "18",         0       ],       "positive":
     [         "6",         0       ],       "negative": [         "7",         0      
@@ -4216,25 +4222,28 @@ MonoBehaviour:
     "KSampler",     "_meta": {       "title": "KSampler"     }   },   "4": {    
     "inputs": {       "ckpt_name": "pixelArtDiffusionXL_spriteShaper.safetensors"    
     },     "class_type": "CheckpointLoaderSimple",     "_meta": {       "title":
-    "Load Checkpoint"     }   },   "5": {     "inputs": {       "width": 1920,      
-    "height": 1080,       "batch_size": 1     },     "class_type": "EmptyLatentImage",    
+    "Load Checkpoint"     }   },   "5": {     "inputs": {       "width": 2880,      
+    "height": 1624,       "batch_size": 1     },     "class_type": "EmptyLatentImage",    
     "_meta": {       "title": "Empty Latent Image"     }   },   "6": {     "inputs":
     {       "text": "Pprompt",       "clip": [         "4",         1       ]    
     },     "class_type": "CLIPTextEncode",     "_meta": {       "title": "CLIP Text
     Encode (Prompt)"     }   },   "7": {     "inputs": {       "text": "Nprompt",      
     "clip": [         "4",         1       ]     },     "class_type": "CLIPTextEncode",    
     "_meta": {       "title": "CLIP Text Encode (Prompt)"     }   },   "9": {    
-    "inputs": {       "filename_prefix": "ComfyUI",       "images": [         "11",        
+    "inputs": {       "filename_prefix": "ComfyUI",       "images": [         "30",        
     0       ]     },     "class_type": "SaveImage",     "_meta": {       "title":
-    "Save Image"     }   },   "11": {     "inputs": {       "pixel_size": 4,      
+    "Save Image"     }   },   "13": {     "inputs": {       "samples": [        
+    "3",         0       ],       "vae": [         "4",         2       ]     },    
+    "class_type": "VAEDecode",     "_meta": {       "title": "VAE Decode"     }  
+    },   "18": {     "inputs": {       "tiling": "x_only",       "copy_model": "Modify
+    in place",       "model": [         "4",         0       ]     },     "class_type":
+    "SeamlessTile",     "_meta": {       "title": "Seamless Tile"     }   },   "30":
+    {     "inputs": {       "upscale_method": "nearest-exact",       "width": 1920,      
+    "height": 1080,       "crop": "disabled",       "image": [         "33",        
+    0       ]     },     "class_type": "ImageScale",     "_meta": {       "title":
+    "Upscale Image"     }   },   "33": {     "inputs": {       "pixel_size": 4,      
     "image": [         "13",         0       ]     },     "class_type": "Pixelization",    
-    "_meta": {       "title": "Pixelization"     }   },   "13": {     "inputs": {      
-    "samples": [         "3",         0       ],       "vae": [         "4",        
-    2       ]     },     "class_type": "VAEDecode",     "_meta": {       "title":
-    "VAE Decode"     }   },   "18": {     "inputs": {       "tiling": "x_only",      
-    "copy_model": "Modify in place",       "model": [         "4",         0      
-    ]     },     "class_type": "SeamlessTile",     "_meta": {       "title": "Seamless
-    Tile"     }   } }'
+    "_meta": {       "title": "Pixelization"     }   } }'
   OnQueuePrompt:
     m_PersistentCalls:
       m_Calls: []
@@ -4277,6 +4286,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+  isControlNet: 0
 --- !u!114 &8045318398188915861
 MonoBehaviour:
   m_ObjectHideFlags: 0
