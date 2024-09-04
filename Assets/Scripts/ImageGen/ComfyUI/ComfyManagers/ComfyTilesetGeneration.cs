@@ -1,10 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ComfyTilesetGeneration : ComfyManager
 {
     [SerializeField] private ComfyUIManager uiManager;
+    public UnityEvent OnRecieveTileset;
+
+    private bool recievedTileset;
 
     [System.Serializable]
     public struct PromptChecker
@@ -36,5 +40,22 @@ public class ComfyTilesetGeneration : ComfyManager
         Debug.Log(finalPrompt);
 
         promptCtr.QueuePrompt(finalPrompt);
+    }
+
+    public override bool OnRecieveImage(string promptID, Texture2D texture)
+    {
+        if (base.OnRecieveImage(promptID, texture) && !recievedTileset)
+        {
+            OnRecieveTileset?.Invoke();
+            recievedTileset = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    private void OnDisable()
+    {
+        OnRecieveTileset = null;
     }
 }

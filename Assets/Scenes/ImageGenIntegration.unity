@@ -597,7 +597,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Generating Image (10/20)
+  m_text: Waiting For Queue...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1901,6 +1901,21 @@ MonoBehaviour:
   imageSaver: {fileID: 514285363}
   fileName: tileset
   uiManager: {fileID: 264889098}
+  OnRecieveTileset:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8045318398188915861}
+        m_TargetAssemblyTypeName: ComfyBGManager, Assembly-CSharp
+        m_MethodName: QueueBGPrompt
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   promptCheckers:
   - foundPrompts: Mountains
     endPrompt: stone themed
@@ -3986,9 +4001,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8045318398188915861}
-        m_TargetAssemblyTypeName: ComfyBGManager, Assembly-CSharp
-        m_MethodName: QueueBGPrompt
+      - m_Target: {fileID: 514285367}
+        m_TargetAssemblyTypeName: ComfyTilesetGeneration, Assembly-CSharp
+        m_MethodName: QueueTilesetPrompt
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4284,9 +4299,9 @@ MonoBehaviour:
   OnRecieveBackground:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 514285367}
-        m_TargetAssemblyTypeName: ComfyTilesetGeneration, Assembly-CSharp
-        m_MethodName: QueueTilesetPrompt
+      - m_Target: {fileID: 30929369}
+        m_TargetAssemblyTypeName: ComfyItemGenration, Assembly-CSharp
+        m_MethodName: QueueItems
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
