@@ -1171,7 +1171,7 @@ MonoBehaviour:
   m_Follow: {fileID: 526969664}
   m_Lens:
     FieldOfView: 40
-    OrthographicSize: 10
+    OrthographicSize: 6
     NearClipPlane: 0.1
     FarClipPlane: 5000
     Dutch: 0
@@ -1446,12 +1446,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70579677df0549944a21ca957aa69697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
+  health: 9999
   shield: 0
-  attack: 0
+  attack: 5
   attackSpeed: 0
-  critRate: 0
-  critDamage: 0
+  critRate: 10
+  critDamage: 1.5
   isImmune: 0
   patrolThreshold: 1
   chaseRange: 10
@@ -2099,7 +2099,7 @@ Camera:
   far clip plane: 5000
   field of view: 40
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2380,6 +2380,10 @@ PrefabInstance:
     - target: {fileID: 5919557274775317354, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9104656562831867184, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
+      propertyPath: attack
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 9209273340593868020, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
       propertyPath: m_AnchorMax.y

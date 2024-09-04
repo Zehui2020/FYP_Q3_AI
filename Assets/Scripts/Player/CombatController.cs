@@ -8,28 +8,36 @@ public class CombatController : MonoBehaviour
 
     private AnimationManager animationManager;
     private CombatCollisionController collisionController;
+    private PlayerController stats;
 
     private int attackComboCount;
 
     private Coroutine attackRoutine;
     private Coroutine attackAnimRoutine;
+    private Coroutine attackCooldownRoutine;
+    private Coroutine plungeAttackRoutine;
 
     public void InitializeCombatController()
     {
         animationManager = GetComponent<AnimationManager>();
         collisionController = GetComponent<CombatCollisionController>();
+        stats = GetComponent<PlayerController>();
         attackComboCount = 0;
     }
     public void HandleAttack()
     {
-        if (attackAnimRoutine == null)
+        if (attackAnimRoutine == null && attackCooldownRoutine == null)
         {
             if (attackRoutine != null)
             {
                 attackComboCount++;
-                if (attackComboCount >= wData.animations.Count)
+                if (attackComboCount >= wData.attackAnimations.Count)
                 {
                     attackComboCount = 0;
+                }
+                else if (attackComboCount == wData.attackAnimations.Count - 1)
+                {
+                    HandleAttackCooldown();
                 }
                 StopCoroutine(attackRoutine);
                 attackRoutine = StartCoroutine(AttackRoutine());
@@ -44,34 +52,72 @@ public class CombatController : MonoBehaviour
 
     private IEnumerator AttackRoutine()
     {
-        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.animations[attackComboCount].name));
+        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.attackAnimations[attackComboCount].name));
         animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
         attackAnimRoutine = StartCoroutine(AttackAnimRoutine());
 
-        yield return new WaitForSeconds(wData.attackSpeed + wData.animations[attackComboCount].length);
+        yield return new WaitForSeconds(wData.comboCooldown + wData.attackAnimations[attackComboCount].length);
 
         attackRoutine = null;
     }
 
     private IEnumerator AttackAnimRoutine()
     {
-        yield return new WaitForSeconds(wData.animations[attackComboCount].length);
+        yield return new WaitForSeconds(wData.attackAnimations[attackComboCount].length);
 
         attackAnimRoutine = null;
     }
 
+    public void HandleAttackCooldown()
+    {
+        if (attackCooldownRoutine == null)
+        {
+            attackCooldownRoutine = StartCoroutine(AttackCooldownRoutine());
+        }
+    }
+
+    private IEnumerator AttackCooldownRoutine()
+    {
+        yield return new WaitForSeconds(wData.attackCooldown + wData.attackAnimations[attackComboCount].length);
+
+        attackCooldownRoutine = null;
+    }
+
     public bool CheckAttacking()
     {
-        if (attackAnimRoutine == null)
+        if (attackAnimRoutine == null && plungeAttackRoutine == null)
         {
             return false;
         }
         return true;
     }
 
+    public void HandlePlungeAttack()
+    {
+        if (plungeAttackRoutine == null)
+        {
+            plungeAttackRoutine = StartCoroutine(PlungeAttackRoutine());
+        }
+    }
+
+    private IEnumerator PlungeAttackRoutine()
+    {
+        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.plungeAttackAnimation.name));
+        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
+
+        yield return new WaitForSeconds(wData.plungeAttackAnimation.length);
+
+        plungeAttackRoutine = null;
+    }
+
     public void OnDamageEventStart(int col)
     {
-        float damage = wData.baseAttack * wData.attackMultipliers[attackComboCount];
+        float damage;
+
+        if (plungeAttackRoutine != null)
+            damage = stats.attack * wData.plungeAttackMultiplier;
+        else
+            damage = stats.attack * wData.attackMultipliers[attackComboCount];
 
         collisionController.EnableCollider(damage, wData.critRate, wData.critMultiplier, col);
     }

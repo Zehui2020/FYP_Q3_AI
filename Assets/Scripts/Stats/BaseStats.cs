@@ -15,14 +15,14 @@ public class BaseStats : MonoBehaviour
     public int health;
     public int shield;
     public int attack;
-    public int attackSpeed;
+    public float attackSpeed;
     public int critRate;
-    public int critDamage;
+    public float critDamage;
     public bool isImmune = false;
 
     private Coroutine immuneRoutine;
 
-    public void TakeDamage(float damage, int critRate, float critMultiplier, Vector3 closestPoint)
+    public virtual void TakeDamage(float damage, int critRate, float critMultiplier, Vector3 closestPoint)
     {
         if (isImmune)
         {
@@ -42,19 +42,20 @@ public class BaseStats : MonoBehaviour
         }
 
         // crit calculation
+        DamagePopup.DamageType isCrit;
         if (Random.Range(0, 100) < critRate)
         {
             damage *= critMultiplier;
-            health -= (int)damage;
-            DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-            damagePopup.SetupPopup((int)damage, closestPoint, DamagePopup.DamageType.Crit);
+            isCrit = DamagePopup.DamageType.Crit;
         }
         else
         {
-            health -= (int)damage;
-            DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-            damagePopup.SetupPopup((int)damage, closestPoint, DamagePopup.DamageType.Normal);
+            isCrit = DamagePopup.DamageType.Normal;
         }
+
+        health -= (int)damage;
+        DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+        damagePopup.SetupPopup((int)damage, closestPoint, isCrit);
     }
 
     public void Heal(int amount)

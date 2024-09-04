@@ -11,10 +11,12 @@ public class WeaponData : ScriptableObject
     }
 
     public WeaponType weaponType;
-    public List<AnimationClip> animations;
-    public int baseAttack;
+    public List<AnimationClip> attackAnimations;
     public List<float> attackMultipliers;
-    public float attackSpeed;
+    public AnimationClip plungeAttackAnimation;
+    public float plungeAttackMultiplier;
     public int critRate;
     public float critMultiplier;
+    public float comboCooldown;
+    public float attackCooldown;
 }
