@@ -1446,9 +1446,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70579677df0549944a21ca957aa69697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 9999
+  health: 100
+  maxHealth: 0
   shield: 0
   attack: 5
+  baseAttack: 0
   attackSpeed: 0
   critRate: 10
   critDamage: 1.5
@@ -2382,7 +2384,11 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9104656562831867184, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
-      propertyPath: attack
+      propertyPath: maxHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 9104656562831867184, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
+      propertyPath: baseAttack
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 9209273340593868020, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
