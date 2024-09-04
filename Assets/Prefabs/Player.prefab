@@ -1041,8 +1041,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+  maxHealth: 100
   shield: 0
   attack: 10
+  baseAttack: 10
   attackSpeed: 0
   critRate: 0
   critDamage: 0
@@ -1192,6 +1194,9 @@ MonoBehaviour:
   abilityUI:
   - {fileID: 794952187612417045}
   - {fileID: 3733261872196111398}
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &3507462888382954062
 GameObject:
   m_ObjectHideFlags: 0
