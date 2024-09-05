@@ -33,61 +33,63 @@ public class AbilityController : MonoBehaviour
         if (ability == null)
             return;
 
-        // if ability for self
-        if (ability.abilityUseType == BaseAbility.AbilityUseType.Self)
-        {
-            // update stat
-            switch (ability.abilityEffectStat)
-            {
-                case BaseAbility.AbilityEffectStat.attack:
-                    StartCoroutine(player.AttackChangeRoutine(
-                        ability.abilityEffectValue,
-                        ability.abilityEffectType,
-                        ability.abilityEffectValueType,
-                        ability.abilityDuration));
-                    break;
-                case BaseAbility.AbilityEffectStat.health:
-                    StartCoroutine(player.HealthChangeRoutine(
-                        ability.abilityEffectValue,
-                        ability.abilityEffectType,
-                        ability.abilityEffectValueType,
-                        ability.abilityDuration));
-                    break;
-            }
-        } 
-        // if ability is Area
-        else if (ability.abilityUseType == BaseAbility.AbilityUseType.Area)
-        {
-            // get all target objects in area
-            Collider2D[] targetColliders = Physics2D.OverlapCircleAll(transform.position, ability.abilityRange, targetLayer);
-            List<BaseStats> targetsInArea = new List<BaseStats>();
-            foreach (Collider2D col in targetColliders)
-            {
-                if (col.GetComponent<BaseStats>() != null)
-                    targetsInArea.Add(col.GetComponent<BaseStats>());
-            }
-            for (int i = 0; i < targetsInArea.Count; i++)
-            {
-                // update stat
-                switch (ability.abilityEffectStat)
-                {
-                    case BaseAbility.AbilityEffectStat.attack:
-                        StartCoroutine(targetsInArea[i].AttackChangeRoutine(
-                            ability.abilityEffectValue,
-                            ability.abilityEffectType,
-                            ability.abilityEffectValueType,
-                            ability.abilityDuration));
-                        break;
-                    case BaseAbility.AbilityEffectStat.health:
-                        StartCoroutine(targetsInArea[i].HealthChangeRoutine(
-                            ability.abilityEffectValue,
-                            ability.abilityEffectType,
-                            ability.abilityEffectValueType,
-                            ability.abilityDuration));
-                        break;
-                }
-            }
-        }
+        abilities[abilityNo].OnUseAbility(stats);
+
+        //// if ability for self
+        //if (ability.abilityUseType == BaseAbility.AbilityUseType.Self)
+        //{
+        //    // update stat
+        //    switch (ability.abilityEffectStat)
+        //    {
+        //        case BaseAbility.AbilityEffectStat.attack:
+        //            StartCoroutine(player.AttackChangeRoutine(
+        //                ability.abilityEffectValue,
+        //                ability.abilityEffectType,
+        //                ability.abilityEffectValueType,
+        //                ability.abilityDuration));
+        //            break;
+        //        case BaseAbility.AbilityEffectStat.health:
+        //            StartCoroutine(player.HealthChangeRoutine(
+        //                ability.abilityEffectValue,
+        //                ability.abilityEffectType,
+        //                ability.abilityEffectValueType,
+        //                ability.abilityDuration));
+        //            break;
+        //    }
+        //} 
+        //// if ability is Area
+        //else if (ability.abilityUseType == BaseAbility.AbilityUseType.Area)
+        //{
+        //    // get all target objects in area
+        //    Collider2D[] targetColliders = Physics2D.OverlapCircleAll(transform.position, ability.abilityRange, targetLayer);
+        //    List<BaseStats> targetsInArea = new List<BaseStats>();
+        //    foreach (Collider2D col in targetColliders)
+        //    {
+        //        if (col.GetComponent<BaseStats>() != null)
+        //            targetsInArea.Add(col.GetComponent<BaseStats>());
+        //    }
+        //    for (int i = 0; i < targetsInArea.Count; i++)
+        //    {
+        //        // update stat
+        //        switch (ability.abilityEffectStat)
+        //        {
+        //            case BaseAbility.AbilityEffectStat.attack:
+        //                StartCoroutine(targetsInArea[i].AttackChangeRoutine(
+        //                    ability.abilityEffectValue,
+        //                    ability.abilityEffectType,
+        //                    ability.abilityEffectValueType,
+        //                    ability.abilityDuration));
+        //                break;
+        //            case BaseAbility.AbilityEffectStat.health:
+        //                StartCoroutine(targetsInArea[i].HealthChangeRoutine(
+        //                    ability.abilityEffectValue,
+        //                    ability.abilityEffectType,
+        //                    ability.abilityEffectValueType,
+        //                    ability.abilityDuration));
+        //                break;
+        //        }
+        //    }
+        //}
         abilityDurationRoutines[abilityNo] = StartCoroutine(AbilityDurationRoutine(stats, abilityNo, ability));
     }
 

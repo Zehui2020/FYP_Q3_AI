@@ -118,6 +118,11 @@ public class BaseStats : MonoBehaviour
         attack -= change;
     }
 
+    public void OnHealthChange(float value, BaseAbility.AbilityEffectType effectType, BaseAbility.AbilityEffectValueType valueType, float duration)
+    {
+        StartCoroutine(HealthChangeRoutine(value, effectType, valueType, duration));
+    }
+
     public IEnumerator HealthChangeRoutine(float value, BaseAbility.AbilityEffectType effectType, BaseAbility.AbilityEffectValueType valueType,  float duration)
     {
         int change = 0;

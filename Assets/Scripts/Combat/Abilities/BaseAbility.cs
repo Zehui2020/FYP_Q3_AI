@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class BaseAbility : ScriptableObject
+public abstract class BaseAbility : ScriptableObject
 {
     public enum AbilityName
     {
@@ -50,4 +49,6 @@ public class BaseAbility : ScriptableObject
 
     public float abilityDuration;
     public float abilityCooldown;
+
+    public abstract void OnUseAbility(BaseStats target);
 }
