@@ -50,7 +50,6 @@ public class LlamaCPP : MonoBehaviour
                 "The sound of its hum in a silent room signals the beginning of the end of your life.</result> " +
 
                 "In this environment, keep the description less than 50 words. " +
-                
                 /*
                 "If you are asked for an object that is not a conventional, hand-held, medieval-era weapon, return this response:" +
                 "<result>Please enter a prompt for a weapon.</result> " +
@@ -74,8 +73,11 @@ public class LlamaCPP : MonoBehaviour
             userPrompt = user_Input_Weapon.text;
             AI_Gen_Prompt =
                 '"' +
-                "[INST] <<SYS>> You are a writer and your primary job is to write concise descriptions for game weapons specifically. " +
-                "In this environment, do not address the user and do not show XML tags other than these ones below: <result></result> " +
+                "[INST] <<SYS>> You are a writer and your primary job is to generate statistics for weapons. " +
+                "In this environment, do not address the user and do not show XML tags other than these ones: " +
+                "<result></result>,  " +
+                "<weaponType></weaponType>, " +
+                "<result></result>" +
 
                 "Here are a few examples of what your output should look like: " +
                 "<result>This is a sacred sword from times of old, held by a warrior named Link. " +
