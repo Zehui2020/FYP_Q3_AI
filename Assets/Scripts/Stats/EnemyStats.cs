@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyStats : BaseStats
 {
+    [Header("Enemy Stats")]
     public float patrolThreshold;
 
     public float chaseRange;

@@ -8,7 +8,7 @@ public class CombatController : MonoBehaviour
 
     private AnimationManager animationManager;
     private CombatCollisionController collisionController;
-    private PlayerController stats;
+    private BaseStats player;
 
     private int attackComboCount;
 
@@ -17,36 +17,46 @@ public class CombatController : MonoBehaviour
     private Coroutine attackCooldownRoutine;
     private Coroutine plungeAttackRoutine;
 
-    public void InitializeCombatController()
+    public void InitializeCombatController(BaseStats baseStats)
     {
         animationManager = GetComponent<AnimationManager>();
         collisionController = GetComponent<CombatCollisionController>();
-        stats = GetComponent<PlayerController>();
+        player = baseStats;
         attackComboCount = 0;
+
+        collisionController.InitCollisionController(player);
     }
+
     public void HandleAttack()
     {
-        if (attackAnimRoutine == null && attackCooldownRoutine == null)
+        if (attackAnimRoutine != null || attackCooldownRoutine != null)
+            return;
+
+        if (attackRoutine != null)
         {
-            if (attackRoutine != null)
+            attackComboCount++;
+            if (attackComboCount >= wData.attackAnimations.Count)
             {
-                attackComboCount++;
-                if (attackComboCount >= wData.attackAnimations.Count)
-                {
-                    attackComboCount = 0;
-                }
-                else if (attackComboCount == wData.attackAnimations.Count - 1)
-                {
-                    HandleAttackCooldown();
-                }
-                StopCoroutine(attackRoutine);
-                attackRoutine = StartCoroutine(AttackRoutine());
+                attackComboCount = 0;
+                HandleAttackCooldown();
+
+                player.comboDamageMultipler.RemoveModifier(wData.attackMultipliers[wData.attackMultipliers.Count - 1]);
+                player.comboDamageMultipler.AddModifier(wData.attackMultipliers[attackComboCount]);
             }
             else
             {
-                attackComboCount = 0;
-                attackRoutine = StartCoroutine(AttackRoutine());
+                player.comboDamageMultipler.RemoveModifier(wData.attackMultipliers[attackComboCount - 1]);
+                player.comboDamageMultipler.AddModifier(wData.attackMultipliers[attackComboCount]);
             }
+
+            StopCoroutine(attackRoutine);
+            attackRoutine = StartCoroutine(AttackRoutine());
+        }
+        else
+        {
+            attackComboCount = 0;
+            player.comboDamageMultipler.ReplaceAllModifiers(wData.attackMultipliers[attackComboCount]);
+            attackRoutine = StartCoroutine(AttackRoutine());
         }
     }
 
@@ -96,6 +106,7 @@ public class CombatController : MonoBehaviour
     {
         if (plungeAttackRoutine == null)
         {
+            player.comboDamageMultipler.ReplaceAllModifiers(wData.plungeAttackMultiplier);
             plungeAttackRoutine = StartCoroutine(PlungeAttackRoutine());
         }
     }
@@ -112,14 +123,7 @@ public class CombatController : MonoBehaviour
 
     public void OnDamageEventStart(int col)
     {
-        float damage;
-
-        if (plungeAttackRoutine != null)
-            damage = stats.attack * wData.plungeAttackMultiplier;
-        else
-            damage = stats.attack * wData.attackMultipliers[attackComboCount];
-
-        collisionController.EnableCollider(damage, wData.critRate, wData.critMultiplier, col);
+        collisionController.EnableCollider(col);
     }
 
     public void OnDamageEventEnd(int col)

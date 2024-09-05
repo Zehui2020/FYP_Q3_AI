@@ -19,6 +19,7 @@ public class Undead : Enemy
     private readonly int LungeAnim = Animator.StringToHash("UndeadLunge");
     private readonly int DieAnim = Animator.StringToHash("UndeadDie");
 
+    [Header("Undead Stats")]
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Vector2 lungeForce;
     [SerializeField] private float lungeAngle;
@@ -83,10 +84,10 @@ public class Undead : Enemy
                 break;
         }
 
-        //if (currentState != State.Scratch && 
-        //    currentState != State.Lunge && 
-        //    currentState != State.Deciding)
-        //    UpdatePlayerDirection();
+        if (currentState != State.Scratch &&
+            currentState != State.Lunge &&
+            currentState != State.Deciding)
+            UpdatePlayerDirection();
     }
 
     private void AttackDecision()
@@ -118,12 +119,14 @@ public class Undead : Enemy
         enemyRB.AddForce(direction * lungeForce, ForceMode2D.Impulse);
     }
 
-    public override void TakeDamage(float damage, int critRate, float critMultiplier, Vector3 closestPoint)
+    public override bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
-        base.TakeDamage(damage, critRate, critMultiplier, closestPoint);
+        bool tookDamage = base.TakeDamage(damage, isCrit, closestPoint, damageType);
 
         if (health <= 0)
             ChangeState(State.Die);
+
+        return tookDamage;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

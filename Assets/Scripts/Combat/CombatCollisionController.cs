@@ -7,14 +7,11 @@ public class CombatCollisionController : MonoBehaviour
     [SerializeField] private CombatCollisionTrigger[] colliders;
     [SerializeField] LayerMask targetLayer;
 
-    private BaseStats stats;
-    private float damage;
-    private int critRate;
-    private float critMultiplier;
+    private BaseStats attacker;
 
-    private void Start()
+    public void InitCollisionController(BaseStats stats)
     {
-        stats = GetComponent<BaseStats>();
+        attacker = stats;
         foreach (var collider in colliders)
         {
             collider.TriggerEvent += TriggerEvent;
@@ -22,38 +19,20 @@ public class CombatCollisionController : MonoBehaviour
         }
     }
 
-    public void EnableCollider(float newDamage, int col)
+    public void EnableCollider(int col)
     {
-        damage = newDamage;
-        critRate = stats.critRate;
-        critMultiplier = stats.critDamage;
-        colliders[col].SetCollider(true);
-    }
-
-    public void EnableCollider(float newDamage, int critRate, float critMultiplier, int col)
-    {
-        damage = newDamage;
-        this.critRate = critRate;
-        this.critMultiplier = critMultiplier;
         colliders[col].SetCollider(true);
     }
 
     public void DisableCollider(int col)
     {
-        damage = 0;
         colliders[col].SetCollider(false);
     }
 
     public void DisableAllCollider()
     {
-        damage = 0;
         foreach (CombatCollisionTrigger col in colliders)
             col.SetCollider(false);
-    }
-
-    public void SetDamage(float newDamage)
-    {
-        damage = newDamage;
     }
 
     private void TriggerEvent(Collider2D col)
@@ -63,18 +42,13 @@ public class CombatCollisionController : MonoBehaviour
 
         Vector3 closestPoint = col.ClosestPoint(transform.position);
 
-        GameObject hitGameObject = col.gameObject;
-        EnemyStats enemyStats = Utility.Instance.GetTopmostParent(hitGameObject.transform).GetComponentInChildren<EnemyStats>();
-        PlayerStats playerStats = hitGameObject.GetComponent<PlayerStats>();
+        BaseStats target = col.GetComponent<BaseStats>();
 
-        if (enemyStats != null)
+        if (target != null)
         {
-            enemyStats.TakeDamage(damage, critRate, critMultiplier, closestPoint);
+            float damageDealt = attacker.CalculateDamageDealt(out bool isCrit, out DamagePopup.DamageType damageType);
+            target.TakeDamage(damageDealt, isCrit, closestPoint, damageType);
             DisableAllCollider();
-        }
-        else if (playerStats != null)
-        {
-            playerStats.TakeDamage(damage, critRate, critMultiplier, closestPoint);
         }
     }
 }

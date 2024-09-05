@@ -7,14 +7,15 @@ using DesignPatterns.ObjectPool;
 public class DamagePopup : PooledObject
 {
     [SerializeField] private TextMeshProUGUI textMesh;
-    [SerializeField] private float driftDistance;
+    private Vector2 driftDir;
 
     private Animator animator;
 
     public enum DamageType
     {
-        Normal,
-        Crit
+        Shield,
+        Health,
+        Crit,
     }
 
     private void Awake()
@@ -22,14 +23,19 @@ public class DamagePopup : PooledObject
         animator = GetComponent<Animator>();
     }
 
-    public void SetupPopup(int damage, Vector3 position, DamageType damageType)
+    public void SetupPopup(int damage, Vector3 position, DamageType damageType, Vector2 driftDirection)
     {
         transform.position = position;
         transform.forward = Camera.main.transform.forward;
+        driftDir = driftDirection;
 
         switch (damageType)
         {
-            case DamageType.Normal:
+            case DamageType.Shield:
+                textMesh.color = Color.blue;
+                textMesh.SetText(damage.ToString());
+                break;
+            case DamageType.Health:
                 textMesh.color = Color.yellow;
                 textMesh.SetText(damage.ToString());
                 break;
@@ -42,10 +48,11 @@ public class DamagePopup : PooledObject
         Deactivate();
     }
 
-    public void SetupPopup(string text, Vector3 position, Color color)
+    public void SetupPopup(string text, Vector3 position, Color color, Vector2 driftDirection)
     {
         transform.position = position;
         transform.forward = Camera.main.transform.forward;
+        driftDir = driftDirection;
 
         textMesh.color = color;
         textMesh.SetText(text);
@@ -69,7 +76,7 @@ public class DamagePopup : PooledObject
             randomDirection.y *= -1;
 
         randomDirection.Normalize();
-        Vector3 targetPosition = initialPosition + randomDirection * driftDistance;
+        Vector3 targetPosition = initialPosition + new Vector3(randomDirection.x * driftDir.x, randomDirection.y * driftDir.y, randomDirection.z);
 
         while (timer < animationLength)
         {

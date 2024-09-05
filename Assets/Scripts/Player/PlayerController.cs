@@ -34,7 +34,7 @@ public class PlayerController : PlayerStats
 
         itemManager.InitItemManager();
         movementController.InitializeMovementController();
-        combatController.InitializeCombatController();
+        combatController.InitializeCombatController(this);
         abilityController.InitializeAbilityController();
         if (proceduralMapGenerator != null)
             proceduralMapGenerator.InitMapGenerator();
@@ -138,13 +138,15 @@ public class PlayerController : PlayerStats
         fadeTransition.FadeOut();
     }
 
-    public override void TakeDamage(float damage, int critRate, float critMultiplier, Vector3 closestPoint)
+    public override bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
-        base.TakeDamage(damage, critRate, critMultiplier, closestPoint);
+        bool tookDamage = base.TakeDamage(damage, isCrit, closestPoint, damageType);
 
         if (health <= 0)
         {
             Debug.Log("YOU DIED!");
         }
+
+        return tookDamage;
     }
 }

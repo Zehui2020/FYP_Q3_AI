@@ -10,6 +10,7 @@ public class Enemy : EnemyStats
     protected PlayerController player;
 
     protected AINavigation aiNavigation;
+    protected EnemyUIController uiController;
     protected Collider2D enemyCol;
     protected Rigidbody2D enemyRB;
     protected CombatCollisionController collisionController;
@@ -37,9 +38,16 @@ public class Enemy : EnemyStats
         enemyCol = GetComponent<Collider2D>();
         enemyRB = GetComponent<Rigidbody2D>();
         collisionController = GetComponent<CombatCollisionController>();
+        uiController = GetComponent<EnemyUIController>();
 
         aiNavigation.InitPathfindingAgent();
+        uiController.InitUIController(this);
+        collisionController.InitCollisionController(this);
         player = PlayerController.Instance;
+
+        OnHealthChanged += (increase, isCrit) => { uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };
+        OnShieldChanged += (increase, isCrit) => { uiController.OnShieldChanged(shield, maxShield, increase, isCrit); };
+        OnBreached += uiController.ShowBreachDamage;
     }
 
     public virtual void UpdateEnemy()
@@ -54,7 +62,7 @@ public class Enemy : EnemyStats
 
     public void OnDamageEventStart(int col)
     {
-        collisionController.EnableCollider(attack, col);
+        collisionController.EnableCollider(col);
     }
 
     public void OnDamageEventEnd(int col)

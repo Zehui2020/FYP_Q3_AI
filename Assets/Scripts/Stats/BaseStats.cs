@@ -1,6 +1,5 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class BaseStats : MonoBehaviour
@@ -13,20 +12,37 @@ public class BaseStats : MonoBehaviour
     }
     private ImmuneType immuneType;
 
+    [Header("Base Stats")]
     public int health;
     public int maxHealth;
     public int shield;
+    public int maxShield;
     public int attack;
-    public int baseAttack;
     public float attackSpeed;
-    public int critRate;
-    public float critDamage;
+    public float shieldRegenDelay;
     public bool isImmune = false;
 
-    private Coroutine immuneRoutine;
+    [Header("Modifiers")]
+    public StatModifier attackIncrease = new();
 
-    public virtual void TakeDamage(float damage, int critRate, float critMultiplier, Vector3 closestPoint)
+    public StatModifier critRate = new();
+    public StatModifier critDamage = new();
+    public StatModifier comboDamageMultipler = new();
+    public StatModifier damageMultipler = new();
+    public StatModifier breachedMultiplier = new();
+    public StatModifier damageReduction = new();
+
+    private Coroutine immuneRoutine;
+    private Coroutine shieldRegenRoutine;
+
+    // bool increase, isCrit
+    public event System.Action<bool, bool> OnHealthChanged;
+    public event System.Action<bool, bool> OnShieldChanged;
+    public event System.Action<float> OnBreached;
+
+    public virtual bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
+        // Check for immunity
         if (isImmune)
         {
             DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
@@ -34,39 +50,94 @@ public class BaseStats : MonoBehaviour
             switch (immuneType)
             {
                 case ImmuneType.Dodge:
-                    popup.SetupPopup("Dodged!", transform.position, Color.white);
+                    popup.SetupPopup("Dodged!", transform.position, Color.white, new Vector2(1, 3));
                     break;
                 case ImmuneType.Block:
-                    popup.SetupPopup("Blocked!", transform.position, Color.white);
+                    popup.SetupPopup("Blocked!", transform.position, Color.white, new Vector2(1, 3));
                     break;
             }
 
-            return;
+            return false;
         }
 
-        // crit calculation
-        DamagePopup.DamageType isCrit;
-        if (Random.Range(0, 100) < critRate)
+        // Start regen shield
+        if (shieldRegenRoutine != null)
+            StopCoroutine(shieldRegenRoutine);
+        shieldRegenRoutine = StartCoroutine(ShieldRegenRoutine());
+
+        DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+
+        int finalDamage = CalculateFinalDamage(damage);
+
+        // Check for shield active
+        if (shield > 0)
         {
-            damage *= critMultiplier;
-            isCrit = DamagePopup.DamageType.Crit;
+            shield -= finalDamage;
+            damageType = DamagePopup.DamageType.Shield;
+            damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(1, 2));
+            OnShieldChanged?.Invoke(false, isCrit);
+
+            if (shield < 0)
+            {
+                damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+                damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.blue, new Vector2(0, 3));
+                shield = 0;
+                OnBreached?.Invoke(breachedMultiplier.GetTotalModifier());
+            }
+
+            return true;
+        }
+
+        health -= finalDamage;
+        OnHealthChanged?.Invoke(false, isCrit);
+        damageType = DamagePopup.DamageType.Health;
+        if (isCrit)
+            damageType = DamagePopup.DamageType.Crit;
+        damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(1, 1));
+
+        return true;
+    }
+
+    public float CalculateDamageDealt(out bool isCrit, out DamagePopup.DamageType damageType)
+    {
+        float critDamage = 1;
+        // Offense
+        // Crit Calculation
+        if (Random.Range(0, 100) < critRate.GetTotalModifier())
+        {
+            critDamage = this.critDamage.GetTotalModifier();
+            damageType = DamagePopup.DamageType.Crit;
+            isCrit = true;
         }
         else
         {
-            isCrit = DamagePopup.DamageType.Normal;
+            damageType = DamagePopup.DamageType.Health;
+            isCrit = false;
         }
 
-        health -= (int)damage;
-        DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-        damagePopup.SetupPopup((int)damage, closestPoint, isCrit);
+        float totalDamage = (attack + attackIncrease.GetTotalModifier()) * comboDamageMultipler.GetTotalModifier() * damageMultipler.GetTotalModifier() * critDamage;
+
+        return totalDamage;
+    }
+
+    public int CalculateFinalDamage(float totalDamageDealt)
+    {
+        if (shield <= 0)
+            totalDamageDealt *= breachedMultiplier.GetTotalModifier();
+
+        totalDamageDealt *= (1 - damageReduction.GetTotalModifier());
+
+        return Mathf.CeilToInt(totalDamageDealt);
     }
 
     public void Heal(int amount)
     {
         health += amount;
+        if (health > maxHealth)
+            health = maxHealth;
 
         DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-        popup.SetupPopup("+ " + amount, transform.position, Color.green);
+        popup.SetupPopup("+" + amount, transform.position, Color.green, new Vector2(1, 2));
     }
 
     public void ApplyImmune(float duration, ImmuneType immuneType)
@@ -107,15 +178,15 @@ public class BaseStats : MonoBehaviour
         else if (valueType == BaseAbility.AbilityEffectValueType.Percentage)
         {
             if (effectType == BaseAbility.AbilityEffectType.Increase)
-                change = (int)(value * baseAttack / 100);
+                change = (int)(value * attack / 100);
             else if (effectType == BaseAbility.AbilityEffectType.Decrease)
-                change = -(int)(value * baseAttack / 100);
+                change = -(int)(value * attack / 100);
         }
-        attack += change;
+        attackIncrease.AddModifier(change);
 
         yield return new WaitForSeconds(duration);
 
-        attack -= change;
+        attackIncrease.RemoveModifier(change);
     }
 
     public void OnHealthChange(float value, BaseAbility.AbilityEffectType effectType, BaseAbility.AbilityEffectValueType valueType, float duration)
@@ -123,9 +194,10 @@ public class BaseStats : MonoBehaviour
         StartCoroutine(HealthChangeRoutine(value, effectType, valueType, duration));
     }
 
-    public IEnumerator HealthChangeRoutine(float value, BaseAbility.AbilityEffectType effectType, BaseAbility.AbilityEffectValueType valueType,  float duration)
+    public IEnumerator HealthChangeRoutine(float value, BaseAbility.AbilityEffectType effectType, BaseAbility.AbilityEffectValueType valueType, float duration)
     {
         int change = 0;
+
         if (valueType == BaseAbility.AbilityEffectValueType.Flat)
         {
             if (effectType == BaseAbility.AbilityEffectType.Increase)
@@ -140,18 +212,22 @@ public class BaseStats : MonoBehaviour
             else if (effectType == BaseAbility.AbilityEffectType.Decrease)
                 change = -(int)(value * maxHealth / 100);
         }
-        int temp = health + change;
-        temp = Mathf.Clamp(temp, 0, maxHealth);
-        change = temp - health;
+
         if (change < 0)
         {
-            TakeDamage(-change, 0, 0, transform.position);
+            health -= change;
+            if (health <= 0)
+                health = 1;
+
+            OnHealthChanged?.Invoke(false, false);
         }
         else
         {
             health += change;
-            DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-            popup.SetupPopup("+ " + change, transform.position, Color.green);
+            if (health > maxHealth)
+                health = maxHealth;
+
+            OnHealthChanged?.Invoke(true, false);
         }
 
         yield return new WaitForSeconds(duration);
@@ -161,14 +237,35 @@ public class BaseStats : MonoBehaviour
             change = -change;
             if (change < 0)
             {
-                TakeDamage(-change, 0, 0, transform.position);
+                health -= change;
+                if (health <= 0)
+                    health = 1;
+
+                OnHealthChanged?.Invoke(false, false);
             }
             else
             {
                 health += change;
-                DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-                popup.SetupPopup("+ " + change, transform.position, Color.green);
+                if (health > maxHealth)
+                    health = maxHealth;
+
+                OnHealthChanged?.Invoke(true, false);
             }
         }
+    }
+
+    private void OnDisable()
+    {
+        OnHealthChanged = null;
+        OnShieldChanged = null;
+        OnBreached = null;
+    }
+
+    private IEnumerator ShieldRegenRoutine()
+    {
+        yield return new WaitForSeconds(shieldRegenDelay);
+
+        shield = maxShield;
+        OnShieldChanged?.Invoke(true, false);
     }
 }
