@@ -42,6 +42,9 @@ public class BaseStats : MonoBehaviour
 
     public virtual bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
+        if (health <= 0)
+            return false;
+
         // Check for immunity
         if (isImmune)
         {
@@ -89,7 +92,7 @@ public class BaseStats : MonoBehaviour
         }
 
         health -= finalDamage;
-        OnHealthChanged?.Invoke(false, isCrit);
+        OnHealthChanged?.Invoke(false, isCrit || shield < 0);
         damageType = DamagePopup.DamageType.Health;
         if (isCrit)
             damageType = DamagePopup.DamageType.Crit;

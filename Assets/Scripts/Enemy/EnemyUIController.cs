@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class EnemyUIController : MonoBehaviour
 {
+    [SerializeField] private Canvas canvas;
     [SerializeField] private EnemyStatBar healthBar;
     [SerializeField] private EnemyStatBar shieldBar;
     [SerializeField] private TextMeshProUGUI breachDamage;
@@ -15,6 +16,11 @@ public class EnemyUIController : MonoBehaviour
     {
         healthBar.InitStatBar(baseStats.health, baseStats.maxHealth);
         shieldBar.InitStatBar(baseStats.shield, baseStats.maxShield);
+    }
+
+    public void SetCanvasActive(bool active)
+    {
+        canvas.enabled = active;
     }
 
     public void OnHealthChanged(int health, int maxHealth, bool increase, bool critical)

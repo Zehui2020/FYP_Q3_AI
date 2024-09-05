@@ -26,6 +26,7 @@ public class Enemy : EnemyStats
     protected event System.Action onReachChaseTarget;
 
     private Coroutine idleRoutine;
+    private bool isInCombat = false;
 
     private void Start()
     {
@@ -45,8 +46,8 @@ public class Enemy : EnemyStats
         collisionController.InitCollisionController(this);
         player = PlayerController.Instance;
 
-        OnHealthChanged += (increase, isCrit) => { uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };
-        OnShieldChanged += (increase, isCrit) => { uiController.OnShieldChanged(shield, maxShield, increase, isCrit); };
+        OnHealthChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };
+        OnShieldChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnShieldChanged(shield, maxShield, increase, isCrit); };
         OnBreached += uiController.ShowBreachDamage;
     }
 
@@ -58,6 +59,9 @@ public class Enemy : EnemyStats
     private void Update()
     {
         UpdateEnemy();
+
+        if (!isInCombat)
+            uiController.SetCanvasActive(false);
     }
 
     public void OnDamageEventStart(int col)
@@ -72,7 +76,8 @@ public class Enemy : EnemyStats
 
     public void OnDie()
     {
-        Destroy(transform.parent.gameObject);
+        Destroy(transform.parent.gameObject, 10f);
+        uiController.SetCanvasActive(false);
     }
 
     protected void PatrolUpdate()
