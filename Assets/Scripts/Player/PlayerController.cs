@@ -36,7 +36,8 @@ public class PlayerController : PlayerStats
         movementController.InitializeMovementController();
         combatController.InitializeCombatController();
         abilityController.InitializeAbilityController();
-        proceduralMapGenerator.InitMapGenerator();
+        if (proceduralMapGenerator != null)
+            proceduralMapGenerator.InitMapGenerator();
     }
 
     private void Update()
