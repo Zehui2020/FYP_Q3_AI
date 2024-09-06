@@ -11,6 +11,7 @@ public class CombatController : MonoBehaviour
     private BaseStats player;
 
     private int attackComboCount;
+    private bool cancelledPlunge = false;
 
     private Coroutine attackRoutine;
     private Coroutine attackAnimRoutine;
@@ -102,13 +103,18 @@ public class CombatController : MonoBehaviour
         return true;
     }
 
-    public void HandlePlungeAttack()
+    public bool HandlePlungeAttack()
     {
-        if (plungeAttackRoutine == null)
+        if (plungeAttackRoutine == null && !cancelledPlunge)
         {
             player.comboDamageMultipler.ReplaceAllModifiers(wData.plungeAttackMultiplier);
             plungeAttackRoutine = StartCoroutine(PlungeAttackRoutine());
+            return true;
         }
+
+        cancelledPlunge = false;
+
+        return false;
     }
 
     private IEnumerator PlungeAttackRoutine()
@@ -119,6 +125,11 @@ public class CombatController : MonoBehaviour
         yield return new WaitForSeconds(wData.plungeAttackAnimation.length);
 
         plungeAttackRoutine = null;
+    }
+
+    public void CancelPlungeAttack()
+    {
+        cancelledPlunge = true;
     }
 
     public void OnDamageEventStart(int col)

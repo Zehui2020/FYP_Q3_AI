@@ -49,14 +49,13 @@ public class MovementController : MonoBehaviour
     public int wallJumpCount;
     public int maxWallJumps;
 
-    public float plungeMultiplier;
-    public bool canPlungeDamage = false;
-
     private Coroutine jumpRoutine;
     private Coroutine burstDragRoutine;
     private Coroutine dashRoutine;
     private Coroutine rollRoutine;
     private Coroutine plungeRoutine;
+
+    public event System.Action OnPlungeEnd;
 
     public void InitializeMovementController()
     {
@@ -472,7 +471,6 @@ public class MovementController : MonoBehaviour
 
         playerRB.gravityScale = movementData.gravityScale;
         playerRB.AddForce(Vector2.down * movementData.plungeForce, ForceMode2D.Impulse);
-        plungeMultiplier = playerRB.velocity.magnitude;
     }
 
     private void StopPlunge()
@@ -483,10 +481,9 @@ public class MovementController : MonoBehaviour
         StopCoroutine(plungeRoutine);
         playerRB.gravityScale = movementData.gravityScale;
         playerRB.AddForce(Vector2.down * movementData.plungeForce, ForceMode2D.Impulse);
-        plungeMultiplier = playerRB.velocity.magnitude;
         isPlunging = false;
-        canPlungeDamage = true;
         plungeRoutine = null;
+        OnPlungeEnd?.Invoke();
     }
 
     public void MovePlayer()
@@ -604,5 +601,10 @@ public class MovementController : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         playerRB.drag = movementData.groundDrag;
         burstDragRoutine = null;
+    }
+
+    private void OnDisable()
+    {
+        OnPlungeEnd = null;
     }
 }

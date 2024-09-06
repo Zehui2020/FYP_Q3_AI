@@ -73,6 +73,7 @@ public class Slime : Enemy
                 break;
             case State.Die:
                 animator.CrossFade(SlimeDieAnim, 0f);
+                uiController.SetCanvasActive(false);
                 break;
         }
     }

@@ -78,7 +78,6 @@ public class Enemy : EnemyStats
     public void OnDie()
     {
         Destroy(transform.parent.gameObject, 10f);
-        uiController.SetCanvasActive(false);
     }
 
     protected void PatrolUpdate()

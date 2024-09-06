@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -38,6 +39,8 @@ public class PlayerController : PlayerStats
         abilityController.InitializeAbilityController();
         if (proceduralMapGenerator != null)
             proceduralMapGenerator.InitMapGenerator();
+
+        movementController.OnPlungeEnd += HandlePlungeAttack;
     }
 
     private void Update()
@@ -49,7 +52,11 @@ public class PlayerController : PlayerStats
             movementController.HandleJump(horizontal);
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
             movementController.HandleDash(horizontal);
+            if (movementController.isPlunging)
+                combatController.CancelPlungeAttack();
+        }
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
             movementController.HandleRoll();
@@ -76,16 +83,15 @@ public class PlayerController : PlayerStats
         if (!combatController.CheckAttacking() && !movementController.canMove)
             movementController.ResumePlayer();
 
-        if (movementController.canPlungeDamage)
-        {
-            combatController.HandlePlungeAttack();
-            movementController.canPlungeDamage = false;
-            movementController.StopPlayer();
-        }
-
         movementController.CheckGroundCollision();
         movementController.HandleMovment(horizontal);
         movementController.HandleGrappling(vertical, ropeX);
+    }
+
+    private void HandlePlungeAttack()
+    {
+        if (combatController.HandlePlungeAttack())
+            movementController.StopPlayer();
     }
 
     public void OnPlayerOverlap(bool overlap)

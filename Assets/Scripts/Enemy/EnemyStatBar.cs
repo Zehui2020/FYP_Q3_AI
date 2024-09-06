@@ -70,7 +70,7 @@ public class EnemyStatBar : MonoBehaviour
 
         if (increase)
         {
-            while (amount != maxAmount)
+            while (statBar.value != statBar.maxValue)
             {
                 statBar.value = Mathf.Lerp(amount, maxAmount, Time.deltaTime * delayBarSpeed);
                 delayBar.sizeDelta = new Vector2(statBar.value / statBar.maxValue * delayBarWidth, delayBar.sizeDelta.y);

@@ -63,6 +63,7 @@ public class Undead : Enemy
             case State.Die:
                 animator.CrossFade(DieAnim, 0f);
                 aiNavigation.StopNavigation();
+                uiController.SetCanvasActive(false);
                 break;
         }
     }
