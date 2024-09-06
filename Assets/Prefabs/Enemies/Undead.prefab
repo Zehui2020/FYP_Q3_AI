@@ -108,7 +108,7 @@ MonoBehaviour:
   delayDuration: 0.5
   delayBarSpeed: 5
   shakeIntensity: 0.03
-  critShakeIntensity: 0.05
+  critShakeIntensity: 0.09
   shakeDuration: 0.2
   critShakeDuration: 0.2
 --- !u!1 &653315967614895171
@@ -473,7 +473,7 @@ MonoBehaviour:
   delayDuration: 0.5
   delayBarSpeed: 5
   shakeIntensity: 0.03
-  critShakeIntensity: 0.05
+  critShakeIntensity: 0.09
   shakeDuration: 0.2
   critShakeDuration: 0.2
 --- !u!1 &4517172174165354833
@@ -636,7 +636,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5955810268208953471}
   m_Layer: 7
-  m_Name: MeleeEnemy
+  m_Name: Undead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1303,6 +1303,7 @@ MonoBehaviour:
   attack: 10
   attackSpeed: 1
   shieldRegenDelay: 5
+  shieldRegenInterval: 0.1
   isImmune: 0
   attackIncrease:
     baseAmount: 0

@@ -105,8 +105,10 @@ public class Undead : Enemy
 
         if (Physics2D.Raycast(transform.position, dir.normalized, scratchRange, playerLayer))
             ChangeState(State.Scratch);
-        else
+        else if (Physics2D.OverlapCircle(transform.position, chaseRange, playerLayer))
             ChangeState(State.Lunge);
+        else
+            ChangeState(State.Patrol);
     }
 
     public void Lunge()

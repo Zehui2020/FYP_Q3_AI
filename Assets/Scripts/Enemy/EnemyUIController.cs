@@ -15,7 +15,9 @@ public class EnemyUIController : MonoBehaviour
     public void InitUIController(BaseStats baseStats)
     {
         healthBar.InitStatBar(baseStats.health, baseStats.maxHealth);
-        shieldBar.InitStatBar(baseStats.shield, baseStats.maxShield);
+
+        if (shieldBar != null)
+            shieldBar.InitStatBar(baseStats.shield, baseStats.maxShield);
     }
 
     public void SetCanvasActive(bool active)
@@ -33,6 +35,9 @@ public class EnemyUIController : MonoBehaviour
 
     public void OnShieldChanged(int shield, int maxShield, bool increase, bool critical)
     {
+        if (shieldBar == null)
+            return;
+
         if (!increase)
             shieldBar.OnDecrease(shield, maxShield, critical);
         else

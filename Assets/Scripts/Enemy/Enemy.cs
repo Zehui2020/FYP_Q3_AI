@@ -46,6 +46,7 @@ public class Enemy : EnemyStats
         collisionController.InitCollisionController(this);
         player = PlayerController.Instance;
 
+        onPlayerInChaseRange += () => { isInCombat = true; uiController.SetCanvasActive(true); };
         OnHealthChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };
         OnShieldChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnShieldChanged(shield, maxShield, increase, isCrit); };
         OnBreached += uiController.ShowBreachDamage;

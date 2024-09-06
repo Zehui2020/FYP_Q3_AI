@@ -13,6 +13,11 @@ public class AINavigation : MonoBehaviour
         aiPath = GetComponent<AIPath>();
     }
 
+    public void SetTarget(Transform target)
+    {
+        this.target = target;
+    }
+
     public void SetPathfindingTarget(Transform target, float speed, bool ignoreY)
     {
         this.target = target;
@@ -59,5 +64,14 @@ public class AINavigation : MonoBehaviour
             return Vector2.right;
         else
             return Vector2.left;
+    }
+
+    public bool IsNearTarget(float threshold)
+    {
+        if (target == null)
+            return false;
+
+        float dist = Vector2.Distance(transform.position, target.position);
+        return dist <= threshold;
     }
 }

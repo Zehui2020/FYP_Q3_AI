@@ -70,9 +70,9 @@ public class EnemyStatBar : MonoBehaviour
 
         if (increase)
         {
-            while (statBar.value != statBar.maxValue)
+            while (amount != maxAmount)
             {
-                statBar.value = Mathf.Lerp(statBar.value, statBar.maxValue, Time.deltaTime * delayBarSpeed);
+                statBar.value = Mathf.Lerp(amount, maxAmount, Time.deltaTime * delayBarSpeed);
                 delayBar.sizeDelta = new Vector2(statBar.value / statBar.maxValue * delayBarWidth, delayBar.sizeDelta.y);
                 yield return null;
             }
@@ -101,5 +101,4 @@ public class EnemyStatBar : MonoBehaviour
 
         transform.localPosition = originalPosition;
     }
-
 }
