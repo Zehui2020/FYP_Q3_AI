@@ -71,8 +71,8 @@ public class ProceduralMapGenerator : MonoBehaviour
         {
             miniMap[i].StartMapGeneration(mapSeed, ConfigureListForMiniMap(takenPosList, i), roomsAdded);
         }
-        mmController.ResetIndicatorNode();
         rtManager.ResetRooms(takenObjectsList);
+        mmController.ResetIndicatorNode();
     }
 
     private void ResetMap()
