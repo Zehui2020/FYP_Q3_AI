@@ -1,13 +1,10 @@
 using System.Collections;
-using System.Security.Cryptography;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : PlayerStats
 {
     public static PlayerController Instance;
 
-    private Collider2D playerCol;
     private MovementController movementController;
     private CombatController combatController;
     private AbilityController abilityController;
@@ -31,7 +28,7 @@ public class PlayerController : PlayerStats
         abilityController = GetComponent<AbilityController>();
         fadeTransition = GetComponent<FadeTransition>();
         itemManager = GetComponent<ItemManager>();
-        playerCol = GetComponent<Collider2D>();
+        statusEffectManager = GetComponent<StatusEffectManager>();
 
         itemManager.InitItemManager();
         movementController.InitializeMovementController();
@@ -40,11 +37,16 @@ public class PlayerController : PlayerStats
         if (proceduralMapGenerator != null)
             proceduralMapGenerator.InitMapGenerator();
 
+        statusEffectManager.OnThresholdReached += ApplyStatusState;
+        statusEffectManager.OnApplyStatusEffect += ApplyStatusEffect;
+
         movementController.OnPlungeEnd += HandlePlungeAttack;
     }
 
     private void Update()
     {
+        statusEffectManager.UpdateStatusEffects();
+
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
@@ -154,5 +156,34 @@ public class PlayerController : PlayerStats
         }
 
         return tookDamage;
+    }
+
+    public override IEnumerator FrozenRoutine()
+    {
+        movementController.StopPlayer();
+        isFrozen = true;
+
+        yield return new WaitForSeconds(statusEffectStats.frozenDuration);
+
+        movementController.ResumePlayer();
+        isFrozen = false;
+    }
+
+    public override IEnumerator StunnedRoutine()
+    {
+        movementController.StopPlayer();
+
+        yield return new WaitForSeconds(statusEffectStats.stunDuration);
+
+        movementController.ResumePlayer();
+    }
+
+    public override IEnumerator DazedRoutine()
+    {
+        movementController.StopPlayer();
+
+        yield return new WaitForSeconds(statusEffectStats.stunDuration);
+
+        movementController.ResumePlayer();
     }
 }

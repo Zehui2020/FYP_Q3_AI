@@ -38,7 +38,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1.5, y: 0.15}
+  m_SizeDelta: {x: 1.5, y: 0.08}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6370803735276591926
 MonoBehaviour:
@@ -182,6 +182,83 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!1 &2700560037494174352
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5319963767321617143}
+  - component: {fileID: 7506624025861453174}
+  - component: {fileID: 5172981789387748900}
+  m_Layer: 7
+  m_Name: StatusEffects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5319963767321617143
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2700560037494174352}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8944708617410875469}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 0, y: -0.2922}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0.5}
+--- !u!114 &7506624025861453174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2700560037494174352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 2
+--- !u!114 &5172981789387748900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2700560037494174352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0.05
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &3050601501415683731
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,7 +480,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1.5, y: 0.15}
+  m_SizeDelta: {x: 1.5, y: 0.08}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7058412420188381358
 MonoBehaviour:
@@ -692,10 +769,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6059075953353431428}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1.5, y: 0.15}
+  m_SizeDelta: {x: 1.5, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &8164609896503913648
 CanvasRenderer:
@@ -997,10 +1074,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 812681868635235335}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1.5, y: 0.15}
+  m_SizeDelta: {x: 1.5, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &4615287168220185250
 CanvasRenderer:
@@ -1049,7 +1126,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8944708617410875469}
+  - component: {fileID: 4319000958396822698}
   - component: {fileID: 1764030423975191098}
+  - component: {fileID: 352179446090164835}
   m_Layer: 7
   m_Name: StatBars
   m_TagString: Untagged
@@ -1070,15 +1149,39 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3544860891700838429}
+  - {fileID: 5319963767321617143}
   - {fileID: 812681868635235335}
   - {fileID: 6059075953353431428}
   m_Father: {fileID: 7110741609057243571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0000019073486}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
+--- !u!223 &4319000958396822698
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7222780687523754455}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!114 &1764030423975191098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1096,8 +1199,8 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 7
-  m_Spacing: 0.03
+  m_ChildAlignment: 6
+  m_Spacing: 0.01
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
@@ -1105,6 +1208,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &352179446090164835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7222780687523754455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 2
 --- !u!1 &7717503329343935119
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,6 +1235,7 @@ GameObject:
   - component: {fileID: 3022327548048810499}
   - component: {fileID: 3702111524126441868}
   - component: {fileID: 5404982304785464193}
+  - component: {fileID: 8981191242498749207}
   - component: {fileID: 8203097071780762640}
   - component: {fileID: 4254695898782168221}
   - component: {fileID: 8352767888944264885}
@@ -1284,6 +1402,41 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &8981191242498749207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7717503329343935119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7083b660dcbbfdd4ebeee0865544725b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
+  bleedStacks:
+    stackResetDuration: -1
+    stackCount: 0
+    stackThreshold: 10
+  burnStacks:
+    stackResetDuration: 10
+    stackCount: 0
+    stackThreshold: -1
+  poisonStacks:
+    stackResetDuration: 15
+    stackCount: 0
+    stackThreshold: -1
+  freezeStacks:
+    stackResetDuration: -1
+    stackCount: 0
+    stackThreshold: 20
+  staticStacks:
+    stackResetDuration: -1
+    stackCount: 0
+    stackThreshold: 15
+  effectCanvas: {fileID: 8944708617410875469}
+  statusEffectUIParent: {fileID: 5319963767321617143}
 --- !u!114 &8203097071780762640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1296,6 +1449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70579677df0549944a21ca957aa69697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
   health: 100
   maxHealth: 100
   shield: 50
@@ -1304,6 +1458,7 @@ MonoBehaviour:
   attackSpeed: 1
   shieldRegenDelay: 5
   isImmune: 0
+  isFrozen: 0
   attackIncrease:
     baseAmount: 0
     modifiers: []

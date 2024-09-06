@@ -40,11 +40,15 @@ public class Enemy : EnemyStats
         enemyRB = GetComponent<Rigidbody2D>();
         collisionController = GetComponent<CombatCollisionController>();
         uiController = GetComponent<EnemyUIController>();
+        statusEffectManager = GetComponent<StatusEffectManager>();
 
         aiNavigation.InitPathfindingAgent();
         uiController.InitUIController(this);
         collisionController.InitCollisionController(this);
         player = PlayerController.Instance;
+
+        statusEffectManager.OnThresholdReached += ApplyStatusState;
+        statusEffectManager.OnApplyStatusEffect += ApplyStatusEffect;
 
         onPlayerInChaseRange += () => { isInCombat = true; uiController.SetCanvasActive(true); };
         OnHealthChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };
@@ -52,19 +56,20 @@ public class Enemy : EnemyStats
         OnBreached += uiController.ShowBreachDamage;
     }
 
-    public virtual void UpdateEnemy()
-    {
-        CheckPlayerOverlap();
-    }
-
     private void Update()
     {
         UpdateEnemy();
-
-        if (!isInCombat)
-            uiController.SetCanvasActive(false);
     }
 
+    public virtual void UpdateEnemy()
+    {
+        statusEffectManager.UpdateStatusEffects();
+
+        CheckPlayerOverlap();
+        if (!isInCombat)
+            uiController.SetCanvasActive(false);
+
+    }
     public void OnDamageEventStart(int col)
     {
         collisionController.EnableCollider(col);
@@ -162,6 +167,40 @@ public class Enemy : EnemyStats
             player.OnPlayerOverlap(true);
         else
             player.OnPlayerOverlap(false);
+    }
+
+    public override IEnumerator FrozenRoutine()
+    {
+        aiNavigation.StopNavigationUntilResume();
+        isFrozen = true;
+
+        yield return new WaitForSeconds(statusEffectStats.frozenDuration);
+
+        aiNavigation.ResumeNavigationFromStop();
+        isFrozen = false;
+    }
+
+    public override IEnumerator StunnedRoutine()
+    {
+        int currentShield = shield;
+        shield = 0;
+        InvokeOnShieldChanged(false, true);
+        aiNavigation.StopNavigationUntilResume();
+
+        yield return new WaitForSeconds(statusEffectStats.stunDuration);
+
+        shield = currentShield;
+        InvokeOnShieldChanged(true, false);
+        aiNavigation.ResumeNavigationFromStop();
+    }
+
+    public override IEnumerator DazedRoutine()
+    {
+        aiNavigation.StopNavigationUntilResume();
+
+        yield return new WaitForSeconds(statusEffectStats.stunDuration);
+
+        aiNavigation.ResumeNavigationFromStop();
     }
 
     private void OnDisable()

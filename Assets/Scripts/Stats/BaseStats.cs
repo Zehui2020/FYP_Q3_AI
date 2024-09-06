@@ -1,6 +1,8 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
 using UnityEngine;
+using static StatusEffectManager;
+using static UnityEngine.Rendering.DebugUI;
 
 public class BaseStats : MonoBehaviour
 {
@@ -12,6 +14,9 @@ public class BaseStats : MonoBehaviour
     }
     private ImmuneType immuneType;
 
+    protected StatusEffectManager statusEffectManager;
+    [SerializeField] protected StatusEffectStats statusEffectStats;
+
     [Header("Base Stats")]
     public int health;
     public int maxHealth;
@@ -21,6 +26,7 @@ public class BaseStats : MonoBehaviour
     public float attackSpeed;
     public float shieldRegenDelay;
     public bool isImmune = false;
+    public bool isFrozen = false;
 
     [Header("Modifiers")]
     public StatModifier attackIncrease = new();
@@ -35,15 +41,38 @@ public class BaseStats : MonoBehaviour
     private Coroutine immuneRoutine;
     private Coroutine shieldRegenRoutine;
 
+    private Coroutine poisonRoutine;
+    private float poisonTimer;
+
     // bool increase, isCrit
     public event System.Action<bool, bool> OnHealthChanged;
     public event System.Action<bool, bool> OnShieldChanged;
     public event System.Action<float> OnBreached;
 
+    public void TakeTrueDamage(float damage)
+    {
+        health -= Mathf.CeilToInt(damage);
+        OnHealthChanged?.Invoke(false, true);
+
+        DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+        damagePopup.SetupPopup(Mathf.CeilToInt(damage).ToString(), transform.position, Color.red, new Vector2(1, 2));
+    }
+
+    public void TakeShieldDamage(float damage)
+    {
+        shield -= Mathf.CeilToInt(damage);
+        OnShieldChanged?.Invoke(false, true);
+
+        DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+        damagePopup.SetupPopup(Mathf.CeilToInt(damage).ToString(), transform.position, Color.blue, new Vector2(1, 2));
+    }
+
     public virtual bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
         if (health <= 0)
             return false;
+
+        statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Bleed, 1);
 
         // Check for immunity
         if (isImmune)
@@ -101,14 +130,22 @@ public class BaseStats : MonoBehaviour
         return true;
     }
 
-    public float CalculateDamageDealt(out bool isCrit, out DamagePopup.DamageType damageType)
+    public float CalculateDamageDealt(BaseStats target, out bool isCrit, out DamagePopup.DamageType damageType)
     {
-        float critDamage = 1;
+        float finalCritRate = critRate.GetTotalModifier();
+        float finalCritDamage = 1;
         // Offense
         // Crit Calculation
-        if (Random.Range(0, 100) < critRate.GetTotalModifier())
+
+        if (target.isFrozen)
         {
-            critDamage = this.critDamage.GetTotalModifier();
+            finalCritRate += target.statusEffectStats.frozenCritRate;
+            finalCritDamage += target.statusEffectStats.frozenCritDmg;
+        }
+
+        if (Random.Range(0, 100) < finalCritRate)
+        {
+            finalCritDamage = critDamage.GetTotalModifier();
             damageType = DamagePopup.DamageType.Crit;
             isCrit = true;
         }
@@ -118,7 +155,7 @@ public class BaseStats : MonoBehaviour
             isCrit = false;
         }
 
-        float totalDamage = (attack + attackIncrease.GetTotalModifier()) * comboDamageMultipler.GetTotalModifier() * damageMultipler.GetTotalModifier() * critDamage;
+        float totalDamage = (attack + attackIncrease.GetTotalModifier()) * comboDamageMultipler.GetTotalModifier() * damageMultipler.GetTotalModifier() * finalCritDamage;
 
         return totalDamage;
     }
@@ -139,6 +176,7 @@ public class BaseStats : MonoBehaviour
         if (health > maxHealth)
             health = maxHealth;
 
+        OnHealthChanged?.Invoke(true, false);
         DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
         popup.SetupPopup("+" + amount, transform.position, Color.green, new Vector2(1, 2));
     }
@@ -270,5 +308,110 @@ public class BaseStats : MonoBehaviour
 
         shield = maxShield;
         OnShieldChanged?.Invoke(true, false);
+    }
+
+    protected void InvokeOnShieldChanged(bool shieldRestored, bool shieldLost)
+    {
+        OnShieldChanged?.Invoke(shieldRestored, shieldLost);
+    }
+
+    public virtual void ApplyStatusState(StatusState state)
+    {
+        DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+
+        switch (state)
+        {
+            case StatusState.BloodLoss:
+                TakeTrueDamage(maxHealth * statusEffectStats.bloodLossDamage);
+                popup.SetupPopup("Blood Loss!", transform.position, Color.red, new Vector2(0, 3));
+                break;
+            case StatusState.Frozen:
+                popup.SetupPopup("Frozen!", transform.position, Color.blue, new Vector2(0, 3));
+                StartCoroutine(FrozenRoutine());
+                break;
+            case StatusState.Dazed:
+                popup.SetupPopup("Dazed!", transform.position, Color.yellow, new Vector2(0, 3));
+                StartCoroutine(DazedRoutine());
+                break;
+            case StatusState.Stunned:
+                popup.SetupPopup("Stunned!", transform.position, Color.yellow, new Vector2(0, 3));
+                StartCoroutine(StunnedRoutine());
+                break;
+        }
+    }
+
+    public virtual void ApplyStatusEffect(StatusEffect.StatusType statusEffect)
+    {
+        switch (statusEffect)
+        {
+            case StatusEffect.StatusType.Burn:
+                StartCoroutine(BurnRoutine());
+                break;
+            case StatusEffect.StatusType.Poison:
+                poisonTimer = statusEffectStats.poisonDuration;
+                if (poisonRoutine == null)
+                    poisonRoutine = StartCoroutine(PoisonRoutine());
+                break;
+        }
+    }
+
+    public virtual IEnumerator FrozenRoutine()
+    {
+        isFrozen = true;
+
+        yield return new WaitForSeconds(statusEffectStats.frozenDuration);
+
+        isFrozen = false;
+    }
+
+    public virtual IEnumerator StunnedRoutine()
+    {
+        int currentShield = shield;
+        shield = 0;
+        OnShieldChanged?.Invoke(false, true);
+
+        yield return new WaitForSeconds(statusEffectStats.stunDuration);
+
+        shield = currentShield;
+        OnShieldChanged?.Invoke(true, false);
+    }
+
+    public virtual IEnumerator DazedRoutine()
+    {
+        yield return null;
+    }
+
+    public virtual IEnumerator BurnRoutine()
+    {
+        int count = 0;
+
+        while (count < statusEffectStats.burnsPerStack)
+        {
+            count++;
+
+            if (shield > 0)
+                TakeShieldDamage(maxShield * (statusEffectStats.burnShieldDamage * statusEffectManager.burnStacks.stackCount));
+            else
+                TakeTrueDamage(statusEffectStats.burnHealthDamage * statusEffectManager.burnStacks.stackCount);
+
+            yield return new WaitForSeconds(statusEffectStats.burnInterval);
+        }
+
+        statusEffectManager.burnStacks.RemoveStack(1);
+    }
+
+    public virtual IEnumerator PoisonRoutine()
+    {
+        while (poisonTimer > -0.01f)
+        {
+            TakeTrueDamage(maxHealth * (statusEffectStats.basePoisonHealthDamage + (statusEffectStats.stackPoisonHealthDamage * statusEffectManager.poisonStacks.stackCount)));
+            poisonTimer -= Time.deltaTime;
+
+            yield return new WaitForSeconds(statusEffectStats.poisonInterval);
+        }
+
+        poisonTimer = 0;
+        statusEffectManager.poisonStacks.RemoveAllStacks();
+        poisonRoutine = null;
     }
 }

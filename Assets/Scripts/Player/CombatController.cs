@@ -5,6 +5,7 @@ using UnityEngine;
 public class CombatController : MonoBehaviour
 {
     [SerializeField] private WeaponData wData;
+    [SerializeField] private Animator weaponEffectAnimator;
 
     private AnimationManager animationManager;
     private CombatCollisionController collisionController;
@@ -26,6 +27,12 @@ public class CombatController : MonoBehaviour
         attackComboCount = 0;
 
         collisionController.InitCollisionController(player);
+    }
+
+    public void ChangeWeapon(WeaponData newData)
+    {
+        wData = newData;
+        weaponEffectAnimator.runtimeAnimatorController = wData.effectController;
     }
 
     public void HandleAttack()
@@ -65,6 +72,8 @@ public class CombatController : MonoBehaviour
     {
         animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.attackAnimations[attackComboCount].name));
         animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
+        weaponEffectAnimator.CrossFade(Animator.StringToHash(wData.attackEffectAnimations[attackComboCount].name), 0);
+
         attackAnimRoutine = StartCoroutine(AttackAnimRoutine());
 
         yield return new WaitForSeconds(wData.comboCooldown + wData.attackAnimations[attackComboCount].length);

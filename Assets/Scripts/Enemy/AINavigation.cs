@@ -7,6 +7,8 @@ public class AINavigation : MonoBehaviour
     private AIDestinationSetter destinationSetter;
     private AIPath aiPath;
 
+    private bool stopNavigationUntilResume = false;
+
     public void InitPathfindingAgent()
     {
         destinationSetter = GetComponent<AIDestinationSetter>();
@@ -34,9 +36,27 @@ public class AINavigation : MonoBehaviour
             destinationSetter.target = target.position;
     }
 
-    public void StopNavigation()
+    public void StopNavigationUntilResume()
     {
         if (!aiPath.enabled)
+            return;
+
+        aiPath.canMove = false;
+        stopNavigationUntilResume = true;
+    }
+
+    public void ResumeNavigationFromStop()
+    {
+        if (!aiPath.enabled)
+            return;
+
+        aiPath.canMove = true;
+        stopNavigationUntilResume = false;
+    }
+
+    public void StopNavigation()
+    {
+        if (!aiPath.enabled || stopNavigationUntilResume)
             return;
 
         aiPath.canMove = false;
@@ -44,7 +64,7 @@ public class AINavigation : MonoBehaviour
 
     public void ResumeNavigation()
     {
-        if (!aiPath.enabled)
+        if (!aiPath.enabled || stopNavigationUntilResume)
             return;
 
         aiPath.canMove = true;
