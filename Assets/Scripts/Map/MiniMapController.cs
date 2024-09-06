@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class MiniMapController : MonoBehaviour
 {
-    private List<MiniMapGenerator> miniMap = new List<MiniMapGenerator>();
+    [SerializeField] private List<MiniMapGenerator> miniMap;
     [SerializeField] private int currIndicatorNode = 0;
 
     private void Start()
     {
-        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("MiniMap"))
-        {
-            miniMap.Add(obj.GetComponent<MiniMapGenerator>());
-        }
         for (int i = 0; i < miniMap.Count; i++)
         {
             miniMap[i].mapContainer.SetActive(miniMap[i].isShowMap);
