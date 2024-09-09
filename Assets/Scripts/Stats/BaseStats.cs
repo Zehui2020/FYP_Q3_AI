@@ -92,7 +92,7 @@ public class BaseStats : MonoBehaviour
         if (health <= 0)
             return false;
 
-        statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Burn, 1);
+        statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Poison, 1);
 
         // Check for immunity
         if (isImmune)
@@ -431,16 +431,17 @@ public class BaseStats : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        while (poisonTimer > -0.01f)
+        while (poisonTimer > 0)
         {
             TakeTrueDamage(maxHealth * (statusEffectStats.basePoisonHealthDamage + (statusEffectStats.stackPoisonHealthDamage * statusEffectManager.poisonStacks.stackCount)));
-            poisonTimer -= Time.deltaTime;
+            poisonTimer -= statusEffectStats.poisonInterval;
 
-            yield return new WaitForSeconds(statusEffectStats.poisonInterval);
+            if (poisonTimer > 0)
+                yield return new WaitForSeconds(statusEffectStats.poisonInterval);
         }
 
         poisonTimer = 0;
-        statusEffectManager.poisonStacks.RemoveAllStacks();
+        statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Poison);
         poisonRoutine = null;
     }
 }
