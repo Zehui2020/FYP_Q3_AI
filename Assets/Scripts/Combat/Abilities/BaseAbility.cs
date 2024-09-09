@@ -6,9 +6,21 @@ public abstract class BaseAbility : ScriptableObject
 {
     public enum AbilityName
     {
-        Rage,
         Heal,
-        Weaken
+        DivineBlessing,
+        ProtectionSphere,
+        Quake,
+        Haste,
+        PoisonKnifes,
+        MolotovCocktail,
+        FreezingOrb,
+        Ravage,
+        BloodArts,
+        HeatWave,
+        StoneSkin,
+        Requiem,
+        ContagiousHaze,
+        Shatter
     }
     public AbilityName abilityName;
 
@@ -31,13 +43,6 @@ public abstract class BaseAbility : ScriptableObject
     }
     public AbilityEffectType abilityEffectType;
 
-    public enum AbilityEffectStat
-    {
-        attack,
-        health
-    }
-    public AbilityEffectStat abilityEffectStat;
-
     public enum AbilityEffectValueType
     {
         Flat,
@@ -50,5 +55,5 @@ public abstract class BaseAbility : ScriptableObject
     public float abilityDuration;
     public float abilityCooldown;
 
-    public abstract void OnUseAbility(BaseStats target);
+    public abstract void OnUseAbility(BaseStats self, BaseStats target);
 }
