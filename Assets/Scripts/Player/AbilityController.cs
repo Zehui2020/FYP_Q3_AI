@@ -23,7 +23,7 @@ public class AbilityController : MonoBehaviour
         }
     }
 
-    public void HandleAbility(PlayerController stats, int abilityNo)
+    public void HandleAbility(int abilityNo)
     {
         if (abilityDurationRoutines[abilityNo] != null)
             return;
@@ -33,80 +33,50 @@ public class AbilityController : MonoBehaviour
         if (ability == null)
             return;
 
-        abilities[abilityNo].OnUseAbility(stats);
-
-        //// if ability for self
-        //if (ability.abilityUseType == BaseAbility.AbilityUseType.Self)
-        //{
-        //    // update stat
-        //    switch (ability.abilityEffectStat)
-        //    {
-        //        case BaseAbility.AbilityEffectStat.attack:
-        //            StartCoroutine(player.AttackChangeRoutine(
-        //                ability.abilityEffectValue,
-        //                ability.abilityEffectType,
-        //                ability.abilityEffectValueType,
-        //                ability.abilityDuration));
-        //            break;
-        //        case BaseAbility.AbilityEffectStat.health:
-        //            StartCoroutine(player.HealthChangeRoutine(
-        //                ability.abilityEffectValue,
-        //                ability.abilityEffectType,
-        //                ability.abilityEffectValueType,
-        //                ability.abilityDuration));
-        //            break;
-        //    }
-        //} 
-        //// if ability is Area
-        //else if (ability.abilityUseType == BaseAbility.AbilityUseType.Area)
-        //{
-        //    // get all target objects in area
-        //    Collider2D[] targetColliders = Physics2D.OverlapCircleAll(transform.position, ability.abilityRange, targetLayer);
-        //    List<BaseStats> targetsInArea = new List<BaseStats>();
-        //    foreach (Collider2D col in targetColliders)
-        //    {
-        //        if (col.GetComponent<BaseStats>() != null)
-        //            targetsInArea.Add(col.GetComponent<BaseStats>());
-        //    }
-        //    for (int i = 0; i < targetsInArea.Count; i++)
-        //    {
-        //        // update stat
-        //        switch (ability.abilityEffectStat)
-        //        {
-        //            case BaseAbility.AbilityEffectStat.attack:
-        //                StartCoroutine(targetsInArea[i].AttackChangeRoutine(
-        //                    ability.abilityEffectValue,
-        //                    ability.abilityEffectType,
-        //                    ability.abilityEffectValueType,
-        //                    ability.abilityDuration));
-        //                break;
-        //            case BaseAbility.AbilityEffectStat.health:
-        //                StartCoroutine(targetsInArea[i].HealthChangeRoutine(
-        //                    ability.abilityEffectValue,
-        //                    ability.abilityEffectType,
-        //                    ability.abilityEffectValueType,
-        //                    ability.abilityDuration));
-        //                break;
-        //        }
-        //    }
-        //}
-        abilityDurationRoutines[abilityNo] = StartCoroutine(AbilityDurationRoutine(stats, abilityNo, ability));
+        // if ability is Area
+        if (ability.abilityUseType == BaseAbility.AbilityUseType.Area)
+        {
+            // get all target objects in area
+            Debug.DrawLine(transform.position, transform.position + new Vector3(abilities[abilityNo].abilityRange, 0, 0));
+            Collider2D[] targetColliders = Physics2D.OverlapCircleAll(transform.position, ability.abilityRange, targetLayer);
+            List<BaseStats> targetsInArea = new List<BaseStats>();
+            foreach (Collider2D col in targetColliders)
+            {
+                if (col.GetComponent<BaseStats>() != null)
+                    targetsInArea.Add(col.GetComponent<BaseStats>());
+            }
+            for (int i = 0; i < targetsInArea.Count; i++)
+            {
+                abilities[abilityNo].OnUseAbility(player, targetsInArea[i]);
+            }
+        }
+        // if ability for self or projectile
+        else
+        {
+            abilities[abilityNo].OnUseAbility(player, player);
+        }
+        abilityDurationRoutines[abilityNo] = StartCoroutine(AbilityDurationRoutine(abilityNo, ability));
     }
 
-    public IEnumerator AbilityDurationRoutine(PlayerController stats, int abilityNo, BaseAbility ability)
+    public IEnumerator AbilityDurationRoutine(int abilityNo, BaseAbility ability)
     {
         // track duration
         float timer = ability.abilityDuration;
-        abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), true);
-        abilityUI[abilityNo].SetCooldown(1);
-        while (timer > 0)
+        // if ability for self
+        if (ability.abilityUseType == BaseAbility.AbilityUseType.Self)
         {
+            timer = ability.abilityDuration;
             abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), true);
-            timer -= Time.deltaTime;
-            yield return null;
+            abilityUI[abilityNo].SetCooldown(1);
+            while (timer > 0)
+            {
+                abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), true);
+                timer -= Time.deltaTime;
+                yield return null;
+            }
+            timer = 0;
+            abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), false);
         }
-        timer = 0;
-        abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), false);
         // track cooldown
         timer = ability.abilityCooldown;
         while (timer > 0)

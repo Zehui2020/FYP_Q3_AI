@@ -67,9 +67,9 @@ public class PlayerController : PlayerStats
             currentInteractable.OnInteract();
 
         if (Input.GetKeyDown(KeyCode.E))
-            abilityController.HandleAbility(this, 0);
+            abilityController.HandleAbility(0);
         if (Input.GetKeyDown(KeyCode.Q))
-            abilityController.HandleAbility(this, 1);
+            abilityController.HandleAbility(1);
 
         if (Input.GetMouseButton(0) && !movementController.isClimbingLedge)
         {
