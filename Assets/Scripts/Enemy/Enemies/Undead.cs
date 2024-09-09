@@ -35,6 +35,7 @@ public class Undead : Enemy
         onFinishIdle += () => { ChangeState(State.Patrol); };
         onPlayerInChaseRange += () => { ChangeState(State.Deciding); };
         OnDieEvent += () => { ChangeState(State.Die); };
+        OnBreached += (multiplier) => { StartCoroutine(DazedRoutine()); };
     }
 
     private void ChangeState(State newState)
