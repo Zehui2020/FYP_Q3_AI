@@ -92,7 +92,7 @@ public class BaseStats : MonoBehaviour
         if (health <= 0)
             return false;
 
-        statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Poison, 1);
+        statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Freeze, 1);
 
         // Check for immunity
         if (isImmune)
@@ -163,7 +163,7 @@ public class BaseStats : MonoBehaviour
         if (target.isFrozen)
         {
             finalCritRate += target.statusEffectStats.frozenCritRate;
-            finalCritDamage += target.statusEffectStats.frozenCritDmg;
+            finalCritDamage = critDamage.GetTotalModifier() + target.statusEffectStats.frozenCritDmg;
         }
 
         if (Random.Range(0, 100) < finalCritRate)

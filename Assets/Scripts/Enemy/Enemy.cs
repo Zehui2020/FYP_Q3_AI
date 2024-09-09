@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.PlayerLoop.PreUpdate;
 
 public class Enemy : EnemyStats
 {
@@ -8,6 +9,8 @@ public class Enemy : EnemyStats
     public EnemyType enemyType;
 
     protected PlayerController player;
+
+    public bool canUpdate = true;
 
     protected AINavigation aiNavigation;
     protected EnemyUIController uiController;
@@ -58,6 +61,9 @@ public class Enemy : EnemyStats
 
     private void Update()
     {
+        if (!canUpdate)
+            return;
+
         UpdateEnemy();
     }
 
@@ -173,11 +179,24 @@ public class Enemy : EnemyStats
     {
         aiNavigation.StopNavigationUntilResume();
         isFrozen = true;
+        canUpdate = false;
+
+        float previousAnimSpeed = animator.speed;
+        animator.speed = 0;
+
+        statusEffectManager.AddEffectUI(StatusEffectUI.StatusEffectType.Frozen, 0);
 
         yield return new WaitForSeconds(statusEffectStats.frozenDuration);
 
+        statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Frozen);
+        animator.speed = previousAnimSpeed;
+
+        if (health <= 0)
+            yield break;
+
         aiNavigation.ResumeNavigationFromStop();
         isFrozen = false;
+        canUpdate = true;
     }
 
     public override IEnumerator StunnedRoutine()
@@ -186,12 +205,14 @@ public class Enemy : EnemyStats
         shield = 0;
         InvokeOnShieldChanged(false, true);
         aiNavigation.StopNavigationUntilResume();
+        canUpdate = false;
 
         yield return new WaitForSeconds(statusEffectStats.stunDuration);
 
         shield = currentShield;
         InvokeOnShieldChanged(true, false);
         aiNavigation.ResumeNavigationFromStop();
+        canUpdate = true;
     }
 
     public override IEnumerator DazedRoutine()

@@ -9,12 +9,16 @@ public class StatusEffectUI : PooledObject
 {
     public enum StatusEffectType
     {
+        // Status Effects
         Bleed,
         Burn,
         Poison,
         Freeze,
         Static,
-        Breached
+
+        // States
+        Breached,
+        Frozen
     }
     public StatusEffectType effectType;
 
