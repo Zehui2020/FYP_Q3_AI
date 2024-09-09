@@ -21,7 +21,7 @@ public class StatusEffect
     public bool AddStack(int amount)
     {
         stackCount += amount;
-        timer = stackResetDuration;
+        timer = 0;
 
         if (stackThreshold > 0 && stackCount >= stackThreshold)
         {
@@ -51,7 +51,7 @@ public class StatusEffect
 
     public void UpdateStack()
     {
-        if (stackCount < 0 || stackResetDuration < 0)
+        if (stackCount <= 0 || stackResetDuration < 0)
             return;
 
         timer += Time.deltaTime;

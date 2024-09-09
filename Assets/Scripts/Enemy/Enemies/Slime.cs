@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class Slime : Enemy
@@ -35,7 +33,6 @@ public class Slime : Enemy
     private bool isJumping = false;
 
     private Coroutine JumpRoutine;
-    private Coroutine TeleportRoutine;
 
     public override void InitializeEnemy()
     {
@@ -45,6 +42,7 @@ public class Slime : Enemy
         ChangeState(State.Idle);
 
         onPlayerInChaseRange += () => { isPatroling = false; aiNavigation.SetTarget(player.transform); };
+        OnDieEvent += () => { ChangeState(State.Die); };
     }
 
     private void ChangeState(State newState)
@@ -72,6 +70,7 @@ public class Slime : Enemy
                 animator.CrossFade(SlimeTeleportStart, 0f);
                 break;
             case State.Die:
+                animator.speed = 1;
                 animator.CrossFade(SlimeDieAnim, 0f);
                 uiController.SetCanvasActive(false);
                 break;
@@ -124,16 +123,6 @@ public class Slime : Enemy
         }
 
         return false;
-    }
-
-    public override bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
-    {
-        bool tookDamage = base.TakeDamage(damage, isCrit, closestPoint, damageType);
-
-        if (health <= 0)
-            ChangeState(State.Die);
-
-        return tookDamage;
     }
 
     private IEnumerator JumpCooldown(float cooldown)

@@ -34,6 +34,8 @@ public class Undead : Enemy
         onReachWaypoint += () => { ChangeState(State.Idle); };
         onFinishIdle += () => { ChangeState(State.Patrol); };
         onPlayerInChaseRange += () => { ChangeState(State.Deciding); };
+        OnDieEvent += () => { ChangeState(State.Die); };
+        OnBreached += (multiplier) => { StartCoroutine(DazedRoutine()); };
     }
 
     private void ChangeState(State newState)
@@ -61,6 +63,7 @@ public class Undead : Enemy
                 animator.Play(LungeAnim, -1, 0f);
                 break;
             case State.Die:
+                animator.speed = 1;
                 animator.CrossFade(DieAnim, 0f);
                 aiNavigation.StopNavigation();
                 uiController.SetCanvasActive(false);
