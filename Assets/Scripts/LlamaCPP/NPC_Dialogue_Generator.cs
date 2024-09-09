@@ -6,10 +6,13 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using TMPro;
 using System.Xml.Linq;
+using Unity.VisualScripting;
 
 
 public class NPC_Dialogue_Generator : MonoBehaviour
 {
+    public GameObject AI_Chat_Canvas;
+
     public TextMeshProUGUI chatbox_Output;
     public TMP_InputField user_Input;
 
@@ -21,14 +24,22 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
     public string AI_Exit_Text;
 
+    private PlayerController playerController;
+    private Rigidbody2D playerRB;
+
+    //User Input
     private string userPrompt;
+    //AI Previous Conversation
     private string previousContext;
 
+    //AI Interface Address
     private string llamaDirectory = @"C:\llama.cpp";
+    //AI Model Address
     private string modelDirectory = @"C:\llama.cpp\models\Trail_3\llama-2-7b-chat.Q4_K_M.gguf";
+    //Full Prompt to feed into AI
     private string AI_Gen_Prompt;
 
-    private int promptCount = 0;
+    private bool inConvo;
     private bool introFinished;
     private bool convoStartedAgain;
 
@@ -36,7 +47,9 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     void Start()
     {
         //AI_Chat_Introduction();
+        inConvo = false;
         introFinished = false;
+        convoStartedAgain = false;
     }
 
     // Update is called once per frame
@@ -57,47 +70,6 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             AI_Chat_Response();
             UnityEngine.Debug.Log("Convo Starting...");
         }
-    }
-
-    public void AI_Chat_End()
-    {
-        AI_Gen_Prompt =
-            '"' +
-            "[INST] <<SYS>> You are the voice of a NPC in a video game. " +
-            "This is the NPC's backstory:  " +
-            "~" + AI_CharacterContext + "~ " +
-            "In this environment, address the user as Lone One, " +
-            "keep your responses less than 100 words, " +
-            "your responses should be purely dialogue, " +
-            "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
-            "and do not show XML tags other than these ones: <result></result>" +
-
-            "Here are a few examples of what your output should look like: " +
-            "<result>" + AI_Example_Output_1 + "</result> " +
-            "<result>" + AI_Example_Output_2 + "</result> " +
-
-            "Your previous response was : " + "~" + previousContext + "~" +
-            "Here is your prompt: <</SYS>> {Bid the player farewell.} [/INST]" + '"';
-
-        string fullCommand_AIChat = $"cd {llamaDirectory} && llama-cli -m {modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
-
-        string AI_Output = OpenCommandPrompt(fullCommand_AIChat);
-
-        string Display_Output;
-
-        if (!string.IsNullOrEmpty(ExtractContent(AI_Output)))
-        {
-            Display_Output = ExtractContent(AI_Output);
-        }
-        else
-        {
-            Display_Output = AI_Output;
-        }
-
-        chatbox_Output.text = Display_Output + "\n\n " + AI_Exit_Text;
-        previousContext = Display_Output;
-
-        convoStartedAgain = true;
     }
 
     private void AI_Chat_Introduction()
@@ -189,7 +161,6 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         {
             if (!string.IsNullOrEmpty(user_Input.text))
             {
-                promptCount++;
                 if (string.IsNullOrEmpty(previousContext))
                 {
                     //UnityEngine.Debug.Log("Previous Context: NIL");
@@ -239,7 +210,6 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                         '"';
                 }
 
-
                 if (!string.IsNullOrEmpty(AI_Gen_Prompt))
                 {
                     string fullCommand_AIChat = $"cd {llamaDirectory} && llama-cli -m {modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
@@ -263,6 +233,56 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void AI_Chat_End()
+    {
+        AI_Gen_Prompt =
+            '"' +
+            "[INST] <<SYS>> You are the voice of a NPC in a video game. " +
+            "This is the NPC's backstory:  " +
+            "~" + AI_CharacterContext + "~ " +
+            "In this environment, address the user as Lone One, " +
+            "keep your responses less than 100 words, " +
+            "your responses should be purely dialogue, " +
+            "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
+            "and do not show XML tags other than these ones: <result></result>" +
+
+            "Here are a few examples of what your output should look like: " +
+            "<result>" + AI_Example_Output_1 + "</result> " +
+            "<result>" + AI_Example_Output_2 + "</result> " +
+
+            "Your previous response was : " + "~" + previousContext + "~" +
+            "Here is your prompt: <</SYS>> {Bid the player farewell.} [/INST]" + '"';
+
+        string fullCommand_AIChat = $"cd {llamaDirectory} && llama-cli -m {modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
+
+        string AI_Output = OpenCommandPrompt(fullCommand_AIChat);
+
+        string Display_Output;
+
+        if (!string.IsNullOrEmpty(ExtractContent(AI_Output)))
+        {
+            Display_Output = ExtractContent(AI_Output);
+        }
+        else
+        {
+            Display_Output = AI_Output;
+        }
+
+        chatbox_Output.text = Display_Output + "\n\n " + AI_Exit_Text;
+        previousContext = Display_Output;
+
+        inConvo = false;
+        convoStartedAgain = true;
+    }
+
+    public void AI_Chat_Return()
+    {
+        inConvo = false;
+        chatbox_Output.text = "";
+        AI_Chat_Canvas.SetActive(false);
+        playerController.enabled = true;
     }
 
     string OpenCommandPrompt(string command)
@@ -298,5 +318,34 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
         return string.Empty;
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Player")
+        {
+            UnityEngine.Debug.Log("Waiting...");
+
+            if (!inConvo)
+            {
+                UnityEngine.Debug.Log("UI Up...");
+
+                AI_Chat_Canvas.SetActive(true);
+
+                playerController = collision.GetComponent<PlayerController>();
+                playerRB = collision.GetComponent<Rigidbody2D>();
+
+                playerController.enabled = false;
+                playerRB.velocity = Vector3.zero;
+
+                inConvo = true;
+            }
+            /*
+            if (Input.GetKeyUp(KeyCode.F))
+            {
+                
+            }
+            */
+        }
     }
 }
