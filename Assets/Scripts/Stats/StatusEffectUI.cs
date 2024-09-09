@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.WSA;
 
 public class StatusEffectUI : PooledObject
 {
@@ -12,7 +13,8 @@ public class StatusEffectUI : PooledObject
         Burn,
         Poison,
         Freeze,
-        Static
+        Static,
+        Breached
     }
     public StatusEffectType effectType;
 
@@ -21,6 +23,8 @@ public class StatusEffectUI : PooledObject
     {
         public StatusEffectType effectType;
         public Sprite icon;
+        public bool removeAfterNoStacks;
+        public bool isStackable;
     }
 
     [SerializeField] private List<StatusEffectHolder> effects = new();
@@ -29,25 +33,38 @@ public class StatusEffectUI : PooledObject
 
     public void SetStatusEffectUI(StatusEffectType type, int count)
     {
-        if (count <= 0)
-        {
-            Release();
-            gameObject.SetActive(false);
-            return;
-        }
-
         foreach (StatusEffectHolder holder in effects)
         {
             if (holder.effectType.Equals(type))
-                effectIcon.sprite = holder.icon;
-        }
+            {
+                if (count <= 0 && holder.removeAfterNoStacks)
+                {
+                    Release();
+                    gameObject.SetActive(false);
+                    return;
+                }
 
-        effectType = type;
-        effectStacks.text = count.ToString();
+                effectIcon.sprite = holder.icon;
+                effectType = type;
+
+                if (holder.isStackable)
+                    effectStacks.text = count.ToString();
+                else
+                    effectStacks.text = string.Empty;
+
+                break;
+            }
+        }
     }
 
     public void SetStackCount(int count)
     {
+        if (count <= 0)
+        {
+            effectStacks.text = string.Empty;
+            return;
+        }
+
         effectStacks.text = count.ToString();
     }
 

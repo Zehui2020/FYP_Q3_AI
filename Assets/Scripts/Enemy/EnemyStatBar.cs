@@ -22,12 +22,15 @@ public class EnemyStatBar : MonoBehaviour
     private Coroutine DelayBarRoutine;
     private Coroutine BarShakeRoutine;
 
+    private Vector3 originalBarPosition;
+
     public void InitStatBar(int amount, int maxAmount)
     {
         statBar.maxValue = maxAmount;
         statBar.value = amount;
 
         delayBarWidth = delayBar.sizeDelta.x;
+        originalBarPosition = transform.localPosition;
     }
 
     public void OnDecrease(int amount, int maxAmount, bool critical)
@@ -36,8 +39,7 @@ public class EnemyStatBar : MonoBehaviour
             StopCoroutine(DelayBarRoutine);
         DelayBarRoutine = StartCoroutine(SetDelayBar(amount, maxAmount, false));
 
-        if (BarShakeRoutine != null)
-            StopCoroutine(BarShakeRoutine);
+        StopShakeRoutine();
         BarShakeRoutine = StartCoroutine(ShakeRoutine(critical));
     }
 
@@ -46,6 +48,14 @@ public class EnemyStatBar : MonoBehaviour
         if (DelayBarRoutine != null)
             StopCoroutine(DelayBarRoutine);
         DelayBarRoutine = StartCoroutine(SetDelayBar(amount, maxAmount, true));
+    }
+
+    private void StopShakeRoutine()
+    {
+        if (BarShakeRoutine == null)
+            return;
+
+        StopCoroutine(BarShakeRoutine);
     }
 
     private IEnumerator SetDelayBar(int amount, int maxAmount, bool increase)
@@ -84,7 +94,6 @@ public class EnemyStatBar : MonoBehaviour
         float intensity = crit ? critShakeIntensity : shakeIntensity;
         float duration = crit ? critShakeDuration : shakeDuration;
 
-        Vector3 originalPosition = transform.localPosition;
         float timer = 0f;
 
         while (timer < duration)
@@ -92,13 +101,13 @@ public class EnemyStatBar : MonoBehaviour
             float offsetX = Random.Range(-intensity, intensity);
             float offsetY = Random.Range(-intensity, intensity);
 
-            transform.localPosition = new Vector3(originalPosition.x + offsetX, originalPosition.y + offsetY, originalPosition.z);
+            transform.localPosition = new Vector3(originalBarPosition.x + offsetX, originalBarPosition.y + offsetY, originalBarPosition.z);
 
             timer += Time.deltaTime;
 
             yield return null; 
         }
 
-        transform.localPosition = originalPosition;
+        transform.localPosition = originalBarPosition;
     }
 }

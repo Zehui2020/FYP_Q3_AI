@@ -53,7 +53,7 @@ public class Enemy : EnemyStats
         onPlayerInChaseRange += () => { isInCombat = true; uiController.SetCanvasActive(true); };
         OnHealthChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };
         OnShieldChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnShieldChanged(shield, maxShield, increase, isCrit); };
-        OnBreached += uiController.ShowBreachDamage;
+        OnBreached += (multiplier) => { statusEffectManager.AddEffectUI(StatusEffectUI.StatusEffectType.Breached, 0); };
     }
 
     private void Update()

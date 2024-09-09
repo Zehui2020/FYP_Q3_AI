@@ -34,6 +34,7 @@ public class Undead : Enemy
         onReachWaypoint += () => { ChangeState(State.Idle); };
         onFinishIdle += () => { ChangeState(State.Patrol); };
         onPlayerInChaseRange += () => { ChangeState(State.Deciding); };
+        OnDieEvent += () => { ChangeState(State.Die); };
     }
 
     private void ChangeState(State newState)

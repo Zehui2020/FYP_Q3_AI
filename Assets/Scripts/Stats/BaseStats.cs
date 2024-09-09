@@ -2,7 +2,6 @@ using DesignPatterns.ObjectPool;
 using System.Collections;
 using UnityEngine;
 using static StatusEffectManager;
-using static UnityEngine.Rendering.DebugUI;
 
 public class BaseStats : MonoBehaviour
 {
@@ -48,14 +47,21 @@ public class BaseStats : MonoBehaviour
     public event System.Action<bool, bool> OnHealthChanged;
     public event System.Action<bool, bool> OnShieldChanged;
     public event System.Action<float> OnBreached;
+    public event System.Action OnDieEvent;
 
     public void TakeTrueDamage(float damage)
     {
+        if (health <= 0)
+            return;
+
         health -= Mathf.CeilToInt(damage);
         OnHealthChanged?.Invoke(false, true);
 
         DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
         damagePopup.SetupPopup(Mathf.CeilToInt(damage).ToString(), transform.position, Color.red, new Vector2(1, 2));
+
+        if (health <= 0)
+            OnDieEvent?.Invoke();
     }
 
     public void TakeShieldDamage(float damage)
@@ -63,7 +69,21 @@ public class BaseStats : MonoBehaviour
         shield -= Mathf.CeilToInt(damage);
         OnShieldChanged?.Invoke(false, true);
 
-        DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+        DamagePopup damagePopup;
+
+        if (shield <= 0)
+        {
+            damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+            damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.blue, new Vector2(0, 3));
+            shield = 0;
+            OnBreached?.Invoke(breachedMultiplier.GetTotalModifier());
+        }
+
+        if (shieldRegenRoutine != null)
+            StopCoroutine(shieldRegenRoutine);
+        shieldRegenRoutine = StartCoroutine(ShieldRegenRoutine());
+
+        damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
         damagePopup.SetupPopup(Mathf.CeilToInt(damage).ToString(), transform.position, Color.blue, new Vector2(1, 2));
     }
 
@@ -72,7 +92,7 @@ public class BaseStats : MonoBehaviour
         if (health <= 0)
             return false;
 
-        statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Bleed, 1);
+        statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Burn, 1);
 
         // Check for immunity
         if (isImmune)
@@ -109,7 +129,7 @@ public class BaseStats : MonoBehaviour
             damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(1, 2));
             OnShieldChanged?.Invoke(false, isCrit);
 
-            if (shield < 0)
+            if (shield <= 0)
             {
                 damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
                 damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.blue, new Vector2(0, 3));
@@ -121,11 +141,14 @@ public class BaseStats : MonoBehaviour
         }
 
         health -= finalDamage;
-        OnHealthChanged?.Invoke(false, isCrit || shield < 0);
+        OnHealthChanged?.Invoke(false, isCrit || shield <= 0);
         damageType = DamagePopup.DamageType.Health;
         if (isCrit)
             damageType = DamagePopup.DamageType.Crit;
         damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(1, 1));
+
+        if (health <= 0)
+            OnDieEvent?.Invoke();
 
         return true;
     }
@@ -300,6 +323,7 @@ public class BaseStats : MonoBehaviour
         OnHealthChanged = null;
         OnShieldChanged = null;
         OnBreached = null;
+        OnDieEvent = null;
     }
 
     private IEnumerator ShieldRegenRoutine()
@@ -308,6 +332,7 @@ public class BaseStats : MonoBehaviour
 
         shield = maxShield;
         OnShieldChanged?.Invoke(true, false);
+        statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Breached);
     }
 
     protected void InvokeOnShieldChanged(bool shieldRestored, bool shieldLost)
@@ -383,6 +408,8 @@ public class BaseStats : MonoBehaviour
 
     public virtual IEnumerator BurnRoutine()
     {
+        yield return new WaitForSeconds(0.5f);
+
         int count = 0;
 
         while (count < statusEffectStats.burnsPerStack)
@@ -390,18 +417,20 @@ public class BaseStats : MonoBehaviour
             count++;
 
             if (shield > 0)
-                TakeShieldDamage(maxShield * (statusEffectStats.burnShieldDamage * statusEffectManager.burnStacks.stackCount));
+                TakeShieldDamage(Mathf.CeilToInt(maxShield * (statusEffectStats.burnShieldDamage * statusEffectManager.burnStacks.stackCount)));
             else
-                TakeTrueDamage(statusEffectStats.burnHealthDamage * statusEffectManager.burnStacks.stackCount);
+                TakeTrueDamage(Mathf.CeilToInt(statusEffectStats.burnHealthDamage * statusEffectManager.burnStacks.stackCount));
 
             yield return new WaitForSeconds(statusEffectStats.burnInterval);
         }
 
-        statusEffectManager.burnStacks.RemoveStack(1);
+        statusEffectManager.ReduceEffectStack(StatusEffect.StatusType.Burn, 1);
     }
 
     public virtual IEnumerator PoisonRoutine()
     {
+        yield return new WaitForSeconds(0.5f);
+
         while (poisonTimer > -0.01f)
         {
             TakeTrueDamage(maxHealth * (statusEffectStats.basePoisonHealthDamage + (statusEffectStats.stackPoisonHealthDamage * statusEffectManager.poisonStacks.stackCount)));

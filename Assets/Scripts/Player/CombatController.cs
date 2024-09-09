@@ -48,13 +48,11 @@ public class CombatController : MonoBehaviour
                 attackComboCount = 0;
                 HandleAttackCooldown();
 
-                player.comboDamageMultipler.RemoveModifier(wData.attackMultipliers[wData.attackMultipliers.Count - 1]);
-                player.comboDamageMultipler.AddModifier(wData.attackMultipliers[attackComboCount]);
+                player.comboDamageMultipler.ReplaceAllModifiers(wData.attackMultipliers[attackComboCount]);
             }
             else
             {
-                player.comboDamageMultipler.RemoveModifier(wData.attackMultipliers[attackComboCount - 1]);
-                player.comboDamageMultipler.AddModifier(wData.attackMultipliers[attackComboCount]);
+                player.comboDamageMultipler.ReplaceAllModifiers(wData.attackMultipliers[attackComboCount]);
             }
 
             StopCoroutine(attackRoutine);
