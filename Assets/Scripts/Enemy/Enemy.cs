@@ -190,6 +190,7 @@ public class Enemy : EnemyStats
 
         statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Frozen);
         animator.speed = previousAnimSpeed;
+        frozenRoutine = null;
 
         if (health <= 0)
             yield break;
@@ -204,13 +205,37 @@ public class Enemy : EnemyStats
         int currentShield = shield;
         shield = 0;
         InvokeOnShieldChanged(false, true);
+
         aiNavigation.StopNavigationUntilResume();
         canUpdate = false;
 
-        yield return new WaitForSeconds(statusEffectStats.stunDuration);
+        float previousAnimSpeed = animator.speed;
+        animator.speed = 0;
 
+        statusEffectManager.AddEffectUI(StatusEffectUI.StatusEffectType.Stunned, 0);
+
+        float timer = statusEffectStats.stunDuration;
+
+        while (timer > 0)
+        {
+            timer -= Time.deltaTime;
+
+            if (shieldRegenRoutine != null)
+                StopCoroutine(shieldRegenRoutine);
+
+            yield return null;
+        }
+
+        statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Stunned);
+
+        animator.speed = previousAnimSpeed;
         shield = currentShield;
         InvokeOnShieldChanged(true, false);
+        stunnedRoutine = null;
+
+        if (health <= 0)
+            yield break;
+
         aiNavigation.ResumeNavigationFromStop();
         canUpdate = true;
     }
@@ -218,10 +243,13 @@ public class Enemy : EnemyStats
     public override IEnumerator DazedRoutine()
     {
         aiNavigation.StopNavigationUntilResume();
+        float previousAnimSpeed = animator.speed;
+        animator.speed = 0;
 
         yield return new WaitForSeconds(statusEffectStats.stunDuration);
 
         aiNavigation.ResumeNavigationFromStop();
+        animator.speed = previousAnimSpeed;
     }
 
     private void OnDisable()

@@ -18,7 +18,8 @@ public class StatusEffectUI : PooledObject
 
         // States
         Breached,
-        Frozen
+        Frozen,
+        Stunned
     }
     public StatusEffectType effectType;
 

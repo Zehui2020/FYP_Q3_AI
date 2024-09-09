@@ -62,6 +62,7 @@ public class Undead : Enemy
                 animator.Play(LungeAnim, -1, 0f);
                 break;
             case State.Die:
+                animator.speed = 1;
                 animator.CrossFade(DieAnim, 0f);
                 aiNavigation.StopNavigation();
                 uiController.SetCanvasActive(false);

@@ -38,7 +38,11 @@ public class BaseStats : MonoBehaviour
     public StatModifier damageReduction = new();
 
     private Coroutine immuneRoutine;
-    private Coroutine shieldRegenRoutine;
+    protected Coroutine shieldRegenRoutine;
+
+    protected Coroutine frozenRoutine;
+    protected Coroutine stunnedRoutine;
+    protected Coroutine dazedRoutine;
 
     private Coroutine poisonRoutine;
     private float poisonTimer;
@@ -92,7 +96,7 @@ public class BaseStats : MonoBehaviour
         if (health <= 0)
             return false;
 
-        statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Freeze, 1);
+        statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Static, 1);
 
         // Check for immunity
         if (isImmune)
@@ -351,16 +355,24 @@ public class BaseStats : MonoBehaviour
                 popup.SetupPopup("Blood Loss!", transform.position, Color.red, new Vector2(0, 3));
                 break;
             case StatusState.Frozen:
+                if (frozenRoutine != null)
+                    return;
                 popup.SetupPopup("Frozen!", transform.position, Color.blue, new Vector2(0, 3));
-                StartCoroutine(FrozenRoutine());
+                frozenRoutine = StartCoroutine(FrozenRoutine());
                 break;
             case StatusState.Dazed:
+                if (dazedRoutine != null)
+                    return;
+
                 popup.SetupPopup("Dazed!", transform.position, Color.yellow, new Vector2(0, 3));
-                StartCoroutine(DazedRoutine());
+                dazedRoutine = StartCoroutine(DazedRoutine());
                 break;
             case StatusState.Stunned:
+                if (stunnedRoutine != null)
+                    return;
+
                 popup.SetupPopup("Stunned!", transform.position, Color.yellow, new Vector2(0, 3));
-                StartCoroutine(StunnedRoutine());
+                stunnedRoutine = StartCoroutine(StunnedRoutine());
                 break;
         }
     }
@@ -382,23 +394,12 @@ public class BaseStats : MonoBehaviour
 
     public virtual IEnumerator FrozenRoutine()
     {
-        isFrozen = true;
-
-        yield return new WaitForSeconds(statusEffectStats.frozenDuration);
-
-        isFrozen = false;
+        yield return null;
     }
 
     public virtual IEnumerator StunnedRoutine()
     {
-        int currentShield = shield;
-        shield = 0;
-        OnShieldChanged?.Invoke(false, true);
-
-        yield return new WaitForSeconds(statusEffectStats.stunDuration);
-
-        shield = currentShield;
-        OnShieldChanged?.Invoke(true, false);
+        yield return null;
     }
 
     public virtual IEnumerator DazedRoutine()
