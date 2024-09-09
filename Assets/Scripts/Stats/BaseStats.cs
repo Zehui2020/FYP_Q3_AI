@@ -96,8 +96,6 @@ public class BaseStats : MonoBehaviour
         if (health <= 0)
             return false;
 
-        statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Bleed, 1);
-
         // Check for immunity
         if (isImmune)
         {

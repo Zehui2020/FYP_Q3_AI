@@ -245,11 +245,19 @@ public class Enemy : EnemyStats
         aiNavigation.StopNavigationUntilResume();
         float previousAnimSpeed = animator.speed;
         animator.speed = 0;
+        canUpdate = false;
+        statusEffectManager.AddEffectUI(StatusEffectUI.StatusEffectType.Dazed, 0);
 
         yield return new WaitForSeconds(statusEffectStats.stunDuration);
 
-        aiNavigation.ResumeNavigationFromStop();
         animator.speed = previousAnimSpeed;
+        statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Dazed);
+
+        if (health <= 0)
+            yield break;
+
+        aiNavigation.ResumeNavigationFromStop();
+        canUpdate = true;
     }
 
     private void OnDisable()
