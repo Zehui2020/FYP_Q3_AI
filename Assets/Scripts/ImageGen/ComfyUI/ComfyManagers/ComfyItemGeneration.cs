@@ -8,6 +8,7 @@ public class ComfyItemGenration : ComfyManager
     public struct ItemPrompt
     {
         [TextArea(3, 10)] public string Pprompt;
+        public string controlNetImage;
         public string filename;
     }
 
@@ -24,7 +25,7 @@ public class ComfyItemGenration : ComfyManager
         if (currentPromptIndex >= itemPrompts.Count)
             return;
 
-        promptCtr.QueuePrompt(itemPrompts[currentPromptIndex].Pprompt);
+        promptCtr.QueuePromptWithControlNet(itemPrompts[currentPromptIndex].Pprompt, itemPrompts[currentPromptIndex].controlNetImage);
         fileName = itemPrompts[currentPromptIndex].filename;
     }
 

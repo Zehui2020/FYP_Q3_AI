@@ -10,6 +10,7 @@ public class PlayerController : PlayerStats
     private AbilityController abilityController;
     private FadeTransition fadeTransition;
     private ItemManager itemManager;
+    private PlayerEffectsController playerEffectsController;
     [SerializeField] private ProceduralMapGenerator proceduralMapGenerator;
 
     private IInteractable currentInteractable;
@@ -29,11 +30,13 @@ public class PlayerController : PlayerStats
         fadeTransition = GetComponent<FadeTransition>();
         itemManager = GetComponent<ItemManager>();
         statusEffectManager = GetComponent<StatusEffectManager>();
+        playerEffectsController = GetComponent<PlayerEffectsController>();
 
         itemManager.InitItemManager();
         movementController.InitializeMovementController();
         combatController.InitializeCombatController(this);
         abilityController.InitializeAbilityController();
+        playerEffectsController.InitializePlayerEffectsController();
         if (proceduralMapGenerator != null)
             proceduralMapGenerator.InitMapGenerator();
 
@@ -149,6 +152,8 @@ public class PlayerController : PlayerStats
     public override bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
         bool tookDamage = base.TakeDamage(damage, isCrit, closestPoint, damageType);
+        playerEffectsController.HitStop(0.1f);
+        playerEffectsController.ShakeCamera(2f, 5f, 0.1f);
 
         if (health <= 0)
         {
