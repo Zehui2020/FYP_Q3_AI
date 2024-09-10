@@ -3,20 +3,20 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Items/HDHUD")]
 public class HDHUD : Item
 {
-    [SerializeField] private int critRateIncrease;
-    [SerializeField] private int critDamageIncrease;
+    [SerializeField] private float critRateIncrease;
+    [SerializeField] private float critDamageIncrease;
 
     public override void Initialize()
     {
         base.Initialize();
-        itemStats.critRate += critRateIncrease;
-        itemStats.critDamage += critDamageIncrease;
+        PlayerController.Instance.critRate.AddModifier(critRateIncrease);
+        PlayerController.Instance.critDamage.AddModifier(critDamageIncrease);
     }
 
     public override void IncrementStack()
     {
         base.IncrementStack();
-        itemStats.critRate += critRateIncrease;
-        itemStats.critDamage += critDamageIncrease;
+        PlayerController.Instance.critRate.AddModifier(critRateIncrease);
+        PlayerController.Instance.critDamage.AddModifier(critDamageIncrease);
     }
 }

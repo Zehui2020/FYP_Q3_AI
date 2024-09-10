@@ -15,6 +15,7 @@ public class BaseStats : MonoBehaviour
 
     protected StatusEffectManager statusEffectManager;
     [SerializeField] protected StatusEffectStats statusEffectStats;
+    [SerializeField] protected ItemStats itemStats;
 
     [Header("Base Stats")]
     public int health;

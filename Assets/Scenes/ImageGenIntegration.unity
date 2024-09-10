@@ -335,7 +335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f79945781b6eb3b469512ff72c92081f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  promptJson: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 445013662218652,\r\n     
+  promptJson: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 1000709893940503,\r\n     
     \"steps\": 20,\r\n      \"cfg\": 8,\r\n      \"sampler_name\": \"euler\",\r\n     
     \"scheduler\": \"normal\",\r\n      \"denoise\": 1,\r\n      \"model\": [\r\n       
     \"4\",\r\n        0\r\n      ],\r\n      \"positive\": [\r\n        \"12\",\r\n       
@@ -376,11 +376,11 @@ MonoBehaviour:
     {\r\n      \"filename_prefix\": \"ComfyUI\",\r\n      \"images\": [\r\n       
     \"36\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"SaveImage\",\r\n   
     \"_meta\": {\r\n      \"title\": \"Save Image\"\r\n    }\r\n  },\r\n  \"34\":
-    {\r\n    \"inputs\": {\r\n      \"low_threshold\": 255,\r\n      \"high_threshold\":
+    {\r\n    \"inputs\": {\r\n      \"low_threshold\": 185,\r\n      \"high_threshold\":
     255,\r\n      \"resolution\": 1024,\r\n      \"image\": [\r\n        \"13\",\r\n       
     0\r\n      ]\r\n    },\r\n    \"class_type\": \"CannyEdgePreprocessor\",\r\n   
     \"_meta\": {\r\n      \"title\": \"Canny Edge\"\r\n    }\r\n  },\r\n  \"35\":
-    {\r\n    \"inputs\": {\r\n      \"pixel_size\": 4,\r\n      \"image\": [\r\n       
+    {\r\n    \"inputs\": {\r\n      \"pixel_size\": 10,\r\n      \"image\": [\r\n       
     \"8\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"Pixelization\",\r\n   
     \"_meta\": {\r\n      \"title\": \"Pixelization\"\r\n    }\r\n  },\r\n  \"36\":
     {\r\n    \"inputs\": {\r\n      \"rmbgmodel\": [\r\n        \"37\",\r\n       
@@ -428,7 +428,10 @@ MonoBehaviour:
   itemPrompts:
   - Pprompt: pixel art, glasses, futuristic, transparent background, opaque lenses
     controlNetImage: item_glasses
-    filename: HDHUD
+    filename: 0
+  - Pprompt: pixel art, sickle, transparent background
+    controlNetImage: item_sickle
+    filename: 1
 --- !u!1 &32123484
 GameObject:
   m_ObjectHideFlags: 0

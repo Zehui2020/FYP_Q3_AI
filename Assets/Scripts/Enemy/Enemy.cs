@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.PlayerLoop.PreUpdate;
 
 public class Enemy : EnemyStats
 {
@@ -56,7 +55,7 @@ public class Enemy : EnemyStats
         onPlayerInChaseRange += () => { isInCombat = true; uiController.SetCanvasActive(true); };
         OnHealthChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };
         OnShieldChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnShieldChanged(shield, maxShield, increase, isCrit); };
-        OnBreached += (multiplier) => { statusEffectManager.AddEffectUI(StatusEffectUI.StatusEffectType.Breached, 0); };
+        OnBreached += (multiplier) => { statusEffectManager.AddEffectUI(StatusEffectUI.StatusEffectType.Breached, 0); PlayerEffectsController.Instance.HitStop(0.2f); };
     }
 
     private void Update()
@@ -65,6 +64,24 @@ public class Enemy : EnemyStats
             return;
 
         UpdateEnemy();
+    }
+
+    public override bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
+    {
+        bool tookDamage = base.TakeDamage(damage, isCrit, closestPoint, damageType);
+
+        if (!tookDamage)
+            return false;
+
+        if (isCrit)
+        {
+            // Ritual Sickle
+            int randNum = Random.Range(0, 100);
+            if (randNum < itemStats.ritualBleedChance)
+                statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Bleed, itemStats.ritualBleedStacks);
+        }
+
+        return tookDamage;
     }
 
     public virtual void UpdateEnemy()
@@ -76,11 +93,11 @@ public class Enemy : EnemyStats
             uiController.SetCanvasActive(false);
 
     }
+
     public void OnDamageEventStart(int col)
     {
         collisionController.EnableCollider(col);
     }
-
     public void OnDamageEventEnd(int col)
     {
         collisionController.DisableCollider(col);

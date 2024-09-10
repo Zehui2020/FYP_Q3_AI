@@ -33,7 +33,7 @@ public class PlayerController : PlayerStats
         playerEffectsController = GetComponent<PlayerEffectsController>();
 
         itemManager.InitItemManager();
-        movementController.InitializeMovementController();
+        movementController.InitializeMovementController(playerEffectsController);
         combatController.InitializeCombatController(this);
         abilityController.InitializeAbilityController();
         playerEffectsController.InitializePlayerEffectsController();
@@ -59,6 +59,7 @@ public class PlayerController : PlayerStats
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             movementController.HandleDash(horizontal);
+
             if (movementController.isPlunging)
                 combatController.CancelPlungeAttack();
         }
@@ -152,8 +153,16 @@ public class PlayerController : PlayerStats
     public override bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
         bool tookDamage = base.TakeDamage(damage, isCrit, closestPoint, damageType);
-        playerEffectsController.HitStop(0.1f);
-        playerEffectsController.ShakeCamera(2f, 5f, 0.1f);
+
+        if (tookDamage)
+        {
+            playerEffectsController.ShakeCamera(4f, 5f, 0.2f);
+            playerEffectsController.Pulse(0.5f, 3f, 0f, 0.3f, true);
+        }
+        else
+        {
+            playerEffectsController.HitStop(0.1f);
+        }
 
         if (health <= 0)
         {

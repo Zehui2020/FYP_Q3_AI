@@ -9,18 +9,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45d5aec796091e94fb03e06129cc5d55, type: 3}
-  m_Name: HDHDUD
+  m_Script: {fileID: 11500000, guid: 819a8ab5e4f45ca45ba561b1be0517d8, type: 3}
+  m_Name: RitualSickle
   m_EditorClassIdentifier: 
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
   itemRarity: 0
-  itemType: 0
+  itemType: 1
   itemCatagory: 0
   spriteIcon: {fileID: 0}
-  title: HDHUD
-  description: Crit rate +10%, Crit damage +5%.
-  itemStack: 13
-  alertDuration: 3
+  title: Ritualist Sickles
+  description: Crit rate +5% on first pickup. Crit hits have a 10%(+5%/stack) chance
+    to inflict 3(+1/stack) stacks of bleed.
+  itemStack: 16
+  alertDuration: 5
   itemOutlineMaterial: {fileID: 2100000, guid: beaaf0a23b32bc74eb6b85b967db3d75, type: 2}
-  critRateIncrease: 10
-  critDamageIncrease: 0.05
+  bleedChance: 10
+  bleedStacks: 3
+  critRateIncrease: 5
+  stackBleedChance: 5
+  stackBleedStacks: 1
