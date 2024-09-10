@@ -15,6 +15,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
     public TextMeshProUGUI chatbox_Output;
     public TMP_InputField user_Input;
+    public GameObject AI_LoadingUI;
 
     public string AI_CharacterContext;
     public string introPrompt;
@@ -63,12 +64,12 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         if (!introFinished)
         {
             AI_Chat_Introduction();
-            UnityEngine.Debug.Log("Intro Starting...");
+            //UnityEngine.Debug.Log("Intro Finished...");
         }
         if (convoStartedAgain)
         {
             AI_Chat_Response();
-            UnityEngine.Debug.Log("Convo Starting...");
+            //UnityEngine.Debug.Log("Convo Starting...");
         }
     }
 
@@ -86,13 +87,17 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             "and do not show XML tags other than these ones: <result></result>" +
 
             "Here are a few examples of what your output should look like: " +
-            "<result>" + AI_Example_Output_1 +"</result> " +
+            "<result>" + AI_Example_Output_1 + "</result> " +
             "<result>" + AI_Example_Output_2 + "</result> " +
 
             "Here is your first prompt: <</SYS>> {" + introPrompt + "} [/INST]" + '"';
 
         string fullCommand_AIChat = $"cd {llamaDirectory} && llama-cli -m {modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
 
+        StartCoroutine(OpenCommandPrompt(fullCommand_AIChat));
+        UnityEngine.Debug.Log("Introducing...");
+        introFinished = true;
+        /*
         string AI_Output = OpenCommandPrompt(fullCommand_AIChat);
 
         string Display_Output;
@@ -108,8 +113,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
         chatbox_Output.text = Display_Output;
         previousContext = Display_Output;
-
-        introFinished = true;
+        */
     }
 
     public void AI_Chat_Response()
@@ -130,13 +134,17 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                 "Here are a few examples of what your output should look like: " +
                 "<result>" + AI_Example_Output_1 + "</result> " +
                 "<result>" + AI_Example_Output_2 + "</result> " +
-                "Here is the input: <</SYS>> {The player come back around yet again, looking for another conversation.} [/INST]" +
+                "Here is the input: <</SYS>> {The player came back for another conversation. You've already spoken to them, speak to them again.} [/INST]" +
                 '"';
 
             if (!string.IsNullOrEmpty(AI_Gen_Prompt))
             {
                 string fullCommand_AIChat = $"cd {llamaDirectory} && llama-cli -m {modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
 
+                StartCoroutine(OpenCommandPrompt(fullCommand_AIChat));
+                UnityEngine.Debug.Log("Talking to NPC again...");
+
+                /*
                 string AI_Output = OpenCommandPrompt(fullCommand_AIChat);
                 //UnityEngine.Debug.Log("Full Command: " + fullCommand_AIChat);
 
@@ -153,6 +161,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
                 chatbox_Output.text = Display_Output;
                 previousContext = Display_Output;
+                */
             }
 
             convoStartedAgain = false;
@@ -214,6 +223,11 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                 {
                     string fullCommand_AIChat = $"cd {llamaDirectory} && llama-cli -m {modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
 
+                    StartCoroutine(OpenCommandPrompt(fullCommand_AIChat));
+
+                    UnityEngine.Debug.Log("Continuing to speak with NPC...");
+
+                    /*
                     string AI_Output = OpenCommandPrompt(fullCommand_AIChat);
                     //UnityEngine.Debug.Log("Full Command: " + fullCommand_AIChat);
 
@@ -230,6 +244,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
                     chatbox_Output.text = Display_Output;
                     previousContext = Display_Output;
+                    */
                 }
             }
         }
@@ -257,6 +272,14 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
         string fullCommand_AIChat = $"cd {llamaDirectory} && llama-cli -m {modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
 
+        StartCoroutine(OpenCommandPrompt(fullCommand_AIChat));
+
+        UnityEngine.Debug.Log("NPC bids farewell...");
+
+        inConvo = false;
+        convoStartedAgain = true;
+
+        /*
         string AI_Output = OpenCommandPrompt(fullCommand_AIChat);
 
         string Display_Output;
@@ -272,9 +295,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
         chatbox_Output.text = Display_Output + "\n\n " + AI_Exit_Text;
         previousContext = Display_Output;
-
-        inConvo = false;
-        convoStartedAgain = true;
+        */
     }
 
     public void AI_Chat_Return()
@@ -285,25 +306,72 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         playerController.enabled = true;
     }
 
-    string OpenCommandPrompt(string command)
+    IEnumerator OpenCommandPrompt(string command)
     {
-        ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/c {command}");
-        startInfo.RedirectStandardOutput = true;
-        startInfo.UseShellExecute = false;
-        startInfo.CreateNoWindow = true;
+        string AI_Output = "";
+        ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/c {command}")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
 
-        Process process = new Process();
-        process.StartInfo = startInfo;
+        Process process = new Process
+        {
+            StartInfo = startInfo
+        };
+
+        process.OutputDataReceived += (sender, e) =>
+        {
+            if (e.Data != null)
+            {
+                AI_Output += e.Data + "\n";
+                UnityEngine.Debug.Log(e.Data);
+                UnityEngine.Debug.Log(AI_Output);
+
+                //Debug Log shows that this is only updated when the full Generation from the AI is complete.
+                //Note: Ask Mr Tan for follow-up
+
+                StartCoroutine(UpdateChatboxOutput(AI_Output));
+            }
+        };
+
+        process.ErrorDataReceived += (sender, e) =>
+        {
+            if (e.Data != null)
+            {
+                //Note: These are actually errors. This is just to distinguish the Text Generation from the Statistics Output
+                //UnityEngine.Debug.LogError(e.Data);
+            }
+        };
+
+        bool processExited = false;
+
         process.Start();
 
-        string output = process.StandardOutput.ReadToEnd();
-        process.WaitForExit();
+        process.BeginErrorReadLine();
+        process.BeginOutputReadLine();
 
-        //UnityEngine.Debug.Log("Player Prompt Count: " + promptCount);
-        //UnityEngine.Debug.Log("Output: " + output);
+        // Wait for the process to exit
+        yield return new WaitUntil(() => process.HasExited);
 
-        return output;
-        //cmd_Output.text = ExtractContent(output);
+        processExited = true;
+
+        // Ensure the final output is updated
+        if (processExited)
+        {
+            StartCoroutine(UpdateChatboxOutput(ExtractContent(AI_Output)));
+            AI_LoadingUI.SetActive(false);
+        }
+    }
+
+    IEnumerator UpdateChatboxOutput(string output)
+    {
+        chatbox_Output.text = output;
+        previousContext = chatbox_Output.text;
+
+        yield return null;
     }
 
     string ExtractContent(string text)
@@ -315,21 +383,18 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         {
             return match.Groups[1].Value;
         }
-
-        return string.Empty;
-
+        else
+        {
+            return text;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
         {
-            UnityEngine.Debug.Log("Waiting...");
-
             if (!inConvo)
             {
-                UnityEngine.Debug.Log("UI Up...");
-
                 AI_Chat_Canvas.SetActive(true);
 
                 playerController = collision.GetComponent<PlayerController>();
@@ -340,12 +405,6 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
                 inConvo = true;
             }
-            /*
-            if (Input.GetKeyUp(KeyCode.F))
-            {
-                
-            }
-            */
         }
     }
 }
