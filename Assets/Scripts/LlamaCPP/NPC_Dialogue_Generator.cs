@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using TMPro;
 using System.Xml.Linq;
 using Unity.VisualScripting;
+using static UnityEditor.Rendering.CameraUI;
 
 
 public class NPC_Dialogue_Generator : MonoBehaviour
@@ -64,12 +65,10 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         if (!introFinished)
         {
             AI_Chat_Introduction();
-            //UnityEngine.Debug.Log("Intro Finished...");
         }
         if (convoStartedAgain)
         {
             AI_Chat_Response();
-            //UnityEngine.Debug.Log("Convo Starting...");
         }
     }
 
@@ -172,8 +171,6 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             {
                 if (string.IsNullOrEmpty(previousContext))
                 {
-                    //UnityEngine.Debug.Log("Previous Context: NIL");
-
                     userPrompt = user_Input.text;
 
                     AI_Gen_Prompt =
@@ -191,12 +188,11 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                         "<result>" + AI_Example_Output_1 + "</result> " +
                         "<result>" + AI_Example_Output_2 + "</result> " +
 
-                        "Here is the player's input: <</SYS>> {" + userPrompt + "} [/INST]" + '"';
+                        "Here is the player's input: <</SYS>> {" + userPrompt + "} [/INST]" + 
+                        '"';
                 }
                 else
                 {
-                    //UnityEngine.Debug.Log("Previous Context: " + previousContext);
-
                     userPrompt = user_Input.text;
 
                     AI_Gen_Prompt =
@@ -218,41 +214,96 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                         "Here is the player's input: <</SYS>> {" + userPrompt + "} [/INST]" +
                         '"';
                 }
-
-                if (!string.IsNullOrEmpty(AI_Gen_Prompt))
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(previousContext))
                 {
-                    string fullCommand_AIChat = $"cd {llamaDirectory} && llama-cli -m {modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
+                    userPrompt = user_Input.text;
 
-                    StartCoroutine(OpenCommandPrompt(fullCommand_AIChat));
+                    AI_Gen_Prompt =
+                        '"' +
+                        "[INST] <<SYS>> You are the voice of a NPC in a video game. " +
+                        "This is the NPC's backstory:  " +
+                        "~" + AI_CharacterContext + "~ " +
+                        "In this environment, address the user as Lone One, " +
+                        "keep your responses less than 100 words, " +
+                        "your responses should be purely dialogue, " +
+                        "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
+                        "and do not show XML tags other than these ones: <result></result>" +
 
-                    UnityEngine.Debug.Log("Continuing to speak with NPC...");
+                        "Here are a few examples of what your output should look like: " +
+                        "<result>" + AI_Example_Output_1 + "</result> " +
+                        "<result>" + AI_Example_Output_2 + "</result> " +
 
-                    /*
-                    string AI_Output = OpenCommandPrompt(fullCommand_AIChat);
-                    //UnityEngine.Debug.Log("Full Command: " + fullCommand_AIChat);
-
-                    string Display_Output;
-
-                    if (!string.IsNullOrEmpty(ExtractContent(AI_Output)))
-                    {
-                        Display_Output = ExtractContent(AI_Output);
-                    }
-                    else
-                    {
-                        Display_Output = AI_Output;
-                    }
-
-                    chatbox_Output.text = Display_Output;
-                    previousContext = Display_Output;
-                    */
+                        "Here is the prompt: <</SYS>> {The player remains silent.} [/INST]" + 
+                        '"';
                 }
+                else
+                {
+                    userPrompt = user_Input.text;
+
+                    AI_Gen_Prompt =
+                        '"' +
+                        "[INST] <<SYS>> You are the voice of a NPC in a video game. " +
+                        "This is the NPC's backstory:  " +
+                        "~" + AI_CharacterContext + "~ " +
+                        "In this environment, address the user as Lone One, " +
+                        "keep your responses less than 100 words, " +
+                        "your responses should be purely dialogue, " +
+                        "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
+                        "and do not show XML tags other than these ones: <result></result>" +
+
+                        "Here are a few examples of what your output should look like: " +
+                        "<result>" + AI_Example_Output_1 + "</result> " +
+                        "<result>" + AI_Example_Output_2 + "</result> " +
+
+                        "Your previous response was : " + "~" + previousContext + "~" +
+                        "Here is the player's input: <</SYS>> {The player remains silent.} [/INST]" +
+                        '"';
+                }
+            }
+
+            if (!string.IsNullOrEmpty(AI_Gen_Prompt))
+            {
+                string fullCommand_AIChat = $"cd {llamaDirectory} && llama-cli -m {modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
+
+                StartCoroutine(OpenCommandPrompt(fullCommand_AIChat));
+
+                user_Input.text = "";
+
+                UnityEngine.Debug.Log("Continuing to speak with NPC...");
             }
         }
     }
 
     public void AI_Chat_End()
     {
-        AI_Gen_Prompt =
+        if (!string.IsNullOrEmpty(user_Input.text))
+        {
+            userPrompt = user_Input.text;
+
+            AI_Gen_Prompt =
+            '"' +
+            "[INST] <<SYS>> You are the voice of a NPC in a video game. " +
+            "This is the NPC's backstory:  " +
+            "~" + AI_CharacterContext + "~ " +
+            "In this environment, address the user as Lone One, " +
+            "keep your responses less than 100 words, " +
+            "your responses should be purely dialogue, " +
+            "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
+            "and do not show XML tags other than these ones: <result></result>" +
+
+            "Here are a few examples of what your output should look like: " +
+            "<result>" + AI_Example_Output_1 + "</result> " +
+            "<result>" + AI_Example_Output_2 + "</result> " +
+
+            "Your previous response was : " + "~" + previousContext + "~" +
+            "Here is your prompt: <</SYS>> {Bid the player farewell after they say to you: " + userPrompt + "} [/INST]" + '"';
+        }
+        else
+        {
+            AI_Gen_Prompt =
             '"' +
             "[INST] <<SYS>> You are the voice of a NPC in a video game. " +
             "This is the NPC's backstory:  " +
@@ -269,16 +320,18 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
             "Your previous response was : " + "~" + previousContext + "~" +
             "Here is your prompt: <</SYS>> {Bid the player farewell.} [/INST]" + '"';
+        }
 
         string fullCommand_AIChat = $"cd {llamaDirectory} && llama-cli -m {modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
 
         StartCoroutine(OpenCommandPrompt(fullCommand_AIChat));
 
-        UnityEngine.Debug.Log("NPC bids farewell...");
+        user_Input.text = "";
 
         inConvo = false;
         convoStartedAgain = true;
 
+        UnityEngine.Debug.Log("NPC bids farewell...");
         /*
         string AI_Output = OpenCommandPrompt(fullCommand_AIChat);
 
@@ -327,8 +380,8 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             if (e.Data != null)
             {
                 AI_Output += e.Data + "\n";
-                UnityEngine.Debug.Log(e.Data);
-                UnityEngine.Debug.Log(AI_Output);
+                UnityEngine.Debug.Log("Receiving Data from AI: " + e.Data);
+                UnityEngine.Debug.Log("Chatbox updating with Data: " + AI_Output);
 
                 //Debug Log shows that this is only updated when the full Generation from the AI is complete.
                 //Note: Ask Mr Tan for follow-up
@@ -353,15 +406,18 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         process.BeginErrorReadLine();
         process.BeginOutputReadLine();
 
-        // Wait for the process to exit
         yield return new WaitUntil(() => process.HasExited);
 
-        processExited = true;
+        UnityEngine.Debug.Log("Process Finished: " + process.HasExited);
 
         // Ensure the final output is updated
-        if (processExited)
+        if (process.HasExited && !string.IsNullOrEmpty(AI_Output))
         {
+            //Bug: e.Data and AI_Output can contain AI_Text_Generation
+            //     but the UpdateChatboxOutput(ExtractContent(AI_Output)) could end up running with a null string.
+            UnityEngine.Debug.Log("Extracting Dialogue from Data: " + AI_Output);
             StartCoroutine(UpdateChatboxOutput(ExtractContent(AI_Output)));
+
             AI_LoadingUI.SetActive(false);
         }
     }
@@ -369,7 +425,11 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     IEnumerator UpdateChatboxOutput(string output)
     {
         chatbox_Output.text = output;
-        previousContext = chatbox_Output.text;
+        previousContext = output;
+
+        UnityEngine.Debug.Log("Chatbox should now show Data: " + output);
+
+        UnityEngine.Debug.Log("Chatbox now showing: " + chatbox_Output.text);
 
         yield return null;
     }
