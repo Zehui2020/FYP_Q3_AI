@@ -156,7 +156,7 @@ public class BaseStats : MonoBehaviour
         return true;
     }
 
-    public float CalculateDamageDealt(BaseStats target, out bool isCrit, out DamagePopup.DamageType damageType)
+    public virtual float CalculateDamageDealt(BaseStats target, out bool isCrit, out DamagePopup.DamageType damageType)
     {
         float finalCritRate = critRate.GetTotalModifier();
         float finalCritDamage = 1;

@@ -172,6 +172,25 @@ public class PlayerController : PlayerStats
         return tookDamage;
     }
 
+    public override float CalculateDamageDealt(BaseStats target, out bool isCrit, out DamagePopup.DamageType damageType)
+    {
+        float knuckleModifier = 0;
+
+        // Knuckle Duster
+        if (target.health >= target.maxHealth * itemStats.knucleDusterThreshold && target.shield <= 0)
+        {
+            knuckleModifier = itemStats.knuckleDusterDamageModifier;
+            damageMultipler.AddModifier(knuckleModifier);
+        }
+
+        float damage = base.CalculateDamageDealt(target, out isCrit, out damageType);
+
+        // Knuckle Duster
+        damageMultipler.RemoveModifier(knuckleModifier);
+
+        return damage;
+    }
+
     public override IEnumerator FrozenRoutine()
     {
         movementController.StopPlayer();

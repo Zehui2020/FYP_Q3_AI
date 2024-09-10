@@ -14,14 +14,14 @@ public class RitualSickle : Item
     {
         base.Initialize();
         PlayerController.Instance.critRate.AddModifier(critRateIncrease);
-        itemStats.ritualBleedChance = bleedChance;
-        itemStats.ritualBleedStacks = bleedStacks;
+        itemStats.ritualBleedChance += bleedChance;
+        itemStats.ritualBleedStacks += bleedStacks;
     }
 
     public override void IncrementStack()
     {
         base.IncrementStack();
-        itemStats.ritualBleedChance = stackBleedChance;
-        itemStats.ritualBleedStacks = stackBleedStacks;
+        itemStats.ritualBleedChance += stackBleedChance;
+        itemStats.ritualBleedStacks += stackBleedStacks;
     }
 }
