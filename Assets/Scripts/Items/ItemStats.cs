@@ -5,12 +5,18 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ItemStats")]
 public class ItemStats : ScriptableObject
 {
-    public int critRate;
-    public int critDamage;
+    public int ritualBleedChance;
+    public int ritualBleedStacks;
+
+    public float knucleDusterThreshold;
+    public float knuckleDusterDamageModifier;
 
     public void ResetStats()
     {
-        critRate = 0;
-        critDamage = 0;
+        ritualBleedChance = 0;
+        ritualBleedStacks = 0;
+
+        knucleDusterThreshold = 0.9f;
+        knuckleDusterDamageModifier = 0;
     }
 }

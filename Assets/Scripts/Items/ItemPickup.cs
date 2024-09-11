@@ -1,19 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DesignPatterns.ObjectPool;
 
 public class ItemPickup : PooledObject
 {
+    [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private Item item;
     [SerializeField] private float bobIntensity = 0.5f;
     [SerializeField] private float bobSpeed = 2f;
     private Vector3 startPos;
 
-    public override void InitPrefab()
+    public void InitPickup(Item newItem)
     {
-        objectName = item.title;
+        item = newItem;
         startPos = transform.position;
+        spriteRenderer.sprite = item.spriteIcon;
     }
 
     public void PickupItem()

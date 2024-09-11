@@ -10,18 +10,28 @@ public class ItemManager : MonoBehaviour
     public List<Item> allItems;
     [SerializeField] private ItemPickupAlert itemPickupAlert;
 
+    [SerializeField] private ItemStats itemStats;
     [SerializeField] private ItemUI itemUIPrefab;
     [SerializeField] private Transform itemUIParent;
     private List<ItemUI> itemUIs = new List<ItemUI>();
 
+    private ImageSaver imageSaver;
+
     private void Awake()
     {
         Instance = this;
+        itemStats.ResetStats();
     }
 
     public void InitItemManager()
     {
-        itemList = new List<Item>();
+        itemList = new();
+        imageSaver = GetComponent<ImageSaver>();
+
+        foreach (Item item in allItems)
+        {
+            item.spriteIcon = imageSaver.GetSpriteFromLocalDisk(item.itemType.ToString());
+        }
     }
 
     public void AddItem(Item itemToAdd)

@@ -7,7 +7,6 @@ public class ItemUI : MonoBehaviour
     [SerializeField] private Image itemIcon;
     [SerializeField] private TextMeshProUGUI itemCountText;
     private int itemCount;
-
     public Item item;
 
     public void SetupItemUI(Item item)
@@ -16,6 +15,7 @@ public class ItemUI : MonoBehaviour
 
         itemCount++;
         itemIcon.sprite = item.spriteIcon;
+        itemIcon.material = item.itemOutlineMaterial;
         itemCountText.gameObject.SetActive(false);
     }
 

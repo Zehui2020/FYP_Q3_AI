@@ -8,7 +8,8 @@ public class WeaponData : ScriptableObject
 {
     public enum WeaponType
     {
-        Sword
+        Sword,
+        Axe
     }
 
     public WeaponType weaponType;

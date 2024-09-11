@@ -8,7 +8,8 @@ public class ComfyItemGenration : ComfyManager
     public struct ItemPrompt
     {
         [TextArea(3, 10)] public string Pprompt;
-        public string filename;
+        public string controlNetImage;
+        public Item.ItemType filename;
     }
 
     public List<ItemPrompt> itemPrompts = new();
@@ -24,8 +25,8 @@ public class ComfyItemGenration : ComfyManager
         if (currentPromptIndex >= itemPrompts.Count)
             return;
 
-        promptCtr.QueuePrompt(itemPrompts[currentPromptIndex].Pprompt);
-        fileName = itemPrompts[currentPromptIndex].filename;
+        promptCtr.QueuePromptWithControlNet(itemPrompts[currentPromptIndex].Pprompt, itemPrompts[currentPromptIndex].controlNetImage);
+        fileName = itemPrompts[currentPromptIndex].filename.ToString();
     }
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)

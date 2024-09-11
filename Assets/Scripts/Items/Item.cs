@@ -10,9 +10,7 @@ public class Item : ScriptableObject
     public enum Rarity { Common, Uncommon, Legendary, Special };
     public Rarity itemRarity;
 
-    public enum ItemType { HDHUD, AdrenalineShot, Gasoline, CrudeKnife, RitualSickle, HoloDie, BundleOfDynamite, ColdOne, WarmOne, 
-        StunGrenade, Shungite, XKILLDrum, HealthPack, JackInTheBox, KnuckleDuster, CorruptedBoots, AmmoStash, Abascus, IncendiaryRound,
-        PiercingRound, BlackCard};
+    public enum ItemType { HDHUD, RitualSickle, KnuckleDuster };
     public ItemType itemType;
 
     public enum ItemCatagory { Damage, Healing, Utility };
@@ -25,6 +23,7 @@ public class Item : ScriptableObject
     public string description;
     public int itemStack;
     public float alertDuration;
+    public Material itemOutlineMaterial;
 
     public virtual void Initialize() { }
 

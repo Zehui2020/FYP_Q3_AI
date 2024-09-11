@@ -15,6 +15,7 @@ public class BaseStats : MonoBehaviour
 
     protected StatusEffectManager statusEffectManager;
     [SerializeField] protected StatusEffectStats statusEffectStats;
+    [SerializeField] protected ItemStats itemStats;
 
     [Header("Base Stats")]
     public int health;
@@ -96,8 +97,6 @@ public class BaseStats : MonoBehaviour
         if (health <= 0)
             return false;
 
-        statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Bleed, 1);
-
         // Check for immunity
         if (isImmune)
         {
@@ -157,7 +156,7 @@ public class BaseStats : MonoBehaviour
         return true;
     }
 
-    public float CalculateDamageDealt(BaseStats target, out bool isCrit, out DamagePopup.DamageType damageType)
+    public virtual float CalculateDamageDealt(BaseStats target, out bool isCrit, out DamagePopup.DamageType damageType)
     {
         float finalCritRate = critRate.GetTotalModifier();
         float finalCritDamage = 1;
