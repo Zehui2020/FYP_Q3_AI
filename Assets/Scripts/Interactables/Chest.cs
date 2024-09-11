@@ -63,6 +63,8 @@ public class Chest : MonoBehaviour, IInteractable
                 break;
         }
 
+        Debug.Log(rarity.ToString());
+
         if (items.Count == 0)
         {
             Debug.Log("MISSING ITEM!");
@@ -70,7 +72,9 @@ public class Chest : MonoBehaviour, IInteractable
         }
 
         int randNum = Random.Range(0, items.Count);
-        ObjectPool.Instance.GetPooledObject(items[randNum].title, true);
+        ItemPickup item = ObjectPool.Instance.GetPooledObject("ItemPickup", true) as ItemPickup;
+        item.transform.position = transform.position;
+        item.InitPickup(items[randNum]);
     }
 
     public void OnEnterRange()

@@ -10,6 +10,7 @@ public class PlayerController : PlayerStats
     private AbilityController abilityController;
     private FadeTransition fadeTransition;
     private ItemManager itemManager;
+    private PlayerEffectsController playerEffectsController;
     [SerializeField] private ProceduralMapGenerator proceduralMapGenerator;
 
     private IInteractable currentInteractable;
@@ -29,11 +30,13 @@ public class PlayerController : PlayerStats
         fadeTransition = GetComponent<FadeTransition>();
         itemManager = GetComponent<ItemManager>();
         statusEffectManager = GetComponent<StatusEffectManager>();
+        playerEffectsController = GetComponent<PlayerEffectsController>();
 
         itemManager.InitItemManager();
-        movementController.InitializeMovementController();
+        movementController.InitializeMovementController(playerEffectsController);
         combatController.InitializeCombatController(this);
         abilityController.InitializeAbilityController();
+        playerEffectsController.InitializePlayerEffectsController();
         if (proceduralMapGenerator != null)
             proceduralMapGenerator.InitMapGenerator();
 
@@ -56,6 +59,7 @@ public class PlayerController : PlayerStats
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             movementController.HandleDash(horizontal);
+
             if (movementController.isPlunging)
                 combatController.CancelPlungeAttack();
         }
@@ -150,12 +154,41 @@ public class PlayerController : PlayerStats
     {
         bool tookDamage = base.TakeDamage(damage, isCrit, closestPoint, damageType);
 
+        if (tookDamage)
+        {
+            playerEffectsController.ShakeCamera(4f, 5f, 0.2f);
+            playerEffectsController.Pulse(0.5f, 3f, 0f, 0.3f, true);
+        }
+        else
+        {
+            playerEffectsController.HitStop(0.1f);
+        }
+
         if (health <= 0)
         {
             Debug.Log("YOU DIED!");
         }
 
         return tookDamage;
+    }
+
+    public override float CalculateDamageDealt(BaseStats target, out bool isCrit, out DamagePopup.DamageType damageType)
+    {
+        float knuckleModifier = 0;
+
+        // Knuckle Duster
+        if (target.health >= target.maxHealth * itemStats.knucleDusterThreshold && target.shield <= 0)
+        {
+            knuckleModifier = itemStats.knuckleDusterDamageModifier;
+            damageMultipler.AddModifier(knuckleModifier);
+        }
+
+        float damage = base.CalculateDamageDealt(target, out isCrit, out damageType);
+
+        // Knuckle Duster
+        damageMultipler.RemoveModifier(knuckleModifier);
+
+        return damage;
     }
 
     public override IEnumerator FrozenRoutine()

@@ -322,7 +322,7 @@ MonoBehaviour:
   OnRecieveImage:
     m_PersistentCalls:
       m_Calls: []
-  isControlNet: 0
+  isControlNet: 1
 --- !u!114 &30929367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -335,37 +335,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f79945781b6eb3b469512ff72c92081f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  promptJson: "{   \"3\": {     \"inputs\": {       \"seed\": 85329666717608,      
-    \"steps\": 20,       \"cfg\": 8,       \"sampler_name\": \"euler\",       \"scheduler\":
-    \"normal\",       \"denoise\": 1,       \"model\": [         \"4\",         0      
-    ],       \"positive\": [         \"6\",         0       ],       \"negative\":
-    [         \"7\",         0       ],       \"latent_image\": [         \"5\",        
-    0       ]     },     \"class_type\": \"KSampler\",     \"_meta\": {       \"title\":
-    \"KSampler\"     }   },   \"4\": {     \"inputs\": {       \"ckpt_name\": \"pixelArtDiffusionXL_spriteShaper.safetensors\"    
-    },     \"class_type\": \"CheckpointLoaderSimple\",     \"_meta\": {       \"title\":
-    \"Load Checkpoint\"     }   },   \"5\": {     \"inputs\": {       \"width\":
-    512,       \"height\": 512,       \"batch_size\": 1     },     \"class_type\":
-    \"EmptyLatentImage\",     \"_meta\": {       \"title\": \"Empty Latent Image\"    
-    }   },   \"6\": {     \"inputs\": {       \"text\": \"Pprompt\",       \"clip\":
-    [         \"4\",         1       ]     },     \"class_type\": \"CLIPTextEncode\",    
-    \"_meta\": {       \"title\": \"CLIP Text Encode (Prompt)\"     }   },   \"7\":
-    {     \"inputs\": {       \"text\": \"Nprompt\",       \"clip\": [         \"4\",        
-    1       ]     },     \"class_type\": \"CLIPTextEncode\",     \"_meta\": {      
-    \"title\": \"CLIP Text Encode (Prompt)\"     }   },   \"9\": {     \"inputs\":
-    {       \"filename_prefix\": \"ComfyUI\",       \"images\": [         \"15\",        
-    0       ]     },     \"class_type\": \"SaveImage\",     \"_meta\": {       \"title\":
-    \"Save Image\"     }   },   \"11\": {     \"inputs\": {       \"pixel_size\":
-    4,       \"image\": [         \"13\",         0       ]     },     \"class_type\":
-    \"Pixelization\",     \"_meta\": {       \"title\": \"Pixelization\"     }  
-    },   \"13\": {     \"inputs\": {       \"samples\": [         \"3\",        
-    0       ],       \"vae\": [         \"4\",         2       ]     },     \"class_type\":
-    \"VAEDecode\",     \"_meta\": {       \"title\": \"VAE Decode\"     }   },  
-    \"15\": {     \"inputs\": {       \"rmbgmodel\": [         \"17\",         0      
-    ],       \"image\": [         \"11\",         0       ]     },     \"class_type\":
-    \"BRIA_RMBG_Zho\",     \"_meta\": {       \"title\": \"\U0001F9F9BRIA RMBG\"    
-    }   },   \"17\": {     \"inputs\": {},     \"class_type\": \"BRIA_RMBG_ModelLoader_Zho\",    
-    \"_meta\": {       \"title\": \"\U0001F9F9BRIA_RMBG Model Loader\"     }   }
-    }"
+  promptJson: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 1000709893940503,\r\n     
+    \"steps\": 20,\r\n      \"cfg\": 8,\r\n      \"sampler_name\": \"euler\",\r\n     
+    \"scheduler\": \"normal\",\r\n      \"denoise\": 1,\r\n      \"model\": [\r\n       
+    \"4\",\r\n        0\r\n      ],\r\n      \"positive\": [\r\n        \"12\",\r\n       
+    0\r\n      ],\r\n      \"negative\": [\r\n        \"12\",\r\n        1\r\n     
+    ],\r\n      \"latent_image\": [\r\n        \"5\",\r\n        0\r\n      ]\r\n   
+    },\r\n    \"class_type\": \"KSampler\",\r\n    \"_meta\": {\r\n      \"title\":
+    \"KSampler\"\r\n    }\r\n  },\r\n  \"4\": {\r\n    \"inputs\": {\r\n      \"ckpt_name\":
+    \"pixelArtDiffusionXL_spriteShaper.safetensors\"\r\n    },\r\n    \"class_type\":
+    \"CheckpointLoaderSimple\",\r\n    \"_meta\": {\r\n      \"title\": \"Load Checkpoint\"\r\n   
+    }\r\n  },\r\n  \"5\": {\r\n    \"inputs\": {\r\n      \"width\": 1024,\r\n     
+    \"height\": 1024,\r\n      \"batch_size\": 1\r\n    },\r\n    \"class_type\":
+    \"EmptyLatentImage\",\r\n    \"_meta\": {\r\n      \"title\": \"Empty Latent
+    Image\"\r\n    }\r\n  },\r\n  \"6\": {\r\n    \"inputs\": {\r\n      \"text\":
+    \"Pprompt\",\r\n      \"clip\": [\r\n        \"4\",\r\n        1\r\n      ]\r\n   
+    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\":
+    \"Prompt\"\r\n    }\r\n  },\r\n  \"7\": {\r\n    \"inputs\": {\r\n      \"text\":
+    \"Nprompt\",\r\n      \"clip\": [\r\n        \"4\",\r\n        1\r\n      ]\r\n   
+    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\":
+    \"Negative Prompt\"\r\n    }\r\n  },\r\n  \"8\": {\r\n    \"inputs\": {\r\n     
+    \"samples\": [\r\n        \"3\",\r\n        0\r\n      ],\r\n      \"vae\": [\r\n       
+    \"4\",\r\n        2\r\n      ]\r\n    },\r\n    \"class_type\": \"VAEDecode\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"VAE Decode\"\r\n    }\r\n  },\r\n  \"11\":
+    {\r\n    \"inputs\": {\r\n      \"control_net_name\": \"controlnet-canny-sdxl-1.0\\\\diffusion_pytorch_model.fp16.safetensors\"\r\n   
+    },\r\n    \"class_type\": \"ControlNetLoader\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"Load ControlNet Model\"\r\n    }\r\n  },\r\n  \"12\": {\r\n    \"inputs\":
+    {\r\n      \"strength\": 1,\r\n      \"start_percent\": 0,\r\n      \"end_percent\":
+    1,\r\n      \"positive\": [\r\n        \"6\",\r\n        0\r\n      ],\r\n     
+    \"negative\": [\r\n        \"7\",\r\n        0\r\n      ],\r\n      \"control_net\":
+    [\r\n        \"11\",\r\n        0\r\n      ],\r\n      \"image\": [\r\n       
+    \"34\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"ControlNetApplyAdvanced\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Apply ControlNet (Advanced)\"\r\n    }\r\n 
+    },\r\n  \"13\": {\r\n    \"inputs\": {\r\n      \"image\": \"placeholder.png\",\r\n     
+    \"upload\": \"image\"\r\n    },\r\n    \"class_type\": \"LoadImage\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Input\"\r\n    }\r\n  },\r\n  \"16\": {\r\n   
+    \"inputs\": {\r\n      \"images\": [\r\n        \"34\",\r\n        0\r\n     
+    ]\r\n    },\r\n    \"class_type\": \"PreviewImage\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"Preview Image\"\r\n    }\r\n  },\r\n  \"24\": {\r\n    \"inputs\":
+    {\r\n      \"filename_prefix\": \"ComfyUI\",\r\n      \"images\": [\r\n       
+    \"36\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"SaveImage\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Save Image\"\r\n    }\r\n  },\r\n  \"34\":
+    {\r\n    \"inputs\": {\r\n      \"low_threshold\": 185,\r\n      \"high_threshold\":
+    255,\r\n      \"resolution\": 1024,\r\n      \"image\": [\r\n        \"13\",\r\n       
+    0\r\n      ]\r\n    },\r\n    \"class_type\": \"CannyEdgePreprocessor\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Canny Edge\"\r\n    }\r\n  },\r\n  \"35\":
+    {\r\n    \"inputs\": {\r\n      \"pixel_size\": 10,\r\n      \"image\": [\r\n       
+    \"8\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"Pixelization\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Pixelization\"\r\n    }\r\n  },\r\n  \"36\":
+    {\r\n    \"inputs\": {\r\n      \"rmbgmodel\": [\r\n        \"37\",\r\n       
+    0\r\n      ],\r\n      \"image\": [\r\n        \"35\",\r\n        0\r\n     
+    ]\r\n    },\r\n    \"class_type\": \"BRIA_RMBG_Zho\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"\U0001F9F9BRIA RMBG\"\r\n    }\r\n  },\r\n  \"37\": {\r\n    \"inputs\":
+    {},\r\n    \"class_type\": \"BRIA_RMBG_ModelLoader_Zho\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"\U0001F9F9BRIA_RMBG Model Loader\"\r\n    }\r\n  }\r\n}"
   OnQueuePrompt:
     m_PersistentCalls:
       m_Calls: []
@@ -403,10 +426,16 @@ MonoBehaviour:
   imageSaver: {fileID: 30929365}
   fileName: 
   itemPrompts:
-  - Pprompt: Pixel Art, transparent background, solid color background, goggles
-    filename: HDHUD
-  - Pprompt: Pixel Art, transparent background, solid color background, gas mask
-    filename: GasMask
+  - Pprompt: pixel art, glasses, futuristic, transparent background, opaque lenses
+    controlNetImage: item_glasses
+    filename: 0
+  - Pprompt: pixel art, sickle, transparent background
+    controlNetImage: item_sickle
+    filename: 1
+  - Pprompt: pixel art, knuckle duster, rusted metal, transparent background, solid
+      background color, no background
+    controlNetImage: item_knuckle_duster
+    filename: 2
 --- !u!1 &32123484
 GameObject:
   m_ObjectHideFlags: 0
