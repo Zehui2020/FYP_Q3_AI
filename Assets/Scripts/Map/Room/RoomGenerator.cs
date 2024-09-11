@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -16,14 +17,23 @@ public class RoomGenerator : MonoBehaviour
     private List<Vector2> collapsedTiles = new List<Vector2>();
     private List<int> collapsableTileNum = new List<int>();
 
+    public List<GameObject> testTiles = new List<GameObject>();
+
     private void Start()
     {
         GenerateRooms();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            SetNextRoom();
+        }
+    }
+
     public void GenerateRooms()
     {
-        Debug.Log("Room Generation Started");
         // randomize starting node
         currTile = new Vector2(Random.Range(0, (int)roomSize.x), Random.Range(0, (int)roomSize.y));
         // set random starting room tile
@@ -68,6 +78,12 @@ public class RoomGenerator : MonoBehaviour
         List<GameObject> availableTiles = GetAvailableTilesList();
         // choose random tile
         GameObject tileToSet = availableTiles[Random.Range(0, availableTiles.Count)];
+
+        // debug
+        Debug.Log(tileToSet.name);
+        testTiles = availableTiles;
+        // end debug
+
         if (tileToSet == null)
             return;
         // set room tile
@@ -88,22 +104,27 @@ public class RoomGenerator : MonoBehaviour
     private List<GameObject> GetAvailableTilesList()
     {
         // get list of placeable tiles from each direction
-        List<GameObject> availableTilesUp = GetAvailableTilesListFromNeighbour(Vector2.up);
-        List<GameObject> availableTilesDown = GetAvailableTilesListFromNeighbour(Vector2.down);
-        List<GameObject> availableTilesLeft = GetAvailableTilesListFromNeighbour(Vector2.left);
-        List<GameObject> availableTilesRight = GetAvailableTilesListFromNeighbour(Vector2.right);
+        List<GameObject> availableTilesFromUp = GetAvailableTilesListFromNeighbour(Vector2.up);
+        List<GameObject> availableTilesFromDown = GetAvailableTilesListFromNeighbour(Vector2.down);
+        List<GameObject> availableTilesFromLeft = GetAvailableTilesListFromNeighbour(Vector2.left);
+        List<GameObject> availableTilesFromRight = GetAvailableTilesListFromNeighbour(Vector2.right);
         // get list of tiles that are available in each list
         List<GameObject> availableTiles = new List<GameObject>();
+        List<GameObject> tilesToRemove = new List<GameObject>();
         availableTiles.AddRange(allTilePrefabs);
         for (int i = 0; i < availableTiles.Count; i++)
         {
-            if (!availableTilesUp.Contains(availableTiles[i]) || 
-                !availableTilesDown.Contains(availableTiles[i]) || 
-                !availableTilesLeft.Contains(availableTiles[i]) || 
-                !availableTilesRight.Contains(availableTiles[i]))
+            if (!availableTilesFromUp.Contains(availableTiles[i]) || 
+                !availableTilesFromDown.Contains(availableTiles[i]) || 
+                !availableTilesFromLeft.Contains(availableTiles[i]) || 
+                !availableTilesFromRight.Contains(availableTiles[i]))
             {
-                availableTiles.Remove(availableTiles[i]);
+                tilesToRemove.Add(availableTiles[i]);
             }
+        }
+        for (int i = 0; i < tilesToRemove.Count; i++)
+        {
+            availableTiles.Remove(tilesToRemove[i]);
         }
         return availableTiles;
     }
