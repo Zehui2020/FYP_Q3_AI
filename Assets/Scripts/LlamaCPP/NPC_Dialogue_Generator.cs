@@ -362,6 +362,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     IEnumerator OpenCommandPrompt(string command)
     {
         string AI_Output = "";
+        bool AI_ChatUpdated = false;
         ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/c {command}")
         {
             RedirectStandardOutput = true,
@@ -399,8 +400,6 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             }
         };
 
-        bool processExited = false;
-
         process.Start();
 
         process.BeginErrorReadLine();
@@ -411,15 +410,20 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         UnityEngine.Debug.Log("Process Finished: " + process.HasExited);
 
         // Ensure the final output is updated
-        if (process.HasExited && !string.IsNullOrEmpty(AI_Output))
+        do
         {
-            //Bug: e.Data and AI_Output can contain AI_Text_Generation
-            //     but the UpdateChatboxOutput(ExtractContent(AI_Output)) could end up running with a null string.
-            UnityEngine.Debug.Log("Extracting Dialogue from Data: " + AI_Output);
-            StartCoroutine(UpdateChatboxOutput(ExtractContent(AI_Output)));
+            if (process.HasExited && AI_Output.Contains("</result>"))
+            {
+                //Bug: e.Data and AI_Output can contain AI_Text_Generation
+                //     but the UpdateChatboxOutput(ExtractContent(AI_Output)) could end up running with a null string.
+                UnityEngine.Debug.Log("Extracting Dialogue from Data: " + AI_Output);
+                StartCoroutine(UpdateChatboxOutput(ExtractContent(AI_Output)));
 
-            AI_LoadingUI.SetActive(false);
+                AI_LoadingUI.SetActive(false);
+                AI_ChatUpdated = true;
+            }
         }
+        while (!AI_ChatUpdated);
     }
 
     IEnumerator UpdateChatboxOutput(string output)
