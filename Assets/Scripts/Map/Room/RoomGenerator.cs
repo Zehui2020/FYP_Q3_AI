@@ -23,7 +23,6 @@ public class RoomGenerator : MonoBehaviour
 
     public void GenerateRooms()
     {
-        Debug.Log("Room Generation Started");
         // randomize starting node
         currTile = new Vector2(Random.Range(0, (int)roomSize.x), Random.Range(0, (int)roomSize.y));
         // set random starting room tile
