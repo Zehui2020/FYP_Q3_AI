@@ -8,6 +8,7 @@ using TMPro;
 using System.Xml.Linq;
 using Unity.VisualScripting;
 using static UnityEditor.Rendering.CameraUI;
+using System.IO;
 
 
 public class NPC_Dialogue_Generator : MonoBehaviour
@@ -376,6 +377,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             StartInfo = startInfo
         };
 
+        /*
         process.OutputDataReceived += (sender, e) =>
         {
             if (e.Data != null)
@@ -399,16 +401,31 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                 //UnityEngine.Debug.LogError(e.Data);
             }
         };
+        */
 
         process.Start();
 
-        process.BeginErrorReadLine();
-        process.BeginOutputReadLine();
+        //process.WaitForExit();
+        //process.BeginErrorReadLine();
+        //process.BeginOutputReadLine();
+
+        /*
+        while (!process.HasExited)
+        {
+            //StreamReader reader = process.StandardOutput;
+            //UnityEngine.Debug.Log(reader.ReadToEnd());
+            //UnityEngine.Debug.Log(process.StandardOutput.ReadLine());
+            yield return null;
+        }
+        */
+
+        UnityEngine.Debug.Log(process.StandardOutput.ReadToEnd());
 
         yield return new WaitUntil(() => process.HasExited);
 
         UnityEngine.Debug.Log("Process Finished: " + process.HasExited);
 
+        /*
         // Ensure the final output is updated
         do
         {
@@ -424,6 +441,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             }
         }
         while (!AI_ChatUpdated);
+        */
     }
 
     IEnumerator UpdateChatboxOutput(string output)
