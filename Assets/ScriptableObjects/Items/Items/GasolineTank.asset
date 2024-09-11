@@ -9,18 +9,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45d5aec796091e94fb03e06129cc5d55, type: 3}
-  m_Name: HDHDUD
+  m_Script: {fileID: 11500000, guid: 7f3fe7a50356e5e46ad88eef4d736550, type: 3}
+  m_Name: GasolineTank
   m_EditorClassIdentifier: 
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
   itemRarity: 0
-  itemType: 0
+  itemType: 7
   itemCatagory: 0
   spriteIcon: {fileID: 0}
-  title: HD HUD
-  description: Crit rate +10%, Crit damage +5%
+  title: Gasoline Tank
+  description: Enemies explode upon death, dealing 150%(+30%/stack) player attack
+    and applies 5(+2/stack) stacks of burn to all enemies within 3m(+2m/stack)
   itemStack: 0
-  alertDuration: 3
+  alertDuration: 8
   itemOutlineMaterial: {fileID: 2100000, guid: beaaf0a23b32bc74eb6b85b967db3d75, type: 2}
-  critRateIncrease: 10
-  critDamageIncrease: 0.05
+  gasolineRadius: 3
+  gasolineDamageModifier: 1.5
+  gasolineBurnStack: 5
+  stackGasolineRadius: 2
+  stakGasolineDamageModifier: 0.3
+  stackGasolineBurnStack: 2

@@ -27,6 +27,7 @@ public class CombatController : MonoBehaviour
         attackComboCount = 0;
 
         collisionController.InitCollisionController(player);
+        weaponEffectAnimator.runtimeAnimatorController = wData.effectController;
     }
 
     public void ChangeWeapon(WeaponData newData)

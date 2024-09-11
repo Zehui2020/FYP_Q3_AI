@@ -22,7 +22,7 @@ public class StatusEffectManager : MonoBehaviour
     public StatusEffect freezeStacks;
     public StatusEffect staticStacks;
 
-    public event System.Action<StatusEffect.StatusType> OnApplyStatusEffect;
+    public event System.Action<StatusEffect.StatusType, int> OnApplyStatusEffect;
     public event System.Action<StatusState> OnThresholdReached;
 
     [Header("Status Effect UI")]
@@ -32,7 +32,7 @@ public class StatusEffectManager : MonoBehaviour
 
     public void ApplyStatusEffect(StatusEffect.StatusType statusEffect, int amount)
     {
-        OnApplyStatusEffect?.Invoke(statusEffect);
+        OnApplyStatusEffect?.Invoke(statusEffect, amount);
 
         switch (statusEffect)
         {

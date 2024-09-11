@@ -279,13 +279,13 @@ public class MovementController : MonoBehaviour
             velX = Mathf.Abs(velX);
         }
 
+        if (horizontal < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
+        else
+            transform.localScale = new Vector3(1, 1, 1);
+
         if (maxJumpCount - jumpCount > 1)
         {
-            if (horizontal < 0)
-                transform.localScale = new Vector3(-1, 1, 1);
-            else
-                transform.localScale = new Vector3(1, 1, 1);
-
             animationManager.ChangeAnimation(animationManager.DoubleJump, 0, 0, true);
             playerEffectsController.PlayDoubleJumpPS();
             velX /= 1.25f;

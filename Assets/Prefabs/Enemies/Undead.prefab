@@ -1443,6 +1443,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70579677df0549944a21ca957aa69697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statusEffectManager: {fileID: 0}
   statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
   health: 100
@@ -1472,6 +1473,9 @@ MonoBehaviour:
   breachedMultiplier:
     baseAmount: 1.5
     modifiers: []
+  totalDamageMultiplier:
+    baseAmount: 1
+    modifiers: []
   damageReduction:
     baseAmount: 0
     modifiers: []
@@ -1481,6 +1485,7 @@ MonoBehaviour:
   idleDuration: 1
   patrolMovementSpeed: 2
   chaseMovementSpeed: 5
+  enemyClass: 0
   enemyType: 0
   canUpdate: 1
   animator: {fileID: 3022327548048810499}

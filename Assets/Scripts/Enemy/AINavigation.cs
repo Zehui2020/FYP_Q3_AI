@@ -24,7 +24,7 @@ public class AINavigation : MonoBehaviour
     {
         this.target = target;
 
-        if (!aiPath.enabled)
+        if (aiPath == null || !aiPath.enabled)
             return;
 
         aiPath.canMove = true;
@@ -38,7 +38,7 @@ public class AINavigation : MonoBehaviour
 
     public void StopNavigationUntilResume()
     {
-        if (!aiPath.enabled)
+        if (aiPath == null || !aiPath.enabled)
             return;
 
         aiPath.canMove = false;
@@ -47,7 +47,7 @@ public class AINavigation : MonoBehaviour
 
     public void ResumeNavigationFromStop()
     {
-        if (!aiPath.enabled)
+        if (aiPath == null || !aiPath.enabled)
             return;
 
         aiPath.canMove = true;
@@ -56,7 +56,7 @@ public class AINavigation : MonoBehaviour
 
     public void StopNavigation()
     {
-        if (!aiPath.enabled || stopNavigationUntilResume)
+        if (aiPath == null || !aiPath.enabled || stopNavigationUntilResume)
             return;
 
         aiPath.canMove = false;
@@ -64,7 +64,7 @@ public class AINavigation : MonoBehaviour
 
     public void ResumeNavigation()
     {
-        if (!aiPath.enabled || stopNavigationUntilResume)
+        if (aiPath == null || !aiPath.enabled || stopNavigationUntilResume)
             return;
 
         aiPath.canMove = true;
