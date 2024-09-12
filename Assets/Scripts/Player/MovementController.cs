@@ -225,6 +225,7 @@ public class MovementController : MonoBehaviour
         ledgePosBot = wallHit.point;
         playerCol.isTrigger = true;
         playerRB.gravityScale = 0;
+        CancelDash();
 
         // If facing right
         if (transform.localScale.x > 0)
@@ -395,7 +396,7 @@ public class MovementController : MonoBehaviour
         dashRoutine = null;
     }
 
-    private void CancelDash()
+    public void CancelDash()
     {
         if (dashRoutine != null)
             StopCoroutine(dashRoutine);
@@ -403,6 +404,7 @@ public class MovementController : MonoBehaviour
         playerEffectsController.StopDashPS();
         dashRoutine = null;
         isDashing = false;
+        lockDirection = false;
         playerRB.gravityScale = movementData.gravityScale;
     }
 
@@ -572,6 +574,7 @@ public class MovementController : MonoBehaviour
         canMove = false;
         playerRB.velocity = Vector3.zero;
         playerRB.gravityScale = 0;
+        CancelDash();
     }
 
     public void ResumePlayer()

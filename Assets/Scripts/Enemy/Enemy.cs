@@ -54,8 +54,8 @@ public class Enemy : EnemyStats
         collisionController.InitCollisionController(this);
         player = PlayerController.Instance;
 
-        statusEffectManager.OnThresholdReached += ApplyStatusState;
-        statusEffectManager.OnApplyStatusEffect += ApplyStatusEffect;
+        statusEffectManager.OnThresholdReached += TriggerStatusState;
+        statusEffectManager.OnApplyStatusEffect += TriggerStatusEffect;
 
         onPlayerInChaseRange += () => { isInCombat = true; uiController.SetCanvasActive(true); };
         OnHealthChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };

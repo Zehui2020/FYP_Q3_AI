@@ -33,6 +33,7 @@ public class BaseStats : MonoBehaviour
         public enum DamageSource
         {
             Normal,
+            StatusEffect,
             FrazzledWire
         }
 
@@ -41,7 +42,7 @@ public class BaseStats : MonoBehaviour
         public int counter;
     }
 
-    [HideInInspector] public StatusEffectManager statusEffectManager;
+    [HideInInspector] protected StatusEffectManager statusEffectManager;
     [SerializeField] public ParticleVFXManager particleVFXManager;
     [SerializeField] protected StatusEffectStats statusEffectStats;
     [SerializeField] protected ItemStats itemStats;
@@ -101,7 +102,6 @@ public class BaseStats : MonoBehaviour
             particleVFXManager.StopEverything();
         }
     }
-
     public virtual void TakeTrueShieldDamage(Damage damage)
     {
         shield -= Mathf.CeilToInt(damage.damage);
@@ -124,7 +124,6 @@ public class BaseStats : MonoBehaviour
         damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
         damagePopup.SetupPopup(Mathf.CeilToInt(damage.damage).ToString(), transform.position, Color.blue, new Vector2(1, 2));
     }
-
     public virtual bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
         if (health <= 0)
@@ -192,7 +191,6 @@ public class BaseStats : MonoBehaviour
 
         return true;
     }
-
     public virtual float CalculateDamageDealt(BaseStats target, out bool isCrit, out DamagePopup.DamageType damageType)
     {
         float finalCritRate = critRate.GetTotalModifier();
@@ -222,7 +220,6 @@ public class BaseStats : MonoBehaviour
 
         return totalDamage;
     }
-
     public virtual Damage CalculateProccDamageDealt(BaseStats target, Damage damage, out bool isCrit, out DamagePopup.DamageType damageType)
     {
         float finalCritRate = critRate.GetTotalModifier();
@@ -252,7 +249,6 @@ public class BaseStats : MonoBehaviour
 
         return new Damage(totalDamage);
     }
-
     public int CalculateFinalDamage(BaseStats attacker, float totalDamageDealt)
     {
         if (shield <= 0)
@@ -414,7 +410,7 @@ public class BaseStats : MonoBehaviour
         OnShieldChanged?.Invoke(shieldRestored, shieldLost);
     }
 
-    public virtual void ApplyStatusState(StatusState state)
+    public virtual void TriggerStatusState(StatusState state)
     {
         if (this == null)
             return;
@@ -424,7 +420,7 @@ public class BaseStats : MonoBehaviour
         switch (state)
         {
             case StatusState.BloodLoss:
-                TakeTrueDamage(new Damage(maxHealth * statusEffectStats.bloodLossDamage));
+                TakeTrueDamage(new Damage(Damage.DamageSource.StatusEffect, maxHealth * statusEffectStats.bloodLossDamage));
                 popup.SetupPopup("Blood Loss!", transform.position, Color.red, new Vector2(0, 3));
                 break;
             case StatusState.Frozen:
@@ -450,7 +446,7 @@ public class BaseStats : MonoBehaviour
         }
     }
 
-    public virtual void ApplyStatusEffect(StatusEffect.StatusType statusEffect, int amount)
+    public virtual void TriggerStatusEffect(StatusEffect.StatusType statusEffect, int amount)
     {
         switch (statusEffect)
         {
@@ -464,6 +460,12 @@ public class BaseStats : MonoBehaviour
                     poisonRoutine = StartCoroutine(PoisonRoutine());
                 break;
         }
+    }
+
+    public void ApplyStatusEffect(StatusEffect.StatusType statusEffect, int amount)
+    {
+        if (health > 0)
+            statusEffectManager.ApplyStatusEffect(statusEffect, amount);
     }
 
     public virtual IEnumerator FrozenRoutine()
@@ -497,9 +499,9 @@ public class BaseStats : MonoBehaviour
             count++;
 
             if (shield > 0)
-                TakeTrueShieldDamage(new Damage(Mathf.CeilToInt(maxShield * (statusEffectStats.burnShieldDamage * statusEffectManager.burnStacks.stackCount))));
+                TakeTrueShieldDamage(new Damage(Damage.DamageSource.StatusEffect, Mathf.CeilToInt(maxShield * statusEffectStats.burnShieldDamage)));
             else
-                TakeTrueDamage(new Damage(Mathf.CeilToInt(statusEffectStats.burnHealthDamage * statusEffectManager.burnStacks.stackCount)));
+                TakeTrueDamage(new Damage(Damage.DamageSource.StatusEffect, Mathf.CeilToInt(statusEffectStats.burnHealthDamage)));
 
             yield return new WaitForSeconds(statusEffectStats.burnInterval);
         }
@@ -523,7 +525,7 @@ public class BaseStats : MonoBehaviour
             if (health <= 0)
                 yield break;
 
-            TakeTrueDamage(new Damage(maxHealth * (statusEffectStats.basePoisonHealthDamage + (statusEffectStats.stackPoisonHealthDamage * statusEffectManager.poisonStacks.stackCount))));
+            TakeTrueDamage(new Damage(Damage.DamageSource.StatusEffect, maxHealth * (statusEffectStats.basePoisonHealthDamage + (statusEffectStats.stackPoisonHealthDamage * statusEffectManager.poisonStacks.stackCount))));
             poisonTimer -= statusEffectStats.poisonInterval;
 
             if (poisonTimer > 0)

@@ -42,8 +42,8 @@ public class PlayerController : PlayerStats
         if (proceduralMapGenerator != null)
             proceduralMapGenerator.InitMapGenerator();
 
-        statusEffectManager.OnThresholdReached += ApplyStatusState;
-        statusEffectManager.OnApplyStatusEffect += ApplyStatusEffect;
+        statusEffectManager.OnThresholdReached += TriggerStatusState;
+        statusEffectManager.OnApplyStatusEffect += TriggerStatusEffect;
 
         movementController.OnPlungeEnd += HandlePlungeAttack;
     }
@@ -185,7 +185,7 @@ public class PlayerController : PlayerStats
                         out DamagePopup.DamageType proccDamageType);
 
                     attacker.TakeTrueDamage(proccDamage);
-                    attacker.statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Freeze, itemStats.cramponFreezeStacks);
+                    attacker.ApplyStatusEffect(StatusEffect.StatusType.Freeze, itemStats.cramponFreezeStacks);
                 }
             }
         }
@@ -218,6 +218,8 @@ public class PlayerController : PlayerStats
         damageMultipler.RemoveModifier(itemStats.crudeKnifeDamageModifier);
         // Overloaded Capcitor
         damageMultipler.RemoveModifier(itemStats.capacitorDamageModifier);
+
+        target.ApplyStatusEffect(StatusEffect.StatusType.Burn, 1);
 
         return damage;
     }
@@ -255,6 +257,9 @@ public class PlayerController : PlayerStats
 
     public void OnHitEnemyEvent(BaseStats target, Damage damage, bool isCrit, Vector3 closestPoint)
     {
+        if (damage.damageSource.Equals(Damage.DamageSource.StatusEffect))
+            return;
+
         if (previousDamage.damageSource.Equals(damage.damageSource) && previousDamage.damageSource != Damage.DamageSource.Normal)
             previousDamage.counter++;
         else
@@ -267,17 +272,18 @@ public class PlayerController : PlayerStats
             // Ritual Sickle
             randNum = Random.Range(0, 100);
             if (randNum < itemStats.ritualBleedChance)
-                target.statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Bleed, itemStats.ritualBleedStacks);
+                target.ApplyStatusEffect(StatusEffect.StatusType.Bleed, itemStats.ritualBleedStacks);
         }
 
         // Jagged Dagger
         randNum = Random.Range(0, 100);
         if (randNum < itemStats.daggerBleedChance)
-            target.statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Bleed, 1);
+            target.ApplyStatusEffect(StatusEffect.StatusType.Bleed, 1);
 
         // Frazzled Wire
         randNum = Random.Range(0, 100);
-        if (randNum < itemStats.frazzledWireChance && !previousDamage.damageSource.Equals(Damage.DamageSource.FrazzledWire))
+        if (randNum < itemStats.frazzledWireChance && 
+            !previousDamage.damageSource.Equals(Damage.DamageSource.FrazzledWire))
         {
             totalDamageMultiplier.AddModifier(itemStats.frazzledWireTotalDamageModifier);
 
@@ -295,7 +301,7 @@ public class PlayerController : PlayerStats
                     out DamagePopup.DamageType proccDamageType);
 
                 targetEnemy.TakeDamage(this, proccDamage, proccCrit, targetEnemy.transform.position, proccDamageType);
-                targetEnemy.statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Static, itemStats.frazzledWireStaticStacks);
+                targetEnemy.ApplyStatusEffect(StatusEffect.StatusType.Static, itemStats.frazzledWireStaticStacks);
             }
 
             totalDamageMultiplier.RemoveModifier(itemStats.frazzledWireTotalDamageModifier);
@@ -319,7 +325,7 @@ public class PlayerController : PlayerStats
                 out DamagePopup.DamageType damageType);
 
             targetEnemy.TakeDamage(this, damage, isCrit, enemy.transform.position, damageType);
-            targetEnemy.statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Burn, itemStats.gasolineBurnStacks);
+            targetEnemy.ApplyStatusEffect(StatusEffect.StatusType.Burn, itemStats.gasolineBurnStacks);
         }
     }
 
