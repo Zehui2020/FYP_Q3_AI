@@ -17,8 +17,6 @@ public class RoomGenerator : MonoBehaviour
     private List<Vector2> collapsedTiles = new List<Vector2>();
     private List<int> collapsableTileNum = new List<int>();
 
-    public List<GameObject> testTiles = new List<GameObject>();
-
     private void Start()
     {
         GenerateRooms();
@@ -78,12 +76,6 @@ public class RoomGenerator : MonoBehaviour
         List<GameObject> availableTiles = GetAvailableTilesList();
         // choose random tile
         GameObject tileToSet = availableTiles[Random.Range(0, availableTiles.Count)];
-
-        // debug
-        Debug.Log(tileToSet.name);
-        testTiles = availableTiles;
-        // end debug
-
         if (tileToSet == null)
             return;
         // set room tile

@@ -9,7 +9,8 @@ public class BaseStats : MonoBehaviour
     {
         None,
         Dodge,
-        Block
+        Block,
+        Parry
     }
     protected ImmuneType immuneType;
 
