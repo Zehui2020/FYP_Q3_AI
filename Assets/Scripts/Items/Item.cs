@@ -7,7 +7,7 @@ public class Item : ScriptableObject
     public enum Rarity { Common, Uncommon, Legendary, Special };
     public Rarity itemRarity;
 
-    public enum ItemType { HDHUD, RitualSickle, KnuckleDuster, JaggedDagger, CrudeKnife, FrazzledWire, IcyCrampon, GasolineTank };
+    public enum ItemType { HDHUD, RitualSickle, KnuckleDuster, JaggedDagger, CrudeKnife, FrazzledWire, IcyCrampon, GasolineTank, OverloadedCapacitor };
     public ItemType itemType;
 
     public enum ItemCatagory { Damage, Healing, Utility };

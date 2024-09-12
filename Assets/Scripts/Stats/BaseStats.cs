@@ -42,6 +42,7 @@ public class BaseStats : MonoBehaviour
     }
 
     [HideInInspector] public StatusEffectManager statusEffectManager;
+    [SerializeField] public ParticleVFXManager particleVFXManager;
     [SerializeField] protected StatusEffectStats statusEffectStats;
     [SerializeField] protected ItemStats itemStats;
 
@@ -94,7 +95,11 @@ public class BaseStats : MonoBehaviour
         damagePopup.SetupPopup(Mathf.CeilToInt(damage.damage).ToString(), transform.position, Color.red, new Vector2(1, 2));
 
         if (health <= 0)
+        {
             OnDieEvent?.Invoke(this);
+            statusEffectManager.OnDie();
+            particleVFXManager.StopEverything();
+        }
     }
 
     public virtual void TakeTrueShieldDamage(Damage damage)
@@ -179,7 +184,11 @@ public class BaseStats : MonoBehaviour
         damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(1, 1));
 
         if (health <= 0)
+        {
             OnDieEvent?.Invoke(this);
+            statusEffectManager.OnDie();
+            particleVFXManager.StopEverything();
+        }
 
         return true;
     }
@@ -282,6 +291,9 @@ public class BaseStats : MonoBehaviour
 
         while (timer > 0)
         {
+            if (health <= 0)
+                yield break;
+
             timer -= Time.deltaTime;
             yield return null;
         }
@@ -471,12 +483,17 @@ public class BaseStats : MonoBehaviour
 
     public virtual IEnumerator BurnRoutine()
     {
+        particleVFXManager.OnBurning(statusEffectManager.burnStacks.stackCount);
+
         yield return new WaitForSeconds(0.5f);
 
         int count = 0;
 
         while (count < statusEffectStats.burnsPerStack)
         {
+            if (health <= 0)
+                yield break;
+
             count++;
 
             if (shield > 0)
@@ -487,16 +504,25 @@ public class BaseStats : MonoBehaviour
             yield return new WaitForSeconds(statusEffectStats.burnInterval);
         }
 
-        Debug.Log("REMOVE STACK");
         statusEffectManager.ReduceEffectStack(StatusEffect.StatusType.Burn, 1);
+
+        if (statusEffectManager.burnStacks.stackCount <= 0)
+            particleVFXManager.StopBurning();
+        else
+            particleVFXManager.OnBurning(statusEffectManager.burnStacks.stackCount);
     }
 
     public virtual IEnumerator PoisonRoutine()
     {
+        particleVFXManager.OnPoison();
+
         yield return new WaitForSeconds(0.5f);
 
         while (poisonTimer > 0)
         {
+            if (health <= 0)
+                yield break;
+
             TakeTrueDamage(new Damage(maxHealth * (statusEffectStats.basePoisonHealthDamage + (statusEffectStats.stackPoisonHealthDamage * statusEffectManager.poisonStacks.stackCount))));
             poisonTimer -= statusEffectStats.poisonInterval;
 
@@ -507,5 +533,6 @@ public class BaseStats : MonoBehaviour
         poisonTimer = 0;
         statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Poison);
         poisonRoutine = null;
+        particleVFXManager.StopPoison();
     }
 }

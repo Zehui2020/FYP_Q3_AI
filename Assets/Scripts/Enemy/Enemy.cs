@@ -206,8 +206,10 @@ public class Enemy : EnemyStats
 
     public override IEnumerator FrozenRoutine()
     {
+        particleVFXManager.OnFrozen();
+
         if (aiNavigation != null)
-        aiNavigation.StopNavigationUntilResume();
+            aiNavigation.StopNavigationUntilResume();
 
         isFrozen = true;
         canUpdate = false;
@@ -231,6 +233,7 @@ public class Enemy : EnemyStats
 
         isFrozen = false;
         canUpdate = true;
+        particleVFXManager.StopFrozen();
     }
 
     public override IEnumerator StunnedRoutine()

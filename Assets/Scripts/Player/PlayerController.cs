@@ -206,6 +206,9 @@ public class PlayerController : PlayerStats
         // Crude Knife
         if (Vector2.Distance(transform.position, target.transform.position) <= itemStats.crudeKnifeDistanceCheck)
             damageMultipler.AddModifier(itemStats.crudeKnifeDamageModifier);
+        // Overloaded Capcitor
+        if (target.shield <= 0)
+            damageMultipler.AddModifier(itemStats.capacitorDamageModifier);
 
         float damage = base.CalculateDamageDealt(target, out isCrit, out damageType);
 
@@ -213,12 +216,15 @@ public class PlayerController : PlayerStats
         damageMultipler.RemoveModifier(itemStats.knuckleDusterDamageModifier);
         // CrudeKnife
         damageMultipler.RemoveModifier(itemStats.crudeKnifeDamageModifier);
+        // Overloaded Capcitor
+        damageMultipler.RemoveModifier(itemStats.capacitorDamageModifier);
 
         return damage;
     }
 
     public override IEnumerator FrozenRoutine()
     {
+        particleVFXManager.OnFrozen();
         movementController.StopPlayer();
         isFrozen = true;
 
@@ -226,6 +232,7 @@ public class PlayerController : PlayerStats
 
         movementController.ResumePlayer();
         isFrozen = false;
+        particleVFXManager.StopFrozen();
     }
 
     public override IEnumerator StunnedRoutine()

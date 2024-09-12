@@ -29,6 +29,8 @@ public class ItemStats : ScriptableObject
     public float gasolineDamageModifier;
     public int gasolineBurnStacks;
 
+    public float capacitorDamageModifier;
+
     public void ResetStats()
     {
         ritualBleedChance = 0;
@@ -54,5 +56,7 @@ public class ItemStats : ScriptableObject
         gasolineRadius = 0;
         gasolineDamageModifier = 0;
         gasolineBurnStacks = 0;
+
+        capacitorDamageModifier = 0;
     }
 }
