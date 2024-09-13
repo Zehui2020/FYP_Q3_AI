@@ -14,6 +14,7 @@ public class ItemPickup : PooledObject
         item = newItem;
         startPos = transform.position;
         spriteRenderer.sprite = item.spriteIcon;
+        spriteRenderer.material = newItem.itemOutlineMaterial;
     }
 
     public void PickupItem()

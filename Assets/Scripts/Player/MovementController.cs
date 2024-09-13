@@ -225,6 +225,7 @@ public class MovementController : MonoBehaviour
         ledgePosBot = wallHit.point;
         playerCol.isTrigger = true;
         playerRB.gravityScale = 0;
+        CancelDash();
 
         // If facing right
         if (transform.localScale.x > 0)
@@ -279,13 +280,13 @@ public class MovementController : MonoBehaviour
             velX = Mathf.Abs(velX);
         }
 
+        if (horizontal < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
+        else
+            transform.localScale = new Vector3(1, 1, 1);
+
         if (maxJumpCount - jumpCount > 1)
         {
-            if (horizontal < 0)
-                transform.localScale = new Vector3(-1, 1, 1);
-            else
-                transform.localScale = new Vector3(1, 1, 1);
-
             animationManager.ChangeAnimation(animationManager.DoubleJump, 0, 0, true);
             playerEffectsController.PlayDoubleJumpPS();
             velX /= 1.25f;
@@ -395,7 +396,7 @@ public class MovementController : MonoBehaviour
         dashRoutine = null;
     }
 
-    private void CancelDash()
+    public void CancelDash()
     {
         if (dashRoutine != null)
             StopCoroutine(dashRoutine);
@@ -403,6 +404,7 @@ public class MovementController : MonoBehaviour
         playerEffectsController.StopDashPS();
         dashRoutine = null;
         isDashing = false;
+        lockDirection = false;
         playerRB.gravityScale = movementData.gravityScale;
     }
 
@@ -572,6 +574,7 @@ public class MovementController : MonoBehaviour
         canMove = false;
         playerRB.velocity = Vector3.zero;
         playerRB.gravityScale = 0;
+        CancelDash();
     }
 
     public void ResumePlayer()

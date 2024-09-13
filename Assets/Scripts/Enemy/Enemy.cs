@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Enemy : EnemyStats
 {
+    public enum EnemyClass { Undead, Slime }
+    public EnemyClass enemyClass;
+
     public enum EnemyType { Normal, Elite, Boss }
     public EnemyType enemyType;
 
@@ -27,6 +30,8 @@ public class Enemy : EnemyStats
     protected event System.Action onPlayerInChaseRange;
     protected event System.Action onReachChaseTarget;
 
+    public event System.Action<BaseStats, Damage, bool, Vector3> onHitEvent;
+
     private Coroutine idleRoutine;
     private bool isInCombat = false;
 
@@ -49,13 +54,16 @@ public class Enemy : EnemyStats
         collisionController.InitCollisionController(this);
         player = PlayerController.Instance;
 
-        statusEffectManager.OnThresholdReached += ApplyStatusState;
-        statusEffectManager.OnApplyStatusEffect += ApplyStatusEffect;
+        statusEffectManager.OnThresholdReached += TriggerStatusState;
+        statusEffectManager.OnApplyStatusEffect += TriggerStatusEffect;
 
         onPlayerInChaseRange += () => { isInCombat = true; uiController.SetCanvasActive(true); };
         OnHealthChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };
         OnShieldChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnShieldChanged(shield, maxShield, increase, isCrit); };
         OnBreached += (multiplier) => { statusEffectManager.AddEffectUI(StatusEffectUI.StatusEffectType.Breached, 0); PlayerEffectsController.Instance.HitStop(0.2f); };
+
+        onHitEvent += player.OnHitEnemyEvent;
+        OnDieEvent += player.OnEnemyDie;
     }
 
     private void Update()
@@ -66,19 +74,24 @@ public class Enemy : EnemyStats
         UpdateEnemy();
     }
 
-    public override bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
+    public override void TakeTrueDamage(Damage damage)
     {
-        bool tookDamage = base.TakeDamage(damage, isCrit, closestPoint, damageType);
+        base.TakeTrueDamage(damage);
+        onHitEvent?.Invoke(this, damage, false, transform.position);
+    }
+    public override void TakeTrueShieldDamage(Damage damage)
+    {
+        base.TakeTrueShieldDamage(damage);
+        onHitEvent?.Invoke(this, damage, false, transform.position);
+    }
 
-        if (!tookDamage)
-            return false;
+    public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
+    {
+        bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
 
-        if (isCrit)
+        if (tookDamage)
         {
-            // Ritual Sickle
-            int randNum = Random.Range(0, 100);
-            if (randNum < itemStats.ritualBleedChance)
-                statusEffectManager.ApplyStatusEffect(StatusEffect.StatusType.Bleed, itemStats.ritualBleedStacks);
+            onHitEvent?.Invoke(this, damage, isCrit, closestPoint);
         }
 
         return tookDamage;
@@ -89,9 +102,8 @@ public class Enemy : EnemyStats
         statusEffectManager.UpdateStatusEffects();
 
         CheckPlayerOverlap();
-        if (!isInCombat)
+        if (!isInCombat || health <= 0)
             uiController.SetCanvasActive(false);
-
     }
 
     public void OnDamageEventStart(int col)
@@ -194,7 +206,11 @@ public class Enemy : EnemyStats
 
     public override IEnumerator FrozenRoutine()
     {
-        aiNavigation.StopNavigationUntilResume();
+        particleVFXManager.OnFrozen();
+
+        if (aiNavigation != null)
+            aiNavigation.StopNavigationUntilResume();
+
         isFrozen = true;
         canUpdate = false;
 
@@ -212,9 +228,12 @@ public class Enemy : EnemyStats
         if (health <= 0)
             yield break;
 
-        aiNavigation.ResumeNavigationFromStop();
+        if (!isInCombat && aiNavigation != null)
+            aiNavigation.ResumeNavigationFromStop();
+
         isFrozen = false;
         canUpdate = true;
+        particleVFXManager.StopFrozen();
     }
 
     public override IEnumerator StunnedRoutine()
@@ -253,7 +272,8 @@ public class Enemy : EnemyStats
         if (health <= 0)
             yield break;
 
-        aiNavigation.ResumeNavigationFromStop();
+        if (!isInCombat)
+            aiNavigation.ResumeNavigationFromStop();
         canUpdate = true;
     }
 
@@ -273,7 +293,8 @@ public class Enemy : EnemyStats
         if (health <= 0)
             yield break;
 
-        aiNavigation.ResumeNavigationFromStop();
+        if (!isInCombat)
+            aiNavigation.ResumeNavigationFromStop();
         canUpdate = true;
     }
 
@@ -283,5 +304,6 @@ public class Enemy : EnemyStats
         onFinishIdle = null;
         onPlayerInChaseRange = null;
         onReachChaseTarget = null;
+        onHitEvent = null;
     }
 }

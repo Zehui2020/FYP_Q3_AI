@@ -15,9 +15,13 @@ public class ComfyItemGenration : ComfyManager
     public List<ItemPrompt> itemPrompts = new();
     private int currentPromptIndex = 0;
 
+    [SerializeField] private bool queueOnStart = false;
+
     private void Start()
     {
         InitManager();
+        if (queueOnStart)
+            QueueItems();
     }
 
     public void QueueItems()

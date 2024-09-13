@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class ItemManager : MonoBehaviour
 {
@@ -30,6 +28,7 @@ public class ItemManager : MonoBehaviour
 
         foreach (Item item in allItems)
         {
+            item.itemStack = 0;
             item.spriteIcon = imageSaver.GetSpriteFromLocalDisk(item.itemType.ToString());
         }
     }
@@ -66,7 +65,6 @@ public class ItemManager : MonoBehaviour
         newItemUI.SetupItemUI(item);
         itemUIs.Add(newItemUI);
     }
-
 
     public void DecreaseStack(Item itemToRemove)
     {
@@ -129,5 +127,25 @@ public class ItemManager : MonoBehaviour
         }
 
         return items;
+    }
+
+    // For dev console
+
+    public void GiveItem(string itemName, string amount)
+    {
+        foreach (Item item in allItems)
+        {
+            if (!item.itemType.ToString().Equals(itemName))
+                continue;
+
+            for (int i = 0; i < int.Parse(amount); i++)
+                AddItem(item);
+        }
+    }
+
+    public void GiveAllItems()
+    {
+        foreach (Item item in allItems)
+            AddItem(item);
     }
 }

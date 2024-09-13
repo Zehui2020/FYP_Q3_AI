@@ -12,10 +12,12 @@ public class PlayerController : PlayerStats
     private ItemManager itemManager;
     private PlayerEffectsController playerEffectsController;
     [SerializeField] private ProceduralMapGenerator proceduralMapGenerator;
+    [SerializeField] private LayerMask enemyLayer;
 
     private IInteractable currentInteractable;
 
     private float ropeX;
+    private Damage previousDamage;
 
     private void Awake()
     {
@@ -40,8 +42,8 @@ public class PlayerController : PlayerStats
         if (proceduralMapGenerator != null)
             proceduralMapGenerator.InitMapGenerator();
 
-        statusEffectManager.OnThresholdReached += ApplyStatusState;
-        statusEffectManager.OnApplyStatusEffect += ApplyStatusEffect;
+        statusEffectManager.OnThresholdReached += TriggerStatusState;
+        statusEffectManager.OnApplyStatusEffect += TriggerStatusEffect;
 
         movementController.OnPlungeEnd += HandlePlungeAttack;
     }
@@ -52,6 +54,15 @@ public class PlayerController : PlayerStats
 
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+            ConsoleManager.Instance.SetConsole();
+
+        if (Input.GetKeyDown(KeyCode.Return))
+            ConsoleManager.Instance.OnInputCommand();
+
+        if (ConsoleManager.Instance.gameObject.activeInHierarchy)
+            return;
 
         if (Input.GetKeyDown(KeyCode.Space) && !Input.GetKey(KeyCode.S))
             movementController.HandleJump(horizontal);
@@ -79,6 +90,17 @@ public class PlayerController : PlayerStats
         {
             combatController.HandleAttack();
             movementController.StopPlayer();
+        }
+        else if (Input.GetMouseButton(1) && !movementController.isClimbingLedge)
+        {
+            if (combatController.HandleParry())
+            {
+                movementController.StopPlayer();
+            }
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            combatController.OnReleaseParry();
         }
 
         if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.Space))
@@ -144,15 +166,14 @@ public class PlayerController : PlayerStats
     {
         fadeTransition.FadeIn();
     }
-
     public void FadeOut()
     {
         fadeTransition.FadeOut();
     }
 
-    public override bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
+    public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
-        bool tookDamage = base.TakeDamage(damage, isCrit, closestPoint, damageType);
+        bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
 
         if (tookDamage)
         {
@@ -162,6 +183,22 @@ public class PlayerController : PlayerStats
         else
         {
             playerEffectsController.HitStop(0.1f);
+
+            if (immuneType == ImmuneType.Dodge)
+            {
+                // Icy Crampon
+                int randNum = Random.Range(0, 100);
+                if (randNum < itemStats.cramponChance)
+                {
+                    Damage proccDamage = CalculateProccDamageDealt(attacker,
+                        new Damage((attack + attackIncrease.GetTotalModifier()) * itemStats.cramponDamageModifier),
+                        out bool proccCrit,
+                        out DamagePopup.DamageType proccDamageType);
+
+                    attacker.TakeTrueDamage(proccDamage);
+                    attacker.ApplyStatusEffect(StatusEffect.StatusType.Freeze, itemStats.cramponFreezeStacks);
+                }
+            }
         }
 
         if (health <= 0)
@@ -174,25 +211,33 @@ public class PlayerController : PlayerStats
 
     public override float CalculateDamageDealt(BaseStats target, out bool isCrit, out DamagePopup.DamageType damageType)
     {
-        float knuckleModifier = 0;
-
         // Knuckle Duster
         if (target.health >= target.maxHealth * itemStats.knucleDusterThreshold && target.shield <= 0)
-        {
-            knuckleModifier = itemStats.knuckleDusterDamageModifier;
-            damageMultipler.AddModifier(knuckleModifier);
-        }
+            damageMultipler.AddModifier(itemStats.knuckleDusterDamageModifier);
+        // Crude Knife
+        if (Vector2.Distance(transform.position, target.transform.position) <= itemStats.crudeKnifeDistanceCheck)
+            damageMultipler.AddModifier(itemStats.crudeKnifeDamageModifier);
+        // Overloaded Capcitor
+        if (target.shield <= 0)
+            damageMultipler.AddModifier(itemStats.capacitorDamageModifier);
 
         float damage = base.CalculateDamageDealt(target, out isCrit, out damageType);
 
         // Knuckle Duster
-        damageMultipler.RemoveModifier(knuckleModifier);
+        damageMultipler.RemoveModifier(itemStats.knuckleDusterDamageModifier);
+        // CrudeKnife
+        damageMultipler.RemoveModifier(itemStats.crudeKnifeDamageModifier);
+        // Overloaded Capcitor
+        damageMultipler.RemoveModifier(itemStats.capacitorDamageModifier);
+
+        target.ApplyStatusEffect(StatusEffect.StatusType.Burn, 1);
 
         return damage;
     }
 
     public override IEnumerator FrozenRoutine()
     {
+        particleVFXManager.OnFrozen();
         movementController.StopPlayer();
         isFrozen = true;
 
@@ -200,6 +245,7 @@ public class PlayerController : PlayerStats
 
         movementController.ResumePlayer();
         isFrozen = false;
+        particleVFXManager.StopFrozen();
     }
 
     public override IEnumerator StunnedRoutine()
@@ -218,5 +264,90 @@ public class PlayerController : PlayerStats
         yield return new WaitForSeconds(statusEffectStats.stunDuration);
 
         movementController.ResumePlayer();
+    }
+
+    public void OnHitEnemyEvent(BaseStats target, Damage damage, bool isCrit, Vector3 closestPoint)
+    {
+        if (damage.damageSource.Equals(Damage.DamageSource.StatusEffect))
+            return;
+
+        if (previousDamage.damageSource.Equals(damage.damageSource) && previousDamage.damageSource != Damage.DamageSource.Normal)
+            previousDamage.counter++;
+        else
+            previousDamage = damage;
+
+        int randNum;
+
+        if (isCrit)
+        {
+            // Ritual Sickle
+            randNum = Random.Range(0, 100);
+            if (randNum < itemStats.ritualBleedChance)
+                target.ApplyStatusEffect(StatusEffect.StatusType.Bleed, itemStats.ritualBleedStacks);
+        }
+
+        // Jagged Dagger
+        randNum = Random.Range(0, 100);
+        if (randNum < itemStats.daggerBleedChance)
+            target.ApplyStatusEffect(StatusEffect.StatusType.Bleed, 1);
+
+        // Frazzled Wire
+        randNum = Random.Range(0, 100);
+        if (randNum < itemStats.frazzledWireChance && 
+            !previousDamage.damageSource.Equals(Damage.DamageSource.FrazzledWire))
+        {
+            totalDamageMultiplier.AddModifier(itemStats.frazzledWireTotalDamageModifier);
+
+            Collider2D[] enemiesInRange = Physics2D.OverlapCircleAll(transform.position, itemStats.frazzledWireRange, enemyLayer);
+            foreach (Collider2D enemy in enemiesInRange)
+            {
+                Enemy targetEnemy = enemy.GetComponent<Enemy>();
+
+                if (targetEnemy == null)
+                    continue;
+
+                Damage proccDamage = CalculateProccDamageDealt(targetEnemy,
+                    new Damage(Damage.DamageSource.FrazzledWire, damage.damage),
+                    out bool proccCrit,
+                    out DamagePopup.DamageType proccDamageType);
+
+                targetEnemy.TakeDamage(this, proccDamage, proccCrit, targetEnemy.transform.position, proccDamageType);
+                targetEnemy.ApplyStatusEffect(StatusEffect.StatusType.Static, itemStats.frazzledWireStaticStacks);
+            }
+
+            totalDamageMultiplier.RemoveModifier(itemStats.frazzledWireTotalDamageModifier);
+        }
+    }
+    public void OnEnemyDie(BaseStats target)
+    {
+        // Gasoline
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(target.transform.position, itemStats.gasolineRadius, enemyLayer);
+
+        foreach (Collider2D enemy in enemies)
+        {
+            Enemy targetEnemy = enemy.GetComponent<Enemy>();
+
+            if (targetEnemy == null || targetEnemy.Equals(target))
+                continue;
+
+            Damage damage = CalculateProccDamageDealt(targetEnemy, 
+                new Damage((attack + attackIncrease.GetTotalModifier()) * itemStats.gasolineDamageModifier), 
+                out bool isCrit, 
+                out DamagePopup.DamageType damageType);
+
+            targetEnemy.TakeDamage(this, damage, isCrit, enemy.transform.position, damageType);
+            targetEnemy.ApplyStatusEffect(StatusEffect.StatusType.Burn, itemStats.gasolineBurnStacks);
+        }
+    }
+
+    // For dev console
+    public void GiveItem(string itemName, string amount)
+    {
+        itemManager.GiveItem(itemName, amount);
+    }
+
+    public void GiveAllItems()
+    {
+        itemManager.GiveAllItems();
     }
 }

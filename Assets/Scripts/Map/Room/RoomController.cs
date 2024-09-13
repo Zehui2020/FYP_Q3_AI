@@ -20,7 +20,7 @@ public class RoomController : MonoBehaviour
     {
         for (int i = 0; i < doors.Count; i++)
         {
-            doors[i].SetActive(isSpaceOccupied[i]);
+            doors[i].SetActive(!isSpaceOccupied[i]);
         }
     }
 

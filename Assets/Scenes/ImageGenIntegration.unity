@@ -352,13 +352,14 @@ MonoBehaviour:
     \"Pprompt\",\r\n      \"clip\": [\r\n        \"4\",\r\n        1\r\n      ]\r\n   
     },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\":
     \"Prompt\"\r\n    }\r\n  },\r\n  \"7\": {\r\n    \"inputs\": {\r\n      \"text\":
-    \"Nprompt\",\r\n      \"clip\": [\r\n        \"4\",\r\n        1\r\n      ]\r\n   
-    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\":
-    \"Negative Prompt\"\r\n    }\r\n  },\r\n  \"8\": {\r\n    \"inputs\": {\r\n     
-    \"samples\": [\r\n        \"3\",\r\n        0\r\n      ],\r\n      \"vae\": [\r\n       
-    \"4\",\r\n        2\r\n      ]\r\n    },\r\n    \"class_type\": \"VAEDecode\",\r\n   
-    \"_meta\": {\r\n      \"title\": \"VAE Decode\"\r\n    }\r\n  },\r\n  \"11\":
-    {\r\n    \"inputs\": {\r\n      \"control_net_name\": \"controlnet-canny-sdxl-1.0\\\\diffusion_pytorch_model.fp16.safetensors\"\r\n   
+    \"human, hands, face, legs, background, shadow, shadows, drop shadow, aura, glow\",\r\n     
+    \"clip\": [\r\n        \"4\",\r\n        1\r\n      ]\r\n    },\r\n    \"class_type\":
+    \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\": \"Negative Prompt\"\r\n   
+    }\r\n  },\r\n  \"8\": {\r\n    \"inputs\": {\r\n      \"samples\": [\r\n       
+    \"3\",\r\n        0\r\n      ],\r\n      \"vae\": [\r\n        \"4\",\r\n       
+    2\r\n      ]\r\n    },\r\n    \"class_type\": \"VAEDecode\",\r\n    \"_meta\":
+    {\r\n      \"title\": \"VAE Decode\"\r\n    }\r\n  },\r\n  \"11\": {\r\n    \"inputs\":
+    {\r\n      \"control_net_name\": \"controlnet-canny-sdxl-1.0\\\\diffusion_pytorch_model.fp16.safetensors\"\r\n   
     },\r\n    \"class_type\": \"ControlNetLoader\",\r\n    \"_meta\": {\r\n     
     \"title\": \"Load ControlNet Model\"\r\n    }\r\n  },\r\n  \"12\": {\r\n    \"inputs\":
     {\r\n      \"strength\": 1,\r\n      \"start_percent\": 0,\r\n      \"end_percent\":
@@ -432,10 +433,29 @@ MonoBehaviour:
   - Pprompt: pixel art, sickle, transparent background
     controlNetImage: item_sickle
     filename: 1
-  - Pprompt: pixel art, knuckle duster, rusted metal, transparent background, solid
-      background color, no background
-    controlNetImage: item_knuckle_duster
-    filename: 2
+  - Pprompt: pixel art, dagger, transparent background, solid color
+    controlNetImage: item_dagger
+    filename: 3
+  - Pprompt: pixel art, crude knife, transparent background, solid color
+    controlNetImage: item_crude_knife
+    filename: 4
+  - Pprompt: pixel art, copper frazzled electric wire, transparent background, solid
+      color background, no background
+    controlNetImage: item_frazzled_wire
+    filename: 5
+  - Pprompt: pixel art, ice crampon, transparent background, solid color background,
+      no background
+    controlNetImage: item_crampon
+    filename: 6
+  - Pprompt: pixel art, gasoline tank, transparent background, solid color background,
+      no background
+    controlNetImage: item_gasoline_tank
+    filename: 7
+  - Pprompt: pixel art, overloaded capacitor, transparent background, solid color
+      background, no background
+    controlNetImage: item_gasoline_tank
+    filename: 8
+  queueOnStart: 1
 --- !u!1 &32123484
 GameObject:
   m_ObjectHideFlags: 0

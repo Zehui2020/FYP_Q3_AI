@@ -9,11 +9,42 @@ public class BaseStats : MonoBehaviour
     {
         None,
         Dodge,
-        Block
+        Block,
+        Parry
     }
-    private ImmuneType immuneType;
+    protected ImmuneType immuneType;
 
-    protected StatusEffectManager statusEffectManager;
+    public struct Damage
+    {
+        // Constructor for normal damage
+        public Damage(float damage)
+        {
+            damageSource = DamageSource.Normal;
+            this.damage = damage;
+            counter = 0;
+        }
+
+        public Damage(DamageSource damageSource, float damage)
+        {
+            this.damageSource = damageSource;
+            this.damage = damage;
+            counter = 0;
+        }
+
+        public enum DamageSource
+        {
+            Normal,
+            StatusEffect,
+            FrazzledWire
+        }
+
+        public DamageSource damageSource;
+        public float damage;
+        public int counter;
+    }
+
+    [HideInInspector] protected StatusEffectManager statusEffectManager;
+    [SerializeField] public ParticleVFXManager particleVFXManager;
     [SerializeField] protected StatusEffectStats statusEffectStats;
     [SerializeField] protected ItemStats itemStats;
 
@@ -30,12 +61,12 @@ public class BaseStats : MonoBehaviour
 
     [Header("Modifiers")]
     public StatModifier attackIncrease = new();
-
     public StatModifier critRate = new();
     public StatModifier critDamage = new();
     public StatModifier comboDamageMultipler = new();
     public StatModifier damageMultipler = new();
     public StatModifier breachedMultiplier = new();
+    public StatModifier totalDamageMultiplier = new();
     public StatModifier damageReduction = new();
 
     private Coroutine immuneRoutine;
@@ -52,26 +83,29 @@ public class BaseStats : MonoBehaviour
     public event System.Action<bool, bool> OnHealthChanged;
     public event System.Action<bool, bool> OnShieldChanged;
     public event System.Action<float> OnBreached;
-    public event System.Action OnDieEvent;
+    public event System.Action<BaseStats> OnDieEvent;
 
-    public void TakeTrueDamage(float damage)
+    public virtual void TakeTrueDamage(Damage damage)
     {
         if (health <= 0)
             return;
 
-        health -= Mathf.CeilToInt(damage);
+        health -= Mathf.CeilToInt(damage.damage);
         OnHealthChanged?.Invoke(false, true);
 
         DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-        damagePopup.SetupPopup(Mathf.CeilToInt(damage).ToString(), transform.position, Color.red, new Vector2(1, 2));
+        damagePopup.SetupPopup(Mathf.CeilToInt(damage.damage).ToString(), transform.position, Color.red, new Vector2(1, 2));
 
         if (health <= 0)
-            OnDieEvent?.Invoke();
+        {
+            OnDieEvent?.Invoke(this);
+            statusEffectManager.OnDie();
+            particleVFXManager.StopEverything();
+        }
     }
-
-    public void TakeShieldDamage(float damage)
+    public virtual void TakeTrueShieldDamage(Damage damage)
     {
-        shield -= Mathf.CeilToInt(damage);
+        shield -= Mathf.CeilToInt(damage.damage);
         OnShieldChanged?.Invoke(false, true);
 
         DamagePopup damagePopup;
@@ -89,10 +123,9 @@ public class BaseStats : MonoBehaviour
         shieldRegenRoutine = StartCoroutine(ShieldRegenRoutine());
 
         damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-        damagePopup.SetupPopup(Mathf.CeilToInt(damage).ToString(), transform.position, Color.blue, new Vector2(1, 2));
+        damagePopup.SetupPopup(Mathf.CeilToInt(damage.damage).ToString(), transform.position, Color.blue, new Vector2(1, 2));
     }
-
-    public virtual bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
+    public virtual bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
         if (health <= 0)
             return false;
@@ -122,7 +155,7 @@ public class BaseStats : MonoBehaviour
 
         DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
 
-        int finalDamage = CalculateFinalDamage(damage);
+        int finalDamage = CalculateFinalDamage(attacker, damage.damage);
 
         // Check for shield active
         if (shield > 0)
@@ -151,11 +184,14 @@ public class BaseStats : MonoBehaviour
         damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(1, 1));
 
         if (health <= 0)
-            OnDieEvent?.Invoke();
+        {
+            OnDieEvent?.Invoke(this);
+            statusEffectManager.OnDie();
+            particleVFXManager.StopEverything();
+        }
 
         return true;
     }
-
     public virtual float CalculateDamageDealt(BaseStats target, out bool isCrit, out DamagePopup.DamageType damageType)
     {
         float finalCritRate = critRate.GetTotalModifier();
@@ -185,13 +221,42 @@ public class BaseStats : MonoBehaviour
 
         return totalDamage;
     }
+    public virtual Damage CalculateProccDamageDealt(BaseStats target, Damage damage, out bool isCrit, out DamagePopup.DamageType damageType)
+    {
+        float finalCritRate = critRate.GetTotalModifier();
+        float finalCritDamage = 1;
+        // Offense
+        // Crit Calculation
 
-    public int CalculateFinalDamage(float totalDamageDealt)
+        if (target.isFrozen)
+        {
+            finalCritRate += target.statusEffectStats.frozenCritRate;
+            finalCritDamage = critDamage.GetTotalModifier() + target.statusEffectStats.frozenCritDmg;
+        }
+
+        if (Random.Range(0, 100) < finalCritRate)
+        {
+            finalCritDamage = critDamage.GetTotalModifier();
+            damageType = DamagePopup.DamageType.Crit;
+            isCrit = true;
+        }
+        else
+        {
+            damageType = DamagePopup.DamageType.Health;
+            isCrit = false;
+        }
+
+        float totalDamage = damage.damage * damageMultipler.GetTotalModifier() * finalCritDamage;
+
+        return new Damage(totalDamage);
+    }
+    public int CalculateFinalDamage(BaseStats attacker, float totalDamageDealt)
     {
         if (shield <= 0)
             totalDamageDealt *= breachedMultiplier.GetTotalModifier();
 
         totalDamageDealt *= (1 - damageReduction.GetTotalModifier());
+        totalDamageDealt *= attacker.totalDamageMultiplier.GetTotalModifier();
 
         return Mathf.CeilToInt(totalDamageDealt);
     }
@@ -223,6 +288,9 @@ public class BaseStats : MonoBehaviour
 
         while (timer > 0)
         {
+            if (health <= 0)
+                yield break;
+
             timer -= Time.deltaTime;
             yield return null;
         }
@@ -343,14 +411,17 @@ public class BaseStats : MonoBehaviour
         OnShieldChanged?.Invoke(shieldRestored, shieldLost);
     }
 
-    public virtual void ApplyStatusState(StatusState state)
+    public virtual void TriggerStatusState(StatusState state)
     {
+        if (this == null)
+            return;
+
         DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
 
         switch (state)
         {
             case StatusState.BloodLoss:
-                TakeTrueDamage(maxHealth * statusEffectStats.bloodLossDamage);
+                TakeTrueDamage(new Damage(Damage.DamageSource.StatusEffect, maxHealth * statusEffectStats.bloodLossDamage));
                 popup.SetupPopup("Blood Loss!", transform.position, Color.red, new Vector2(0, 3));
                 break;
             case StatusState.Frozen:
@@ -376,12 +447,13 @@ public class BaseStats : MonoBehaviour
         }
     }
 
-    public virtual void ApplyStatusEffect(StatusEffect.StatusType statusEffect)
+    public virtual void TriggerStatusEffect(StatusEffect.StatusType statusEffect, int amount)
     {
         switch (statusEffect)
         {
             case StatusEffect.StatusType.Burn:
-                StartCoroutine(BurnRoutine());
+                for (int i = 0; i < amount; i++)
+                    StartCoroutine(BurnRoutine());
                 break;
             case StatusEffect.StatusType.Poison:
                 poisonTimer = statusEffectStats.poisonDuration;
@@ -389,6 +461,12 @@ public class BaseStats : MonoBehaviour
                     poisonRoutine = StartCoroutine(PoisonRoutine());
                 break;
         }
+    }
+
+    public void ApplyStatusEffect(StatusEffect.StatusType statusEffect, int amount)
+    {
+        if (health > 0)
+            statusEffectManager.ApplyStatusEffect(statusEffect, amount);
     }
 
     public virtual IEnumerator FrozenRoutine()
@@ -408,32 +486,47 @@ public class BaseStats : MonoBehaviour
 
     public virtual IEnumerator BurnRoutine()
     {
+        particleVFXManager.OnBurning(statusEffectManager.burnStacks.stackCount);
+
         yield return new WaitForSeconds(0.5f);
 
         int count = 0;
 
         while (count < statusEffectStats.burnsPerStack)
         {
+            if (health <= 0)
+                yield break;
+
             count++;
 
             if (shield > 0)
-                TakeShieldDamage(Mathf.CeilToInt(maxShield * (statusEffectStats.burnShieldDamage * statusEffectManager.burnStacks.stackCount)));
+                TakeTrueShieldDamage(new Damage(Damage.DamageSource.StatusEffect, Mathf.CeilToInt(maxShield * statusEffectStats.burnShieldDamage)));
             else
-                TakeTrueDamage(Mathf.CeilToInt(statusEffectStats.burnHealthDamage * statusEffectManager.burnStacks.stackCount));
+                TakeTrueDamage(new Damage(Damage.DamageSource.StatusEffect, Mathf.CeilToInt(statusEffectStats.burnHealthDamage)));
 
             yield return new WaitForSeconds(statusEffectStats.burnInterval);
         }
 
         statusEffectManager.ReduceEffectStack(StatusEffect.StatusType.Burn, 1);
+
+        if (statusEffectManager.burnStacks.stackCount <= 0)
+            particleVFXManager.StopBurning();
+        else
+            particleVFXManager.OnBurning(statusEffectManager.burnStacks.stackCount);
     }
 
     public virtual IEnumerator PoisonRoutine()
     {
+        particleVFXManager.OnPoison();
+
         yield return new WaitForSeconds(0.5f);
 
         while (poisonTimer > 0)
         {
-            TakeTrueDamage(maxHealth * (statusEffectStats.basePoisonHealthDamage + (statusEffectStats.stackPoisonHealthDamage * statusEffectManager.poisonStacks.stackCount)));
+            if (health <= 0)
+                yield break;
+
+            TakeTrueDamage(new Damage(Damage.DamageSource.StatusEffect, maxHealth * (statusEffectStats.basePoisonHealthDamage + (statusEffectStats.stackPoisonHealthDamage * statusEffectManager.poisonStacks.stackCount))));
             poisonTimer -= statusEffectStats.poisonInterval;
 
             if (poisonTimer > 0)
@@ -443,5 +536,6 @@ public class BaseStats : MonoBehaviour
         poisonTimer = 0;
         statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Poison);
         poisonRoutine = null;
+        particleVFXManager.StopPoison();
     }
 }
