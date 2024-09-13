@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimationManager : MonoBehaviour
@@ -45,6 +43,9 @@ public class AnimationManager : MonoBehaviour
         if (Time.time < transitionDelay)
             return;
 
+        if (state != Attacking)
+            animator.speed = 1;
+
         // Add transition delay
         transitionDelay = Time.time + delayDuration;
 
@@ -68,8 +69,9 @@ public class AnimationManager : MonoBehaviour
         return Attacking;
     }
 
-    public void SetAttackAnimationClip(int animation)
+    public void SetAttackAnimationClip(int animation, float attackSpeed)
     {
         Attacking = animation;
+        animator.speed = attackSpeed;
     }
 }

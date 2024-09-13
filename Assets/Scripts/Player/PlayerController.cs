@@ -3,6 +3,13 @@ using UnityEngine;
 
 public class PlayerController : PlayerStats
 {
+    public enum PlayerStates
+    {
+        Movement,
+        Combat
+    }
+    public PlayerStates currentState;
+
     public static PlayerController Instance;
 
     private MovementController movementController;
@@ -15,7 +22,6 @@ public class PlayerController : PlayerStats
     [SerializeField] private LayerMask enemyLayer;
 
     private IInteractable currentInteractable;
-
     private float ropeX;
     private Damage previousDamage;
 
@@ -35,7 +41,7 @@ public class PlayerController : PlayerStats
         playerEffectsController = GetComponent<PlayerEffectsController>();
 
         itemManager.InitItemManager();
-        movementController.InitializeMovementController(playerEffectsController);
+        movementController.InitializeMovementController();
         combatController.InitializeCombatController(this);
         abilityController.InitializeAbilityController();
         playerEffectsController.InitializePlayerEffectsController();
@@ -45,6 +51,7 @@ public class PlayerController : PlayerStats
         statusEffectManager.OnThresholdReached += TriggerStatusState;
         statusEffectManager.OnApplyStatusEffect += TriggerStatusEffect;
 
+        combatController.OnAttackReset += () => { currentState = PlayerStates.Movement; };
         movementController.OnPlungeEnd += HandlePlungeAttack;
     }
 
@@ -64,20 +71,75 @@ public class PlayerController : PlayerStats
         if (ConsoleManager.Instance.gameObject.activeInHierarchy)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Space) && !Input.GetKey(KeyCode.S))
-            movementController.HandleJump(horizontal);
+        // Combat Inputs
+        if (Input.GetMouseButton(0))
+        {
+            if (movementController.currentState == MovementController.MovementState.GroundDash ||
+                movementController.currentState == MovementController.MovementState.AirDash)
+                return;
+
+            currentState = PlayerStates.Combat;
+            combatController.HandleAttack();
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            combatController.ResetComboAttack();
+        }
+        else if (Input.GetMouseButton(1))
+        {
+            currentState = PlayerStates.Combat;
+            combatController.HandleParry();
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            currentState = PlayerStates.Movement;
+            combatController.OnReleaseParry();
+        }
+
+        // Movment Inputs
+        if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.Space))
+        {
+            currentState = PlayerStates.Movement;
+            combatController.HandlePlungeAttack();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            currentState = PlayerStates.Movement;
+            movementController.OnJump(horizontal);
+        }
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
+            currentState = PlayerStates.Movement;
             movementController.HandleDash(horizontal);
-
-            if (movementController.isPlunging)
-                combatController.CancelPlungeAttack();
         }
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            currentState = PlayerStates.Movement;
             movementController.HandleRoll();
+        }
 
+        if (currentState == PlayerStates.Movement)
+        {
+            if (!movementController.canMove)
+            {
+                movementController.ResumePlayer();
+                combatController.SetCanAttack(true);
+            }
+
+            movementController.CheckGroundCollision();
+            movementController.HandleGrappling(vertical, ropeX);
+            movementController.HandleMovment(horizontal);
+        }
+        else
+        {
+            movementController.currentState = MovementController.MovementState.Idle;
+            movementController.StopPlayer();
+        }
+
+        // Other Inputs
         if (Input.GetKeyDown(KeyCode.F) && currentInteractable != null)
             currentInteractable.OnInteract();
 
@@ -85,35 +147,11 @@ public class PlayerController : PlayerStats
             abilityController.HandleAbility(0);
         if (Input.GetKeyDown(KeyCode.Q))
             abilityController.HandleAbility(1);
+    }
 
-        if (Input.GetMouseButton(0) && !movementController.isClimbingLedge)
-        {
-            combatController.HandleAttack();
-            movementController.StopPlayer();
-        }
-        else if (Input.GetMouseButton(1) && !movementController.isClimbingLedge)
-        {
-            if (combatController.HandleParry())
-            {
-                movementController.StopPlayer();
-            }
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            combatController.OnReleaseParry();
-        }
-
-        if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.Space))
-        {
-            movementController.HandlePlunge();
-        }
-
-        if (!combatController.CheckAttacking() && !movementController.canMove)
-            movementController.ResumePlayer();
-
-        movementController.CheckGroundCollision();
-        movementController.HandleMovment(horizontal);
-        movementController.HandleGrappling(vertical, ropeX);
+    private void FixedUpdate()
+    {
+        movementController.MovePlayer(movementSpeedMultiplier.GetTotalModifier());
     }
 
     private void HandlePlungeAttack()
@@ -127,11 +165,6 @@ public class PlayerController : PlayerStats
         movementController.OnPlayerOverlap(overlap);
     }
 
-    private void FixedUpdate()
-    {
-        movementController.MovePlayer();
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Rope"))
@@ -143,7 +176,7 @@ public class PlayerController : PlayerStats
         if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
             currentInteractable = interactable;
-            currentInteractable.OnEnterRange();
+            interactable.OnEnterRange();
         }
     }
 
@@ -157,7 +190,7 @@ public class PlayerController : PlayerStats
 
         if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
-            currentInteractable.OnLeaveRange();
+            interactable.OnLeaveRange();
             currentInteractable = null;
         }
     }
@@ -230,7 +263,7 @@ public class PlayerController : PlayerStats
         // Overloaded Capcitor
         damageMultipler.RemoveModifier(itemStats.capacitorDamageModifier);
 
-        target.ApplyStatusEffect(StatusEffect.StatusType.Burn, 1);
+        target.ApplyStatusEffect(StatusEffect.StatusType.Bleed, 1);
 
         return damage;
     }

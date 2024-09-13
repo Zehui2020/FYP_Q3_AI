@@ -1445,7 +1445,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70579677df0549944a21ca957aa69697, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statusEffectManager: {fileID: 0}
   particleVFXManager: {fileID: 8616100626519332858}
   statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
@@ -1458,6 +1457,9 @@ MonoBehaviour:
   shieldRegenDelay: 5
   isImmune: 0
   isFrozen: 0
+  attackSpeedMultiplier:
+    baseAmount: 1
+    modifiers: []
   attackIncrease:
     baseAmount: 0
     modifiers: []

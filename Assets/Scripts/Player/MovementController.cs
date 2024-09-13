@@ -1,11 +1,30 @@
 using System.Collections;
-using System.Drawing;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class MovementController : MonoBehaviour
 {
+    public enum MovementState
+    {
+        Idle,
+        Running,
+        Jump,
+        DoubleJump,
+        WallJump,
+        GroundDash,
+        AirDash,
+        Falling,
+        Land,
+        Plunge,
+        LedgeGrab,
+        Grapple,
+        GrappleIdle,
+        Roll,
+        LungeRoll
+    }
+    public MovementState currentState;
+
     [SerializeField] private MovementData movementData;
-    private AnimationManager animationManager;
 
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallJumpCheck;
@@ -16,38 +35,27 @@ public class MovementController : MonoBehaviour
 
     private CapsuleCollider2D playerCol;
     private Rigidbody2D playerRB;
+    private AnimationManager animationManager;
+    private PlayerEffectsController playerEffectsController;
 
+    public bool isGrounded = false;
     public bool canMove = true;
-
-    public bool isMoving = false;
-    public bool isGrounded = true;
-    public bool isDashing = false;
-    public bool isClimbingLedge = false;
-    public bool isPlunging = false;
-    public bool isWallJumping = false;
-
-    public bool lockMomentum = false;
-    public bool lockDirection = false;
-
     public bool canGrapple = false;
-    public bool isGrappling = false;
 
     private Vector2 ledgePosBot;
     private Vector2 ledgePos1;
     private Vector2 ledgePos2;
 
     private Vector2 direction;
-    private float moveSpeed;
-    private float moveSpeedModifier = 1;
 
     private float fallingDuration;
-    private bool isLanding = false;
-
     public int jumpCount;
     public int maxJumpCount;
 
     public int wallJumpCount;
     public int maxWallJumps;
+
+    private float moveSpeed;
 
     private Coroutine jumpRoutine;
     private Coroutine burstDragRoutine;
@@ -55,21 +63,71 @@ public class MovementController : MonoBehaviour
     private Coroutine rollRoutine;
     private Coroutine plungeRoutine;
 
-    private PlayerEffectsController playerEffectsController;
-
     public event System.Action OnPlungeEnd;
 
-    public void InitializeMovementController(PlayerEffectsController playerEffectsController)
+    public void InitializeMovementController()
     {
-        this.playerEffectsController = playerEffectsController;
-        moveSpeed = movementData.walkSpeed;
         playerCol = GetComponent<CapsuleCollider2D>();
         playerRB = GetComponent<Rigidbody2D>();
         animationManager = GetComponent<AnimationManager>();
 
         animationManager.InitAnimationController();
-
         moveSpeed = movementData.walkSpeed;
+        playerEffectsController = PlayerEffectsController.Instance;
+    }
+
+    public void ChangeState(MovementState movementState)
+    {
+        switch (movementState)
+        {
+            case MovementState.Idle:
+                animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f, false);
+                break;
+            case MovementState.Running:
+                animationManager.ChangeAnimation(animationManager.Running, 0f, 0f, false);
+                break;
+            case MovementState.Jump:
+                animationManager.ChangeAnimation(animationManager.Jumping, 0f, 0f, false);
+                break;
+            case MovementState.DoubleJump:
+                animationManager.ChangeAnimation(animationManager.DoubleJump, 0f, 0f, false);
+                break;
+            case MovementState.WallJump:
+                animationManager.ChangeAnimation(animationManager.WallJump, 0f, 0f, false);
+                break;
+            case MovementState.GroundDash:
+                animationManager.ChangeAnimation(animationManager.GroundDash, 0f, 0f, false);
+                break;
+            case MovementState.AirDash:
+                animationManager.ChangeAnimation(animationManager.AirDash, 0f, 0f, false);
+                break;
+            case MovementState.Falling:
+                animationManager.ChangeAnimation(animationManager.Falling, 0f, 0f, false);
+                break;
+            case MovementState.Land:
+                animationManager.ChangeAnimation(animationManager.Land, 0f, 0f, false);
+                break;
+            case MovementState.LedgeGrab:
+                animationManager.ChangeAnimation(animationManager.WallClimb, 0f, 0f, false);
+                break;
+            case MovementState.Grapple:
+                animationManager.ChangeAnimation(animationManager.Grappling, 0, 0, false);
+                break;
+            case MovementState.GrappleIdle:
+                animationManager.ChangeAnimation(animationManager.GrappleIdle, 0, 0, false);
+                break;
+            case MovementState.Roll:
+                animationManager.ChangeAnimation(animationManager.Roll, 0, 0, false);
+                break;
+            case MovementState.LungeRoll:
+                animationManager.ChangeAnimation(animationManager.LungeRoll, 0, 0, false);
+                break;
+            case MovementState.Plunge:
+                HandlePlunge();
+                break;
+        }
+
+        currentState = movementState;
     }
 
     public void HandleMovment(float horizontal)
@@ -77,13 +135,14 @@ public class MovementController : MonoBehaviour
         if (!canMove)
             return;
 
-        if (!isGrappling)
-            HandleLedgeGrab();
-
-        isMoving = horizontal != 0;
+        // Calculate move dir
+        direction = Camera.main.transform.forward.normalized;
+        Vector3 sideDirection = Vector3.ProjectOnPlane(Camera.main.transform.right * horizontal, Vector3.up);
+        direction = sideDirection.normalized;
 
         // Update player facing dir
-        if (!lockDirection)
+        if (currentState == MovementState.Running ||
+            currentState == MovementState.Falling)
         {
             if (horizontal > 0)
                 transform.localScale = new Vector3(1, 1, 1);
@@ -91,34 +150,32 @@ public class MovementController : MonoBehaviour
                 transform.localScale = new Vector3(-1, 1, 1);
         }
 
-        if (isMoving)
+        if (horizontal == 0 && 
+            playerRB.velocity.magnitude <= 3f && 
+            currentState != MovementState.Roll &&
+            currentState != MovementState.LedgeGrab &&
+            currentState != MovementState.GroundDash &&
+            isGrounded)
+            ChangeState(MovementState.Idle);
+
+        if (playerRB.velocity.y < -0.1f && currentState != MovementState.Land)
+            ChangeState(MovementState.Falling);
+        else if (currentState == MovementState.Idle && horizontal != 0)
+            ChangeState(MovementState.Running);
+
+        switch (currentState)
         {
-            direction = Camera.main.transform.forward.normalized;
-
-            Vector3 sideDirection = Vector3.ProjectOnPlane(Camera.main.transform.right * horizontal, Vector3.up);
-            direction = sideDirection.normalized;
+            case MovementState.Idle:
+                if (burstDragRoutine != null)
+                    StartCoroutine(BurstDrag());
+                break;
+            case MovementState.Falling:
+                fallingDuration += Time.deltaTime;
+                break;
         }
-        else if (!isMoving && isGrounded)
-        {
-            if (burstDragRoutine != null)
-                StartCoroutine(BurstDrag());
-
-            if (jumpRoutine == null && rollRoutine == null && !isDashing)
-                animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f, false);
-        }
-
-        if (!isGrounded)
-            fallingDuration += Time.deltaTime;
 
         SpeedControl();
-
-        if (playerRB.velocity.y < -0.1f && !isLanding)
-        {
-            lockMomentum = false;
-            lockDirection = false;
-            isWallJumping = false;
-            animationManager.ChangeAnimation(animationManager.Falling, 0, 0, false);
-        }
+        HandleLedgeGrab();
 
         Debug.DrawRay(groundCheckPosition.position, Vector3.down * movementData.plungeThreshold, UnityEngine.Color.red);
     }
@@ -128,22 +185,13 @@ public class MovementController : MonoBehaviour
         if (plungeRoutine != null)
             return;
 
-        if (!isGrappling)
-        {
-            if (!canGrapple || vertical == 0)
-                return;
-        }
-
-        if (vertical == 0)
-            animationManager.ChangeAnimation(animationManager.GrappleIdle, 0, 0, false);
-        else
-            animationManager.ChangeAnimation(animationManager.Grappling, 0, 0, false);
-
+        if (!canGrapple || vertical == 0)
+            return;
+            
         transform.position = new Vector3(Mathf.Lerp(transform.position.x, posX, Time.deltaTime * 10f),
             transform.position.y,
             transform.position.z);
 
-        isGrappling = true;
         playerRB.gravityScale = 0;
         playerRB.velocity = Vector2.zero;
         playerCol.isTrigger = true;
@@ -154,17 +202,13 @@ public class MovementController : MonoBehaviour
     public void StopGrappling()
     {
         playerRB.gravityScale = movementData.gravityScale;
-        isGrappling = false;
         playerCol.isTrigger = false;
     }
 
-    public void HandleJump(float horizontal)
+    public void OnJump(float horizontal)
     {
-        if (plungeRoutine != null || rollRoutine != null || isClimbingLedge)
+        if (plungeRoutine != null || rollRoutine != null)
             return;
-
-        if (isGrappling)
-            StopGrappling();
 
         bool isTouchingWall;
         Vector2 dir;
@@ -174,34 +218,95 @@ public class MovementController : MonoBehaviour
             dir = transform.right;
 
         Debug.DrawRay(wallCheckPosition.position, dir * movementData.wallCheckDist, UnityEngine.Color.red);
+
         Collider2D col = Physics2D.Raycast(wallCheckPosition.position, dir, 0.2f, wallJumpCheck).collider;
         isTouchingWall = col != null;
 
+        if (jumpRoutine != null)
+            return;
+
         if (!isTouchingWall || wallJumpCount <= 0)
-        {
-            // Normal Jump
-            if (fallingDuration > movementData.cyoteTime && jumpCount == maxJumpCount)
-                return;
+            HandleJump(horizontal);
+        else if (isTouchingWall && wallJumpCount > 0)
+            HandleWallJump(col);
+    }
 
-            if (jumpCount <= 0 && !isGrounded)
-                return;
+    public void HandleJump(float horizontal)
+    {
+        if (fallingDuration > movementData.cyoteTime && jumpCount == maxJumpCount)
+            return;
 
-            if (jumpRoutine == null)
-                jumpRoutine = StartCoroutine(JumpRoutine(horizontal));
-        }
-        else if (wallJumpCount > 0)
+        if (jumpCount <= 0 && !isGrounded)
+            return;
+
+        ChangeState(MovementState.Jump);
+        jumpRoutine = StartCoroutine(JumpRoutine(horizontal));
+    }
+    private IEnumerator JumpRoutine(float horizontal)
+    {
+        CancelDash();
+        jumpCount--;
+        float velX = playerRB.velocity.x;
+
+        if (horizontal < 0)
         {
-            // Wall Jump
-            if (jumpRoutine == null)
-                jumpRoutine = StartCoroutine(WallJumpRoutine(col));
+            if (velX > 0)
+                velX = -velX;
         }
+        else if (horizontal > 0)
+        {
+            velX = Mathf.Abs(velX);
+        }
+
+        if (horizontal < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
+        else
+            transform.localScale = new Vector3(1, 1, 1);
+
+        if (maxJumpCount - jumpCount > 1)
+        {
+            if (Mathf.Sign(horizontal) != Mathf.Sign(playerRB.velocity.x))
+                velX *= movementData.oppositeJumpMultiplier;
+
+            ChangeState(MovementState.DoubleJump);
+            playerEffectsController.PlayDoubleJumpPS();
+        }
+
+        playerRB.velocity = new Vector2(velX, 0);
+        playerRB.AddForce(transform.up * movementData.baseJumpForce, ForceMode2D.Impulse);
+
+        yield return new WaitForSeconds(movementData.jumpInterval);
+
+        jumpRoutine = null;
+    }
+
+    public void HandleWallJump(Collider2D col)
+    {
+        ChangeState(MovementState.WallJump);
+        jumpRoutine = StartCoroutine(WallJumpRoutine(col));
+    }
+    private IEnumerator WallJumpRoutine(Collider2D col)
+    {
+        wallJumpCount--;
+
+        Vector2 dir;
+        playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
+        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+
+        if (col.ClosestPoint(transform.position).x < transform.position.x)
+            dir = new Vector2(movementData.wallJumpForceX, movementData.wallJumpForceY);
+        else
+            dir = new Vector2(-movementData.wallJumpForceX, movementData.wallJumpForceY);
+
+        playerRB.AddForce(dir * movementData.baseJumpForce, ForceMode2D.Impulse);
+
+        yield return new WaitForSeconds(movementData.jumpInterval);
+
+        jumpRoutine = null;
     }
 
     private void HandleLedgeGrab()
     {
-        if (isClimbingLedge)
-            return;
-
         Vector2 dir;
         if (transform.localScale.x < 0)
             dir = -transform.right;
@@ -222,6 +327,7 @@ public class MovementController : MonoBehaviour
         if (wallHit.collider.gameObject.GetComponent<PlatformEffector2D>())
             return;
 
+        ChangeState(MovementState.LedgeGrab);
         ledgePosBot = wallHit.point;
         playerCol.isTrigger = true;
         playerRB.gravityScale = 0;
@@ -239,112 +345,28 @@ public class MovementController : MonoBehaviour
             ledgePos2 = new Vector2(ledgePosBot.x - movementData.ledgeXOffset2, ledgePosBot.y + movementData.ledgeYOffset2);
         }
 
-        lockMomentum = true;
-        lockDirection = true;
         playerRB.velocity = Vector2.zero;
         playerRB.gravityScale = 0;
 
         transform.position = ledgePos1;
-
-        animationManager.ChangeAnimation(animationManager.WallClimb, 0, 0, false);
-
-        isClimbingLedge = true;
     }
 
     public void FinishLedgeClimb()
     {
-        animationManager.ChangeAnimation(animationManager.Idle, 0, 0, false);
-        lockMomentum = false;
-        lockDirection = false;
+        ChangeState(MovementState.Idle);
         transform.position = ledgePos2;
         playerRB.gravityScale = movementData.gravityScale;
-        isClimbingLedge = false;
         playerCol.isTrigger = false;
         playerRB.gravityScale = movementData.gravityScale;
     }
 
-    private IEnumerator JumpRoutine(float horizontal)
-    {
-        CancelDash();
-        jumpCount--;
-        float velX = playerRB.velocity.x;
-        lockMomentum = false;
-
-        if (horizontal < 0)
-        {
-            if (velX > 0)
-                velX = -velX;
-        }
-        else if (horizontal > 0)
-        {
-            velX = Mathf.Abs(velX);
-        }
-
-        if (horizontal < 0)
-            transform.localScale = new Vector3(-1, 1, 1);
-        else
-            transform.localScale = new Vector3(1, 1, 1);
-
-        if (maxJumpCount - jumpCount > 1)
-        {
-            animationManager.ChangeAnimation(animationManager.DoubleJump, 0, 0, true);
-            playerEffectsController.PlayDoubleJumpPS();
-            velX /= 1.25f;
-        }
-        else
-        {
-            animationManager.ChangeAnimation(animationManager.Jumping, 0, 0, true);
-        }
-
-        playerRB.velocity = new Vector2(velX, 0);
-        playerRB.AddForce(transform.up * movementData.baseJumpForce, ForceMode2D.Impulse);
-
-        yield return new WaitForSeconds(movementData.jumpInterval);
-
-        jumpRoutine = null;
-    }
-
-    private IEnumerator WallJumpRoutine(Collider2D col)
-    {
-        lockMomentum = true;
-        lockDirection = true;
-        isWallJumping = true;
-        wallJumpCount--;
-
-        Vector2 dir;
-        playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
-        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
-
-        if (col.ClosestPoint(transform.position).x < transform.position.x)
-            dir = new Vector2(movementData.wallJumpForceX, movementData.wallJumpForceY);
-        else
-            dir = new Vector2(-movementData.wallJumpForceX, movementData.wallJumpForceY);
-
-        playerRB.AddForce(dir * movementData.baseJumpForce, ForceMode2D.Impulse);
-        animationManager.ChangeAnimation(animationManager.WallJump, 0, 0, true);
-
-
-        yield return new WaitForSeconds(movementData.jumpInterval);
-
-        jumpRoutine = null;
-    }
-
     public void HandleDash(float direction)
     {
-        if (dashRoutine == null && !isClimbingLedge)
+        if (dashRoutine == null)
             dashRoutine = StartCoroutine(DashRoutine(direction));
     }
-
     private IEnumerator DashRoutine(float direction)
     {
-        lockMomentum = false;
-        lockDirection = true;
-
-        if (direction < 0)
-            transform.localScale = new Vector3(-1, 1, 1);
-        else
-            transform.localScale = new Vector3(1, 1, 1);
-
         float timer;
         PlayerController.Instance.ApplyImmune(movementData.dashIFrames, BaseStats.ImmuneType.Dodge);
         playerRB.gravityScale = 0;
@@ -354,17 +376,15 @@ public class MovementController : MonoBehaviour
 
         if (!isGrounded)
         {
-            animationManager.ChangeAnimation(animationManager.AirDash, 0, 0, true);
             playerEffectsController.PlayDashPS(false);
-
+            ChangeState(MovementState.AirDash);
             dashSpeed = movementData.dashSpeed;
             timer = movementData.dashDuration;
         }
         else
         {
-            animationManager.ChangeAnimation(animationManager.GroundDash, 0, 0, true);
             playerEffectsController.PlayDashPS(true);
-
+            ChangeState(MovementState.GroundDash);
             dashSpeed = movementData.groundDashSpeed;
             timer = movementData.groundDashDuration;
         }
@@ -380,16 +400,22 @@ public class MovementController : MonoBehaviour
                 else
                     direction = -1;
             }
+            else if (direction < 0)
+                transform.localScale = new Vector3(-1, 1, 1);
+            else
+                transform.localScale = new Vector3(1, 1, 1);
 
-            isDashing = true;
             playerRB.velocity = new Vector2(dashSpeed * direction, playerRB.velocity.y);
             yield return null;
         }
 
-        playerEffectsController.StopDashPS();
-        isDashing = false;
         playerRB.gravityScale = movementData.gravityScale;
-        lockDirection = false;
+        playerEffectsController.StopDashPS();
+
+        if (isGrounded)
+            ChangeState(MovementState.Idle);
+        else
+            ChangeState(MovementState.Falling);
 
         yield return new WaitForSeconds(movementData.dashCooldown);
 
@@ -401,10 +427,7 @@ public class MovementController : MonoBehaviour
         if (dashRoutine != null)
             StopCoroutine(dashRoutine);
 
-        playerEffectsController.StopDashPS();
         dashRoutine = null;
-        isDashing = false;
-        lockDirection = false;
         playerRB.gravityScale = movementData.gravityScale;
     }
 
@@ -416,13 +439,9 @@ public class MovementController : MonoBehaviour
         if (rollRoutine == null)
             rollRoutine = StartCoroutine(RollRoutine());
     }
-
     private IEnumerator RollRoutine()
     {
         CancelDash();
-
-        lockMomentum = true;
-        lockDirection = true;
 
         Vector2 originalSize = playerCol.size;
         Vector2 originalOffset = playerCol.offset;
@@ -436,13 +455,13 @@ public class MovementController : MonoBehaviour
 
         if (playerRB.velocity.magnitude < 5f)
         {
-            animationManager.ChangeAnimation(animationManager.Roll, 0, 0, false);
+            ChangeState(MovementState.Roll);
             playerRB.AddForce(new Vector3(transform.localScale.x, 0, 0) * 2, ForceMode2D.Impulse);
             rollDuration = movementData.rollDuration;
         }
         else
         {
-            animationManager.ChangeAnimation(animationManager.LungeRoll, 0, 0, false);
+            ChangeState(MovementState.LungeRoll);
             playerRB.AddForce(-playerRB.velocity.normalized * movementData.rollFriction, ForceMode2D.Impulse);
             rollDuration = movementData.lungeRollDuration;
         }
@@ -451,16 +470,15 @@ public class MovementController : MonoBehaviour
 
         playerCol.size = originalSize;
         playerCol.offset = originalOffset;
-
         playerRB.drag = movementData.groundDrag;
-        lockMomentum = false;
-        lockDirection = false;
+        ChangeState(MovementState.Idle);
+
         rollRoutine = null;
     }
 
     public bool HandlePlunge()
     {
-        if (plungeRoutine != null || isClimbingLedge)
+        if (plungeRoutine != null)
             return false;
 
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, movementData.plungeThreshold, groundLayer);
@@ -475,7 +493,6 @@ public class MovementController : MonoBehaviour
 
     private IEnumerator PlungeRoutine()
     {
-        isPlunging = true;
         playerRB.velocity = Vector2.zero;
         playerRB.gravityScale = 0;
 
@@ -493,14 +510,16 @@ public class MovementController : MonoBehaviour
         StopCoroutine(plungeRoutine);
         playerRB.gravityScale = movementData.gravityScale;
         playerRB.AddForce(Vector2.down * movementData.plungeForce, ForceMode2D.Impulse);
-        isPlunging = false;
         plungeRoutine = null;
         OnPlungeEnd?.Invoke();
     }
 
-    public void MovePlayer()
+    public void MovePlayer(float movementSpeedMultiplier)
     {
-        if (!isMoving || lockMomentum || isGrappling || plungeRoutine != null || !canMove || isWallJumping)
+        if (currentState != MovementState.Running &&
+            currentState != MovementState.Jump &&
+            currentState != MovementState.DoubleJump &&
+            currentState != MovementState.Falling)
             return;
 
         Vector3 force;
@@ -509,58 +528,44 @@ public class MovementController : MonoBehaviour
         if (isGrounded)
             force = direction * (moveSpeed + playerRB.velocity.magnitude) * 5f;
         else if (!isGrounded)
-            force = direction * moveSpeed * 10f * movementData.airMultiplier * moveSpeedModifier;
+            force = direction * moveSpeed * 10f * movementData.airMultiplier;
         else
             force = Vector3.zero;
 
         // Move player
-        playerRB.AddForce(force * moveSpeedModifier, ForceMode2D.Force);
-
-        if (isGrounded && jumpRoutine == null && !isDashing)
-            animationManager.ChangeAnimation(animationManager.Running, 0f, 0f, false);
+        playerRB.AddForce(force * movementSpeedMultiplier, ForceMode2D.Force);
     }
 
     public void CheckGroundCollision()
     {
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, 100, groundLayer);
-        if (!groundHit || isClimbingLedge)
-            return;
-
         float dist = Vector3.Distance(groundCheckPosition.position, groundHit.point);
 
         if (!isGrounded && playerRB.velocity.y < 0 && dist <= 2f)
-        {
-            isLanding = true;
-            animationManager.ChangeAnimation(animationManager.Land, 0, 0, false);
-        }
-        else if (dist > 2f)
-        {
-            isLanding = false;
-        }
+            ChangeState(MovementState.Land);
 
         if (dist <= movementData.minGroundDist)
         {
-            isLanding = false;
+            if (!isGrounded && 
+                currentState != MovementState.LedgeGrab
+                && currentState != MovementState.GroundDash)
+                ChangeState(MovementState.Idle);
+
             isGrounded = true;
-            if (jumpRoutine == null)
-                isWallJumping = false;
             fallingDuration = 0;
 
             if (rollRoutine == null)
-            {
                 playerRB.drag = movementData.groundDrag;
-                lockMomentum = false;
-            }
 
             wallJumpCount = maxWallJumps;
             if (jumpRoutine == null)
                 jumpCount = maxJumpCount;
 
-            if (isPlunging)
-                StopPlunge();
+            //if (isPlunging)
+            //    StopPlunge();
 
-            if (isGrappling)
-                StopGrappling();
+            //if (isGrappling)
+            //    StopGrappling();
         }
         else if (dist > movementData.minGroundDist)
         {
@@ -584,11 +589,6 @@ public class MovementController : MonoBehaviour
         playerRB.gravityScale = movementData.gravityScale;
     }
 
-    public void SetMoveSpeedModifier(float newModifier)
-    {
-        moveSpeedModifier = newModifier;
-    }
-
     public void OnPlayerOverlap(bool inRange)
     {
         if (inRange)
@@ -601,9 +601,9 @@ public class MovementController : MonoBehaviour
     {
         Vector2 currentVel = new Vector2(playerRB.velocity.x, 0);
 
-        if (currentVel.magnitude > moveSpeed)
+        if (currentVel.magnitude > movementData.walkSpeed)
         {
-            Vector3 limitVel = currentVel.normalized * moveSpeed;
+            Vector3 limitVel = currentVel.normalized * movementData.walkSpeed;
             playerRB.velocity = new Vector2(limitVel.x, playerRB.velocity.y);
         }
     }

@@ -19,12 +19,13 @@ public class CombatController : MonoBehaviour
     private bool isHoldParry = false;
     private bool isInParry = false;
     private bool damageReduced = false;
+    private bool canAttack = true;
+    public bool isAttacking = false;
 
-    private Coroutine attackRoutine;
-    private Coroutine attackAnimRoutine;
-    private Coroutine attackCooldownRoutine;
-    private Coroutine plungeAttackRoutine;
     private Coroutine parryRoutine;
+    private Coroutine resetComboRoutine;
+
+    public event System.Action OnAttackReset;
 
     public void InitializeCombatController(BaseStats baseStats)
     {
@@ -55,7 +56,7 @@ public class CombatController : MonoBehaviour
     {
         isInParry = true;
         isHoldParry = true;
-        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.parryAnimation.name));
+        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.parryAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
         animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
         // if player is hit, negate damage
         player.ApplyImmune(perfectParryDuration, BaseStats.ImmuneType.Parry);
@@ -91,73 +92,51 @@ public class CombatController : MonoBehaviour
 
     public void HandleAttack()
     {
-        if (attackAnimRoutine != null || attackCooldownRoutine != null)
+        if (!canAttack)
             return;
+            
+        canAttack = false;
 
-        if (attackRoutine != null)
-        {
-            attackComboCount++;
-            if (attackComboCount >= wData.attackAnimations.Count)
-            {
-                attackComboCount = 0;
-                HandleAttackCooldown();
-
-                player.comboDamageMultipler.ReplaceAllModifiers(wData.attackMultipliers[attackComboCount]);
-            }
-            else
-            {
-                player.comboDamageMultipler.ReplaceAllModifiers(wData.attackMultipliers[attackComboCount]);
-            }
-
-            StopCoroutine(attackRoutine);
-            attackRoutine = StartCoroutine(AttackRoutine());
-        }
-        else
-        {
-            attackComboCount = 0;
-            player.comboDamageMultipler.ReplaceAllModifiers(wData.attackMultipliers[attackComboCount]);
-            attackRoutine = StartCoroutine(AttackRoutine());
-        }
-    }
-
-    private IEnumerator AttackRoutine()
-    {
-        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.attackAnimations[attackComboCount].name));
+        player.comboDamageMultipler.ReplaceAllModifiers(wData.attackMultipliers[attackComboCount]);
+        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.attackAnimations[attackComboCount].name), player.attackSpeedMultiplier.GetTotalModifier());
         animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
-        weaponEffectAnimator.CrossFade(Animator.StringToHash(wData.attackEffectAnimations[attackComboCount].name), 0);
 
-        attackAnimRoutine = StartCoroutine(AttackAnimRoutine());
+        weaponEffectAnimator.speed = player.attackSpeedMultiplier.GetTotalModifier();
+        weaponEffectAnimator.Play(Animator.StringToHash(wData.attackEffectAnimations[attackComboCount].name), -1, 0);
 
-        yield return new WaitForSeconds(wData.comboCooldown + wData.attackAnimations[attackComboCount].length);
-
-        attackRoutine = null;
+        attackComboCount++;
+        if (attackComboCount >= wData.attackAnimations.Count)
+            attackComboCount = 0;
     }
 
-    private IEnumerator AttackAnimRoutine()
+    public void ResetComboAttack()
     {
-        yield return new WaitForSeconds(wData.attackAnimations[attackComboCount].length);
-
-        attackAnimRoutine = null;
+        if (resetComboRoutine != null)
+            StopCoroutine(resetComboRoutine);
+        resetComboRoutine = StartCoroutine(ResetComboRoutine());
     }
 
-    public void HandleAttackCooldown()
+    private IEnumerator ResetComboRoutine()
     {
-        if (attackCooldownRoutine == null)
-        {
-            attackCooldownRoutine = StartCoroutine(AttackCooldownRoutine());
-        }
+        yield return new WaitForSeconds(wData.comboCooldown);
+
+        attackComboCount = 0;
     }
 
-    private IEnumerator AttackCooldownRoutine()
+    public void OnAnimationEnd()
     {
-        yield return new WaitForSeconds(wData.attackCooldown + wData.attackAnimations[attackComboCount].length);
+        SetCanAttack(true);
+        OnAttackReset?.Invoke();
+    }
 
-        attackCooldownRoutine = null;
+    public void SetCanAttack(bool can)
+    {
+        canAttack = can;
     }
 
     public bool CheckAttacking()
     {
-        if (attackAnimRoutine == null && plungeAttackRoutine == null && !isInParry && !isHoldParry)
+        if (canAttack && !isInParry && !isHoldParry)
         {
             return false;
         }
@@ -166,10 +145,11 @@ public class CombatController : MonoBehaviour
 
     public bool HandlePlungeAttack()
     {
-        if (plungeAttackRoutine == null && !cancelledPlunge)
+        if (!cancelledPlunge)
         {
             player.comboDamageMultipler.ReplaceAllModifiers(wData.plungeAttackMultiplier);
-            plungeAttackRoutine = StartCoroutine(PlungeAttackRoutine());
+            animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.plungeAttackAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
+            animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
             return true;
         }
 
@@ -178,19 +158,10 @@ public class CombatController : MonoBehaviour
         return false;
     }
 
-    private IEnumerator PlungeAttackRoutine()
-    {
-        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.plungeAttackAnimation.name));
-        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
-
-        yield return new WaitForSeconds(wData.plungeAttackAnimation.length);
-
-        plungeAttackRoutine = null;
-    }
-
     public void CancelPlungeAttack()
     {
         cancelledPlunge = true;
+        canAttack = true;
     }
 
     public void OnDamageEventStart(int col)
@@ -201,5 +172,10 @@ public class CombatController : MonoBehaviour
     public void OnDamageEventEnd(int col)
     {
         collisionController.DisableCollider(col);
+    }
+
+    private void OnDisable()
+    {
+        OnAttackReset = null;
     }
 }

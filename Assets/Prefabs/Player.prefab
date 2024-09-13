@@ -15969,7 +15969,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1cca5adbcb00ed4e876036dcf1998cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  statusEffectManager: {fileID: 0}
   particleVFXManager: {fileID: 7765192986147965756}
   statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
@@ -15982,6 +15981,9 @@ MonoBehaviour:
   shieldRegenDelay: 0
   isImmune: 0
   isFrozen: 0
+  attackSpeedMultiplier:
+    baseAmount: 1
+    modifiers: []
   attackIncrease:
     baseAmount: 0
     modifiers: []
@@ -16006,6 +16008,10 @@ MonoBehaviour:
   damageReduction:
     baseAmount: 0
     modifiers: []
+  movementSpeedMultiplier:
+    baseAmount: 1
+    modifiers: []
+  currentState: 0
   proceduralMapGenerator: {fileID: 0}
   enemyLayer:
     serializedVersion: 2
@@ -16058,6 +16064,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4b4056c0080c5442860c024d95171b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 0
   movementData: {fileID: 11400000, guid: 9a5214ef13da2764cb703945b58372b3, type: 2}
   groundLayer:
     serializedVersion: 2
@@ -16068,17 +16075,9 @@ MonoBehaviour:
   groundCheckPosition: {fileID: 2104895536129314052}
   wallCheckPosition: {fileID: 6890254838679211935}
   ledgeCheckPosition: {fileID: 3567513247180481193}
-  canMove: 1
-  isMoving: 0
   isGrounded: 1
-  isDashing: 0
-  isClimbingLedge: 0
-  isPlunging: 0
-  isWallJumping: 0
-  lockMomentum: 0
-  lockDirection: 0
+  canMove: 1
   canGrapple: 0
-  isGrappling: 0
   jumpCount: 2
   maxJumpCount: 2
   wallJumpCount: 1
@@ -16143,6 +16142,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8ca3cf03b68e0d545a8df3c8c29f586f, type: 2}
   - {fileID: 11400000, guid: 5b2c9b6f98eee2f4c9329826a333f7e3, type: 2}
   - {fileID: 11400000, guid: 8bcc526015e729c43b5ae8e8fa27dfab, type: 2}
+  - {fileID: 11400000, guid: e08387af470f41648bba32edcf2d0387, type: 2}
   itemPickupAlert: {fileID: 3955222949805468391}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
   itemUIPrefab: {fileID: 8576670009721690369, guid: e4418f51b090caf44b79e3b374f8f5c0, type: 3}
@@ -16161,6 +16161,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wData: {fileID: 11400000, guid: 2e8eaf0f3dd2e9a47ae446cd0af1067e, type: 2}
   weaponEffectAnimator: {fileID: 3195104573612119562}
+  perfectParryDuration: 0
+  perfectParryCooldown: 0
+  parryDmgReduction: 0
+  isAttacking: 0
 --- !u!114 &9081095423942104333
 MonoBehaviour:
   m_ObjectHideFlags: 0

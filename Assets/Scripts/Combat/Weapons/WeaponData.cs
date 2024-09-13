@@ -25,5 +25,4 @@ public class WeaponData : ScriptableObject
     public int critRate;
     public float critMultiplier;
     public float comboCooldown;
-    public float attackCooldown;
 }

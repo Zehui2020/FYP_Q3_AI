@@ -60,6 +60,7 @@ public class BaseStats : MonoBehaviour
     public bool isFrozen = false;
 
     [Header("Modifiers")]
+    public StatModifier attackSpeedMultiplier = new();
     public StatModifier attackIncrease = new();
     public StatModifier critRate = new();
     public StatModifier critDamage = new();
@@ -68,6 +69,7 @@ public class BaseStats : MonoBehaviour
     public StatModifier breachedMultiplier = new();
     public StatModifier totalDamageMultiplier = new();
     public StatModifier damageReduction = new();
+    public StatModifier movementSpeedMultiplier = new();
 
     private Coroutine immuneRoutine;
     protected Coroutine shieldRegenRoutine;
