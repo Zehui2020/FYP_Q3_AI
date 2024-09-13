@@ -65,7 +65,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         RegulateRoomAmount();
         PlaceRooms();
         FlipTakenObjectsList();
-        ConfigureRoomDoors();
+        ConfigureMapBorders();
         // pass info to mini map
         for (int i = 0; i < miniMap.Count; i++)
         {
@@ -302,7 +302,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         }
     }
 
-    private void ConfigureRoomDoors()
+    private void ConfigureMapBorders()
     {
         for (int i = 0; i < takenObjectsList.Count; i++)
         {
@@ -311,22 +311,22 @@ public class ProceduralMapGenerator : MonoBehaviour
             // up
             if (CheckAdjacentSpaceTaken(takenPosList[i], 1))
             {
-                rData.isSpaceOccupied[0] = true;
+                rData.isSpaceOccupied[1] = true;
             }
             // down
             if (CheckAdjacentSpaceTaken(takenPosList[i], 2))
             {
-                rData.isSpaceOccupied[1] = true;
+                rData.isSpaceOccupied[0] = true;
             }
             // left
             if (CheckAdjacentSpaceTaken(takenPosList[i], 3))
             {
-                rData.isSpaceOccupied[2] = true;
+                rData.isSpaceOccupied[3] = true;
             }
             // right
             if (CheckAdjacentSpaceTaken(takenPosList[i], 4))
             {
-                rData.isSpaceOccupied[3] = true;
+                rData.isSpaceOccupied[2] = true;
             }
             // update doors
             rData.UpdateDoors();

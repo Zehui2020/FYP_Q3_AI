@@ -91,6 +91,17 @@ public class PlayerController : PlayerStats
             combatController.HandleAttack();
             movementController.StopPlayer();
         }
+        else if (Input.GetMouseButton(1) && !movementController.isClimbingLedge)
+        {
+            if (combatController.HandleParry())
+            {
+                movementController.StopPlayer();
+            }
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            combatController.OnReleaseParry();
+        }
 
         if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.Space))
         {
