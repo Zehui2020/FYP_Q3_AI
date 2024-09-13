@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Abilities/Quake")]
@@ -10,7 +9,7 @@ public class Quake : BaseAbility
         {
             // deal damage
             float damageDealt = (abilityEffectValue / 100) * target.CalculateDamageDealt(target, out bool isCrit, out DamagePopup.DamageType damageType);
-            target.TakeDamage(damageDealt, isCrit, target.transform.position, damageType);
+            target.TakeDamage(PlayerController.Instance, new BaseStats.Damage(damageDealt), isCrit, target.transform.position, damageType);
             // push targets away
             Vector3 force = (target.transform.position - PlayerController.Instance.transform.position).normalized;
             force = new Vector3(force.x, 1, 0);

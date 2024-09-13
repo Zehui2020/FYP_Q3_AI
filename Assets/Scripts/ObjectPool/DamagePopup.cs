@@ -15,6 +15,7 @@ public class DamagePopup : PooledObject
         Shield,
         Health,
         Crit,
+        OnHitProcc
     }
 
     private void Awake()
@@ -39,6 +40,7 @@ public class DamagePopup : PooledObject
                 textMesh.SetText(damage.ToString());
                 break;
             case DamageType.Crit:
+            case DamageType.OnHitProcc:
                 textMesh.color = Color.red;
                 textMesh.SetText(damage.ToString() + "!");
                 break;

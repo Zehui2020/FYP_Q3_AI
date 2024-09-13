@@ -6,6 +6,9 @@ public class CombatController : MonoBehaviour
 {
     [SerializeField] private WeaponData wData;
     [SerializeField] private Animator weaponEffectAnimator;
+    [SerializeField] private float perfectParryDuration;
+    [SerializeField] private float perfectParryCooldown;
+    [SerializeField] private int parryDmgReduction;
 
     private AnimationManager animationManager;
     private CombatCollisionController collisionController;
@@ -13,11 +16,15 @@ public class CombatController : MonoBehaviour
 
     private int attackComboCount;
     private bool cancelledPlunge = false;
+    private bool isHoldParry = false;
+    private bool isInParry = false;
+    private bool damageReduced = false;
 
     private Coroutine attackRoutine;
     private Coroutine attackAnimRoutine;
     private Coroutine attackCooldownRoutine;
     private Coroutine plungeAttackRoutine;
+    private Coroutine parryRoutine;
 
     public void InitializeCombatController(BaseStats baseStats)
     {
@@ -27,12 +34,59 @@ public class CombatController : MonoBehaviour
         attackComboCount = 0;
 
         collisionController.InitCollisionController(player);
+        weaponEffectAnimator.runtimeAnimatorController = wData.effectController;
     }
 
     public void ChangeWeapon(WeaponData newData)
     {
         wData = newData;
         weaponEffectAnimator.runtimeAnimatorController = wData.effectController;
+    }
+
+    public bool HandleParry()
+    {
+        if (parryRoutine != null || isHoldParry)
+            return false;
+        parryRoutine = StartCoroutine(ParryRoutine());
+        return true;
+    }
+
+    private IEnumerator ParryRoutine()
+    {
+        isInParry = true;
+        isHoldParry = true;
+        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.parryAnimation.name));
+        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
+        // if player is hit, negate damage
+        player.ApplyImmune(perfectParryDuration, BaseStats.ImmuneType.Parry);
+        // only check for perfect parry
+        yield return new WaitForSeconds(perfectParryDuration);
+        OnHoldParry();
+        yield return new WaitForSeconds(wData.parryAnimation.length - perfectParryDuration);
+        if (!isHoldParry)
+            OnReleaseParry();
+        // parry cooldown
+        isInParry = false;
+        yield return new WaitForSeconds(perfectParryCooldown);
+        // can parry again
+        parryRoutine = null;
+    }
+
+    private void OnHoldParry()
+    {
+        // reduce damage
+        damageReduced = true;
+        player.damageReduction.AddModifier(parryDmgReduction);
+    }
+    public void OnReleaseParry()
+    {
+        if (damageReduced)
+        {
+            // reset damage reduction
+            damageReduced = false;
+            player.damageReduction.RemoveModifier(parryDmgReduction);
+        }
+        isHoldParry = false;
     }
 
     public void HandleAttack()
@@ -103,7 +157,7 @@ public class CombatController : MonoBehaviour
 
     public bool CheckAttacking()
     {
-        if (attackAnimRoutine == null && plungeAttackRoutine == null)
+        if (attackAnimRoutine == null && plungeAttackRoutine == null && !isInParry && !isHoldParry)
         {
             return false;
         }

@@ -5,12 +5,58 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ItemStats")]
 public class ItemStats : ScriptableObject
 {
-    public int critRate;
-    public int critDamage;
+    public int ritualBleedChance;
+    public int ritualBleedStacks;
+
+    public float knucleDusterThreshold;
+    public float knuckleDusterDamageModifier;
+
+    public int daggerBleedChance;
+
+    public float crudeKnifeDamageModifier;
+    public float crudeKnifeDistanceCheck;
+
+    public int frazzledWireChance;
+    public int frazzledWireStaticStacks;
+    public float frazzledWireTotalDamageModifier;
+    public float frazzledWireRange;
+
+    public int cramponChance;
+    public int cramponFreezeStacks;
+    public float cramponDamageModifier;
+
+    public float gasolineRadius;
+    public float gasolineDamageModifier;
+    public int gasolineBurnStacks;
+
+    public float capacitorDamageModifier;
 
     public void ResetStats()
     {
-        critRate = 0;
-        critDamage = 0;
+        ritualBleedChance = 0;
+        ritualBleedStacks = 0;
+
+        knucleDusterThreshold = 0.9f;
+        knuckleDusterDamageModifier = 0;
+
+        daggerBleedChance = 0;
+
+        crudeKnifeDamageModifier = 0;
+        crudeKnifeDistanceCheck = 3;
+
+        frazzledWireChance = 0;
+        frazzledWireStaticStacks = 0;
+        frazzledWireTotalDamageModifier = 0.8f;
+        frazzledWireRange = 0;
+
+        cramponChance = 0;
+        cramponFreezeStacks = 0;
+        cramponDamageModifier = 0;
+
+        gasolineRadius = 0;
+        gasolineDamageModifier = 0;
+        gasolineBurnStacks = 0;
+
+        capacitorDamageModifier = 0;
     }
 }

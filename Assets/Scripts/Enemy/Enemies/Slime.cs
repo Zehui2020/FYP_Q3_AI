@@ -42,11 +42,14 @@ public class Slime : Enemy
         ChangeState(State.Idle);
 
         onPlayerInChaseRange += () => { isPatroling = false; aiNavigation.SetTarget(player.transform); };
-        OnDieEvent += () => { ChangeState(State.Die); };
+        OnDieEvent += (target) => { ChangeState(State.Die); };
     }
 
     private void ChangeState(State newState)
     {
+        if (isFrozen || !canUpdate)
+            return;
+
         currentState = newState;
 
         switch (newState)

@@ -14,6 +14,7 @@ public class StatusEffectManager : MonoBehaviour
     }
 
     [SerializeField] private StatusEffectStats statusEffectStats;
+    [SerializeField] private ParticleVFXManager particleVFXManager;
 
     [Header("Status Stacks")]
     public StatusEffect bleedStacks;
@@ -22,7 +23,7 @@ public class StatusEffectManager : MonoBehaviour
     public StatusEffect freezeStacks;
     public StatusEffect staticStacks;
 
-    public event System.Action<StatusEffect.StatusType> OnApplyStatusEffect;
+    public event System.Action<StatusEffect.StatusType, int> OnApplyStatusEffect;
     public event System.Action<StatusState> OnThresholdReached;
 
     [Header("Status Effect UI")]
@@ -32,13 +33,18 @@ public class StatusEffectManager : MonoBehaviour
 
     public void ApplyStatusEffect(StatusEffect.StatusType statusEffect, int amount)
     {
-        OnApplyStatusEffect?.Invoke(statusEffect);
+        OnApplyStatusEffect?.Invoke(statusEffect, amount);
 
         switch (statusEffect)
         {
             case StatusEffect.StatusType.Bleed:
+                particleVFXManager.OnBleeding();
+
                 if (bleedStacks.AddStack(amount))
                 {
+                    particleVFXManager.StopBleeding();
+                    particleVFXManager.OnBloodLoss();
+
                     OnThresholdReached?.Invoke(StatusState.BloodLoss);
                     bleedStacks.SetThreshold(bleedStacks.stackThreshold * statusEffectStats.bleedThresholdMultiplier);
                     RemoveEffectUI(StatusEffectUI.StatusEffectType.Bleed);
@@ -64,8 +70,12 @@ public class StatusEffectManager : MonoBehaviour
                     SpawnEffectUI(statusEffect, freezeStacks.stackCount);
                 break;
             case StatusEffect.StatusType.Static:
+                particleVFXManager.OnStatic();
                 if (staticStacks.AddStack(amount))
                 {
+                    particleVFXManager.StopStatic();
+                    particleVFXManager.OnStunned();
+
                     OnThresholdReached?.Invoke(StatusState.Stunned);
                     RemoveEffectUI(StatusEffectUI.StatusEffectType.Static);
                 }
@@ -211,6 +221,15 @@ public class StatusEffectManager : MonoBehaviour
         {
             effectUI.SetStackCount(targetEffect.stackCount);
         }
+    }
+
+    public void OnDie()
+    {
+        bleedStacks.stackCount = 0;
+        burnStacks.stackCount = 0;
+        poisonStacks.stackCount = 0;
+        freezeStacks.stackCount = 0;
+        staticStacks.stackCount = 0;
     }
 
     private void OnDisable()

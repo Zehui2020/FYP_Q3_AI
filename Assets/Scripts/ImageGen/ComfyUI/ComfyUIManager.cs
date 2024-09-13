@@ -27,7 +27,7 @@ public class ComfyUIManager : MonoBehaviour
         {
             loadingBar.maxValue = maxValue;
             loadingBar.value = maxValue;
-            loadingText.text = "Saving Image...";
+            loadingText.text = "Processing Image...";
         }
     }
 

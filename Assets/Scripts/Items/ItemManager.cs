@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class ItemManager : MonoBehaviour
 {
@@ -10,18 +8,29 @@ public class ItemManager : MonoBehaviour
     public List<Item> allItems;
     [SerializeField] private ItemPickupAlert itemPickupAlert;
 
+    [SerializeField] private ItemStats itemStats;
     [SerializeField] private ItemUI itemUIPrefab;
     [SerializeField] private Transform itemUIParent;
     private List<ItemUI> itemUIs = new List<ItemUI>();
 
+    private ImageSaver imageSaver;
+
     private void Awake()
     {
         Instance = this;
+        itemStats.ResetStats();
     }
 
     public void InitItemManager()
     {
-        itemList = new List<Item>();
+        itemList = new();
+        imageSaver = GetComponent<ImageSaver>();
+
+        foreach (Item item in allItems)
+        {
+            item.itemStack = 0;
+            item.spriteIcon = imageSaver.GetSpriteFromLocalDisk(item.itemType.ToString());
+        }
     }
 
     public void AddItem(Item itemToAdd)
@@ -56,7 +65,6 @@ public class ItemManager : MonoBehaviour
         newItemUI.SetupItemUI(item);
         itemUIs.Add(newItemUI);
     }
-
 
     public void DecreaseStack(Item itemToRemove)
     {
@@ -119,5 +127,25 @@ public class ItemManager : MonoBehaviour
         }
 
         return items;
+    }
+
+    // For dev console
+
+    public void GiveItem(string itemName, string amount)
+    {
+        foreach (Item item in allItems)
+        {
+            if (!item.itemType.ToString().Equals(itemName))
+                continue;
+
+            for (int i = 0; i < int.Parse(amount); i++)
+                AddItem(item);
+        }
+    }
+
+    public void GiveAllItems()
+    {
+        foreach (Item item in allItems)
+            AddItem(item);
     }
 }

@@ -34,7 +34,7 @@ public class Undead : Enemy
         onReachWaypoint += () => { ChangeState(State.Idle); };
         onFinishIdle += () => { ChangeState(State.Patrol); };
         onPlayerInChaseRange += () => { ChangeState(State.Deciding); };
-        OnDieEvent += () => { ChangeState(State.Die); };
+        OnDieEvent += (target) => { ChangeState(State.Die); };
         OnBreached += (multiplier) => { StartCoroutine(DazedRoutine()); };
     }
 
@@ -125,9 +125,9 @@ public class Undead : Enemy
         enemyRB.AddForce(direction * lungeForce, ForceMode2D.Impulse);
     }
 
-    public override bool TakeDamage(float damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
+    public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
-        bool tookDamage = base.TakeDamage(damage, isCrit, closestPoint, damageType);
+        bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
 
         if (health <= 0)
             ChangeState(State.Die);
