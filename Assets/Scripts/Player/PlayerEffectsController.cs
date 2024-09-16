@@ -10,6 +10,7 @@ public class PlayerEffectsController : MonoBehaviour
     public static PlayerEffectsController Instance;
 
     [SerializeField] private Volume volume;
+    [SerializeField] private Animator camAnimator;
 
     [Header("Camera Effects")]
     [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
@@ -41,8 +42,10 @@ public class PlayerEffectsController : MonoBehaviour
 
     public void ShakeCamera(float intensity, float frequency, float timer)
     {
-        if (shakeRoutine == null)
-            shakeRoutine = StartCoroutine(StartShakeCamera(intensity, frequency, timer));
+        if (shakeRoutine != null)
+            StopCoroutine(shakeRoutine);
+
+        shakeRoutine = StartCoroutine(StartShakeCamera(intensity, frequency, timer));
     }
     private IEnumerator StartShakeCamera(float intensity, float frequency, float timer)
     {
@@ -76,6 +79,11 @@ public class PlayerEffectsController : MonoBehaviour
         Time.timeScale = 0;
         yield return new WaitForSecondsRealtime(duration);
         Time.timeScale = 1;
+    }
+
+    public void SetCameraTrigger(string trigger)
+    {
+        camAnimator.SetTrigger(trigger);
     }
 
     public void PlayDashPS(bool isGroundDash)

@@ -20,7 +20,6 @@ public class Undead : Enemy
     private readonly int DieAnim = Animator.StringToHash("UndeadDie");
 
     [Header("Undead Stats")]
-    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Vector2 lungeForce;
     [SerializeField] private float lungeAngle;
     [SerializeField] private float scratchRange;
@@ -123,6 +122,12 @@ public class Undead : Enemy
             direction = new Vector2(-direction.x, direction.y);
 
         enemyRB.AddForce(direction * lungeForce, ForceMode2D.Impulse);
+    }
+
+    public override void Knockback(float initialSpeed, float distance)
+    {
+        enemyRB.velocity = Vector2.zero;
+        base.Knockback(initialSpeed, distance);
     }
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)

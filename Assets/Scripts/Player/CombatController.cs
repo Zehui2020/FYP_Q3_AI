@@ -6,9 +6,7 @@ public class CombatController : MonoBehaviour
 {
     [SerializeField] private WeaponData wData;
     [SerializeField] private Animator weaponEffectAnimator;
-    [SerializeField] private float perfectParryDuration;
     [SerializeField] private float perfectParryCooldown;
-    [SerializeField] private int parryDmgReduction;
 
     private AnimationManager animationManager;
     private CombatCollisionController collisionController;
@@ -16,13 +14,11 @@ public class CombatController : MonoBehaviour
 
     private int attackComboCount;
     private bool cancelledPlunge = false;
-    private bool isHoldParry = false;
     private bool isInParry = false;
-    private bool damageReduced = false;
     private bool canAttack = true;
     public bool isAttacking = false;
 
-    private Coroutine parryRoutine;
+    private Coroutine parryCooldownRoutine;
     private Coroutine resetComboRoutine;
 
     public event System.Action OnAttackReset;
@@ -52,50 +48,35 @@ public class CombatController : MonoBehaviour
         player.critDamage.AddModifier(wData.critDamage);
     }
 
+    public void GiveParryImmune()
+    {
+        player.ApplyImmune(wData.parryAnimation.length, BaseStats.ImmuneType.Parry);
+    }
+
     public bool HandleParry()
     {
-        if (parryRoutine != null || isHoldParry)
+        if (isInParry || parryCooldownRoutine != null)
             return false;
-        parryRoutine = StartCoroutine(ParryRoutine());
+
+        isInParry = true;
+        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.parryAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
+        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
+
         return true;
     }
 
-    private IEnumerator ParryRoutine()
+    private IEnumerator ParryCooldownRoutine()
     {
-        isInParry = true;
-        isHoldParry = true;
-        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.parryAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
-        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
-        // if player is hit, negate damage
-        player.ApplyImmune(perfectParryDuration, BaseStats.ImmuneType.Parry);
-        // only check for perfect parry
-        yield return new WaitForSeconds(perfectParryDuration);
-        OnHoldParry();
-        yield return new WaitForSeconds(wData.parryAnimation.length - perfectParryDuration);
-        if (!isHoldParry)
-            OnReleaseParry();
-        // parry cooldown
-        isInParry = false;
         yield return new WaitForSeconds(perfectParryCooldown);
-        // can parry again
-        parryRoutine = null;
+        parryCooldownRoutine = null;
     }
 
-    private void OnHoldParry()
+    public void OnParryEnd()
     {
-        // reduce damage
-        damageReduced = true;
-        player.damageReduction.AddModifier(parryDmgReduction);
-    }
-    public void OnReleaseParry()
-    {
-        if (damageReduced)
-        {
-            // reset damage reduction
-            damageReduced = false;
-            player.damageReduction.RemoveModifier(parryDmgReduction);
-        }
-        isHoldParry = false;
+        player.RemoveImmune();
+        isInParry = false;
+        OnAnimationEnd();
+        parryCooldownRoutine = StartCoroutine(ParryCooldownRoutine());
     }
 
     public void HandleAttack()
@@ -112,11 +93,22 @@ public class CombatController : MonoBehaviour
         weaponEffectAnimator.speed = player.attackSpeedMultiplier.GetTotalModifier();
         weaponEffectAnimator.Play(Animator.StringToHash(wData.attackEffectAnimations[attackComboCount].name), -1, 0);
 
-        //player.breachedMultiplier.AddModifier();
+        if (attackComboCount - 1 >= 0)
+            player.breachedMultiplier.RemoveModifier(wData.breachMultipliers[attackComboCount - 1]);
+        else
+            player.breachedMultiplier.RemoveModifier(wData.breachMultipliers[wData.breachMultipliers.Count - 1]);
+
+        player.breachedMultiplier.AddModifier(wData.breachMultipliers[attackComboCount]);
 
         attackComboCount++;
         if (attackComboCount >= wData.attackAnimations.Count)
             attackComboCount = 0;
+    }
+
+    public void ResetComboInstantly()
+    {
+        attackComboCount = 0;
+        canAttack = true;
     }
 
     public void ResetComboAttack()
@@ -146,11 +138,17 @@ public class CombatController : MonoBehaviour
 
     public bool CheckAttacking()
     {
-        if (canAttack && !isInParry && !isHoldParry)
+        if (canAttack && !isInParry)
         {
             return false;
         }
         return true;
+    }
+
+    public void OnPlungeStart()
+    {
+        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.plungeAttackAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
+        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
     }
 
     public bool HandlePlungeAttack()
@@ -158,7 +156,7 @@ public class CombatController : MonoBehaviour
         if (!cancelledPlunge)
         {
             player.comboDamageMultipler.ReplaceAllModifiers(wData.plungeAttackMultiplier);
-            animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.plungeAttackAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
+            animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.plungeSlamAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
             animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
             return true;
         }

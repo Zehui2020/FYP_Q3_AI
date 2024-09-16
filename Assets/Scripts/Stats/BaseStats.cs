@@ -86,6 +86,7 @@ public class BaseStats : MonoBehaviour
     public event System.Action<bool, bool> OnHealthChanged;
     public event System.Action<bool, bool> OnShieldChanged;
     public event System.Action<float> OnBreached;
+    public event System.Action<BaseStats> OnParry;
     public event System.Action<BaseStats> OnDieEvent;
 
     public virtual void TakeTrueDamage(Damage damage)
@@ -145,6 +146,10 @@ public class BaseStats : MonoBehaviour
                     break;
                 case ImmuneType.Block:
                     popup.SetupPopup("Blocked!", transform.position, Color.white, new Vector2(1, 3));
+                    break;
+                case ImmuneType.Parry:
+                    OnParry?.Invoke(attacker);
+                    popup.SetupPopup("Parried!", transform.position, Color.white, new Vector2(1, 3));
                     break;
             }
 
@@ -285,6 +290,15 @@ public class BaseStats : MonoBehaviour
         immuneRoutine = StartCoroutine(ImmuneRoutine(duration));
         this.immuneType = immuneType;
     }
+    public void RemoveImmune()
+    {
+        if (immuneRoutine != null)
+            StopCoroutine(immuneRoutine);
+
+        isImmune = false;
+        immuneRoutine = null;
+        immuneType = ImmuneType.None;
+    }
 
     private IEnumerator ImmuneRoutine(float duration)
     {
@@ -400,6 +414,7 @@ public class BaseStats : MonoBehaviour
         OnShieldChanged = null;
         OnBreached = null;
         OnDieEvent = null;
+        OnParry = null;
     }
 
     private IEnumerator ShieldRegenRoutine()

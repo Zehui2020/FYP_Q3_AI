@@ -6,12 +6,14 @@ public class PlayerController : PlayerStats
     public enum PlayerStates
     {
         Movement,
-        Combat
+        Combat,
+        Hurt
     }
     public PlayerStates currentState;
 
     public static PlayerController Instance;
 
+    private AnimationManager animationManager;
     private MovementController movementController;
     private CombatController combatController;
     private AbilityController abilityController;
@@ -39,9 +41,11 @@ public class PlayerController : PlayerStats
         itemManager = GetComponent<ItemManager>();
         statusEffectManager = GetComponent<StatusEffectManager>();
         playerEffectsController = GetComponent<PlayerEffectsController>();
+        animationManager = GetComponent<AnimationManager>();
 
+        animationManager.InitAnimationController();
         itemManager.InitItemManager();
-        movementController.InitializeMovementController();
+        movementController.InitializeMovementController(animationManager);
         combatController.InitializeCombatController(this);
         abilityController.InitializeAbilityController();
         playerEffectsController.InitializePlayerEffectsController();
@@ -53,6 +57,14 @@ public class PlayerController : PlayerStats
 
         combatController.OnAttackReset += () => { currentState = PlayerStates.Movement; };
         movementController.OnPlungeEnd += HandlePlungeAttack;
+        movementController.ChangePlayerState += ChangeState;
+        OnParry += (target) => 
+        {
+            playerEffectsController.HitStop(0.5f);
+            playerEffectsController.ShakeCamera(5, 20, 0.5f);
+            playerEffectsController.SetCameraTrigger("parry");
+            movementController.Knockback(80f, 2f);
+        };
     }
 
     private void Update()
@@ -68,7 +80,9 @@ public class PlayerController : PlayerStats
         if (Input.GetKeyDown(KeyCode.Return))
             ConsoleManager.Instance.OnInputCommand();
 
-        if (ConsoleManager.Instance.gameObject.activeInHierarchy)
+        if (ConsoleManager.Instance.gameObject.activeInHierarchy || 
+            movementController.currentState == MovementController.MovementState.Knockback ||
+            currentState == PlayerStates.Hurt)
             return;
 
         // Combat Inputs
@@ -85,22 +99,21 @@ public class PlayerController : PlayerStats
         {
             combatController.ResetComboAttack();
         }
-        else if (Input.GetMouseButton(1))
+
+        if (Input.GetMouseButton(1))
         {
-            currentState = PlayerStates.Combat;
-            combatController.HandleParry();
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            currentState = PlayerStates.Movement;
-            combatController.OnReleaseParry();
+            if (combatController.HandleParry())
+                currentState = PlayerStates.Combat;
         }
 
         // Movment Inputs
         if (Input.GetKey(KeyCode.S) && Input.GetKey(KeyCode.Space))
         {
-            currentState = PlayerStates.Movement;
-            combatController.HandlePlungeAttack();
+            if (movementController.HandlePlunge())
+            {
+                currentState = PlayerStates.Movement;
+                combatController.OnPlungeStart();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -111,8 +124,16 @@ public class PlayerController : PlayerStats
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            currentState = PlayerStates.Movement;
-            movementController.HandleDash(horizontal);
+            if (movementController.HandleDash(horizontal))
+            {
+                currentState = PlayerStates.Movement;
+
+                if (movementController.currentState == MovementController.MovementState.Plunge)
+                {
+                    combatController.CancelPlungeAttack();
+                    movementController.CancelPlunge();
+                }
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
@@ -127,6 +148,7 @@ public class PlayerController : PlayerStats
             {
                 movementController.ResumePlayer();
                 combatController.SetCanAttack(true);
+                combatController.OnParryEnd();
             }
 
             movementController.CheckGroundCollision();
@@ -212,25 +234,34 @@ public class PlayerController : PlayerStats
         {
             playerEffectsController.ShakeCamera(4f, 5f, 0.2f);
             playerEffectsController.Pulse(0.5f, 3f, 0f, 0.3f, true);
+
+            ChangeState(PlayerStates.Hurt);
+            combatController.ResetComboInstantly();
+            animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, true);
         }
         else
         {
-            playerEffectsController.HitStop(0.1f);
-
-            if (immuneType == ImmuneType.Dodge)
+            switch (immuneType)
             {
-                // Icy Crampon
-                int randNum = Random.Range(0, 100);
-                if (randNum < itemStats.cramponChance)
-                {
-                    Damage proccDamage = CalculateProccDamageDealt(attacker,
-                        new Damage((attack + attackIncrease.GetTotalModifier()) * itemStats.cramponDamageModifier),
-                        out bool proccCrit,
-                        out DamagePopup.DamageType proccDamageType);
+                case ImmuneType.Dodge:
+                    // Icy Crampon
+                    int randNum = Random.Range(0, 100);
+                    if (randNum < itemStats.cramponChance)
+                    {
+                        Damage proccDamage = CalculateProccDamageDealt(attacker,
+                            new Damage((attack + attackIncrease.GetTotalModifier()) * itemStats.cramponDamageModifier),
+                            out bool proccCrit,
+                            out DamagePopup.DamageType proccDamageType);
 
-                    attacker.TakeTrueDamage(proccDamage);
-                    attacker.ApplyStatusEffect(StatusEffect.StatusType.Freeze, itemStats.cramponFreezeStacks);
-                }
+                        attacker.TakeTrueDamage(proccDamage);
+                        attacker.ApplyStatusEffect(StatusEffect.StatusType.Freeze, itemStats.cramponFreezeStacks);
+                    }
+
+                    playerEffectsController.HitStop(0.1f);
+
+                    break;
+                case ImmuneType.Parry:
+                    break;
             }
         }
 
@@ -371,6 +402,11 @@ public class PlayerController : PlayerStats
             targetEnemy.TakeDamage(this, damage, isCrit, enemy.transform.position, damageType);
             targetEnemy.ApplyStatusEffect(StatusEffect.StatusType.Burn, itemStats.gasolineBurnStacks);
         }
+    }
+
+    public void ChangeState(PlayerStates newState)
+    {
+        currentState = newState;
     }
 
     // For dev console

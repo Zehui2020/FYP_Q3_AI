@@ -523,7 +523,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3851838279515176265
 Transform:
   m_ObjectHideFlags: 0
@@ -16007,8 +16007,8 @@ MonoBehaviour:
   particleVFXManager: {fileID: 7765192986147965756}
   statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
-  health: 100
-  maxHealth: 100
+  health: 100000
+  maxHealth: 100000
   shield: 0
   maxShield: 0
   attack: 10
@@ -16197,11 +16197,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b6dff5c6159be6419d78826f59bd2dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wData: {fileID: 11400000, guid: de5c36eb11ad4e646bc3eff40616d844, type: 2}
+  wData: {fileID: 11400000, guid: 2e8eaf0f3dd2e9a47ae446cd0af1067e, type: 2}
   weaponEffectAnimator: {fileID: 3195104573612119562}
-  perfectParryDuration: 0
-  perfectParryCooldown: 0
-  parryDmgReduction: 0
+  perfectParryCooldown: 1
   isAttacking: 0
 --- !u!114 &9081095423942104333
 MonoBehaviour:
@@ -16260,6 +16258,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   volume: {fileID: 3207393372567944172}
+  camAnimator: {fileID: 0}
   cinemachineVirtualCamera: {fileID: 0}
   airDashPS: {fileID: 7404285949796565952}
   groundDashPS: {fileID: 6434938499212376125}

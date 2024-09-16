@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static MovementController;
 
 public class Enemy : EnemyStats
 {
@@ -21,6 +22,7 @@ public class Enemy : EnemyStats
     protected CombatCollisionController collisionController;
     [SerializeField] protected Animator animator;
     [SerializeField] protected LayerMask playerLayer;
+    [SerializeField] protected LayerMask groundLayer;
 
     [SerializeField] protected List<Transform> waypoints = new();
     protected int currentWaypoint = 0;
@@ -33,6 +35,8 @@ public class Enemy : EnemyStats
     public event System.Action<BaseStats, Damage, bool, Vector3> onHitEvent;
 
     private Coroutine idleRoutine;
+    private Coroutine knockbackRoutine;
+
     private bool isInCombat = false;
 
     private void Start()
@@ -64,6 +68,11 @@ public class Enemy : EnemyStats
 
         onHitEvent += player.OnHitEnemyEvent;
         OnDieEvent += player.OnEnemyDie;
+        player.OnParry += (target) => 
+        {
+            if (target == this)
+                Knockback(60f, 2f); 
+        };
     }
 
     private void Update()
@@ -296,6 +305,63 @@ public class Enemy : EnemyStats
         if (!isInCombat)
             aiNavigation.ResumeNavigationFromStop();
         canUpdate = true;
+    }
+
+    public virtual void Knockback(float initialSpeed, float distance)
+    {
+        if (knockbackRoutine != null)
+            StopCoroutine(knockbackRoutine);
+        knockbackRoutine = StartCoroutine(KnockbackRoutine(initialSpeed, distance));
+    }
+
+    private IEnumerator KnockbackRoutine(float initialSpeed, float distance)
+    {
+        aiNavigation.StopNavigationUntilResume();
+
+        Vector2 dir;
+        if (transform.localScale.x > 0)
+            dir = Vector2.left;
+        else
+            dir = Vector2.right;
+
+        float knockedBackDistance = 0f;
+        float currentSpeed;
+        Vector2 initialPosition = enemyRB.position;
+        float remainingDistance = distance - knockedBackDistance;
+
+        while (remainingDistance > 0.3f)
+        {
+            if (Time.timeScale == 0)
+                yield return null;
+
+            RaycastHit2D hit;
+            if (hit = Physics2D.Raycast(transform.position, dir, distance, groundLayer))
+            {
+                if (Vector2.Distance(transform.position, hit.point) <= 2f)
+                {
+                    while (Time.timeScale == 0)
+                        yield return null;
+
+                    knockbackRoutine = null;
+                    if (!isInCombat)
+                        aiNavigation.ResumeNavigationFromStop();
+                    yield break;
+                }
+            }
+
+            remainingDistance = distance - knockedBackDistance;
+            currentSpeed = Mathf.Lerp(initialSpeed, 0, knockedBackDistance / distance);
+            Vector2 newPosition = enemyRB.position + dir * currentSpeed * Time.deltaTime;
+            enemyRB.MovePosition(newPosition);
+
+            knockedBackDistance = Vector2.Distance(initialPosition, enemyRB.position);
+
+            yield return null;
+        }
+
+        if (!isInCombat)
+            aiNavigation.ResumeNavigationFromStop();
+        knockbackRoutine = null;
     }
 
     private void OnDisable()

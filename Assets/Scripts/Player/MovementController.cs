@@ -1,4 +1,6 @@
+using Cinemachine.Utility;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -20,7 +22,8 @@ public class MovementController : MonoBehaviour
         Grapple,
         GrappleIdle,
         Roll,
-        LungeRoll
+        LungeRoll,
+        Knockback
     }
     public MovementState currentState;
 
@@ -60,18 +63,18 @@ public class MovementController : MonoBehaviour
     private Coroutine jumpRoutine;
     private Coroutine burstDragRoutine;
     private Coroutine dashRoutine;
-    private Coroutine rollRoutine;
     private Coroutine plungeRoutine;
+    private Coroutine knockbackRoutine;
 
     public event System.Action OnPlungeEnd;
+    public event System.Action<PlayerController.PlayerStates> ChangePlayerState;
 
-    public void InitializeMovementController()
+    public void InitializeMovementController(AnimationManager animationManager)
     {
         playerCol = GetComponent<CapsuleCollider2D>();
         playerRB = GetComponent<Rigidbody2D>();
-        animationManager = GetComponent<AnimationManager>();
 
-        animationManager.InitAnimationController();
+        this.animationManager = animationManager;
         moveSpeed = movementData.walkSpeed;
         playerEffectsController = PlayerEffectsController.Instance;
     }
@@ -122,17 +125,71 @@ public class MovementController : MonoBehaviour
             case MovementState.LungeRoll:
                 animationManager.ChangeAnimation(animationManager.LungeRoll, 0, 0, false);
                 break;
-            case MovementState.Plunge:
-                HandlePlunge();
-                break;
         }
 
         currentState = movementState;
     }
 
+    public void Knockback(float initialSpeed, float distance)
+    {
+        if (knockbackRoutine != null)
+            StopCoroutine(knockbackRoutine);
+        knockbackRoutine = StartCoroutine(KnockbackRoutine(initialSpeed, distance));
+    }
+
+    private IEnumerator KnockbackRoutine(float initialSpeed, float distance)
+    {
+        Vector2 dir;
+        if (transform.localScale.x > 0)
+            dir = Vector2.left;
+        else
+            dir = Vector2.right;
+
+        float knockedBackDistance = 0f;
+        float currentSpeed;
+        Vector2 initialPosition = playerRB.position;
+        float remainingDistance = distance - knockedBackDistance;
+
+        while (remainingDistance > 0.3f)
+        {
+            currentState = MovementState.Knockback;
+
+            if (Time.timeScale == 0)
+                yield return null;
+
+            RaycastHit2D hit;
+            if (hit = Physics2D.Raycast(transform.position, dir, distance, groundLayer))
+            {
+                if (Vector2.Distance(transform.position, hit.point) <= 2f)
+                {
+                    while (Time.timeScale == 0)
+                        yield return null;
+
+                    knockbackRoutine = null;
+                    ChangeState(MovementState.Idle);
+                    ChangePlayerState?.Invoke(PlayerController.PlayerStates.Movement);
+                    yield break;
+                }
+            }
+
+            remainingDistance = distance - knockedBackDistance;
+            currentSpeed = Mathf.Lerp(initialSpeed, 0, knockedBackDistance / distance);
+            Vector2 newPosition = playerRB.position + dir * currentSpeed * Time.deltaTime;
+            playerRB.MovePosition(newPosition);
+
+            knockedBackDistance = Vector2.Distance(initialPosition, playerRB.position);
+
+            yield return null;
+        }
+
+        knockbackRoutine = null;
+        ChangeState(MovementState.Idle);
+        ChangePlayerState?.Invoke(PlayerController.PlayerStates.Movement);
+    }
+
     public void HandleMovment(float horizontal)
     {
-        if (!canMove)
+        if (!canMove || currentState == MovementState.Knockback)
             return;
 
         // Calculate move dir
@@ -155,10 +212,14 @@ public class MovementController : MonoBehaviour
             currentState != MovementState.Roll &&
             currentState != MovementState.LedgeGrab &&
             currentState != MovementState.GroundDash &&
+            currentState != MovementState.Knockback &&
+            currentState != MovementState.Plunge &&
             isGrounded)
             ChangeState(MovementState.Idle);
 
-        if (playerRB.velocity.y < -0.1f && currentState != MovementState.Land)
+        if (playerRB.velocity.y < -0.1f && 
+            currentState != MovementState.Land &&
+            currentState != MovementState.Plunge)
             ChangeState(MovementState.Falling);
         else if (currentState == MovementState.Idle && horizontal != 0)
             ChangeState(MovementState.Running);
@@ -182,12 +243,19 @@ public class MovementController : MonoBehaviour
 
     public void HandleGrappling(float vertical, float posX)
     {
-        if (plungeRoutine != null)
+        if (plungeRoutine != null || !canGrapple)
             return;
 
-        if (!canGrapple || vertical == 0)
+        if (vertical == 0)
+        {
+            if (currentState == MovementState.Grapple)
+                ChangeState(MovementState.GrappleIdle);
+
             return;
-            
+        }
+
+        ChangeState(MovementState.Grapple);
+
         transform.position = new Vector3(Mathf.Lerp(transform.position.x, posX, Time.deltaTime * 10f),
             transform.position.y,
             transform.position.z);
@@ -207,7 +275,10 @@ public class MovementController : MonoBehaviour
 
     public void OnJump(float horizontal)
     {
-        if (plungeRoutine != null || rollRoutine != null)
+        if (currentState == MovementState.Plunge || 
+            currentState == MovementState.Roll || 
+            currentState == MovementState.LungeRoll || 
+            currentState == MovementState.Knockback)
             return;
 
         bool isTouchingWall;
@@ -233,10 +304,14 @@ public class MovementController : MonoBehaviour
 
     public void HandleJump(float horizontal)
     {
+        if (currentState == MovementState.Grapple ||
+            currentState == MovementState.GrappleIdle)
+            StopGrappling();
+
         if (fallingDuration > movementData.cyoteTime && jumpCount == maxJumpCount)
             return;
 
-        if (jumpCount <= 0 && !isGrounded)
+        if (jumpCount <= 0 && !isGrounded || currentState == MovementState.Knockback)
             return;
 
         ChangeState(MovementState.Jump);
@@ -360,10 +435,17 @@ public class MovementController : MonoBehaviour
         playerRB.gravityScale = movementData.gravityScale;
     }
 
-    public void HandleDash(float direction)
+    public bool HandleDash(float direction)
     {
-        if (dashRoutine == null)
+        if (dashRoutine == null && 
+            currentState != MovementState.Knockback &&
+            currentState != MovementState.LedgeGrab)
+        {
             dashRoutine = StartCoroutine(DashRoutine(direction));
+            return true;
+        }
+
+        return false;
     }
     private IEnumerator DashRoutine(float direction)
     {
@@ -433,12 +515,12 @@ public class MovementController : MonoBehaviour
 
     public void HandleRoll()
     {
-        if (!isGrounded)
+        if (!isGrounded || currentState == MovementState.Knockback)
             return;
 
-        if (rollRoutine == null)
-            rollRoutine = StartCoroutine(RollRoutine());
+        StartCoroutine(RollRoutine());
     }
+
     private IEnumerator RollRoutine()
     {
         CancelDash();
@@ -472,19 +554,19 @@ public class MovementController : MonoBehaviour
         playerCol.offset = originalOffset;
         playerRB.drag = movementData.groundDrag;
         ChangeState(MovementState.Idle);
-
-        rollRoutine = null;
     }
 
     public bool HandlePlunge()
     {
-        if (plungeRoutine != null)
+        if (currentState == MovementState.Roll ||
+            currentState == MovementState.LungeRoll)
             return false;
 
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, movementData.plungeThreshold, groundLayer);
         if (groundHit)
             return false;
 
+        ChangeState(MovementState.Plunge);
         StopGrappling();
         plungeRoutine = StartCoroutine(PlungeRoutine());
 
@@ -514,12 +596,23 @@ public class MovementController : MonoBehaviour
         OnPlungeEnd?.Invoke();
     }
 
+    public void CancelPlunge()
+    {
+        if (plungeRoutine == null)
+            return;
+
+        StopCoroutine(plungeRoutine);
+        playerRB.gravityScale = movementData.gravityScale;
+        plungeRoutine = null;
+    }
+
     public void MovePlayer(float movementSpeedMultiplier)
     {
         if (currentState != MovementState.Running &&
             currentState != MovementState.Jump &&
             currentState != MovementState.DoubleJump &&
-            currentState != MovementState.Falling)
+            currentState != MovementState.Falling &&
+            currentState != MovementState.Knockback)
             return;
 
         Vector3 force;
@@ -538,34 +631,43 @@ public class MovementController : MonoBehaviour
 
     public void CheckGroundCollision()
     {
+        if (currentState == MovementState.Knockback)
+            return;
+
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, 100, groundLayer);
         float dist = Vector3.Distance(groundCheckPosition.position, groundHit.point);
 
-        if (!isGrounded && playerRB.velocity.y < 0 && dist <= 2f)
+        if (!isGrounded && 
+            playerRB.velocity.y < 0 && 
+            dist <= 2f &&
+            currentState != MovementState.Plunge)
             ChangeState(MovementState.Land);
 
         if (dist <= movementData.minGroundDist)
         {
             if (!isGrounded && 
                 currentState != MovementState.LedgeGrab
-                && currentState != MovementState.GroundDash)
+                && currentState != MovementState.GroundDash
+                && currentState != MovementState.Knockback &&
+                currentState != MovementState.Plunge)
                 ChangeState(MovementState.Idle);
+            else if (currentState == MovementState.Plunge)
+                StopPlunge();
 
             isGrounded = true;
             fallingDuration = 0;
 
-            if (rollRoutine == null)
+            if (currentState != MovementState.Roll &&
+                currentState != MovementState.LungeRoll)
                 playerRB.drag = movementData.groundDrag;
 
             wallJumpCount = maxWallJumps;
             if (jumpRoutine == null)
                 jumpCount = maxJumpCount;
 
-            //if (isPlunging)
-            //    StopPlunge();
-
-            //if (isGrappling)
-            //    StopGrappling();
+            if (currentState == MovementState.Grapple ||
+                currentState == MovementState.GrappleIdle)
+                StopGrappling();
         }
         else if (dist > movementData.minGroundDist)
         {
@@ -619,5 +721,6 @@ public class MovementController : MonoBehaviour
     private void OnDisable()
     {
         OnPlungeEnd = null;
+        ChangePlayerState = null;
     }
 }

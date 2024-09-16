@@ -22,10 +22,10 @@ public class WeaponData : ScriptableObject
     public List<float> breachMultipliers;
 
     public AnimationClip plungeAttackAnimation;
+    public AnimationClip plungeSlamAnimation;
     public float plungeAttackMultiplier;
     public AnimationClip parryAnimation;
     public int critRate;
     public float critDamage;
-    public float breachMutliplier;
     public float comboCooldown;
 }
