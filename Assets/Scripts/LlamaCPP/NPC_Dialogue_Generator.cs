@@ -396,13 +396,14 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             if (e.Data != null)
             {
                 //Note: These are actually errors. This is just to distinguish the Text Generation from the Statistics Output
-                //UnityEngine.Debug.LogError(e.Data);
+                UnityEngine.Debug.Log(e.Data);
             }
         };
 
         process.Start();
 
         process.BeginErrorReadLine();
+
         process.BeginOutputReadLine();
 
         yield return new WaitUntil(() => process.HasExited);
