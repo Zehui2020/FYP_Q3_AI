@@ -1,25 +1,34 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WFC_MapGeneration : MonoBehaviour
 {
+    [Header("General Settings")]
     [SerializeField] private Vector2 mapSize;
     [SerializeField] private float tileSize;
     [SerializeField] private int borderThickness;
+    [SerializeField] private int mapSeed;
+    [Header("Main Map Generation")]
     [SerializeField] private List<GameObject> startingTilePrefabs;
     [SerializeField] private List<GameObject> allTilePrefabs;
+    [Header("Border Generation")]
+    [Header("Edges")]
     [SerializeField] private List<GameObject> topBorderTiles;
     [SerializeField] private List<GameObject> bottomBorderTiles;
     [SerializeField] private List<GameObject> leftBorderTiles;
     [SerializeField] private List<GameObject> rightBorderTiles;
+    [Header("Corners")]
     [SerializeField] private List<GameObject> topLeftCornerTiles;
     [SerializeField] private List<GameObject> topRightCornerTiles;
     [SerializeField] private List<GameObject> bottomLeftCornerTiles;
     [SerializeField] private List<GameObject> bottomRightCornerTiles;
-    [SerializeField] private GameObject solidTile;
-    [SerializeField] private int mapSeed;
-    private List<MapTile> mapTiles = new List<MapTile>();
+    [Header("Perimeter")]
+    [SerializeField] private List<GameObject> solidTile;
+
     private Vector2 currTile;
+    private Vector2 startingPos;
+    private List<MapTile> mapTiles = new List<MapTile>();
     private List<Vector2> collapsableTiles = new List<Vector2>();
     private List<Vector2> collapsedTiles = new List<Vector2>();
     private List<int> collapsableTileNum = new List<int>();
@@ -61,6 +70,7 @@ public class WFC_MapGeneration : MonoBehaviour
         }
         // randomize starting node
         currTile = new Vector2(Random.Range(0, (int)mapSize.x), Random.Range(0, (int)mapSize.y));
+        startingPos = currTile * tileSize;
         // set random starting room tile
         int randomIndex = Random.Range(0, startingTilePrefabs.Count);
         mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = startingTilePrefabs[randomIndex].GetComponent<MapTile>();
@@ -209,7 +219,7 @@ public class WFC_MapGeneration : MonoBehaviour
                 if (i < -1 || i > mapSize.x || j < -1 || j > mapSize.y)
                 {
                     GameObject obj;
-                    obj = Instantiate(solidTile, transform);
+                    obj = Instantiate(solidTile[Random.Range(0, solidTile.Count)], transform);
                     obj.transform.localPosition = new Vector2(i, j) * tileSize;
                 }
             }
@@ -395,10 +405,15 @@ public class WFC_MapGeneration : MonoBehaviour
         return pos.x >= 0 && pos.x < mapSize.x && pos.y >= 0 && pos.y < mapSize.y;
     }
 
-    public MapTile GetCurrentRoomTile()
+    private MapTile GetCurrentRoomTile()
     {
         if (CheckTileInBounds(currTile))
             return mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)];
         return null;
+    }
+
+    public Vector2 GetStartingPos()
+    {
+        return startingPos;
     }
 }

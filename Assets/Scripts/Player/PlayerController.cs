@@ -47,6 +47,7 @@ public class PlayerController : PlayerStats
         playerEffectsController.InitializePlayerEffectsController();
         if (proceduralMapGenerator != null)
             proceduralMapGenerator.InitMapGenerator();
+        transform.position = proceduralMapGenerator.GetStartingPos();
 
         statusEffectManager.OnThresholdReached += TriggerStatusState;
         statusEffectManager.OnApplyStatusEffect += TriggerStatusEffect;
