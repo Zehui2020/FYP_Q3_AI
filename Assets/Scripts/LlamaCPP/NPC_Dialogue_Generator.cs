@@ -37,7 +37,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     //AI Interface Address
     private string llamaDirectory = @"C:\llama.cpp";
     //AI Model Address
-    private string modelDirectory = @"C:\llama.cpp\models\Trail_3\llama-2-7b-chat.Q4_K_M.gguf";
+    private string modelDirectory = @"C:\llama.cpp\models\LLM\llama-2-7b-chat.Q4_K_M.gguf";
     //Full Prompt to feed into AI
     private string AI_Gen_Prompt;
 
