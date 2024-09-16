@@ -17,8 +17,8 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private List<GameObject> bottomLeftCornerTiles;
     [SerializeField] private List<GameObject> bottomRightCornerTiles;
     [SerializeField] private GameObject solidTile;
-    [SerializeField] private List<MapTile> mapTiles;
     [SerializeField] private int mapSeed;
+    private List<MapTile> mapTiles = new List<MapTile>();
     private Vector2 currTile;
     private List<Vector2> collapsableTiles = new List<Vector2>();
     private List<Vector2> collapsedTiles = new List<Vector2>();
@@ -54,6 +54,11 @@ public class WFC_MapGeneration : MonoBehaviour
 
     public void GenerateMap()
     {
+        // init maptiles list
+        for (int i = 0; i < mapSize.x * mapSize.y; i++)
+        {
+            mapTiles.Add(null);
+        }
         // randomize starting node
         currTile = new Vector2(Random.Range(0, (int)mapSize.x), Random.Range(0, (int)mapSize.y));
         // set random starting room tile
