@@ -23,7 +23,6 @@ public class Slime : Enemy
     private readonly int SlimeTeleportEnd = Animator.StringToHash("SlimeTeleportEnd");
 
     [Header("Slime Stats")]
-    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Vector2 jumpForce;
     [SerializeField] private float jumpAngle;
     [SerializeField] private float patrolJumpInterval;

@@ -84,46 +84,46 @@ public class MovementController : MonoBehaviour
         switch (movementState)
         {
             case MovementState.Idle:
-                animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f, false);
+                animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f, AnimationManager.AnimType.None);
                 break;
             case MovementState.Running:
-                animationManager.ChangeAnimation(animationManager.Running, 0f, 0f, false);
+                animationManager.ChangeAnimation(animationManager.Running, 0f, 0f, AnimationManager.AnimType.None);
                 break;
             case MovementState.Jump:
-                animationManager.ChangeAnimation(animationManager.Jumping, 0f, 0f, false);
+                animationManager.ChangeAnimation(animationManager.Jumping, 0f, 0f, AnimationManager.AnimType.None);
                 break;
             case MovementState.DoubleJump:
-                animationManager.ChangeAnimation(animationManager.DoubleJump, 0f, 0f, false);
+                animationManager.ChangeAnimation(animationManager.DoubleJump, 0f, 0f, AnimationManager.AnimType.None);
                 break;
             case MovementState.WallJump:
-                animationManager.ChangeAnimation(animationManager.WallJump, 0f, 0f, false);
+                animationManager.ChangeAnimation(animationManager.WallJump, 0f, 0f, AnimationManager.AnimType.None);
                 break;
             case MovementState.GroundDash:
-                animationManager.ChangeAnimation(animationManager.GroundDash, 0f, 0f, false);
+                animationManager.ChangeAnimation(animationManager.GroundDash, 0f, 0f, AnimationManager.AnimType.None);
                 break;
             case MovementState.AirDash:
-                animationManager.ChangeAnimation(animationManager.AirDash, 0f, 0f, false);
+                animationManager.ChangeAnimation(animationManager.AirDash, 0f, 0f, AnimationManager.AnimType.None);
                 break;
             case MovementState.Falling:
-                animationManager.ChangeAnimation(animationManager.Falling, 0f, 0f, false);
+                animationManager.ChangeAnimation(animationManager.Falling, 0f, 0f, AnimationManager.AnimType.None);
                 break;
             case MovementState.Land:
-                animationManager.ChangeAnimation(animationManager.Land, 0f, 0f, false);
+                animationManager.ChangeAnimation(animationManager.Land, 0f, 0f, AnimationManager.AnimType.None);
                 break;
             case MovementState.LedgeGrab:
-                animationManager.ChangeAnimation(animationManager.WallClimb, 0f, 0f, false);
+                animationManager.ChangeAnimation(animationManager.WallClimb, 0f, 0f, AnimationManager.AnimType.None);
                 break;
             case MovementState.Grapple:
-                animationManager.ChangeAnimation(animationManager.Grappling, 0, 0, false);
+                animationManager.ChangeAnimation(animationManager.Grappling, 0, 0, AnimationManager.AnimType.None);
                 break;
             case MovementState.GrappleIdle:
-                animationManager.ChangeAnimation(animationManager.GrappleIdle, 0, 0, false);
+                animationManager.ChangeAnimation(animationManager.GrappleIdle, 0, 0, AnimationManager.AnimType.None);
                 break;
             case MovementState.Roll:
-                animationManager.ChangeAnimation(animationManager.Roll, 0, 0, false);
+                animationManager.ChangeAnimation(animationManager.Roll, 0, 0, AnimationManager.AnimType.None);
                 break;
             case MovementState.LungeRoll:
-                animationManager.ChangeAnimation(animationManager.LungeRoll, 0, 0, false);
+                animationManager.ChangeAnimation(animationManager.LungeRoll, 0, 0, AnimationManager.AnimType.None);
                 break;
         }
 

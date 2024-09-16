@@ -20,6 +20,8 @@ public class PlayerController : PlayerStats
     private FadeTransition fadeTransition;
     private ItemManager itemManager;
     private PlayerEffectsController playerEffectsController;
+    private Rigidbody2D playerRB;
+
     [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
     [SerializeField] private LayerMask enemyLayer;
 
@@ -42,6 +44,7 @@ public class PlayerController : PlayerStats
         statusEffectManager = GetComponent<StatusEffectManager>();
         playerEffectsController = GetComponent<PlayerEffectsController>();
         animationManager = GetComponent<AnimationManager>();
+        playerRB = GetComponent<Rigidbody2D>();
 
         animationManager.InitAnimationController();
         itemManager.InitItemManager();
@@ -235,9 +238,10 @@ public class PlayerController : PlayerStats
             playerEffectsController.ShakeCamera(4f, 5f, 0.2f);
             playerEffectsController.Pulse(0.5f, 3f, 0f, 0.3f, true);
 
+            playerRB.velocity = Vector2.zero;
             ChangeState(PlayerStates.Hurt);
             combatController.ResetComboInstantly();
-            animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, true);
+            animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);
         }
         else
         {

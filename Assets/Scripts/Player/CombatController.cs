@@ -60,7 +60,7 @@ public class CombatController : MonoBehaviour
 
         isInParry = true;
         animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.parryAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
-        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
+        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, AnimationManager.AnimType.ResetIfSame);
 
         return true;
     }
@@ -88,7 +88,7 @@ public class CombatController : MonoBehaviour
 
         player.comboDamageMultipler.ReplaceAllModifiers(wData.attackMultipliers[attackComboCount]);
         animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.attackAnimations[attackComboCount].name), player.attackSpeedMultiplier.GetTotalModifier());
-        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
+        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, AnimationManager.AnimType.ResetIfSame);
 
         weaponEffectAnimator.speed = player.attackSpeedMultiplier.GetTotalModifier();
         weaponEffectAnimator.Play(Animator.StringToHash(wData.attackEffectAnimations[attackComboCount].name), -1, 0);
@@ -148,7 +148,7 @@ public class CombatController : MonoBehaviour
     public void OnPlungeStart()
     {
         animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.plungeAttackAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
-        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
+        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, AnimationManager.AnimType.ResetIfSame);
     }
 
     public bool HandlePlungeAttack()
@@ -157,7 +157,7 @@ public class CombatController : MonoBehaviour
         {
             player.comboDamageMultipler.ReplaceAllModifiers(wData.plungeAttackMultiplier);
             animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.plungeSlamAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
-            animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, true);
+            animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, AnimationManager.AnimType.ResetIfSame);
             return true;
         }
 
