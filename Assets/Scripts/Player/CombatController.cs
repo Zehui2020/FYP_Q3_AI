@@ -35,13 +35,21 @@ public class CombatController : MonoBehaviour
         attackComboCount = 0;
 
         collisionController.InitCollisionController(player);
+
+        if (wData == null)
+            return;
+
         weaponEffectAnimator.runtimeAnimatorController = wData.effectController;
+        player.critRate.AddModifier(wData.critRate);
+        player.critDamage.AddModifier(wData.critDamage);
     }
 
     public void ChangeWeapon(WeaponData newData)
     {
         wData = newData;
         weaponEffectAnimator.runtimeAnimatorController = wData.effectController;
+        player.critRate.AddModifier(wData.critRate);
+        player.critDamage.AddModifier(wData.critDamage);
     }
 
     public bool HandleParry()
@@ -103,6 +111,8 @@ public class CombatController : MonoBehaviour
 
         weaponEffectAnimator.speed = player.attackSpeedMultiplier.GetTotalModifier();
         weaponEffectAnimator.Play(Animator.StringToHash(wData.attackEffectAnimations[attackComboCount].name), -1, 0);
+
+        //player.breachedMultiplier.AddModifier();
 
         attackComboCount++;
         if (attackComboCount >= wData.attackAnimations.Count)

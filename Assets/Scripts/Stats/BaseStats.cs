@@ -66,6 +66,7 @@ public class BaseStats : MonoBehaviour
     public StatModifier critDamage = new();
     public StatModifier comboDamageMultipler = new();
     public StatModifier damageMultipler = new();
+    public StatModifier breachDamageMultiplier = new();
     public StatModifier breachedMultiplier = new();
     public StatModifier totalDamageMultiplier = new();
     public StatModifier damageReduction = new();
@@ -256,6 +257,8 @@ public class BaseStats : MonoBehaviour
     {
         if (shield <= 0)
             totalDamageDealt *= breachedMultiplier.GetTotalModifier();
+        else
+            totalDamageDealt *= attacker.breachDamageMultiplier.GetTotalModifier();
 
         totalDamageDealt *= (1 - damageReduction.GetTotalModifier());
         totalDamageDealt *= attacker.totalDamageMultiplier.GetTotalModifier();
