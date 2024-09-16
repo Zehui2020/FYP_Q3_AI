@@ -1,33 +1,45 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class RoomGenerator : MonoBehaviour
+public class WFC_MapGeneration : MonoBehaviour
 {
     [SerializeField] private Vector2 roomSize;
     [SerializeField] private float tileSize;
-    [SerializeField] private GameObject doorPrefab;
     [SerializeField] private List<GameObject> startingTilePrefabs;
     [SerializeField] private List<GameObject> allTilePrefabs;
-    [SerializeField] private List<RoomTile> roomTiles;
+    [SerializeField] private List<MapTile> roomTiles;
+    [SerializeField] private int mapSeed;
     private Vector2 currTile;
     private List<Vector2> collapsableTiles = new List<Vector2>();
     private List<Vector2> collapsedTiles = new List<Vector2>();
     private List<int> collapsableTileNum = new List<int>();
 
-    private void Start()
+    private void Update()
     {
+        // debug inputs
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RandomizeSeed();
+            GenerateRooms();
+        }
+    }
+
+    public void InitMapGenerator()
+    {
+        SetSeed(mapSeed);
         GenerateRooms();
     }
 
-    private void Update()
+    private void RandomizeSeed()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            SetNextRoom();
-        }
+        mapSeed = Random.Range(0, 1000000000);
+        Random.InitState(mapSeed);
+    }
+
+    public void SetSeed(int seed)
+    {
+        mapSeed = seed;
+        Random.InitState(mapSeed);
     }
 
     public void GenerateRooms()
@@ -36,7 +48,7 @@ public class RoomGenerator : MonoBehaviour
         currTile = new Vector2(Random.Range(0, (int)roomSize.x), Random.Range(0, (int)roomSize.y));
         // set random starting room tile
         int randomIndex = Random.Range(0, startingTilePrefabs.Count);
-        roomTiles[(int)currTile.x + (int)(currTile.y * roomSize.x)] = startingTilePrefabs[randomIndex].GetComponent<RoomTile>();
+        roomTiles[(int)currTile.x + (int)(currTile.y * roomSize.x)] = startingTilePrefabs[randomIndex].GetComponent<MapTile>();
         //place room
         GameObject obj = Instantiate(startingTilePrefabs[randomIndex], transform);
         obj.transform.localPosition = currTile * tileSize;
@@ -61,7 +73,7 @@ public class RoomGenerator : MonoBehaviour
                     tileToCollapse = collapsableTiles[i];
                     leastTilesToCollapse = collapsableTileNum[i];
                 }
-                else if (collapsableTileNum[i] < leastTilesToCollapse)
+                else if (collapsableTileNum[i] <= leastTilesToCollapse)
                 {
                     tileToCollapse = collapsableTiles[i];
                     leastTilesToCollapse = collapsableTileNum[i];
@@ -79,7 +91,7 @@ public class RoomGenerator : MonoBehaviour
         if (tileToSet == null)
             return;
         // set room tile
-        roomTiles[(int)currTile.x + (int)(currTile.y * roomSize.x)] = tileToSet.GetComponent<RoomTile>();
+        roomTiles[(int)currTile.x + (int)(currTile.y * roomSize.x)] = tileToSet.GetComponent<MapTile>();
         //place room
         GameObject obj = Instantiate(tileToSet, transform);
         obj.transform.localPosition = currTile * tileSize;
@@ -192,7 +204,7 @@ public class RoomGenerator : MonoBehaviour
         return pos.x >= 0 && pos.x < roomSize.x && pos.y >= 0 && pos.y < roomSize.y;
     }
 
-    public RoomTile GetCurrentRoomTile()
+    public MapTile GetCurrentRoomTile()
     {
         if (CheckTileInBounds(currTile))
             return roomTiles[(int)currTile.x + (int)(currTile.y * roomSize.x)];

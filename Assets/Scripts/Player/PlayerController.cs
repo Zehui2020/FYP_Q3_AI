@@ -18,7 +18,7 @@ public class PlayerController : PlayerStats
     private FadeTransition fadeTransition;
     private ItemManager itemManager;
     private PlayerEffectsController playerEffectsController;
-    [SerializeField] private ProceduralMapGenerator proceduralMapGenerator;
+    [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
     [SerializeField] private LayerMask enemyLayer;
 
     private IInteractable currentInteractable;
