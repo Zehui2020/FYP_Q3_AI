@@ -1239,7 +1239,7 @@ GameObject:
   - component: {fileID: 7873470830961561041}
   m_Layer: 7
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1503,13 +1503,13 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
   waypoints:
   - {fileID: 7664433895671088423}
   - {fileID: 8630401135501763257}
   currentState: 0
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
   lungeForce: {x: 25, y: 15}
   lungeAngle: 45
   scratchRange: 2

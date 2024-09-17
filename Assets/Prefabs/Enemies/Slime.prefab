@@ -1060,7 +1060,7 @@ GameObject:
   - component: {fileID: 4325749170283590701}
   m_Layer: 7
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1324,13 +1324,13 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
   waypoints:
   - {fileID: 2139633979204247439}
   - {fileID: 5000193587285852631}
   currentState: 0
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
   jumpForce: {x: 15, y: 20}
   jumpAngle: 60
   patrolJumpInterval: 2
