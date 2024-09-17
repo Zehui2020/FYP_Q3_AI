@@ -438,9 +438,11 @@ public class MovementController : MonoBehaviour
 
     public bool HandleDash(float direction)
     {
-        if (dashRoutine == null && 
+        if (dashRoutine == null &&
             currentState != MovementState.Knockback &&
-            currentState != MovementState.LedgeGrab)
+            currentState != MovementState.LedgeGrab &&
+            currentState != MovementState.Roll &&
+            currentState != MovementState.LungeRoll)
         {
             dashRoutine = StartCoroutine(DashRoutine(direction));
             return true;
@@ -597,16 +599,6 @@ public class MovementController : MonoBehaviour
         OnPlungeEnd?.Invoke();
     }
 
-    public void CancelPlunge()
-    {
-        if (plungeRoutine == null)
-            return;
-
-        StopCoroutine(plungeRoutine);
-        playerRB.gravityScale = movementData.gravityScale;
-        plungeRoutine = null;
-    }
-
     public void MovePlayer(float movementSpeedMultiplier)
     {
         if (currentState != MovementState.Running &&
@@ -648,7 +640,7 @@ public class MovementController : MonoBehaviour
         else if (!isGrounded &&
             playerRB.velocity.y < 0 &&
             dist > 2f &&
-            currentState == MovementState.Plunge)
+            currentState != MovementState.Plunge)
         {
             ChangeState(MovementState.Falling);
         }
