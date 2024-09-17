@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using TMPro;
+using System.IO;
+using System.Text;
 
 public class NPC_Dialogue_Generator : MonoBehaviour
 {
