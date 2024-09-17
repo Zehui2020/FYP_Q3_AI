@@ -38,6 +38,8 @@ public class Enemy : EnemyStats
     private Coroutine knockbackRoutine;
 
     private bool isInCombat = false;
+    private float previousAnimSpeed;
+    private int currentShield;
 
     private void Start()
     {
@@ -60,11 +62,17 @@ public class Enemy : EnemyStats
 
         statusEffectManager.OnThresholdReached += TriggerStatusState;
         statusEffectManager.OnApplyStatusEffect += TriggerStatusEffect;
+        statusEffectManager.OnCleanse += OnCleanse;
 
         onPlayerInChaseRange += () => { isInCombat = true; uiController.SetCanvasActive(true); };
         OnHealthChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };
         OnShieldChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnShieldChanged(shield, maxShield, increase, isCrit); };
-        OnBreached += (multiplier) => { statusEffectManager.AddEffectUI(StatusEffectUI.StatusEffectType.Breached, 0); PlayerEffectsController.Instance.HitStop(0.2f); };
+        OnBreached += (multiplier) => 
+        {
+            ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Breached), 0);
+            dazedRoutine = StartCoroutine(DazedRoutine());
+            PlayerEffectsController.Instance.HitStop(0.2f); 
+        };
 
         onHitEvent += player.OnHitEnemyEvent;
         OnDieEvent += player.OnEnemyDie;
@@ -223,19 +231,23 @@ public class Enemy : EnemyStats
         isFrozen = true;
         canUpdate = false;
 
-        float previousAnimSpeed = animator.speed;
+        previousAnimSpeed = animator.speed;
         animator.speed = 0;
 
-        statusEffectManager.AddEffectUI(StatusEffectUI.StatusEffectType.Frozen, 0);
+        ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Frozen), 0);
 
         yield return new WaitForSeconds(statusEffectStats.frozenDuration);
 
-        statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Frozen);
+        OnFrozenEnd();
+    }
+    private void OnFrozenEnd()
+    {
+        statusEffectManager.RemoveEffectUI(StatusEffect.StatusType.Status.Frozen);
         animator.speed = previousAnimSpeed;
         frozenRoutine = null;
 
         if (health <= 0)
-            yield break;
+            return;
 
         if (!isInCombat && aiNavigation != null)
             aiNavigation.ResumeNavigationFromStop();
@@ -247,17 +259,17 @@ public class Enemy : EnemyStats
 
     public override IEnumerator StunnedRoutine()
     {
-        int currentShield = shield;
+        currentShield = shield;
         shield = 0;
         InvokeOnShieldChanged(false, true);
 
         aiNavigation.StopNavigationUntilResume();
         canUpdate = false;
 
-        float previousAnimSpeed = animator.speed;
+        previousAnimSpeed = animator.speed;
         animator.speed = 0;
 
-        statusEffectManager.AddEffectUI(StatusEffectUI.StatusEffectType.Stunned, 0);
+        ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Stunned), 0);
 
         float timer = statusEffectStats.stunDuration;
 
@@ -271,7 +283,11 @@ public class Enemy : EnemyStats
             yield return null;
         }
 
-        statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Stunned);
+        OnStunEnd();
+    }
+    private void OnStunEnd()
+    {
+        statusEffectManager.RemoveEffectUI(StatusEffect.StatusType.Status.Stunned);
 
         animator.speed = previousAnimSpeed;
         shield = currentShield;
@@ -279,7 +295,7 @@ public class Enemy : EnemyStats
         stunnedRoutine = null;
 
         if (health <= 0)
-            yield break;
+            return;
 
         if (!isInCombat)
             aiNavigation.ResumeNavigationFromStop();
@@ -289,22 +305,58 @@ public class Enemy : EnemyStats
     public override IEnumerator DazedRoutine()
     {
         aiNavigation.StopNavigationUntilResume();
-        float previousAnimSpeed = animator.speed;
+        previousAnimSpeed = animator.speed;
         animator.speed = 0;
         canUpdate = false;
-        statusEffectManager.AddEffectUI(StatusEffectUI.StatusEffectType.Dazed, 0);
+        ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Dazed), 0);
 
-        yield return new WaitForSeconds(statusEffectStats.stunDuration);
+        yield return new WaitForSeconds(statusEffectStats.dazeDuration);
+
+        OnDazeEnd();
+    }
+    private void OnDazeEnd()
+    {
+        statusEffectManager.RemoveEffectUI(StatusEffect.StatusType.Status.Dazed);
 
         animator.speed = previousAnimSpeed;
-        statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Dazed);
+        shield = maxShield;
+        InvokeOnShieldChanged(true, false);
+        dazedRoutine = null;
 
         if (health <= 0)
-            yield break;
+            return;
 
         if (!isInCombat)
             aiNavigation.ResumeNavigationFromStop();
         canUpdate = true;
+    }
+
+    public override void OnCleanse(StatusEffect.StatusType.Status status)
+    {
+        switch (status)
+        {
+            case StatusEffect.StatusType.Status.Frozen:
+                if (frozenRoutine == null)
+                    break;
+
+                StopCoroutine(frozenRoutine);
+                OnFrozenEnd();
+                break;
+            case StatusEffect.StatusType.Status.Stunned:
+                if (stunnedRoutine == null)
+                    break;
+
+                StopCoroutine(stunnedRoutine);
+                OnStunEnd();
+                break;
+            case StatusEffect.StatusType.Status.Dazed:
+                if (dazedRoutine == null)
+                    return;
+
+                StopCoroutine(dazedRoutine);
+                OnDazeEnd();
+                break;
+        }
     }
 
     public virtual void Knockback(float initialSpeed, float distance)

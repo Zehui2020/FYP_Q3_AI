@@ -3,13 +3,38 @@ using UnityEngine;
 [System.Serializable]
 public class StatusEffect
 {
-    public enum StatusType
+    public struct StatusType
     {
-        Bleed,
-        Burn,
-        Poison,
-        Freeze,
-        Static
+        public enum Type
+        {
+            Buff,
+            Debuff
+        }
+        public enum Status
+        {
+            // Status Effects
+            Bleed,
+            Burn,
+            Poison,
+            Freeze,
+            Static,
+            BloodLoss,
+
+            // States
+            Breached,
+            Frozen,
+            Stunned,
+            Dazed
+        }
+
+        public Type statusType;
+        public Status statusEffect;
+
+        public StatusType(Type type, Status status)
+        {
+            statusType = type;
+            statusEffect = status;
+        }
     }
 
     public float stackResetDuration;

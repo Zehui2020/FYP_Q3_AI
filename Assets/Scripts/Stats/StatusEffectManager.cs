@@ -5,14 +5,6 @@ using UnityEngine.UI;
 
 public class StatusEffectManager : MonoBehaviour
 {
-    public enum StatusState
-    {
-        BloodLoss,
-        Frozen,
-        Dazed,
-        Stunned,
-    }
-
     [SerializeField] private StatusEffectStats statusEffectStats;
     [SerializeField] private ParticleVFXManager particleVFXManager;
 
@@ -24,66 +16,13 @@ public class StatusEffectManager : MonoBehaviour
     public StatusEffect staticStacks;
 
     public event System.Action<StatusEffect.StatusType, int> OnApplyStatusEffect;
-    public event System.Action<StatusState> OnThresholdReached;
+    public event System.Action<StatusEffect.StatusType.Status> OnThresholdReached;
+    public event System.Action<StatusEffect.StatusType.Status> OnCleanse;
 
     [Header("Status Effect UI")]
     [SerializeField] private RectTransform effectCanvas;
     [SerializeField] private Transform statusEffectUIParent;
     private List<StatusEffectUI> currentEffectUIs = new();
-
-    public void ApplyStatusEffect(StatusEffect.StatusType statusEffect, int amount)
-    {
-        OnApplyStatusEffect?.Invoke(statusEffect, amount);
-
-        switch (statusEffect)
-        {
-            case StatusEffect.StatusType.Bleed:
-                particleVFXManager.OnBleeding();
-
-                if (bleedStacks.AddStack(amount))
-                {
-                    particleVFXManager.StopBleeding();
-                    particleVFXManager.OnBloodLoss();
-
-                    OnThresholdReached?.Invoke(StatusState.BloodLoss);
-                    bleedStacks.SetThreshold(bleedStacks.stackThreshold * statusEffectStats.bleedThresholdMultiplier);
-                    RemoveEffectUI(StatusEffectUI.StatusEffectType.Bleed);
-                }
-                else
-                    SpawnEffectUI(statusEffect, bleedStacks.stackCount);
-                break;
-            case StatusEffect.StatusType.Burn:
-                burnStacks.AddStack(amount);
-                SpawnEffectUI(statusEffect, burnStacks.stackCount);
-                break;
-            case StatusEffect.StatusType.Poison:
-                poisonStacks.AddStack(amount);
-                SpawnEffectUI(statusEffect, poisonStacks.stackCount);
-                break;
-            case StatusEffect.StatusType.Freeze:
-                if (freezeStacks.AddStack(amount))
-                {
-                    OnThresholdReached?.Invoke(StatusState.Frozen);
-                    RemoveEffectUI(StatusEffectUI.StatusEffectType.Freeze);
-                }
-                else
-                    SpawnEffectUI(statusEffect, freezeStacks.stackCount);
-                break;
-            case StatusEffect.StatusType.Static:
-                particleVFXManager.OnStatic();
-                if (staticStacks.AddStack(amount))
-                {
-                    particleVFXManager.StopStatic();
-                    particleVFXManager.OnStunned();
-
-                    OnThresholdReached?.Invoke(StatusState.Stunned);
-                    RemoveEffectUI(StatusEffectUI.StatusEffectType.Static);
-                }
-                else
-                    SpawnEffectUI(statusEffect, staticStacks.stackCount);
-                break;
-        }
-    }
 
     public void UpdateStatusEffects()
     {
@@ -94,51 +33,64 @@ public class StatusEffectManager : MonoBehaviour
         staticStacks.UpdateStack();
     }
 
-    private void SpawnEffectUI(StatusEffect.StatusType statusType, int count)
+    public void ApplyStatusEffect(StatusEffect.StatusType statusEffect, int amount)
     {
-        StatusEffectUI.StatusEffectType type;
+        OnApplyStatusEffect?.Invoke(statusEffect, amount);
 
-        switch (statusType)
+        switch (statusEffect.statusEffect)
         {
-            case StatusEffect.StatusType.Bleed:
-                type = StatusEffectUI.StatusEffectType.Bleed;
+            case StatusEffect.StatusType.Status.Bleed:
+                particleVFXManager.OnBleeding();
+
+                if (bleedStacks.AddStack(amount))
+                {
+                    particleVFXManager.StopBleeding();
+                    particleVFXManager.OnBloodLoss();
+
+                    OnThresholdReached?.Invoke(StatusEffect.StatusType.Status.BloodLoss);
+                    bleedStacks.SetThreshold(bleedStacks.stackThreshold * statusEffectStats.bleedThresholdMultiplier);
+                    RemoveEffectUI(StatusEffect.StatusType.Status.Bleed);
+                }
+                else
+                    AddEffectUI(statusEffect, bleedStacks.stackCount);
                 break;
-            case StatusEffect.StatusType.Burn:
-                type = StatusEffectUI.StatusEffectType.Burn;
+            case StatusEffect.StatusType.Status.Burn:
+                burnStacks.AddStack(amount);
+                AddEffectUI(statusEffect, burnStacks.stackCount);
                 break;
-            case StatusEffect.StatusType.Poison:
-                type = StatusEffectUI.StatusEffectType.Poison;
+            case StatusEffect.StatusType.Status.Poison:
+                poisonStacks.AddStack(amount);
+                AddEffectUI(statusEffect, poisonStacks.stackCount);
                 break;
-            case StatusEffect.StatusType.Freeze:
-                type = StatusEffectUI.StatusEffectType.Freeze; 
+            case StatusEffect.StatusType.Status.Freeze:
+                if (freezeStacks.AddStack(amount))
+                {
+                    OnThresholdReached?.Invoke(StatusEffect.StatusType.Status.Frozen);
+                    RemoveEffectUI(StatusEffect.StatusType.Status.Freeze);
+                }
+                else
+                    AddEffectUI(statusEffect, freezeStacks.stackCount);
                 break;
-            case StatusEffect.StatusType.Static:
-                type = StatusEffectUI.StatusEffectType.Static; 
+            case StatusEffect.StatusType.Status.Static:
+                particleVFXManager.OnStatic();
+                if (staticStacks.AddStack(amount))
+                {
+                    particleVFXManager.StopStatic();
+                    particleVFXManager.OnStunned();
+
+                    OnThresholdReached?.Invoke(StatusEffect.StatusType.Status.Stunned);
+                    RemoveEffectUI(StatusEffect.StatusType.Status.Static);
+                }
+                else
+                    AddEffectUI(statusEffect, staticStacks.stackCount);
                 break;
             default:
-                type = StatusEffectUI.StatusEffectType.Bleed;
+                AddEffectUI(statusEffect, 0);
                 break;
         }
-
-        foreach (StatusEffectUI effectUI in currentEffectUIs)
-        {
-            if (effectUI.effectType.Equals(type))
-            {
-                effectUI.SetStackCount(count);
-                return;
-            }
-        }
-
-        StatusEffectUI statusEffectUI = ObjectPool.Instance.GetPooledObject("StatusEffectUI", true) as StatusEffectUI;
-        statusEffectUI.SetStatusEffectUI(type, count);
-        currentEffectUIs.Add(statusEffectUI);
-
-        statusEffectUI.transform.SetParent(statusEffectUIParent);
-        statusEffectUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-        LayoutRebuilder.ForceRebuildLayoutImmediate(effectCanvas);
     }
 
-    public void AddEffectUI(StatusEffectUI.StatusEffectType effectType, int count)
+    private void AddEffectUI(StatusEffect.StatusType effectType, int count)
     {
         foreach (StatusEffectUI effectUI in currentEffectUIs)
         {
@@ -158,7 +110,7 @@ public class StatusEffectManager : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(effectCanvas);
     }
 
-    public void RemoveEffectUI(StatusEffectUI.StatusEffectType effectType)
+    public void RemoveEffectUI(StatusEffect.StatusType.Status effectType)
     {
         StatusEffectUI effectUI = FindStatusEffectUI(effectType);
         if (effectUI == null)
@@ -168,46 +120,35 @@ public class StatusEffectManager : MonoBehaviour
         currentEffectUIs.Remove(effectUI);
     }
 
-    private StatusEffectUI FindStatusEffectUI(StatusEffectUI.StatusEffectType effectType)
+    public bool ReduceEffectStack(StatusEffect.StatusType.Status statusType, int amount)
     {
-        foreach (StatusEffectUI effectUI in currentEffectUIs)
-        {
-            if (effectUI.effectType.Equals(effectType))
-                return effectUI;
-        }
-
-        return null;
-    }
-
-    public void ReduceEffectStack(StatusEffect.StatusType statusType, int amount)
-    {
-        StatusEffectUI effectUI;
+        StatusEffectUI effectUI = FindStatusEffectUI(statusType);
+        if (effectUI == null)
+            return false;
 
         switch (statusType)
         {
-            case StatusEffect.StatusType.Bleed:
-                effectUI = FindStatusEffectUI(StatusEffectUI.StatusEffectType.Bleed);
+            case StatusEffect.StatusType.Status.Bleed:
                 ReduceStackCount(bleedStacks, effectUI, amount);
                 break;
-            case StatusEffect.StatusType.Burn:
-                effectUI = FindStatusEffectUI(StatusEffectUI.StatusEffectType.Burn);
+            case StatusEffect.StatusType.Status.Burn:
                 ReduceStackCount(burnStacks, effectUI, amount);
                 break;
-            case StatusEffect.StatusType.Poison:
-                effectUI = FindStatusEffectUI(StatusEffectUI.StatusEffectType.Poison);
+            case StatusEffect.StatusType.Status.Poison:
                 ReduceStackCount(poisonStacks, effectUI, amount);
                 break;
-            case StatusEffect.StatusType.Freeze:
-                effectUI = FindStatusEffectUI(StatusEffectUI.StatusEffectType.Freeze);
+            case StatusEffect.StatusType.Status.Freeze:
                 ReduceStackCount(freezeStacks, effectUI, amount);
                 break;
-            case StatusEffect.StatusType.Static:
-                effectUI = FindStatusEffectUI(StatusEffectUI.StatusEffectType.Static);
+            case StatusEffect.StatusType.Status.Static:
                 ReduceStackCount(staticStacks, effectUI, amount);
                 break;
+            default:
+                return false;
         }
-    }
 
+        return true;
+    }
     private void ReduceStackCount(StatusEffect targetEffect, StatusEffectUI effectUI, int amount)
     {
         targetEffect.RemoveStack(amount);
@@ -220,6 +161,41 @@ public class StatusEffectManager : MonoBehaviour
         else
         {
             effectUI.SetStackCount(targetEffect.stackCount);
+        }
+    }
+
+    private StatusEffectUI FindStatusEffectUI(StatusEffect.StatusType.Status effectType)
+    {
+        foreach (StatusEffectUI effectUI in currentEffectUIs)
+        {
+            if (effectUI.effectType.statusEffect == effectType)
+                return effectUI;
+        }
+
+        return null;
+    }
+
+    public void Cleanse(StatusEffect.StatusType.Type type)
+    {
+        List<StatusEffectUI> effectUIsToRemove = new();
+
+        for (int i = 0; i < currentEffectUIs.Count; i++)
+        {
+            if (!(currentEffectUIs[i].effectType.statusType == type))
+                continue;
+
+            effectUIsToRemove.Add(currentEffectUIs[i]);
+        }
+
+        foreach (StatusEffectUI effectUI in effectUIsToRemove)
+        {
+            OnCleanse?.Invoke(effectUI.effectType.statusEffect);
+
+            if (!ReduceEffectStack(effectUI.effectType.statusEffect, Mathf.CeilToInt(Mathf.Infinity)))
+            {
+                effectUI.RemoveStatusEffect();
+                currentEffectUIs.Remove(effectUI);
+            }
         }
     }
 
@@ -236,5 +212,6 @@ public class StatusEffectManager : MonoBehaviour
     {
         OnApplyStatusEffect = null;
         OnThresholdReached = null;
+        OnCleanse = null;
     }
 }

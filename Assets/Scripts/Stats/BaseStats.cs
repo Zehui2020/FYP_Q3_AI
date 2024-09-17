@@ -79,6 +79,7 @@ public class BaseStats : MonoBehaviour
     protected Coroutine stunnedRoutine;
     protected Coroutine dazedRoutine;
 
+    protected Coroutine burnRoutine;
     private Coroutine poisonRoutine;
     private float poisonTimer;
 
@@ -408,6 +409,10 @@ public class BaseStats : MonoBehaviour
         }
     }
 
+    public virtual void OnCleanse(StatusEffect.StatusType.Status status)
+    {
+    }
+
     private void OnDisable()
     {
         OnHealthChanged = null;
@@ -423,15 +428,15 @@ public class BaseStats : MonoBehaviour
 
         shield = maxShield;
         OnShieldChanged?.Invoke(true, false);
-        statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Breached);
+        statusEffectManager.RemoveEffectUI(StatusEffect.StatusType.Status.Breached);
     }
 
-    protected void InvokeOnShieldChanged(bool shieldRestored, bool shieldLost)
+    protected void InvokeOnShieldChanged(bool shieldRestored, bool isCrit)
     {
-        OnShieldChanged?.Invoke(shieldRestored, shieldLost);
+        OnShieldChanged?.Invoke(shieldRestored, isCrit);
     }
 
-    public virtual void TriggerStatusState(StatusState state)
+    public virtual void TriggerStatusState(StatusEffect.StatusType.Status state)
     {
         if (this == null)
             return;
@@ -440,24 +445,24 @@ public class BaseStats : MonoBehaviour
 
         switch (state)
         {
-            case StatusState.BloodLoss:
+            case StatusEffect.StatusType.Status.BloodLoss:
                 TakeTrueDamage(new Damage(Damage.DamageSource.StatusEffect, maxHealth * statusEffectStats.bloodLossDamage));
                 popup.SetupPopup("Blood Loss!", transform.position, Color.red, new Vector2(0, 3));
                 break;
-            case StatusState.Frozen:
+            case StatusEffect.StatusType.Status.Frozen:
                 if (frozenRoutine != null)
                     return;
                 popup.SetupPopup("Frozen!", transform.position, Color.blue, new Vector2(0, 3));
                 frozenRoutine = StartCoroutine(FrozenRoutine());
                 break;
-            case StatusState.Dazed:
+            case StatusEffect.StatusType.Status.Dazed:
                 if (dazedRoutine != null)
                     return;
 
                 popup.SetupPopup("Dazed!", transform.position, Color.yellow, new Vector2(0, 3));
                 dazedRoutine = StartCoroutine(DazedRoutine());
                 break;
-            case StatusState.Stunned:
+            case StatusEffect.StatusType.Status.Stunned:
                 if (stunnedRoutine != null)
                     return;
 
@@ -469,13 +474,13 @@ public class BaseStats : MonoBehaviour
 
     public virtual void TriggerStatusEffect(StatusEffect.StatusType statusEffect, int amount)
     {
-        switch (statusEffect)
+        switch (statusEffect.statusEffect)
         {
-            case StatusEffect.StatusType.Burn:
+            case StatusEffect.StatusType.Status.Burn:
                 for (int i = 0; i < amount; i++)
-                    StartCoroutine(BurnRoutine());
+                    burnRoutine = StartCoroutine(BurnRoutine());
                 break;
-            case StatusEffect.StatusType.Poison:
+            case StatusEffect.StatusType.Status.Poison:
                 poisonTimer = statusEffectStats.poisonDuration;
                 if (poisonRoutine == null)
                     poisonRoutine = StartCoroutine(PoisonRoutine());
@@ -514,8 +519,8 @@ public class BaseStats : MonoBehaviour
 
         while (count < statusEffectStats.burnsPerStack)
         {
-            if (health <= 0)
-                yield break;
+            if (health <= 0 || statusEffectManager.burnStacks.stackCount <= 0)
+                break;
 
             count++;
 
@@ -527,7 +532,7 @@ public class BaseStats : MonoBehaviour
             yield return new WaitForSeconds(statusEffectStats.burnInterval);
         }
 
-        statusEffectManager.ReduceEffectStack(StatusEffect.StatusType.Burn, 1);
+        statusEffectManager.ReduceEffectStack(StatusEffect.StatusType.Status.Burn, 1);
 
         if (statusEffectManager.burnStacks.stackCount <= 0)
             particleVFXManager.StopBurning();
@@ -543,8 +548,8 @@ public class BaseStats : MonoBehaviour
 
         while (poisonTimer > 0)
         {
-            if (health <= 0)
-                yield break;
+            if (health <= 0 || statusEffectManager.poisonStacks.stackCount <= 0)
+                break;
 
             TakeTrueDamage(new Damage(Damage.DamageSource.StatusEffect, maxHealth * (statusEffectStats.basePoisonHealthDamage + (statusEffectStats.stackPoisonHealthDamage * statusEffectManager.poisonStacks.stackCount))));
             poisonTimer -= statusEffectStats.poisonInterval;
@@ -554,7 +559,7 @@ public class BaseStats : MonoBehaviour
         }
 
         poisonTimer = 0;
-        statusEffectManager.RemoveEffectUI(StatusEffectUI.StatusEffectType.Poison);
+        statusEffectManager.RemoveEffectUI(StatusEffect.StatusType.Status.Poison);
         poisonRoutine = null;
         particleVFXManager.StopPoison();
     }

@@ -518,7 +518,10 @@ public class MovementController : MonoBehaviour
 
     public void HandleRoll()
     {
-        if (!isGrounded || currentState == MovementState.Knockback)
+        if (!isGrounded || 
+            currentState == MovementState.Knockback ||
+            currentState == MovementState.Roll ||
+            currentState == MovementState.LungeRoll)
             return;
 
         StartCoroutine(RollRoutine());
