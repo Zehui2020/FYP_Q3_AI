@@ -370,6 +370,16 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             StartInfo = startInfo
         };
 
+        process.Start();
+
+        UnityEngine.Debug.Log("Generating...");
+
+        yield return new WaitUntil(() => process.HasExited);
+        AI_LoadingUI.SetActive(false);
+        UnityEngine.Debug.Log(process.StandardOutput.ReadLine());
+        UnityEngine.Debug.Log("Done!");
+
+        /*
         process.OutputDataReceived += (sender, e) =>
         {
             if (e.Data != null)
@@ -419,6 +429,33 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             }
         }
         while (!AI_ChatUpdated);
+        */
+    }
+
+    private IEnumerator ReadOutputCharacterByCharacter(StreamReader reader)
+    {
+        char[] buffer = new char[1]; // Buffer to hold a single character
+        StringBuilder outputBuilder = new StringBuilder();
+
+        while (!reader.EndOfStream)
+        {
+            // Read a single character asynchronously
+            int numRead = reader.Read(buffer, 0, 1);
+            if (numRead > 0)
+            {
+                char ch = buffer[0];
+                outputBuilder.Append(ch);
+
+                UnityEngine.Debug.Log("Character Received: " + ch);
+
+                yield return null;
+            }
+        }
+
+        // Process the accumulated output if necessary
+        string finalOutput = outputBuilder.ToString();
+        UnityEngine.Debug.Log("Final Output: " + finalOutput);
+        StartCoroutine(UpdateChatboxOutput(ExtractContent(finalOutput)));
     }
 
     IEnumerator UpdateChatboxOutput(string output)
