@@ -45,7 +45,7 @@ public class WFC_MapGeneration : MonoBehaviour
 
     public void InitMapGenerator()
     {
-        SetSeed(mapSeed);
+        RandomizeSeed();
         GenerateMap();
     }
 

@@ -1,3 +1,4 @@
+using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 public class CombatController : MonoBehaviour
 {
     [SerializeField] private WeaponData wData;
+    [SerializeField] private ItemStats itemStats;
     [SerializeField] private Animator weaponEffectAnimator;
     [SerializeField] private float perfectParryCooldown;
 
@@ -103,6 +105,15 @@ public class CombatController : MonoBehaviour
         attackComboCount++;
         if (attackComboCount >= wData.attackAnimations.Count)
             attackComboCount = 0;
+
+        // Hidden Kunai
+        int randNum = Random.Range(0, 100);
+        if (randNum < itemStats.kunaiChance)
+        {
+            Kunai kunai = ObjectPool.Instance.GetPooledObject("Kunai", true) as Kunai;
+            kunai.SetupKunai(player, transform.localScale.x > 0 ? Vector2.left : Vector2.right);
+            kunai.transform.position = transform.position;
+        }
     }
 
     public void ResetComboInstantly()

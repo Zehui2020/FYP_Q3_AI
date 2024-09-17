@@ -31,6 +31,12 @@ public class ItemStats : ScriptableObject
 
     public float capacitorDamageModifier;
 
+    public int metalBatChance;
+    public int metalBatStacks;
+
+    public int kunaiChance;
+    public int kunaiDamageMultiplier;
+
     public void ResetStats()
     {
         ritualBleedChance = 0;
@@ -58,5 +64,11 @@ public class ItemStats : ScriptableObject
         gasolineBurnStacks = 0;
 
         capacitorDamageModifier = 0;
+
+        metalBatChance = 0;
+        metalBatStacks = 0;
+
+        kunaiChance = 0;
+        kunaiDamageMultiplier = 0;
     }
 }

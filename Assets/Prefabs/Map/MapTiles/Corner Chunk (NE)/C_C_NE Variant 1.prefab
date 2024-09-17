@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 7420951585441074866}
   - component: {fileID: 5426147198792496809}
   - component: {fileID: -2056319150084738622}
+  - component: {fileID: -7318233729712341226}
+  - component: {fileID: 1646428811071053994}
   m_Layer: 0
   m_Name: C_C_NE Variant 1
   m_TagString: Untagged
@@ -161,6 +163,91 @@ MonoBehaviour:
   - {fileID: 4450227809201839608, guid: 2d35d05d5af80bd4b8a6e8e35da7f026, type: 3}
   - {fileID: 3116948415897060614, guid: e8ad7febdb8ec1344848df203e7927a8, type: 3}
   - {fileID: 6416505323140514690, guid: b4ed4a627ba1f714195361e4c8a6cd03, type: 3}
+--- !u!114 &-7318233729712341226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2220150228242585423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91098c77b02a2314a89946d37e7e55a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imageSaver: {fileID: 1646428811071053994}
+  fileName: Tileset
+  tileRects:
+  - serializedVersion: 2
+    x: 57
+    y: 664
+    width: 303
+    height: 303
+  - serializedVersion: 2
+    x: 360
+    y: 664
+    width: 303
+    height: 303
+  - serializedVersion: 2
+    x: 663
+    y: 664
+    width: 303
+    height: 303
+  - serializedVersion: 2
+    x: 57
+    y: 361
+    width: 303
+    height: 303
+  - serializedVersion: 2
+    x: 360
+    y: 361
+    width: 303
+    height: 303
+  - serializedVersion: 2
+    x: 663
+    y: 361
+    width: 303
+    height: 303
+  - serializedVersion: 2
+    x: 57
+    y: 58
+    width: 303
+    height: 303
+  - serializedVersion: 2
+    x: 360
+    y: 58
+    width: 303
+    height: 303
+  - serializedVersion: 2
+    x: 663
+    y: 58
+    width: 303
+    height: 303
+  tilemaps:
+  - {fileID: 2025698892206431525}
+  - {fileID: 4843550556838076086}
+  targetTiles:
+  - {fileID: 11400000, guid: 819b449ba3507e64a9f0aa05f3d71c9a, type: 2}
+  - {fileID: 11400000, guid: 3bba73f6b0b563b49a68742ae65f6f44, type: 2}
+  - {fileID: 11400000, guid: 0ae0480f52f375749b3b3b2f825cd831, type: 2}
+  - {fileID: 11400000, guid: e580982580c46a741bb5e028c678a6ae, type: 2}
+  - {fileID: 11400000, guid: f7cf0aec804d62c4abf231014a28ced7, type: 2}
+  - {fileID: 11400000, guid: 98c890698b56ddd40b6000026267dc2f, type: 2}
+  - {fileID: 11400000, guid: 755018ad579f7334d9e87f706ca0cd4e, type: 2}
+  - {fileID: 11400000, guid: 7b6273946236ae34bab9ac70ff0762a6, type: 2}
+  - {fileID: 11400000, guid: 03227739e82ff0845bd18db099dae3ba, type: 2}
+--- !u!114 &1646428811071053994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2220150228242585423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fb7b725e864671448e8c09318a3291e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3583715239236459946
 GameObject:
   m_ObjectHideFlags: 0

@@ -305,7 +305,8 @@ public class MovementController : MonoBehaviour
     public void HandleJump(float horizontal)
     {
         if (currentState == MovementState.Grapple ||
-            currentState == MovementState.GrappleIdle)
+            currentState == MovementState.GrappleIdle ||
+            currentState == MovementState.LedgeGrab)
             StopGrappling();
 
         if (fallingDuration > movementData.cyoteTime && jumpCount == maxJumpCount)
@@ -641,7 +642,16 @@ public class MovementController : MonoBehaviour
             playerRB.velocity.y < 0 && 
             dist <= 2f &&
             currentState != MovementState.Plunge)
+        {
             ChangeState(MovementState.Land);
+        }
+        else if (!isGrounded &&
+            playerRB.velocity.y < 0 &&
+            dist > 2f &&
+            currentState == MovementState.Plunge)
+        {
+            ChangeState(MovementState.Falling);
+        }
 
         if (dist <= movementData.minGroundDist)
         {

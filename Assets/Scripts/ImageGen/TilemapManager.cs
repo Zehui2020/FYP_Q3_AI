@@ -11,7 +11,7 @@ public class TilemapManager : MonoBehaviour
     private List<Sprite> slicedSprites = new();
 
     [Header("Tilemap Manipulation")]
-    [SerializeField] private Tilemap tilemap;
+    [SerializeField] private List<Tilemap> tilemaps;
     [SerializeField] private List<TileBase> targetTiles;
 
     private void Start()
@@ -44,7 +44,8 @@ public class TilemapManager : MonoBehaviour
         {
             Tile tile = ScriptableObject.CreateInstance<Tile>();
             tile.sprite = slicedSprites[i];
-            tilemap.SwapTile(targetTiles[i], tile);
+            foreach (Tilemap tilemap in tilemaps)
+                tilemap.SwapTile(targetTiles[i], tile);
         }
     }
 }

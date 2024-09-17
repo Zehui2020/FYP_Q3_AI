@@ -1,3 +1,4 @@
+using DesignPatterns.ObjectPool;
 using System.Collections;
 using UnityEngine;
 
@@ -53,8 +54,10 @@ public class PlayerController : PlayerStats
         abilityController.InitializeAbilityController();
         playerEffectsController.InitializePlayerEffectsController();
         if (proceduralMapGenerator != null)
+        {
             proceduralMapGenerator.InitMapGenerator();
-        transform.position = proceduralMapGenerator.GetStartingPos();
+            transform.position = proceduralMapGenerator.GetStartingPos();
+        }
 
         statusEffectManager.OnThresholdReached += TriggerStatusState;
         statusEffectManager.OnApplyStatusEffect += TriggerStatusEffect;
@@ -62,13 +65,7 @@ public class PlayerController : PlayerStats
         combatController.OnAttackReset += () => { currentState = PlayerStates.Movement; };
         movementController.OnPlungeEnd += HandlePlungeAttack;
         movementController.ChangePlayerState += ChangeState;
-        OnParry += (target) => 
-        {
-            playerEffectsController.HitStop(0.5f);
-            playerEffectsController.ShakeCamera(5, 20, 0.5f);
-            playerEffectsController.SetCameraTrigger("parry");
-            movementController.Knockback(80f, 2f);
-        };
+        OnParry += OnParryEnemy;
     }
 
     private void Update()
@@ -299,7 +296,7 @@ public class PlayerController : PlayerStats
         // Overloaded Capcitor
         damageMultipler.RemoveModifier(itemStats.capacitorDamageModifier);
 
-        target.ApplyStatusEffect(StatusEffect.StatusType.Bleed, 1);
+        target.ApplyStatusEffect(StatusEffect.StatusType.Burn, 1);
 
         return damage;
     }
@@ -407,6 +404,20 @@ public class PlayerController : PlayerStats
             targetEnemy.TakeDamage(this, damage, isCrit, enemy.transform.position, damageType);
             targetEnemy.ApplyStatusEffect(StatusEffect.StatusType.Burn, itemStats.gasolineBurnStacks);
         }
+    }
+
+    public void OnParryEnemy(BaseStats target)
+    {
+        playerEffectsController.HitStop(0.5f);
+        playerEffectsController.ShakeCamera(5, 20, 0.5f);
+        playerEffectsController.SetCameraTrigger("parry");
+        movementController.Knockback(80f, 2f);
+
+        // Metal Bat
+        int randNum = Random.Range(0, 100);
+
+        if (randNum < itemStats.metalBatChance)
+            target.ApplyStatusEffect(StatusEffect.StatusType.Static, itemStats.metalBatStacks);
     }
 
     public void ChangeState(PlayerStates newState)

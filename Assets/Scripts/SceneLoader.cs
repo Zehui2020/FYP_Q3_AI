@@ -19,7 +19,7 @@ public class SceneLoader : MonoBehaviour
         if (fadeTransition == null)
             return;
 
-        fadeTransition.SetBool("fade", false);
+        fadeTransition.SetBool("FadeIn", false);
     }
 
     public void FadeOut()
@@ -27,7 +27,7 @@ public class SceneLoader : MonoBehaviour
         if (fadeTransition == null)
             return;
 
-        fadeTransition.SetBool("fade", true);
+        fadeTransition.SetBool("FadeOut", true);
     }
 
     public void LoadScene(string sceneName)

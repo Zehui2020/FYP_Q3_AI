@@ -1,14 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using TMPro;
-using System.Xml.Linq;
-using Unity.VisualScripting;
-using static UnityEditor.Rendering.CameraUI;
-
 
 public class NPC_Dialogue_Generator : MonoBehaviour
 {
