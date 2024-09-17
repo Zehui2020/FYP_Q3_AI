@@ -15,7 +15,6 @@ public class CombatController : MonoBehaviour
     private BaseStats player;
 
     private int attackComboCount;
-    private bool cancelledPlunge = false;
     private bool isInParry = false;
     private bool canAttack = true;
     public bool isAttacking = false;
@@ -110,9 +109,9 @@ public class CombatController : MonoBehaviour
         int randNum = Random.Range(0, 100);
         if (randNum < itemStats.kunaiChance)
         {
-            Kunai kunai = ObjectPool.Instance.GetPooledObject("Kunai", true) as Kunai;
-            kunai.SetupKunai(player, transform.localScale.x > 0 ? Vector2.left : Vector2.right);
+            Kunai kunai = ObjectPool.Instance.GetPooledObject("Kunai", false) as Kunai;
             kunai.transform.position = transform.position;
+            kunai.SetupKunai(player, transform.localScale.x < 0 ? Vector2.left : Vector2.right);
         }
     }
 
@@ -160,27 +159,22 @@ public class CombatController : MonoBehaviour
     {
         animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.plungeAttackAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
         animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, AnimationManager.AnimType.ResetIfSame);
+
+        weaponEffectAnimator.Play(Animator.StringToHash(wData.plungeEffectAnimation.name), -1, 0);
     }
 
-    public bool HandlePlungeAttack()
+    public void HandlePlungeAttack()
     {
-        if (!cancelledPlunge)
-        {
-            player.comboDamageMultipler.ReplaceAllModifiers(wData.plungeAttackMultiplier);
-            animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.plungeSlamAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
-            animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, AnimationManager.AnimType.ResetIfSame);
-            return true;
-        }
+        player.comboDamageMultipler.ReplaceAllModifiers(wData.plungeAttackMultiplier);
+        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.plungeSlamAnimation.name), player.attackSpeedMultiplier.GetTotalModifier());
+        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, AnimationManager.AnimType.ResetIfSame);
 
-        cancelledPlunge = false;
-
-        return false;
+        weaponEffectAnimator.Play(Animator.StringToHash(wData.plungeSlamEffectAnimation.name), -1, 0);
     }
 
-    public void CancelPlungeAttack()
+    public void CancelPlunge()
     {
-        cancelledPlunge = true;
-        canAttack = true;
+        weaponEffectAnimator.SetTrigger("cancelPlunge");
     }
 
     public void OnDamageEventStart(int col)

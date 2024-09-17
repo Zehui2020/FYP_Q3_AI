@@ -125,16 +125,11 @@ public class PlayerController : PlayerStats
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            if (movementController.HandleDash(horizontal))
-            {
-                currentState = PlayerStates.Movement;
+            if (movementController.currentState == MovementController.MovementState.Plunge)
+                combatController.CancelPlunge();    
 
-                if (movementController.currentState == MovementController.MovementState.Plunge)
-                {
-                    combatController.CancelPlungeAttack();
-                    movementController.CancelPlunge();
-                }
-            }
+            if (movementController.HandleDash(horizontal))
+                currentState = PlayerStates.Movement;
         }
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
@@ -179,8 +174,8 @@ public class PlayerController : PlayerStats
 
     private void HandlePlungeAttack()
     {
-        if (combatController.HandlePlungeAttack())
-            movementController.StopPlayer();
+        combatController.HandlePlungeAttack();
+        movementController.StopPlayer();
     }
 
     public void OnPlayerOverlap(bool overlap)

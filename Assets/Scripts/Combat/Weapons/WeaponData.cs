@@ -7,7 +7,8 @@ public class WeaponData : ScriptableObject
     public enum WeaponType
     {
         Sword,
-        Axe
+        Axe,
+        Dagger
     }
 
     public WeaponType weaponType;
@@ -20,7 +21,11 @@ public class WeaponData : ScriptableObject
     public List<float> breachMultipliers;
 
     public AnimationClip plungeAttackAnimation;
+    public AnimationClip plungeEffectAnimation;
+
     public AnimationClip plungeSlamAnimation;
+    public AnimationClip plungeSlamEffectAnimation;
+
     public float plungeAttackMultiplier;
     public AnimationClip parryAnimation;
     public int critRate;
