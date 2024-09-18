@@ -13,7 +13,7 @@ public class MolotovProjectile : AbilityProjectile
         areaObj.SetActive(true);
         areaObj.transform.localScale = new Vector3(range, areaObj.transform.localScale.y, areaObj.transform.localScale.z);
         areaObj.transform.SetParent(transform.parent);
-        StartCoroutine(areaOfEffect.StatusOverTime());
+        areaOfEffect.HandleStatusOverTime();
 
         base.OnHit(target);
     }
