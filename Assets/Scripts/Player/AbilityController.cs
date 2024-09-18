@@ -33,6 +33,9 @@ public class AbilityController : MonoBehaviour
         if (ability == null)
             return;
 
+        // Emergency Transceiver
+        player.ApplyTransceiverBuff();
+
         // if ability is Area
         if (ability.abilityUseType == BaseAbility.AbilityUseType.Area)
         {
