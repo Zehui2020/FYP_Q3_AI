@@ -365,10 +365,10 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
     IEnumerator OpenCommandPrompt(string command)
     {
-        /*
+        
         string AI_Output = "";
         bool AI_ChatUpdated = false;
-        */
+        
 
         ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/c {command}")
         {
@@ -378,11 +378,17 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             CreateNoWindow = true
         };
 
+        Process process = new Process
+        {
+            StartInfo = startInfo,
+        };
+
+        /*
         AI_Chat_Process = new Process
         {
             StartInfo = startInfo
         };
-
+        
         AI_Chat_Process.Start();
         UnityEngine.Debug.Log("Generating...");
         yield return StartCoroutine(ReadAIOutput(AI_Chat_Process.StandardOutput));
@@ -400,8 +406,8 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         }
 
         AI_Chat_Process.Dispose();
-
-        /*
+        */
+        
         process.OutputDataReceived += (sender, e) =>
         {
             if (e.Data != null)
@@ -451,7 +457,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             }
         }
         while (!AI_ChatUpdated);
-        */
+        
     }
 
     private IEnumerator ReadAIOutput(StreamReader streamReader)
