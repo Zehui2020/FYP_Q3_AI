@@ -305,14 +305,13 @@ public class MovementController : MonoBehaviour
     public void HandleJump(float horizontal)
     {
         if (currentState == MovementState.Grapple ||
-            currentState == MovementState.GrappleIdle ||
-            currentState == MovementState.LedgeGrab)
+            currentState == MovementState.GrappleIdle)
             StopGrappling();
 
         if (fallingDuration > movementData.cyoteTime && jumpCount == maxJumpCount)
             return;
 
-        if (jumpCount <= 0 && !isGrounded || currentState == MovementState.Knockback)
+        if (jumpCount <= 0 && !isGrounded || currentState == MovementState.Knockback || currentState == MovementState.LedgeGrab)
             return;
 
         ChangeState(MovementState.Jump);
