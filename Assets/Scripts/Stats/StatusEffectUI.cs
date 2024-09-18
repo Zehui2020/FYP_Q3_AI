@@ -6,27 +6,12 @@ using UnityEngine.UI;
 
 public class StatusEffectUI : PooledObject
 {
-    public enum StatusEffectType
-    {
-        // Status Effects
-        Bleed,
-        Burn,
-        Poison,
-        Freeze,
-        Static,
-
-        // States
-        Breached,
-        Frozen,
-        Stunned,
-        Dazed
-    }
-    public StatusEffectType effectType;
+    public StatusEffect.StatusType effectType;
 
     [System.Serializable]
     public struct StatusEffectHolder
     {
-        public StatusEffectType effectType;
+        public StatusEffect.StatusType.Status effectType;
         public Sprite icon;
         public bool removeAfterNoStacks;
         public bool isStackable;
@@ -36,29 +21,29 @@ public class StatusEffectUI : PooledObject
     [SerializeField] private Image effectIcon;
     [SerializeField] private TextMeshProUGUI effectStacks;
 
-    public void SetStatusEffectUI(StatusEffectType type, int count)
+    public void SetStatusEffectUI(StatusEffect.StatusType type, int count)
     {
         foreach (StatusEffectHolder holder in effects)
         {
-            if (holder.effectType.Equals(type))
+            if (holder.effectType != type.statusEffect)
+                continue;
+
+            if (count <= 0 && holder.removeAfterNoStacks)
             {
-                if (count <= 0 && holder.removeAfterNoStacks)
-                {
-                    Release();
-                    gameObject.SetActive(false);
-                    return;
-                }
-
-                effectIcon.sprite = holder.icon;
-                effectType = type;
-
-                if (holder.isStackable)
-                    effectStacks.text = count.ToString();
-                else
-                    effectStacks.text = string.Empty;
-
-                break;
+                Release();
+                gameObject.SetActive(false);
+                return;
             }
+
+            effectIcon.sprite = holder.icon;
+            effectType = type;
+
+            if (holder.isStackable)
+                effectStacks.text = count.ToString();
+            else
+                effectStacks.text = string.Empty;
+
+            break;
         }
     }
 

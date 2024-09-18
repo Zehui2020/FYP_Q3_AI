@@ -26,6 +26,22 @@ public class Kunai : PooledObject
         StartCoroutine(ReleaseRoutine());
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!Utility.Instance.CheckLayer(collision.gameObject, targetLayer))
+            return;
+
+        if (!collision.TryGetComponent<BaseStats>(out BaseStats target))
+            return;
+
+        BaseStats.Damage damage = thrower.CalculateProccDamageDealt(target, 
+            new BaseStats.Damage(thrower.attack * itemStats.kunaiDamageMultiplier), 
+            out bool isCrit, 
+            out DamagePopup.DamageType damageType);
+
+        target.TakeDamage(thrower, damage, isCrit, collision.transform.position, damageType);
+    }
+
     private IEnumerator ReleaseRoutine()
     {
         yield return new WaitForSeconds(5f);
