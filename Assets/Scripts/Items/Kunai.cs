@@ -12,30 +12,34 @@ public class Kunai : PooledObject
 
     public void SetupKunai(BaseStats baseStats, Vector2 direction)
     {
+        gameObject.SetActive(true);
+
         thrower = baseStats;
 
-        kunaiRB.AddForce(direction * force, ForceMode2D.Impulse);
-        if (direction == Vector2.left)
+        if (direction == Vector2.right)
+            transform.localScale = new Vector3(1, 1, 1);
+        else
             transform.localScale = new Vector3(-1, 1, 1);
+
+        kunaiRB.AddForce(direction * force, ForceMode2D.Impulse);
 
         StartCoroutine(ReleaseRoutine());
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(Utility.Instance.CheckLayer(collision.gameObject, targetLayer));
-
         if (!Utility.Instance.CheckLayer(collision.gameObject, targetLayer))
             return;
 
-        if (!collision.TryGetComponent<EnemyStats>(out EnemyStats target))
+        if (!collision.TryGetComponent<BaseStats>(out BaseStats target))
             return;
 
-        BaseStats.Damage damage = target.CalculateProccDamageDealt(target, new BaseStats.Damage(thrower.attack * itemStats.kunaiDamageMultiplier), out bool crit, out DamagePopup.DamageType damageType);
-        target.TakeDamage(thrower, damage, crit, target.transform.position, damageType);
+        BaseStats.Damage damage = thrower.CalculateProccDamageDealt(target, 
+            new BaseStats.Damage(thrower.attack * itemStats.kunaiDamageMultiplier), 
+            out bool isCrit, 
+            out DamagePopup.DamageType damageType);
 
-        Release();
-        gameObject.SetActive(false);
+        target.TakeDamage(thrower, damage, isCrit, collision.transform.position, damageType);
     }
 
     private IEnumerator ReleaseRoutine()

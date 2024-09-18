@@ -6,7 +6,7 @@ public class PoisonKnifeProjectile : AbilityProjectile
 {
     protected override void OnHit(BaseStats target)
     {
-        target.ApplyStatusEffect(StatusEffect.StatusType.Poison, 1);
+        target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), 1);
         base.OnHit(target);
     }
 }

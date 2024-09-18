@@ -305,14 +305,13 @@ public class MovementController : MonoBehaviour
     public void HandleJump(float horizontal)
     {
         if (currentState == MovementState.Grapple ||
-            currentState == MovementState.GrappleIdle ||
-            currentState == MovementState.LedgeGrab)
+            currentState == MovementState.GrappleIdle)
             StopGrappling();
 
         if (fallingDuration > movementData.cyoteTime && jumpCount == maxJumpCount)
             return;
 
-        if (jumpCount <= 0 && !isGrounded || currentState == MovementState.Knockback)
+        if (jumpCount <= 0 && !isGrounded || currentState == MovementState.Knockback || currentState == MovementState.LedgeGrab)
             return;
 
         ChangeState(MovementState.Jump);
@@ -438,9 +437,11 @@ public class MovementController : MonoBehaviour
 
     public bool HandleDash(float direction)
     {
-        if (dashRoutine == null && 
+        if (dashRoutine == null &&
             currentState != MovementState.Knockback &&
-            currentState != MovementState.LedgeGrab)
+            currentState != MovementState.LedgeGrab &&
+            currentState != MovementState.Roll &&
+            currentState != MovementState.LungeRoll)
         {
             dashRoutine = StartCoroutine(DashRoutine(direction));
             return true;
@@ -516,7 +517,10 @@ public class MovementController : MonoBehaviour
 
     public void HandleRoll()
     {
-        if (!isGrounded || currentState == MovementState.Knockback)
+        if (!isGrounded || 
+            currentState == MovementState.Knockback ||
+            currentState == MovementState.Roll ||
+            currentState == MovementState.LungeRoll)
             return;
 
         StartCoroutine(RollRoutine());
@@ -597,16 +601,6 @@ public class MovementController : MonoBehaviour
         OnPlungeEnd?.Invoke();
     }
 
-    public void CancelPlunge()
-    {
-        if (plungeRoutine == null)
-            return;
-
-        StopCoroutine(plungeRoutine);
-        playerRB.gravityScale = movementData.gravityScale;
-        plungeRoutine = null;
-    }
-
     public void MovePlayer(float movementSpeedMultiplier)
     {
         if (currentState != MovementState.Running &&
@@ -648,7 +642,7 @@ public class MovementController : MonoBehaviour
         else if (!isGrounded &&
             playerRB.velocity.y < 0 &&
             dist > 2f &&
-            currentState == MovementState.Plunge)
+            currentState != MovementState.Plunge)
         {
             ChangeState(MovementState.Falling);
         }

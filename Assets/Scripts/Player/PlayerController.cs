@@ -61,6 +61,7 @@ public class PlayerController : PlayerStats
 
         statusEffectManager.OnThresholdReached += TriggerStatusState;
         statusEffectManager.OnApplyStatusEffect += TriggerStatusEffect;
+        statusEffectManager.OnCleanse += OnCleanse;
 
         combatController.OnAttackReset += () => { currentState = PlayerStates.Movement; };
         movementController.OnPlungeEnd += HandlePlungeAttack;
@@ -125,16 +126,11 @@ public class PlayerController : PlayerStats
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            if (movementController.HandleDash(horizontal))
-            {
-                currentState = PlayerStates.Movement;
+            if (movementController.currentState == MovementController.MovementState.Plunge)
+                combatController.CancelPlunge();    
 
-                if (movementController.currentState == MovementController.MovementState.Plunge)
-                {
-                    combatController.CancelPlungeAttack();
-                    movementController.CancelPlunge();
-                }
-            }
+            if (movementController.HandleDash(horizontal))
+                currentState = PlayerStates.Movement;
         }
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
@@ -179,8 +175,8 @@ public class PlayerController : PlayerStats
 
     private void HandlePlungeAttack()
     {
-        if (combatController.HandlePlungeAttack())
-            movementController.StopPlayer();
+        combatController.HandlePlungeAttack();
+        movementController.StopPlayer();
     }
 
     public void OnPlayerOverlap(bool overlap)
@@ -256,7 +252,7 @@ public class PlayerController : PlayerStats
                             out DamagePopup.DamageType proccDamageType);
 
                         attacker.TakeTrueDamage(proccDamage);
-                        attacker.ApplyStatusEffect(StatusEffect.StatusType.Freeze, itemStats.cramponFreezeStacks);
+                        attacker.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Freeze), itemStats.cramponFreezeStacks);
                     }
 
                     playerEffectsController.HitStop(0.1f);
@@ -296,7 +292,7 @@ public class PlayerController : PlayerStats
         // Overloaded Capcitor
         damageMultipler.RemoveModifier(itemStats.capacitorDamageModifier);
 
-        target.ApplyStatusEffect(StatusEffect.StatusType.Burn, 1);
+        target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), 10);
 
         return damage;
     }
@@ -309,9 +305,14 @@ public class PlayerController : PlayerStats
 
         yield return new WaitForSeconds(statusEffectStats.frozenDuration);
 
+        FrozenEnd();
+    }
+    private void FrozenEnd()
+    {
         movementController.ResumePlayer();
         isFrozen = false;
         particleVFXManager.StopFrozen();
+        frozenRoutine = null;
     }
 
     public override IEnumerator StunnedRoutine()
@@ -320,7 +321,12 @@ public class PlayerController : PlayerStats
 
         yield return new WaitForSeconds(statusEffectStats.stunDuration);
 
+        StunEnd();
+    }
+    private void StunEnd()
+    {
         movementController.ResumePlayer();
+        stunnedRoutine = null;
     }
 
     public override IEnumerator DazedRoutine()
@@ -329,7 +335,40 @@ public class PlayerController : PlayerStats
 
         yield return new WaitForSeconds(statusEffectStats.stunDuration);
 
+        DazeEnd();
+    }
+    private void DazeEnd()
+    {
         movementController.ResumePlayer();
+        dazedRoutine = null;
+    }
+
+    public override void OnCleanse(StatusEffect.StatusType.Status status)
+    {
+        switch (status)
+        {
+            case StatusEffect.StatusType.Status.Frozen:
+                if (frozenRoutine == null)
+                    return;
+
+                StopCoroutine(frozenRoutine);
+                FrozenEnd();
+                break;
+            case StatusEffect.StatusType.Status.Stunned:
+                if (stunnedRoutine == null)
+                    return;
+
+                StopCoroutine(stunnedRoutine);
+                StunEnd();
+                break;
+            case StatusEffect.StatusType.Status.Dazed:
+                if (dazedRoutine == null)
+                    return;
+
+                StopCoroutine(dazedRoutine);
+                DazeEnd();
+                break;
+        }
     }
 
     public void OnHitEnemyEvent(BaseStats target, Damage damage, bool isCrit, Vector3 closestPoint)
@@ -349,13 +388,13 @@ public class PlayerController : PlayerStats
             // Ritual Sickle
             randNum = Random.Range(0, 100);
             if (randNum < itemStats.ritualBleedChance)
-                target.ApplyStatusEffect(StatusEffect.StatusType.Bleed, itemStats.ritualBleedStacks);
+                target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Bleed), itemStats.ritualBleedStacks);
         }
 
         // Jagged Dagger
         randNum = Random.Range(0, 100);
         if (randNum < itemStats.daggerBleedChance)
-            target.ApplyStatusEffect(StatusEffect.StatusType.Bleed, 1);
+            target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Bleed), 1);
 
         // Frazzled Wire
         randNum = Random.Range(0, 100);
@@ -378,7 +417,7 @@ public class PlayerController : PlayerStats
                     out DamagePopup.DamageType proccDamageType);
 
                 targetEnemy.TakeDamage(this, proccDamage, proccCrit, targetEnemy.transform.position, proccDamageType);
-                targetEnemy.ApplyStatusEffect(StatusEffect.StatusType.Static, itemStats.frazzledWireStaticStacks);
+                targetEnemy.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), itemStats.frazzledWireStaticStacks);
             }
 
             totalDamageMultiplier.RemoveModifier(itemStats.frazzledWireTotalDamageModifier);
@@ -402,7 +441,7 @@ public class PlayerController : PlayerStats
                 out DamagePopup.DamageType damageType);
 
             targetEnemy.TakeDamage(this, damage, isCrit, enemy.transform.position, damageType);
-            targetEnemy.ApplyStatusEffect(StatusEffect.StatusType.Burn, itemStats.gasolineBurnStacks);
+            targetEnemy.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), itemStats.gasolineBurnStacks);
         }
     }
 
@@ -417,7 +456,7 @@ public class PlayerController : PlayerStats
         int randNum = Random.Range(0, 100);
 
         if (randNum < itemStats.metalBatChance)
-            target.ApplyStatusEffect(StatusEffect.StatusType.Static, itemStats.metalBatStacks);
+            target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), itemStats.metalBatStacks);
     }
 
     public void ChangeState(PlayerStates newState)

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class AbilityProjectile : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] protected Rigidbody2D rb;
     [SerializeField] private int targetLayer = 7;
 
     public void LaunchProjectile(Vector3 force)
