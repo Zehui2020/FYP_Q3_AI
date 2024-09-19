@@ -8,22 +8,23 @@ public class MinimapController : MonoBehaviour
     [SerializeField] Camera cam;
     [SerializeField] int minimapSize;
     [SerializeField] int zoomSize;
-    private int index = 0;
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            ChangeView();
+            ChangeView(1);
+        }
+        else if (Input.GetKeyUp(KeyCode.M))
+        {
+            ChangeView(0);
         }
     }
 
-    private void ChangeView()
+    private void ChangeView(int i)
     {
-        index++;
-        if (index == transforms.Count)
+        if (i == 0)
         {
-            index = 0;
             cam.orthographicSize = minimapSize;
         }
         else
@@ -31,8 +32,7 @@ public class MinimapController : MonoBehaviour
             cam.orthographicSize = zoomSize;
         }
 
-
-        transform.SetParent(transforms[index]);
+        transform.SetParent(transforms[i]);
         transform.localPosition = Vector3.zero;
         transform.localScale = Vector3.one;
     }
