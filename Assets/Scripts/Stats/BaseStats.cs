@@ -409,6 +409,11 @@ public class BaseStats : MonoBehaviour
         }
     }
 
+    public void Cleanse(StatusEffect.StatusType.Type type)
+    {
+        statusEffectManager.Cleanse(type);
+    }
+
     public virtual void OnCleanse(StatusEffect.StatusType.Status status)
     {
     }

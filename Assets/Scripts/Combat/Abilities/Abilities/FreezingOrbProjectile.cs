@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MolotovProjectile : AbilityProjectile
+public class FreezingOrbProjectile : AbilityProjectile
 {
     [SerializeField] private GameObject areaObj;
     [SerializeField] private AreaOfEffect areaOfEffect;

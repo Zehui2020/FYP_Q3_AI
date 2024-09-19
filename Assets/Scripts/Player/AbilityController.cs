@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -10,6 +11,7 @@ public class AbilityController : MonoBehaviour
     [SerializeField] private List<BaseAbility> abilities;
     [SerializeField] private List<AbilityUIController> abilityUI;
     [SerializeField] LayerMask targetLayer;
+    [SerializeField] LayerMask groundLayer;
 
     private PlayerController player;
     private List<Coroutine> abilityDurationRoutines = new List<Coroutine> { null, null };
@@ -37,13 +39,21 @@ public class AbilityController : MonoBehaviour
         if (ability.abilityUseType == BaseAbility.AbilityUseType.Area)
         {
             // get all target objects in area
-            Debug.DrawLine(transform.position, transform.position + new Vector3(abilities[abilityNo].abilityRange, 0, 0));
             Collider2D[] targetColliders = Physics2D.OverlapCircleAll(transform.position, ability.abilityRange, targetLayer);
             List<BaseStats> targetsInArea = new List<BaseStats>();
             foreach (Collider2D col in targetColliders)
             {
                 if (col.GetComponent<BaseStats>() != null)
-                    targetsInArea.Add(col.GetComponent<BaseStats>());
+                {
+                    if (!Physics2D.Raycast(
+                        player.transform.position,
+                        col.transform.position - player.transform.position,
+                        Vector3.Distance(player.transform.position, col.transform.position),
+                        groundLayer))
+                    {
+                        targetsInArea.Add(col.GetComponent<BaseStats>());
+                    }
+                }
             }
             for (int i = 0; i < targetsInArea.Count; i++)
             {

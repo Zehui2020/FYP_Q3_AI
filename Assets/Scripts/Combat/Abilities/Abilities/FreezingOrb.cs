@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Abilities/Molotov Cocktail")]
-public class MolotovCocktail : BaseAbility
+[CreateAssetMenu(menuName = "Abilities/Freezing Orb")]
+public class FreezingOrb : BaseAbility
 {
     [SerializeField] GameObject nadePrefab;
 
@@ -10,6 +10,6 @@ public class MolotovCocktail : BaseAbility
         GameObject obj = Instantiate(nadePrefab);
         obj.transform.position = PlayerController.Instance.transform.position;
         Vector3 force = new Vector3(PlayerController.Instance.transform.localScale.x * abilityRange + PlayerController.Instance.GetComponent<Rigidbody2D>().velocity.x, abilityEffectValue, 0);
-        obj.GetComponent<MolotovProjectile>().LaunchProjectile(force);
+        obj.GetComponent<FreezingOrbProjectile>().LaunchProjectile(force);
     }
 }
