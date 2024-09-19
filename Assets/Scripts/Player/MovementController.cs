@@ -382,6 +382,9 @@ public class MovementController : MonoBehaviour
 
     private void HandleLedgeGrab()
     {
+        if (currentState == MovementState.Plunge)
+            return;
+
         Vector2 dir;
         if (transform.localScale.x < 0)
             dir = -transform.right;
@@ -441,7 +444,8 @@ public class MovementController : MonoBehaviour
             currentState != MovementState.Knockback &&
             currentState != MovementState.LedgeGrab &&
             currentState != MovementState.Roll &&
-            currentState != MovementState.LungeRoll)
+            currentState != MovementState.LungeRoll &&
+            currentState != MovementState.Plunge)
         {
             dashRoutine = StartCoroutine(DashRoutine(direction));
             return true;
@@ -496,10 +500,13 @@ public class MovementController : MonoBehaviour
         playerRB.gravityScale = movementData.gravityScale;
         playerEffectsController.StopDashPS();
 
-        if (isGrounded)
-            ChangeState(MovementState.Idle);
-        else
-            ChangeState(MovementState.Falling);
+        if (currentState != MovementState.Plunge)
+        {
+            if (isGrounded)
+                ChangeState(MovementState.Idle);
+            else
+                ChangeState(MovementState.Falling);
+        }
 
         yield return new WaitForSeconds(movementData.dashCooldown);
 
@@ -564,7 +571,11 @@ public class MovementController : MonoBehaviour
     public bool HandlePlunge()
     {
         if (currentState == MovementState.Roll ||
-            currentState == MovementState.LungeRoll)
+            currentState == MovementState.LungeRoll ||
+            currentState == MovementState.LedgeGrab ||
+            currentState == MovementState.Plunge ||
+            currentState == MovementState.Grapple ||
+            currentState == MovementState.GrappleIdle)
             return false;
 
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, movementData.plungeThreshold, groundLayer);

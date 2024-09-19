@@ -1,6 +1,7 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
 using UnityEngine;
+using static MovementController;
 
 public class PlayerController : PlayerStats
 {
@@ -29,6 +30,8 @@ public class PlayerController : PlayerStats
     private IInteractable currentInteractable;
     private float ropeX;
     private Damage previousDamage;
+
+    private Coroutine transceiverBuffRoutine;
 
     private void Awake()
     {
@@ -83,15 +86,15 @@ public class PlayerController : PlayerStats
             ConsoleManager.Instance.OnInputCommand();
 
         if (ConsoleManager.Instance.gameObject.activeInHierarchy || 
-            movementController.currentState == MovementController.MovementState.Knockback ||
+            movementController.currentState == MovementState.Knockback ||
             currentState == PlayerStates.Hurt)
             return;
 
         // Combat Inputs
         if (Input.GetMouseButton(0))
         {
-            if (movementController.currentState == MovementController.MovementState.GroundDash ||
-                movementController.currentState == MovementController.MovementState.AirDash)
+            if (movementController.currentState == MovementState.GroundDash ||
+                movementController.currentState == MovementState.AirDash)
                 return;
 
             currentState = PlayerStates.Combat;
@@ -126,9 +129,6 @@ public class PlayerController : PlayerStats
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            if (movementController.currentState == MovementController.MovementState.Plunge)
-                combatController.CancelPlunge();    
-
             if (movementController.HandleDash(horizontal))
                 currentState = PlayerStates.Movement;
         }
@@ -154,7 +154,7 @@ public class PlayerController : PlayerStats
         }
         else
         {
-            movementController.currentState = MovementController.MovementState.Idle;
+            movementController.currentState = MovementState.Idle;
             movementController.StopPlayer();
         }
 
@@ -227,10 +227,24 @@ public class PlayerController : PlayerStats
     {
         bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
 
+        // Spiked Chestplate
+        Damage chestplateDamage = CalculateProccDamageDealt(
+            attacker, 
+            new Damage((attack + attackIncrease.GetTotalModifier()) * itemStats.chestplateDamageModifier), 
+            out bool chestplateCrit, 
+            out DamagePopup.DamageType chestplateDamageType);
+
+        attacker.TakeDamage(this, chestplateDamage, chestplateCrit, attacker.transform.position, chestplateDamageType);
+        attacker.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), itemStats.chestplatePoisonStacks);
+
         if (tookDamage)
         {
             playerEffectsController.ShakeCamera(4f, 5f, 0.2f);
             playerEffectsController.Pulse(0.5f, 3f, 0f, 0.3f, true);
+
+            if (movementController.currentState == MovementState.Plunge ||
+                movementController.currentState == MovementState.LedgeGrab)
+                return true;
 
             playerRB.velocity = Vector2.zero;
             ChangeState(PlayerStates.Hurt);
@@ -457,6 +471,30 @@ public class PlayerController : PlayerStats
 
         if (randNum < itemStats.metalBatChance)
             target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), itemStats.metalBatStacks);
+    }
+
+    public void ApplyTransceiverBuff()
+    {
+        if (transceiverBuffRoutine == null)
+            transceiverBuffRoutine = StartCoroutine(TransceiverBuff());
+    }
+    private IEnumerator TransceiverBuff()
+    {
+        float attackBuff;
+        float attackSpeedBuff;
+
+        attackBuff = attack * itemStats.transceiverBuffMultiplier;
+        attackSpeedBuff = itemStats.transceiverBuffMultiplier;
+
+        attackIncrease.AddModifier(attackBuff);
+        attackSpeedMultiplier.AddModifier(attackSpeedBuff);
+
+        yield return new WaitForSeconds(itemStats.transceiverBuffDuration);
+
+        attackIncrease.RemoveModifier(attackBuff);
+        attackSpeedMultiplier.RemoveModifier(attackSpeedBuff);
+
+        transceiverBuffRoutine = null;
     }
 
     public void ChangeState(PlayerStates newState)

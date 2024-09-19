@@ -37,9 +37,14 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     //Full Prompt to feed into AI
     private string AI_Gen_Prompt;
 
+    //AI Chat Bools
     private bool inConvo;
     private bool introFinished;
     private bool convoStartedAgain;
+
+    //Command Prompt Stuff
+    private Process AI_Chat_Process;
+    private StringBuilder AI_Output_Builder = new StringBuilder();
 
     // Start is called before the first frame update
     void Start()
@@ -357,8 +362,11 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
     IEnumerator OpenCommandPrompt(string command)
     {
+        
         string AI_Output = "";
         bool AI_ChatUpdated = false;
+        
+
         ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/c {command}")
         {
             RedirectStandardOutput = true,
@@ -369,19 +377,34 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
         Process process = new Process
         {
-            StartInfo = startInfo
+            StartInfo = startInfo,
         };
 
-        process.Start();
-
+        /*
+        AI_Chat_Process = new Process
+        {
+            StartInfo = startInfo
+        };
+        
+        AI_Chat_Process.Start();
         UnityEngine.Debug.Log("Generating...");
+        yield return StartCoroutine(ReadAIOutput(AI_Chat_Process.StandardOutput));
 
-        yield return new WaitUntil(() => process.HasExited);
+        yield return new WaitUntil(() => AI_Chat_Process.HasExited);
         AI_LoadingUI.SetActive(false);
-        UnityEngine.Debug.Log(process.StandardOutput.ReadLine());
         UnityEngine.Debug.Log("Done!");
 
-        /*
+        if (AI_Output_Builder.Length > 0)
+        {
+            string finalOutput = AI_Output_Builder.ToString();
+            UnityEngine.Debug.Log("Final Output: " + finalOutput);
+            chatbox_Output.text = ExtractContent(finalOutput);
+            previousContext = ExtractContent(finalOutput);
+        }
+
+        AI_Chat_Process.Dispose();
+        */
+        
         process.OutputDataReceived += (sender, e) =>
         {
             if (e.Data != null)
@@ -431,33 +454,24 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             }
         }
         while (!AI_ChatUpdated);
-        */
+        
     }
 
-    private IEnumerator ReadOutputCharacterByCharacter(StreamReader reader)
+    private IEnumerator ReadAIOutput(StreamReader streamReader)
     {
-        char[] buffer = new char[1]; // Buffer to hold a single character
-        StringBuilder outputBuilder = new StringBuilder();
-
-        while (!reader.EndOfStream)
+        while (!streamReader.EndOfStream)
         {
-            // Read a single character asynchronously
-            int numRead = reader.Read(buffer, 0, 1);
-            if (numRead > 0)
+            //string output = streamReader.ReadLine();
+            string output = "";
+            if (output != null)
             {
-                char ch = buffer[0];
-                outputBuilder.Append(ch);
-
-                UnityEngine.Debug.Log("Character Received: " + ch);
-
-                yield return null;
+                AI_Output_Builder.Append(output + "\n");
+                UnityEngine.Debug.Log("Receiving Data from AI: " + output);
             }
-        }
 
-        // Process the accumulated output if necessary
-        string finalOutput = outputBuilder.ToString();
-        UnityEngine.Debug.Log("Final Output: " + finalOutput);
-        StartCoroutine(UpdateChatboxOutput(ExtractContent(finalOutput)));
+            // Yielding to the next frame to avoid freezing
+            yield return null;
+        }
     }
 
     IEnumerator UpdateChatboxOutput(string output)

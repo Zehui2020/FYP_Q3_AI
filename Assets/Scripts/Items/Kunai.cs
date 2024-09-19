@@ -40,6 +40,9 @@ public class Kunai : PooledObject
             out DamagePopup.DamageType damageType);
 
         target.TakeDamage(thrower, damage, isCrit, collision.transform.position, damageType);
+
+        Release();
+        gameObject.SetActive(false);
     }
 
     private IEnumerator ReleaseRoutine()

@@ -37,6 +37,12 @@ public class ItemStats : ScriptableObject
     public int kunaiChance;
     public int kunaiDamageMultiplier;
 
+    public float chestplateDamageModifier;
+    public int chestplatePoisonStacks;
+
+    public float transceiverBuffDuration;
+    public float transceiverBuffMultiplier;
+
     public void ResetStats()
     {
         ritualBleedChance = 0;
@@ -70,5 +76,11 @@ public class ItemStats : ScriptableObject
 
         kunaiChance = 0;
         kunaiDamageMultiplier = 0;
+
+        chestplateDamageModifier = 0;
+        chestplatePoisonStacks = 0;
+
+        transceiverBuffDuration = 0;
+        transceiverBuffMultiplier = 0;
     }
 }
