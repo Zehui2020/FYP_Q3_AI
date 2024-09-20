@@ -11,7 +11,7 @@ public class PoisonKnives : BaseAbility
     {
         GameObject obj = Instantiate(knifePrefab);
         obj.transform.position = PlayerController.Instance.transform.position;
-        Vector3 force = new Vector3(PlayerController.Instance.transform.localScale.x * abilityEffectValue, 0, 0);
-        obj.GetComponent<PoisonKnifeProjectile>().LaunchProjectile(force * abilityRange);
+        Vector3 force = new Vector3(PlayerController.Instance.transform.localScale.x * abilityRange + PlayerController.Instance.GetComponent<Rigidbody2D>().velocity.x, abilityEffectValue, 0);
+        obj.GetComponent<PoisonKnifeProjectile>().LaunchProjectile(force);
     }
 }

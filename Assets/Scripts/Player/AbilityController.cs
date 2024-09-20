@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -10,9 +11,16 @@ public class AbilityController : MonoBehaviour
     [SerializeField] private List<BaseAbility> abilities;
     [SerializeField] private List<AbilityUIController> abilityUI;
     [SerializeField] LayerMask targetLayer;
+    [SerializeField] LayerMask groundLayer;
 
     private PlayerController player;
     private List<Coroutine> abilityDurationRoutines = new List<Coroutine> { null, null };
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+            ResetAbilityCooldowns();
+    }
 
     public void InitializeAbilityController()
     {
@@ -33,17 +41,28 @@ public class AbilityController : MonoBehaviour
         if (ability == null)
             return;
 
+        // Emergency Transceiver
+        player.ApplyTransceiverBuff();
+
         // if ability is Area
         if (ability.abilityUseType == BaseAbility.AbilityUseType.Area)
         {
             // get all target objects in area
-            Debug.DrawLine(transform.position, transform.position + new Vector3(abilities[abilityNo].abilityRange, 0, 0));
             Collider2D[] targetColliders = Physics2D.OverlapCircleAll(transform.position, ability.abilityRange, targetLayer);
             List<BaseStats> targetsInArea = new List<BaseStats>();
             foreach (Collider2D col in targetColliders)
             {
                 if (col.GetComponent<BaseStats>() != null)
-                    targetsInArea.Add(col.GetComponent<BaseStats>());
+                {
+                    if (!Physics2D.Raycast(
+                        player.transform.position,
+                        col.transform.position - player.transform.position,
+                        Vector3.Distance(player.transform.position, col.transform.position),
+                        groundLayer))
+                    {
+                        targetsInArea.Add(col.GetComponent<BaseStats>());
+                    }
+                }
             }
             for (int i = 0; i < targetsInArea.Count; i++)
             {
@@ -77,6 +96,7 @@ public class AbilityController : MonoBehaviour
             timer = 0;
             abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), false);
         }
+
         // track cooldown
         timer = ability.abilityCooldown;
         while (timer > 0)
@@ -86,9 +106,23 @@ public class AbilityController : MonoBehaviour
             timer -= Time.deltaTime;
             yield return null;
         }
-        abilityUI[abilityNo].SetCooldown(0);
 
+        abilityUI[abilityNo].SetCooldown(0);
         abilityDurationRoutines[abilityNo] = null;
+    }
+
+    public void ResetAbilityCooldowns()
+    {
+        for (int i = 0; i < abilityDurationRoutines.Count; i++)
+        {
+            if (abilityDurationRoutines[i] == null)
+                continue;
+
+            StopCoroutine(abilityDurationRoutines[i]);
+
+            abilityUI[i].SetCooldown(0);
+            abilityDurationRoutines[i] = null;
+        }
     }
 
     public void SetAbility(int abilityNo, BaseAbility ability)

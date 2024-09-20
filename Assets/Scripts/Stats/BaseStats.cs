@@ -34,8 +34,10 @@ public class BaseStats : MonoBehaviour
         public enum DamageSource
         {
             Normal,
+            Plunge,
             StatusEffect,
-            FrazzledWire
+            Item,
+            Gavel
         }
 
         public DamageSource damageSource;
@@ -201,7 +203,7 @@ public class BaseStats : MonoBehaviour
 
         return true;
     }
-    public virtual float CalculateDamageDealt(BaseStats target, out bool isCrit, out DamagePopup.DamageType damageType)
+    public virtual float CalculateDamageDealt(BaseStats target, Damage.DamageSource damageSource, out bool isCrit, out DamagePopup.DamageType damageType)
     {
         float finalCritRate = critRate.GetTotalModifier();
         float finalCritDamage = 1;
@@ -257,8 +259,9 @@ public class BaseStats : MonoBehaviour
 
         float totalDamage = damage.damage * damageMultipler.GetTotalModifier() * finalCritDamage;
 
-        return new Damage(totalDamage);
+        return new Damage(damage.damageSource, totalDamage);
     }
+
     public int CalculateFinalDamage(BaseStats attacker, float totalDamageDealt)
     {
         if (shield <= 0)
@@ -409,6 +412,11 @@ public class BaseStats : MonoBehaviour
         }
     }
 
+    public void Cleanse(StatusEffect.StatusType.Type type)
+    {
+        statusEffectManager.Cleanse(type);
+    }
+
     public virtual void OnCleanse(StatusEffect.StatusType.Status status)
     {
     }
@@ -488,7 +496,7 @@ public class BaseStats : MonoBehaviour
         }
     }
 
-    public void ApplyStatusEffect(StatusEffect.StatusType statusEffect, int amount)
+    public virtual void ApplyStatusEffect(StatusEffect.StatusType statusEffect, int amount)
     {
         if (health > 0)
             statusEffectManager.ApplyStatusEffect(statusEffect, amount);

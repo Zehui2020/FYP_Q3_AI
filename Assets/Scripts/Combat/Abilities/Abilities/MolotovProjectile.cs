@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MolotovProjectile : AbilityProjectile
@@ -11,9 +9,9 @@ public class MolotovProjectile : AbilityProjectile
     protected override void OnHit(BaseStats target)
     {
         areaObj.SetActive(true);
-        areaObj.transform.localScale = new Vector3(range, areaObj.transform.localScale.y, areaObj.transform.localScale.z);
+        areaObj.transform.localScale = new Vector3(range / transform.localScale.x, areaObj.transform.localScale.y / transform.localScale.y, areaObj.transform.localScale.z);
         areaObj.transform.SetParent(transform.parent);
-        StartCoroutine(areaOfEffect.StatusOverTime());
+        areaOfEffect.HandleStatusOverTime();
 
         base.OnHit(target);
     }

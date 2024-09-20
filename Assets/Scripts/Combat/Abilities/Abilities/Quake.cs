@@ -8,7 +8,7 @@ public class Quake : BaseAbility
         if (target.GetComponent<Rigidbody2D>().velocity.y <= 0)
         {
             // deal damage
-            float damageDealt = (abilityEffectValue / 100) * target.CalculateDamageDealt(target, out bool isCrit, out DamagePopup.DamageType damageType);
+            float damageDealt = (abilityEffectValue / 100) * target.CalculateDamageDealt(target,BaseStats.Damage.DamageSource.Normal, out bool isCrit, out DamagePopup.DamageType damageType);
             target.TakeDamage(PlayerController.Instance, new BaseStats.Damage(damageDealt), isCrit, target.transform.position, damageType);
             // push targets away
             Vector3 force = (target.transform.position - PlayerController.Instance.transform.position).normalized;

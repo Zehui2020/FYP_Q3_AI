@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static MovementController;
 
 public class Enemy : EnemyStats
 {
-    public enum EnemyClass { Undead, Slime }
+    public enum EnemyClass { Undead, Slime, Dummy }
     public EnemyClass enemyClass;
 
     public enum EnemyType { Normal, Elite, Boss }
@@ -25,6 +24,8 @@ public class Enemy : EnemyStats
     [SerializeField] protected LayerMask groundLayer;
 
     [SerializeField] protected List<Transform> waypoints = new();
+    [SerializeField] private int goldUponDeath;
+
     protected int currentWaypoint = 0;
 
     protected event System.Action onReachWaypoint;
@@ -75,7 +76,20 @@ public class Enemy : EnemyStats
         };
 
         onHitEvent += player.OnHitEnemyEvent;
-        OnDieEvent += player.OnEnemyDie;
+        OnDieEvent += (target) => 
+        {
+            player.OnEnemyDie(target);
+
+            int goldToDrop = goldUponDeath;
+
+            // Interest Contract
+            int randNum = Random.Range(0, 100);
+            if (randNum < itemStats.interestChance)
+                goldToDrop *= 2;
+
+            player.gold += goldToDrop;
+        }; 
+
         player.OnParry += (target) => 
         {
             if (target == this)
@@ -219,6 +233,13 @@ public class Enemy : EnemyStats
             player.OnPlayerOverlap(true);
         else
             player.OnPlayerOverlap(false);
+    }
+
+    public override void ApplyStatusEffect(StatusEffect.StatusType statusEffect, int amount)
+    {
+        base.ApplyStatusEffect(statusEffect, amount);
+        uiController.SetCanvasActive(true);
+        isInCombat = true;
     }
 
     public override IEnumerator FrozenRoutine()

@@ -3,6 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class StatusEffect
 {
+    [System.Serializable]
     public struct StatusType
     {
         public enum Type
@@ -18,13 +19,15 @@ public class StatusEffect
             Poison,
             Freeze,
             Static,
-            BloodLoss,
+            TotalStatusEffect,
 
             // States
+            BloodLoss,
             Breached,
             Frozen,
             Stunned,
-            Dazed
+            Dazed,
+            TotalStates
         }
 
         public Type statusType;

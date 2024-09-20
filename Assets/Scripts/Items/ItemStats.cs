@@ -37,6 +37,33 @@ public class ItemStats : ScriptableObject
     public int kunaiChance;
     public int kunaiDamageMultiplier;
 
+    public float chestplateDamageModifier;
+    public int chestplatePoisonStacks;
+
+    public float transceiverBuffDuration;
+    public float transceiverBuffMultiplier;
+
+    public float minPlungeDist;
+    public float maxPlungeDist;
+    public float minPlungeMultiplier;
+    public float maxPlungeMultiplier;
+
+    public float dynamightTotalDamageMultiplier;
+    public float dynamightRadius;
+
+    public float gavelThreshold;
+    public float gavelDamageMultiplier;
+    public int gavelStacks;
+
+    public float bottleRadius;
+    public int bottleStacks;
+
+    public int voucherRewardCount;
+
+    public int interestChance;
+
+    public int rebateGold;
+
     public void ResetStats()
     {
         ritualBleedChance = 0;
@@ -70,5 +97,32 @@ public class ItemStats : ScriptableObject
 
         kunaiChance = 0;
         kunaiDamageMultiplier = 0;
+
+        chestplateDamageModifier = 0;
+        chestplatePoisonStacks = 0;
+
+        transceiverBuffDuration = 0;
+        transceiverBuffMultiplier = 0;
+
+        minPlungeDist = 0;
+        maxPlungeDist = 0;
+        minPlungeMultiplier = 0;
+        maxPlungeMultiplier = 0;
+
+        dynamightTotalDamageMultiplier = 0;
+        dynamightRadius = 0;
+
+        gavelThreshold = 0;
+        gavelDamageMultiplier = 0;
+        gavelStacks = 0;
+
+        bottleRadius = 0;
+        bottleStacks = 0;
+
+        voucherRewardCount = 0;
+
+        interestChance = 0;
+
+        rebateGold = 0;
     }
 }

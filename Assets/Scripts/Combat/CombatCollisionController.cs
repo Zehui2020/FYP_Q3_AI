@@ -33,7 +33,7 @@ public class CombatCollisionController : MonoBehaviour
             col.SetCollider(false);
     }
 
-    private void TriggerEvent(Collider2D col)
+    private void TriggerEvent(Collider2D col, BaseStats.Damage.DamageSource damageSource)
     {
         if (!Utility.Instance.CheckLayer(col.gameObject, targetLayer))
             return;
@@ -44,8 +44,8 @@ public class CombatCollisionController : MonoBehaviour
 
         if (target != null)
         {
-            float damageDealt = attacker.CalculateDamageDealt(target, out bool isCrit, out DamagePopup.DamageType damageType);
-            target.TakeDamage(attacker, new BaseStats.Damage(damageDealt), isCrit, closestPoint, damageType);
+            float damageDealt = attacker.CalculateDamageDealt(target, damageSource, out bool isCrit, out DamagePopup.DamageType damageType);
+            target.TakeDamage(attacker, new BaseStats.Damage(damageSource, damageDealt), isCrit, closestPoint, damageType);
             DisableAllCollider();
         }
     }

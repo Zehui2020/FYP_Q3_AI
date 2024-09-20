@@ -38,13 +38,25 @@ public class AreaOfEffect : MonoBehaviour
         Destroy(gameObject, lifeTime);
     }
 
-    public IEnumerator StatusOverTime()
+    public void HandleStatusOverTime()
     {
-        foreach (BaseStats stat in stats)
+        StartCoroutine(DeathRoutine());
+        StartCoroutine(StatusOverTime());
+    }
+
+    private IEnumerator DeathRoutine()
+    {
+        yield return new WaitForSeconds(lifeTime);
+        Destroy(gameObject);
+    }
+
+    private IEnumerator StatusOverTime()
+    {
+        for (int i = 0; i < stats.Count; i++)
         {
-            stat.ApplyStatusEffect(status, 1);
-            Debug.Log("Status Applied");
+            stats[i].ApplyStatusEffect(status, 1);
         }
+
         yield return new WaitForSeconds(interval);
 
         StartCoroutine(StatusOverTime());

@@ -352,14 +352,15 @@ MonoBehaviour:
     \"Pprompt\",\r\n      \"clip\": [\r\n        \"4\",\r\n        1\r\n      ]\r\n   
     },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\":
     \"Prompt\"\r\n    }\r\n  },\r\n  \"7\": {\r\n    \"inputs\": {\r\n      \"text\":
-    \"human, hands, face, legs, background, shadow, shadows, drop shadow, aura, glow\",\r\n     
-    \"clip\": [\r\n        \"4\",\r\n        1\r\n      ]\r\n    },\r\n    \"class_type\":
-    \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\": \"Negative Prompt\"\r\n   
-    }\r\n  },\r\n  \"8\": {\r\n    \"inputs\": {\r\n      \"samples\": [\r\n       
-    \"3\",\r\n        0\r\n      ],\r\n      \"vae\": [\r\n        \"4\",\r\n       
-    2\r\n      ]\r\n    },\r\n    \"class_type\": \"VAEDecode\",\r\n    \"_meta\":
-    {\r\n      \"title\": \"VAE Decode\"\r\n    }\r\n  },\r\n  \"11\": {\r\n    \"inputs\":
-    {\r\n      \"control_net_name\": \"controlnet-canny-sdxl-1.0\\\\diffusion_pytorch_model.fp16.safetensors\"\r\n   
+    \"human, hands, face, legs, background, shadow, shadows, drop shadow, aura, glow,
+    body, arms, feet\",\r\n      \"clip\": [\r\n        \"4\",\r\n        1\r\n     
+    ]\r\n    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"Negative Prompt\"\r\n    }\r\n  },\r\n  \"8\": {\r\n    \"inputs\":
+    {\r\n      \"samples\": [\r\n        \"3\",\r\n        0\r\n      ],\r\n     
+    \"vae\": [\r\n        \"4\",\r\n        2\r\n      ]\r\n    },\r\n    \"class_type\":
+    \"VAEDecode\",\r\n    \"_meta\": {\r\n      \"title\": \"VAE Decode\"\r\n   
+    }\r\n  },\r\n  \"11\": {\r\n    \"inputs\": {\r\n      \"control_net_name\":
+    \"controlnet-canny-sdxl-1.0\\\\diffusion_pytorch_model.fp16.safetensors\"\r\n   
     },\r\n    \"class_type\": \"ControlNetLoader\",\r\n    \"_meta\": {\r\n     
     \"title\": \"Load ControlNet Model\"\r\n    }\r\n  },\r\n  \"12\": {\r\n    \"inputs\":
     {\r\n      \"strength\": 1,\r\n      \"start_percent\": 0,\r\n      \"end_percent\":
@@ -455,7 +456,7 @@ MonoBehaviour:
       background, no background
     controlNetImage: item_capacitor
     filename: 8
-  - Pprompt: pixel art, adrenaline shot, transparent background, solid color background,
+  - Pprompt: pixel art, syringe and needle, transparent background, solid color background,
       no background
     controlNetImage: item_adrenaline
     filename: 9
@@ -463,6 +464,58 @@ MonoBehaviour:
       no background
     controlNetImage: item_metal_bat
     filename: 10
+  - Pprompt: pixel art, kunai, transparent background, solid color background, no
+      background
+    controlNetImage: item_kunai
+    filename: 11
+  - Pprompt: pixel art, spiked chestplate, medieval chestplate, poison themed, transparent
+      background, solid color background, no background
+    controlNetImage: item_chestplate
+    filename: 12
+  - Pprompt: pixel art, walkie talkie, transparent background, solid color background,
+      no background
+    controlNetImage: item_transceiver
+    filename: 13
+  - Pprompt: pixel art, lead plunger, transparent background, solid color background,
+      no background
+    controlNetImage: item_plunger
+    filename: 14
+  - Pprompt: pixel art, dynamite, transparent background, solid color background,
+      no background
+    controlNetImage: item_dynamite
+    filename: 15
+  - Pprompt: pixel art, gavel, transparent background, solid color background, no
+      background
+    controlNetImage: item_gavel
+    filename: 16
+  - Pprompt: pixel art, bottle, corck, rainbow content, transparent background, solid
+      color background, no background
+    controlNetImage: item_bottle
+    filename: 17
+  - Pprompt: pixel art, feathered cape, transparent background, solid color background,
+      no background
+    controlNetImage: item_cape
+    filename: 18
+  - Pprompt: pixel art, blood bag, transparent background, solid color background,
+      no background
+    controlNetImage: item_blood_bag
+    filename: 19
+  - Pprompt: pixel art, tattered vouchers, transparent background, solid color background,
+      no background
+    controlNetImage: item_voucher
+    filename: 20
+  - Pprompt: pixel art, aztec totem, transparent background, solid color background,
+      no background
+    controlNetImage: item_totem
+    filename: 21
+  - Pprompt: pixel art, paper contracts, transparent background, solid color background,
+      no background
+    controlNetImage: item_contract
+    filename: 22
+  - Pprompt: pixel art, gold coin, gold token, transparent background, solid color
+      background, no background
+    controlNetImage: item_token
+    filename: 23
   queueOnStart: 1
 --- !u!1 &32123484
 GameObject:
