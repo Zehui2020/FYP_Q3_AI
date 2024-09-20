@@ -16,12 +16,6 @@ public class AbilityController : MonoBehaviour
     private PlayerController player;
     private List<Coroutine> abilityDurationRoutines = new List<Coroutine> { null, null };
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.H))
-            ResetAbilityCooldowns();
-    }
-
     public void InitializeAbilityController()
     {
         player = GetComponent<PlayerController>();

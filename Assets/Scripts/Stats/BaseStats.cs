@@ -60,6 +60,7 @@ public class BaseStats : MonoBehaviour
     public float shieldRegenDelay;
     public bool isImmune = false;
     public bool isFrozen = false;
+    public int goldUponDeath;
 
     [Header("Modifiers")]
     public StatModifier attackSpeedMultiplier = new();

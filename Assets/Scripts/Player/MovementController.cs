@@ -243,7 +243,9 @@ public class MovementController : MonoBehaviour
 
     public void HandleGrappling(float vertical, float posX)
     {
-        if (plungeRoutine != null || !canGrapple)
+        if (plungeRoutine != null || 
+            !canGrapple || 
+            currentState == MovementState.LedgeGrab)
             return;
 
         if (vertical == 0)

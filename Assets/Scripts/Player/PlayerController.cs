@@ -1,3 +1,4 @@
+using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -177,7 +178,20 @@ public class PlayerController : PlayerStats
 
         // Other Inputs
         if (Input.GetKeyDown(KeyCode.F) && currentInteractable != null)
-            currentInteractable.OnInteract();
+        {
+            if (currentInteractable.OnInteract())
+            {
+                // Daze Grenade
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, itemStats.dazeGrenadeRadius, enemyLayer);
+                foreach (Collider2D col in colliders)
+                {
+                    if (!col.TryGetComponent<Enemy>(out Enemy enemy))
+                        continue;
+
+                    enemy.TriggerStatusState(StatusEffect.StatusType.Status.Dazed);
+                }
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.E))
             abilityController.HandleAbility(0);
@@ -574,6 +588,8 @@ public class PlayerController : PlayerStats
     }
     public void OnEnemyDie(BaseStats target)
     {
+        int randNum;
+
         // Gasoline
         Collider2D[] enemies = Physics2D.OverlapCircleAll(target.transform.position, itemStats.gasolineRadius, enemyLayer);
         foreach (Collider2D enemy in enemies)
@@ -607,7 +623,7 @@ public class PlayerController : PlayerStats
         }
         for (int i = 0; i < itemStats.bottleStacks; i++)
         {
-            int randNum = Random.Range(0, enemiesInRange.Count);
+            randNum = Random.Range(0, enemiesInRange.Count);
 
             StatusEffect.StatusType.Status randStatusEffect = (StatusEffect.StatusType.Status)Random.Range(0, (int)StatusEffect.StatusType.Status.TotalStatusEffect);
 
@@ -616,6 +632,22 @@ public class PlayerController : PlayerStats
                 randStatusEffect);
 
             enemiesInRange[randNum].ApplyStatusEffect(statusType, 1);
+        }
+
+        // Interest Contract
+        int goldToDrop = target.goldUponDeath;
+        randNum = Random.Range(0, 100);
+        if (randNum < itemStats.interestChance)
+            goldToDrop *= 2;
+        gold += goldToDrop;
+
+        // NRG Bar
+        randNum = Random.Range(0, 100);
+        if (randNum < itemStats.nrgBarChance)
+        {
+            NRGBarPickup nRGBarPickup = ObjectPool.Instance.GetPooledObject("NRGBar", false) as NRGBarPickup;
+            nRGBarPickup.transform.position = target.transform.position;
+            nRGBarPickup.gameObject.SetActive(true);
         }
     }
 

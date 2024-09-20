@@ -295,7 +295,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6630449916640861948
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16821,6 +16821,7 @@ MonoBehaviour:
   shieldRegenDelay: 0
   isImmune: 0
   isFrozen: 0
+  goldUponDeath: 0
   attackSpeedMultiplier:
     baseAmount: 1
     modifiers: []
@@ -17004,6 +17005,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2d79bd08b5b833c478f218235a93c667, type: 2}
   - {fileID: 11400000, guid: b4edc7f679cbc7046ae3ac9797e64223, type: 2}
   - {fileID: 11400000, guid: c318f29d7bfc22b4984b8fc8135a13c3, type: 2}
+  - {fileID: 11400000, guid: 48d115e4efa416d43ac654e299bcd152, type: 2}
+  - {fileID: 11400000, guid: 0f79ab478d999794c90a35d21dcbeb39, type: 2}
   itemPickupAlert: {fileID: 3955222949805468391}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
   itemUIPrefab: {fileID: 8576670009721690369, guid: e4418f51b090caf44b79e3b374f8f5c0, type: 3}
@@ -18592,7 +18595,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7621115747701063390
 RectTransform:
   m_ObjectHideFlags: 0

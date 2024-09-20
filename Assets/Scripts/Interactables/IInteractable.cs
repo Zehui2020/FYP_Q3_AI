@@ -1,6 +1,6 @@
 public interface IInteractable
 {
-    public void OnInteract();
+    public bool OnInteract();
     public void OnEnterRange();
     public void OnLeaveRange();
 }

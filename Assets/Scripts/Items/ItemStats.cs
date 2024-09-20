@@ -64,6 +64,10 @@ public class ItemStats : ScriptableObject
 
     public int rebateGold;
 
+    public int nrgBarChance;
+
+    public float dazeGrenadeRadius;
+
     public void ResetStats()
     {
         ritualBleedChance = 0;
@@ -124,5 +128,9 @@ public class ItemStats : ScriptableObject
         interestChance = 0;
 
         rebateGold = 0;
+
+        nrgBarChance = 0;
+
+        dazeGrenadeRadius = 0;
     }
 }

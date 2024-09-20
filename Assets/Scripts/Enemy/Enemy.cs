@@ -24,7 +24,6 @@ public class Enemy : EnemyStats
     [SerializeField] protected LayerMask groundLayer;
 
     [SerializeField] protected List<Transform> waypoints = new();
-    [SerializeField] private int goldUponDeath;
 
     protected int currentWaypoint = 0;
 
@@ -79,15 +78,6 @@ public class Enemy : EnemyStats
         OnDieEvent += (target) => 
         {
             player.OnEnemyDie(target);
-
-            int goldToDrop = goldUponDeath;
-
-            // Interest Contract
-            int randNum = Random.Range(0, 100);
-            if (randNum < itemStats.interestChance)
-                goldToDrop *= 2;
-
-            player.gold += goldToDrop;
         }; 
 
         player.OnParry += (target) => 

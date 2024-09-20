@@ -31,10 +31,10 @@ public class Chest : MonoBehaviour, IInteractable
     [SerializeField] private ItemStats itemStats;
     private bool isOpened = false;
 
-    public void OnInteract()
+    public bool OnInteract()
     {
         if (isOpened || PlayerController.Instance.gold < cost)
-            return;
+            return false;
 
         int randNum = Random.Range(0, 100);
 
@@ -47,6 +47,7 @@ public class Chest : MonoBehaviour, IInteractable
 
         PlayerController.Instance.chestUnlockCount++;
         PlayerController.Instance.gold -= cost;
+        return true;
     }
 
     private void SpawnItem(Item.Rarity rarity)
@@ -98,6 +99,9 @@ public class Chest : MonoBehaviour, IInteractable
 
     public void OnEnterRange()
     {
+        if (isOpened)
+            return;
+
         costText.text = cost.ToString();
         canvas.gameObject.SetActive(true);
     }
