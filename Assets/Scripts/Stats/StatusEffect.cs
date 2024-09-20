@@ -3,6 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class StatusEffect
 {
+    [System.Serializable]
     public struct StatusType
     {
         public enum Type
