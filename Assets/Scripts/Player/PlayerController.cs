@@ -1,7 +1,6 @@
-using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
+using TMPro;
 using UnityEngine;
 using static BaseStats.Damage;
 using static MovementController;
@@ -36,6 +35,12 @@ public class PlayerController : PlayerStats
 
     private Vector2 plungeStartPos;
     private Vector2 plungeEndPos;
+
+    public int chestUnlockCount = 0;
+    public int extraLives = 0;
+
+    [SerializeField] private TextMeshProUGUI goldText;
+    public int gold = 0;
 
     private Coroutine transceiverBuffRoutine;
 
@@ -80,6 +85,11 @@ public class PlayerController : PlayerStats
 
     private void Update()
     {
+        if (health <= 0)
+            return;
+
+        goldText.text = gold.ToString();
+
         statusEffectManager.UpdateStatusEffects();
 
         float horizontal = Input.GetAxisRaw("Horizontal");
@@ -177,6 +187,9 @@ public class PlayerController : PlayerStats
 
     private void FixedUpdate()
     {
+        if (health <= 0)
+            return;
+
         movementController.MovePlayer(movementSpeedMultiplier.GetTotalModifier());
     }
 
@@ -233,6 +246,9 @@ public class PlayerController : PlayerStats
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
+        if (health <= 0)
+            return false;
+
         bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
 
         if (tookDamage)
@@ -261,6 +277,9 @@ public class PlayerController : PlayerStats
                 attacker.TakeDamage(this, chestplateDamage, chestplateCrit, attacker.transform.position, chestplateDamageType);
                 attacker.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), itemStats.chestplatePoisonStacks);
             }
+
+            // Rebate Token
+            gold += itemStats.rebateGold;
         }
         else
         {
@@ -290,10 +309,23 @@ public class PlayerController : PlayerStats
 
         if (health <= 0)
         {
-            Debug.Log("YOU DIED!");
+            Debug.Log("You hit the ground too hard");
+
+            if (extraLives > 0)
+                StartCoroutine(DieRoutine());
         }
 
         return tookDamage;
+    }
+    private IEnumerator DieRoutine()
+    {
+        yield return new WaitForSeconds(2f);
+
+        extraLives--;
+        health = maxHealth;
+
+        Cleanse(StatusEffect.StatusType.Type.Debuff);
+        Cleanse(StatusEffect.StatusType.Type.Buff);
     }
 
     public override float CalculateDamageDealt(BaseStats target, DamageSource damageSource, out bool isCrit, out DamagePopup.DamageType damageType)
@@ -577,7 +609,7 @@ public class PlayerController : PlayerStats
         {
             int randNum = Random.Range(0, enemiesInRange.Count);
 
-            StatusEffect.StatusType.Status randStatusEffect = (StatusEffect.StatusType.Status)Random.Range(0, (int)StatusEffect.StatusType.Status.TotalStatusEffect - 1);
+            StatusEffect.StatusType.Status randStatusEffect = (StatusEffect.StatusType.Status)Random.Range(0, (int)StatusEffect.StatusType.Status.TotalStatusEffect);
 
             StatusEffect.StatusType statusType = new StatusEffect.StatusType(
                 StatusEffect.StatusType.Type.Debuff,

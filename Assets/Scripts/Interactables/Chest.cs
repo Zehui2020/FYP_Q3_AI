@@ -28,9 +28,14 @@ public class Chest : MonoBehaviour, IInteractable
     [SerializeField] private GameObject canvas;
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private int cost;
+    [SerializeField] private ItemStats itemStats;
+    private bool isOpened = false;
 
     public void OnInteract()
     {
+        if (isOpened || PlayerController.Instance.gold < cost)
+            return;
+
         int randNum = Random.Range(0, 100);
 
         if (randNum < chestType.legendaryItemRate)
@@ -39,42 +44,56 @@ public class Chest : MonoBehaviour, IInteractable
             SpawnItem(Item.Rarity.Uncommon);
         else
             SpawnItem(Item.Rarity.Common);
+
+        PlayerController.Instance.chestUnlockCount++;
+        PlayerController.Instance.gold -= cost;
     }
 
     private void SpawnItem(Item.Rarity rarity)
     {
-        List<Item> items = new();
+        int itemSpawnCount;
+        if (PlayerController.Instance.chestUnlockCount <= 0 && itemStats.voucherRewardCount > 0)
+            itemSpawnCount = 1 + itemStats.voucherRewardCount;
+        else
+            itemSpawnCount = 1;
 
-        switch (chestType.type)
+        for (int i = 0; i < itemSpawnCount; i++)
         {
-            case ChestType.Type.Damage:
-                items = ItemManager.Instance.GetItemsFrom(Item.ItemCatagory.Damage, rarity);
-                break;
-            case ChestType.Type.Healing:
-                items = ItemManager.Instance.GetItemsFrom(Item.ItemCatagory.Healing, rarity);
-                break;
-            case ChestType.Type.Utility:
-                items = ItemManager.Instance.GetItemsFrom(Item.ItemCatagory.Utility, rarity);
-                break;
-            case ChestType.Type.Normal:
-            case ChestType.Type.Large:
-            case ChestType.Type.Legendary:
-                items = ItemManager.Instance.GetItemsFrom(rarity);
-                break;
+            List<Item> items = new();
+
+            switch (chestType.type)
+            {
+                case ChestType.Type.Damage:
+                    items = ItemManager.Instance.GetItemsFrom(Item.ItemCatagory.Damage, rarity);
+                    break;
+                case ChestType.Type.Healing:
+                    items = ItemManager.Instance.GetItemsFrom(Item.ItemCatagory.Healing, rarity);
+                    break;
+                case ChestType.Type.Utility:
+                    items = ItemManager.Instance.GetItemsFrom(Item.ItemCatagory.Utility, rarity);
+                    break;
+                case ChestType.Type.Normal:
+                case ChestType.Type.Large:
+                case ChestType.Type.Legendary:
+                    items = ItemManager.Instance.GetItemsFrom(rarity);
+                    break;
+            }
+
+            Debug.Log("Rarity: " + rarity);
+
+            if (items.Count == 0)
+            {
+                Debug.Log("MISSING ITEM!");
+                return;
+            }
+
+            int randNum = Random.Range(0, items.Count);
+            ItemPickup item = ObjectPool.Instance.GetPooledObject("ItemPickup", true) as ItemPickup;
+            item.transform.position = transform.position;
+            item.InitPickup(items[randNum]);
         }
 
-        Debug.Log(rarity.ToString());
-
-        if (items.Count == 0)
-        {
-            Debug.Log("MISSING ITEM!");
-            return;
-        }
-
-        int randNum = Random.Range(0, items.Count);
-        ItemPickup item = ObjectPool.Instance.GetPooledObject("ItemPickup", true) as ItemPickup;
-        item.transform.position = transform.position;
-        item.InitPickup(items[randNum]);
+        isOpened = true;
     }
 
     public void OnEnterRange()

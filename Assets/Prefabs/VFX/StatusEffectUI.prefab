@@ -261,6 +261,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectName: StatusEffectUI
   poolAmount: 5
+  effectType:
+    statusType: 0
+    statusEffect: 0
   effects:
   - effectType: 0
     icon: {fileID: 21300000, guid: 4605dd994775b714282c10127e2b2366, type: 3}
@@ -282,20 +285,20 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: 364207a87218be34c9fb53564ef564b8, type: 3}
     removeAfterNoStacks: 1
     isStackable: 1
-  - effectType: 6
-    icon: {fileID: 21300000, guid: df5c76c086911274999c24181eda0c7d, type: 3}
-    removeAfterNoStacks: 0
-    isStackable: 0
   - effectType: 7
-    icon: {fileID: 0}
+    icon: {fileID: -1036257699, guid: e70ab9a87685df84ab98ab8ee063115e, type: 3}
     removeAfterNoStacks: 0
     isStackable: 0
   - effectType: 8
-    icon: {fileID: 21300000, guid: 89bff93f55cd270478f443ce947ac956, type: 3}
+    icon: {fileID: -1036257699, guid: e70ab9a87685df84ab98ab8ee063115e, type: 3}
     removeAfterNoStacks: 0
     isStackable: 0
   - effectType: 9
-    icon: {fileID: 21300000, guid: 8865373b14046d449979ea7784448d95, type: 3}
+    icon: {fileID: -1036257699, guid: e70ab9a87685df84ab98ab8ee063115e, type: 3}
+    removeAfterNoStacks: 0
+    isStackable: 0
+  - effectType: 10
+    icon: {fileID: -1036257699, guid: e70ab9a87685df84ab98ab8ee063115e, type: 3}
     removeAfterNoStacks: 0
     isStackable: 0
   effectIcon: {fileID: 131551014031051274}

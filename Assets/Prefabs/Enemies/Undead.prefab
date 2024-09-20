@@ -1020,6 +1020,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d4c5d77f94c7f4d9c79b9f5271e797, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageSource: 0
   col: {fileID: 2184537020566929818}
 --- !u!61 &2184537020566929818
 BoxCollider2D:
@@ -1509,6 +1510,7 @@ MonoBehaviour:
   waypoints:
   - {fileID: 7664433895671088423}
   - {fileID: 8630401135501763257}
+  goldUponDeath: 8
   currentState: 0
   lungeForce: {x: 25, y: 15}
   lungeAngle: 45
@@ -1719,6 +1721,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d4c5d77f94c7f4d9c79b9f5271e797, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageSource: 0
   col: {fileID: 3322536333234295075}
 --- !u!61 &3322536333234295075
 BoxCollider2D:

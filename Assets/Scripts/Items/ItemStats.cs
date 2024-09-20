@@ -58,6 +58,12 @@ public class ItemStats : ScriptableObject
     public float bottleRadius;
     public int bottleStacks;
 
+    public int voucherRewardCount;
+
+    public int interestChance;
+
+    public int rebateGold;
+
     public void ResetStats()
     {
         ritualBleedChance = 0;
@@ -112,5 +118,11 @@ public class ItemStats : ScriptableObject
 
         bottleRadius = 0;
         bottleStacks = 0;
+
+        voucherRewardCount = 0;
+
+        interestChance = 0;
+
+        rebateGold = 0;
     }
 }

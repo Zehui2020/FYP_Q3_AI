@@ -19,10 +19,10 @@ public class StatusEffect
             Poison,
             Freeze,
             Static,
-            BloodLoss,
             TotalStatusEffect,
 
             // States
+            BloodLoss,
             Breached,
             Frozen,
             Stunned,

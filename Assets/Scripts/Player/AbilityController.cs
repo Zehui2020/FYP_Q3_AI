@@ -16,6 +16,12 @@ public class AbilityController : MonoBehaviour
     private PlayerController player;
     private List<Coroutine> abilityDurationRoutines = new List<Coroutine> { null, null };
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+            ResetAbilityCooldowns();
+    }
+
     public void InitializeAbilityController()
     {
         player = GetComponent<PlayerController>();
@@ -90,6 +96,7 @@ public class AbilityController : MonoBehaviour
             timer = 0;
             abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), false);
         }
+
         // track cooldown
         timer = ability.abilityCooldown;
         while (timer > 0)
@@ -99,9 +106,23 @@ public class AbilityController : MonoBehaviour
             timer -= Time.deltaTime;
             yield return null;
         }
-        abilityUI[abilityNo].SetCooldown(0);
 
+        abilityUI[abilityNo].SetCooldown(0);
         abilityDurationRoutines[abilityNo] = null;
+    }
+
+    public void ResetAbilityCooldowns()
+    {
+        for (int i = 0; i < abilityDurationRoutines.Count; i++)
+        {
+            if (abilityDurationRoutines[i] == null)
+                continue;
+
+            StopCoroutine(abilityDurationRoutines[i]);
+
+            abilityUI[i].SetCooldown(0);
+            abilityDurationRoutines[i] = null;
+        }
     }
 
     public void SetAbility(int abilityNo, BaseAbility ability)
