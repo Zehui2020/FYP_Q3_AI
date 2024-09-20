@@ -9,7 +9,8 @@ public class Item : ScriptableObject
 
     public enum ItemType { 
         HDHUD, RitualSickle, KnuckleDuster, JaggedDagger, CrudeKnife, FrazzledWire, IcyCrampon, GasolineTank, OverloadedCapacitor, AdrenalineShot,
-        MetalBat, HiddenKunai, SpikedChestplate, EmergencyTransceiver
+        MetalBat, HiddenKunai, SpikedChestplate, EmergencyTransceiver, LeadPlunger, Dynamight, AncientGavel, BottleOfSurprises, FeatheredCape,
+        BloodBag
     };
     public ItemType itemType;
 

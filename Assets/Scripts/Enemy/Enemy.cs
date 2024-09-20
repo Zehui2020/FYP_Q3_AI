@@ -5,7 +5,7 @@ using static MovementController;
 
 public class Enemy : EnemyStats
 {
-    public enum EnemyClass { Undead, Slime }
+    public enum EnemyClass { Undead, Slime, Dummy }
     public EnemyClass enemyClass;
 
     public enum EnemyType { Normal, Elite, Boss }
@@ -219,6 +219,13 @@ public class Enemy : EnemyStats
             player.OnPlayerOverlap(true);
         else
             player.OnPlayerOverlap(false);
+    }
+
+    public override void ApplyStatusEffect(StatusEffect.StatusType statusEffect, int amount)
+    {
+        base.ApplyStatusEffect(statusEffect, amount);
+        uiController.SetCanvasActive(true);
+        isInCombat = true;
     }
 
     public override IEnumerator FrozenRoutine()

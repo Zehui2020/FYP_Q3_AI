@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class CombatCollisionTrigger : MonoBehaviour
 {
+    [SerializeField] private BaseStats.Damage.DamageSource damageSource;
     [SerializeField] private Collider2D col;
 
-    public event System.Action<Collider2D> TriggerEvent;
+    public event System.Action<Collider2D, BaseStats.Damage.DamageSource> TriggerEvent;
 
     public void SetCollider(bool enable)
     {
@@ -15,7 +16,7 @@ public class CombatCollisionTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        TriggerEvent?.Invoke(col);
+        TriggerEvent?.Invoke(col, damageSource);
     }
 
     private void OnDisable()

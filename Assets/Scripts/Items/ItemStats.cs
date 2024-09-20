@@ -43,6 +43,21 @@ public class ItemStats : ScriptableObject
     public float transceiverBuffDuration;
     public float transceiverBuffMultiplier;
 
+    public float minPlungeDist;
+    public float maxPlungeDist;
+    public float minPlungeMultiplier;
+    public float maxPlungeMultiplier;
+
+    public float dynamightTotalDamageMultiplier;
+    public float dynamightRadius;
+
+    public float gavelThreshold;
+    public float gavelDamageMultiplier;
+    public int gavelStacks;
+
+    public float bottleRadius;
+    public int bottleStacks;
+
     public void ResetStats()
     {
         ritualBleedChance = 0;
@@ -82,5 +97,20 @@ public class ItemStats : ScriptableObject
 
         transceiverBuffDuration = 0;
         transceiverBuffMultiplier = 0;
+
+        minPlungeDist = 0;
+        maxPlungeDist = 0;
+        minPlungeMultiplier = 0;
+        maxPlungeMultiplier = 0;
+
+        dynamightTotalDamageMultiplier = 0;
+        dynamightRadius = 0;
+
+        gavelThreshold = 0;
+        gavelDamageMultiplier = 0;
+        gavelStacks = 0;
+
+        bottleRadius = 0;
+        bottleStacks = 0;
     }
 }

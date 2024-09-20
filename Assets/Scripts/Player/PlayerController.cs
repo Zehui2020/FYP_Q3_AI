@@ -1,6 +1,9 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static BaseStats.Damage;
 using static MovementController;
 
 public class PlayerController : PlayerStats
@@ -29,7 +32,10 @@ public class PlayerController : PlayerStats
 
     private IInteractable currentInteractable;
     private float ropeX;
-    private Damage previousDamage;
+    private Queue<Damage> damageQueue = new();
+
+    private Vector2 plungeStartPos;
+    private Vector2 plungeEndPos;
 
     private Coroutine transceiverBuffRoutine;
 
@@ -116,6 +122,7 @@ public class PlayerController : PlayerStats
         {
             if (movementController.HandlePlunge())
             {
+                plungeStartPos = transform.position;
                 currentState = PlayerStates.Movement;
                 combatController.OnPlungeStart();
             }
@@ -175,6 +182,7 @@ public class PlayerController : PlayerStats
 
     private void HandlePlungeAttack()
     {
+        plungeEndPos = transform.position;
         combatController.HandlePlungeAttack();
         movementController.StopPlayer();
     }
@@ -227,16 +235,6 @@ public class PlayerController : PlayerStats
     {
         bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
 
-        // Spiked Chestplate
-        Damage chestplateDamage = CalculateProccDamageDealt(
-            attacker, 
-            new Damage((attack + attackIncrease.GetTotalModifier()) * itemStats.chestplateDamageModifier), 
-            out bool chestplateCrit, 
-            out DamagePopup.DamageType chestplateDamageType);
-
-        attacker.TakeDamage(this, chestplateDamage, chestplateCrit, attacker.transform.position, chestplateDamageType);
-        attacker.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), itemStats.chestplatePoisonStacks);
-
         if (tookDamage)
         {
             playerEffectsController.ShakeCamera(4f, 5f, 0.2f);
@@ -250,6 +248,19 @@ public class PlayerController : PlayerStats
             ChangeState(PlayerStates.Hurt);
             combatController.ResetComboInstantly();
             animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);
+
+            // Spiked Chestplate
+            if (itemStats.chestplateDamageModifier != 0)
+            {
+                Damage chestplateDamage = CalculateProccDamageDealt(
+                    attacker,
+                    new Damage((attack + attackIncrease.GetTotalModifier()) * itemStats.chestplateDamageModifier),
+                    out bool chestplateCrit,
+                    out DamagePopup.DamageType chestplateDamageType);
+
+                attacker.TakeDamage(this, chestplateDamage, chestplateCrit, attacker.transform.position, chestplateDamageType);
+                attacker.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), itemStats.chestplatePoisonStacks);
+            }
         }
         else
         {
@@ -285,7 +296,56 @@ public class PlayerController : PlayerStats
         return tookDamage;
     }
 
-    public override float CalculateDamageDealt(BaseStats target, out bool isCrit, out DamagePopup.DamageType damageType)
+    public override float CalculateDamageDealt(BaseStats target, DamageSource damageSource, out bool isCrit, out DamagePopup.DamageType damageType)
+    {
+        // Item Multipliers
+        AddItemMultipliers(target);
+
+        // Lead Plunger
+        float plungerDamageMultiplier = 0;
+        if (damageSource == DamageSource.Plunge)
+        {
+            float dist = Vector2.Distance(plungeStartPos, plungeEndPos);
+
+            if (dist >= itemStats.minPlungeDist)
+            {
+                float distPercentage = Mathf.Clamp01(dist / itemStats.maxPlungeDist);
+                plungerDamageMultiplier = distPercentage * itemStats.maxPlungeMultiplier;
+                plungerDamageMultiplier = Mathf.Clamp(plungerDamageMultiplier, itemStats.minPlungeMultiplier, distPercentage * itemStats.maxPlungeMultiplier);
+
+                damageMultipler.AddModifier(plungerDamageMultiplier);
+            }
+        }
+
+        float damage = base.CalculateDamageDealt(target, damageSource, out isCrit, out damageType);
+
+        // Item Multipliers
+        RemoveItemMultipliers();
+
+        // Lead Plunger
+        if (damageSource == DamageSource.Plunge)
+            damageMultipler.RemoveModifier(plungerDamageMultiplier);
+
+        //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), 1);
+        //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), 1);
+        //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), 1);
+        //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Freeze), 1);
+        //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Bleed), 1);
+
+        return damage;
+    }
+    public override Damage CalculateProccDamageDealt(BaseStats target, Damage damage, out bool isCrit, out DamagePopup.DamageType damageType)
+    {
+        AddItemMultipliers(target);
+
+        Damage finalDamage = base.CalculateProccDamageDealt(target, damage, out isCrit, out damageType);
+
+        RemoveItemMultipliers();
+
+        return finalDamage;
+    }
+
+    private void AddItemMultipliers(BaseStats target)
     {
         // Knuckle Duster
         if (target.health >= target.maxHealth * itemStats.knucleDusterThreshold && target.shield <= 0)
@@ -296,19 +356,15 @@ public class PlayerController : PlayerStats
         // Overloaded Capcitor
         if (target.shield <= 0)
             damageMultipler.AddModifier(itemStats.capacitorDamageModifier);
-
-        float damage = base.CalculateDamageDealt(target, out isCrit, out damageType);
-
+    }
+    private void RemoveItemMultipliers()
+    {
         // Knuckle Duster
         damageMultipler.RemoveModifier(itemStats.knuckleDusterDamageModifier);
         // CrudeKnife
         damageMultipler.RemoveModifier(itemStats.crudeKnifeDamageModifier);
         // Overloaded Capcitor
         damageMultipler.RemoveModifier(itemStats.capacitorDamageModifier);
-
-        target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), 10);
-
-        return damage;
     }
 
     public override IEnumerator FrozenRoutine()
@@ -385,12 +441,22 @@ public class PlayerController : PlayerStats
         }
     }
 
+    private bool CanProccItem(Damage previousDamage)
+    {
+        return previousDamage.damageSource.Equals(DamageSource.Normal) || previousDamage.damageSource.Equals(DamageSource.Plunge);
+    }
     public void OnHitEnemyEvent(BaseStats target, Damage damage, bool isCrit, Vector3 closestPoint)
     {
-        if (damage.damageSource.Equals(Damage.DamageSource.StatusEffect))
+        if (damage.damageSource.Equals(DamageSource.StatusEffect))
             return;
 
-        if (previousDamage.damageSource.Equals(damage.damageSource) && previousDamage.damageSource != Damage.DamageSource.Normal)
+        Damage previousDamage;
+        if (!damageQueue.TryPeek(out previousDamage))
+            previousDamage = damage;
+
+        damageQueue.Enqueue(damage);
+
+        if (previousDamage.damageSource.Equals(damage.damageSource) && previousDamage.damageSource != DamageSource.Normal)
             previousDamage.counter++;
         else
             previousDamage = damage;
@@ -412,8 +478,7 @@ public class PlayerController : PlayerStats
 
         // Frazzled Wire
         randNum = Random.Range(0, 100);
-        if (randNum < itemStats.frazzledWireChance && 
-            !previousDamage.damageSource.Equals(Damage.DamageSource.FrazzledWire))
+        if (randNum < itemStats.frazzledWireChance && CanProccItem(previousDamage))
         {
             totalDamageMultiplier.AddModifier(itemStats.frazzledWireTotalDamageModifier);
 
@@ -426,7 +491,7 @@ public class PlayerController : PlayerStats
                     continue;
 
                 Damage proccDamage = CalculateProccDamageDealt(targetEnemy,
-                    new Damage(Damage.DamageSource.FrazzledWire, damage.damage),
+                    new Damage(DamageSource.Item, damage.damage),
                     out bool proccCrit,
                     out DamagePopup.DamageType proccDamageType);
 
@@ -436,12 +501,49 @@ public class PlayerController : PlayerStats
 
             totalDamageMultiplier.RemoveModifier(itemStats.frazzledWireTotalDamageModifier);
         }
+
+        // Dynamight
+        if (CanProccItem(previousDamage) && itemStats.dynamightTotalDamageMultiplier != 0)
+        {
+            totalDamageMultiplier.AddModifier(itemStats.dynamightTotalDamageMultiplier);
+
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, itemStats.dynamightRadius);
+
+            foreach (Collider2D col in colliders)
+            {
+                if (!col.TryGetComponent<EnemyStats>(out EnemyStats enemy))
+                    continue;
+
+                if (enemy == target)
+                    continue;
+
+                float dynamightDamage = CalculateDamageDealt(enemy, DamageSource.Item, out bool dynamightCrit, out DamagePopup.DamageType dynamightDamageType);
+                enemy.TakeDamage(this, new Damage(DamageSource.Item, dynamightDamage), dynamightCrit, enemy.transform.position, dynamightDamageType);
+            }
+
+            totalDamageMultiplier.RemoveModifier(itemStats.dynamightTotalDamageMultiplier);
+        }
+
+        // Ancient Gavel
+        if (!previousDamage.damageSource.Equals(DamageSource.Gavel) && itemStats.gavelThreshold != 0)
+        {
+            float gavelThreshold = attack * itemStats.gavelThreshold;
+            if (damage.damage >= gavelThreshold)
+            {
+                Damage gavelDamage = CalculateProccDamageDealt(target, new Damage(DamageSource.Gavel, attack * itemStats.gavelDamageMultiplier), out bool gavelCrit, out DamagePopup.DamageType gavelDamageType);
+                target.TakeDamage(this, gavelDamage, gavelCrit, target.transform.position, gavelDamageType);
+
+                target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), itemStats.gavelStacks);
+                target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), itemStats.gavelStacks);
+            }
+        }
+
+        damageQueue.Dequeue();
     }
     public void OnEnemyDie(BaseStats target)
     {
         // Gasoline
         Collider2D[] enemies = Physics2D.OverlapCircleAll(target.transform.position, itemStats.gasolineRadius, enemyLayer);
-
         foreach (Collider2D enemy in enemies)
         {
             Enemy targetEnemy = enemy.GetComponent<Enemy>();
@@ -456,6 +558,32 @@ public class PlayerController : PlayerStats
 
             targetEnemy.TakeDamage(this, damage, isCrit, enemy.transform.position, damageType);
             targetEnemy.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), itemStats.gasolineBurnStacks);
+        }
+
+        // Bottle Of Surprises
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(target.transform.position, itemStats.bottleRadius, enemyLayer);
+        List<BaseStats> enemiesInRange = new();
+        foreach (Collider2D col in colliders)
+        {
+            if (!col.TryGetComponent<BaseStats>(out BaseStats enemy))
+                continue;
+
+            if (enemy == target)
+                continue;
+
+            enemiesInRange.Add(enemy);
+        }
+        for (int i = 0; i < itemStats.bottleStacks; i++)
+        {
+            int randNum = Random.Range(0, enemiesInRange.Count);
+
+            StatusEffect.StatusType.Status randStatusEffect = (StatusEffect.StatusType.Status)Random.Range(0, (int)StatusEffect.StatusType.Status.TotalStatusEffect - 1);
+
+            StatusEffect.StatusType statusType = new StatusEffect.StatusType(
+                StatusEffect.StatusType.Type.Debuff,
+                randStatusEffect);
+
+            enemiesInRange[randNum].ApplyStatusEffect(statusType, 1);
         }
     }
 
@@ -500,6 +628,17 @@ public class PlayerController : PlayerStats
     public void ChangeState(PlayerStates newState)
     {
         currentState = newState;
+    }
+
+    public void AddJumpCount(int count)
+    {
+        movementController.jumpCount += count;
+        movementController.maxJumpCount += count;
+    }
+    public void AddWallJumpCount(int count)
+    {
+        movementController.wallJumpCount += count;
+        movementController.maxWallJumps += count;
     }
 
     // For dev console

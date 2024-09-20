@@ -10,14 +10,6 @@ public class MinimapController : MonoBehaviour
     [SerializeField] int zoomSize;
     private int index = 0;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            ChangeView();
-        }
-    }
-
     private void ChangeView()
     {
         index++;

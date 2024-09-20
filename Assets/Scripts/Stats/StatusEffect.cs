@@ -19,12 +19,14 @@ public class StatusEffect
             Freeze,
             Static,
             BloodLoss,
+            TotalStatusEffect,
 
             // States
             Breached,
             Frozen,
             Stunned,
-            Dazed
+            Dazed,
+            TotalStates
         }
 
         public Type statusType;
