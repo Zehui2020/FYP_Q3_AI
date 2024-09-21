@@ -1,5 +1,6 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static StatusEffectManager;
 
@@ -75,6 +76,8 @@ public class BaseStats : MonoBehaviour
     public StatModifier damageReduction = new();
     public StatModifier movementSpeedMultiplier = new();
 
+    public Queue<StatusEffect.StatusType.Status> states = new();
+
     private Coroutine immuneRoutine;
     protected Coroutine shieldRegenRoutine;
 
@@ -88,7 +91,7 @@ public class BaseStats : MonoBehaviour
 
     // bool increase, isCrit
     public event System.Action<bool, bool> OnHealthChanged;
-    public event System.Action<bool, bool> OnShieldChanged;
+    public event System.Action<bool, bool, float> OnShieldChanged;
     public event System.Action<float> OnBreached;
     public event System.Action<BaseStats> OnParry;
     public event System.Action<BaseStats> OnDieEvent;
@@ -114,7 +117,7 @@ public class BaseStats : MonoBehaviour
     public virtual void TakeTrueShieldDamage(Damage damage)
     {
         shield -= Mathf.CeilToInt(damage.damage);
-        OnShieldChanged?.Invoke(false, true);
+        OnShieldChanged?.Invoke(false, true, 0);
 
         DamagePopup damagePopup;
 
@@ -125,10 +128,12 @@ public class BaseStats : MonoBehaviour
             shield = 0;
             OnBreached?.Invoke(breachedMultiplier.GetTotalModifier());
         }
-
-        if (shieldRegenRoutine != null)
-            StopCoroutine(shieldRegenRoutine);
-        shieldRegenRoutine = StartCoroutine(ShieldRegenRoutine());
+        else
+        {
+            if (shieldRegenRoutine != null)
+                StopCoroutine(shieldRegenRoutine);
+            shieldRegenRoutine = StartCoroutine(ShieldRegenRoutine());
+        }
 
         damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
         damagePopup.SetupPopup(Mathf.CeilToInt(damage.damage).ToString(), transform.position, Color.blue, new Vector2(1, 2));
@@ -160,11 +165,6 @@ public class BaseStats : MonoBehaviour
             return false;
         }
 
-        // Start regen shield
-        if (shieldRegenRoutine != null)
-            StopCoroutine(shieldRegenRoutine);
-        shieldRegenRoutine = StartCoroutine(ShieldRegenRoutine());
-
         DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
 
         int finalDamage = CalculateFinalDamage(attacker, damage.damage);
@@ -175,7 +175,12 @@ public class BaseStats : MonoBehaviour
             shield -= finalDamage;
             damageType = DamagePopup.DamageType.Shield;
             damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(1, 2));
-            OnShieldChanged?.Invoke(false, isCrit);
+            OnShieldChanged?.Invoke(false, isCrit, 0);
+
+            // Start regen shield
+            if (shieldRegenRoutine != null)
+                StopCoroutine(shieldRegenRoutine);
+            shieldRegenRoutine = StartCoroutine(ShieldRegenRoutine());
 
             if (shield <= 0)
             {
@@ -270,7 +275,13 @@ public class BaseStats : MonoBehaviour
         else
             totalDamageDealt *= attacker.breachDamageMultiplier.GetTotalModifier();
 
-        totalDamageDealt *= (1 - damageReduction.GetTotalModifier());
+        // Minimum 1% damage from damage reduction
+        float totalDamageReduction = 1 - damageReduction.GetTotalModifier();
+        if (totalDamageReduction > 0)
+            totalDamageDealt *= totalDamageReduction;
+        else
+            totalDamageDealt *= 0.01f;
+
         totalDamageDealt *= attacker.totalDamageMultiplier.GetTotalModifier();
 
         return Mathf.CeilToInt(totalDamageDealt);
@@ -278,6 +289,9 @@ public class BaseStats : MonoBehaviour
 
     public void Heal(int amount)
     {
+        // Sentient Algae
+        amount *= itemStats.algaeHealingMultiplier;
+
         health += amount;
         if (health > maxHealth)
             health = maxHealth;
@@ -433,23 +447,25 @@ public class BaseStats : MonoBehaviour
 
     private IEnumerator ShieldRegenRoutine()
     {
+        OnShieldChanged?.Invoke(true, false, shieldRegenDelay);
+
         yield return new WaitForSeconds(shieldRegenDelay);
 
         shield = maxShield;
-        OnShieldChanged?.Invoke(true, false);
         statusEffectManager.RemoveEffectUI(StatusEffect.StatusType.Status.Breached);
     }
 
-    protected void InvokeOnShieldChanged(bool shieldRestored, bool isCrit)
+    protected void InvokeOnShieldChanged(bool shieldRestored, float duration, bool isCrit)
     {
-        OnShieldChanged?.Invoke(shieldRestored, isCrit);
+        OnShieldChanged?.Invoke(shieldRestored, isCrit, duration);
     }
 
-    public virtual void TriggerStatusState(StatusEffect.StatusType.Status state)
+    public virtual void TriggerStatusState(StatusEffect.StatusType.Status state, float duration)
     {
         if (this == null)
             return;
 
+        states.Enqueue(state);
         DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
 
         switch (state)
@@ -457,26 +473,27 @@ public class BaseStats : MonoBehaviour
             case StatusEffect.StatusType.Status.BloodLoss:
                 TakeTrueDamage(new Damage(Damage.DamageSource.StatusEffect, maxHealth * statusEffectStats.bloodLossDamage));
                 popup.SetupPopup("Blood Loss!", transform.position, Color.red, new Vector2(0, 3));
+                states.Dequeue();
                 break;
             case StatusEffect.StatusType.Status.Frozen:
                 if (frozenRoutine != null)
                     return;
                 popup.SetupPopup("Frozen!", transform.position, Color.blue, new Vector2(0, 3));
-                frozenRoutine = StartCoroutine(FrozenRoutine());
+                frozenRoutine = StartCoroutine(FrozenRoutine(duration));
                 break;
             case StatusEffect.StatusType.Status.Dazed:
                 if (dazedRoutine != null)
                     return;
 
                 popup.SetupPopup("Dazed!", transform.position, Color.yellow, new Vector2(0, 3));
-                dazedRoutine = StartCoroutine(DazedRoutine());
+                dazedRoutine = StartCoroutine(DazedRoutine(duration));
                 break;
             case StatusEffect.StatusType.Status.Stunned:
                 if (stunnedRoutine != null)
                     return;
 
                 popup.SetupPopup("Stunned!", transform.position, Color.yellow, new Vector2(0, 3));
-                stunnedRoutine = StartCoroutine(StunnedRoutine());
+                stunnedRoutine = StartCoroutine(StunnedRoutine(duration));
                 break;
         }
     }
@@ -503,17 +520,17 @@ public class BaseStats : MonoBehaviour
             statusEffectManager.ApplyStatusEffect(statusEffect, amount);
     }
 
-    public virtual IEnumerator FrozenRoutine()
+    public virtual IEnumerator FrozenRoutine(float duration)
     {
         yield return null;
     }
 
-    public virtual IEnumerator StunnedRoutine()
+    public virtual IEnumerator StunnedRoutine(float duration)
     {
         yield return null;
     }
 
-    public virtual IEnumerator DazedRoutine()
+    public virtual IEnumerator DazedRoutine(float duration)
     {
         yield return null;
     }

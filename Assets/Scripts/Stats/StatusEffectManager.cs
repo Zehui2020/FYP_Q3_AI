@@ -16,7 +16,7 @@ public class StatusEffectManager : MonoBehaviour
     public StatusEffect staticStacks;
 
     public event System.Action<StatusEffect.StatusType, int> OnApplyStatusEffect;
-    public event System.Action<StatusEffect.StatusType.Status> OnThresholdReached;
+    public event System.Action<StatusEffect.StatusType.Status, float> OnThresholdReached;
     public event System.Action<StatusEffect.StatusType.Status> OnCleanse;
 
     [Header("Status Effect UI")]
@@ -47,7 +47,7 @@ public class StatusEffectManager : MonoBehaviour
                     particleVFXManager.StopBleeding();
                     particleVFXManager.OnBloodLoss();
 
-                    OnThresholdReached?.Invoke(StatusEffect.StatusType.Status.BloodLoss);
+                    OnThresholdReached?.Invoke(StatusEffect.StatusType.Status.BloodLoss, 0);
                     bleedStacks.SetThreshold(bleedStacks.stackThreshold * statusEffectStats.bleedThresholdMultiplier);
                     RemoveEffectUI(StatusEffect.StatusType.Status.Bleed);
                 }
@@ -65,7 +65,7 @@ public class StatusEffectManager : MonoBehaviour
             case StatusEffect.StatusType.Status.Freeze:
                 if (freezeStacks.AddStack(amount))
                 {
-                    OnThresholdReached?.Invoke(StatusEffect.StatusType.Status.Frozen);
+                    OnThresholdReached?.Invoke(StatusEffect.StatusType.Status.Frozen, statusEffectStats.frozenDuration);
                     RemoveEffectUI(StatusEffect.StatusType.Status.Freeze);
                 }
                 else
@@ -78,7 +78,7 @@ public class StatusEffectManager : MonoBehaviour
                     particleVFXManager.StopStatic();
                     particleVFXManager.OnStunned();
 
-                    OnThresholdReached?.Invoke(StatusEffect.StatusType.Status.Stunned);
+                    OnThresholdReached?.Invoke(StatusEffect.StatusType.Status.Stunned, statusEffectStats.stunDuration);
                     RemoveEffectUI(StatusEffect.StatusType.Status.Static);
                 }
                 else

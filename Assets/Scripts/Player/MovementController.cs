@@ -735,6 +735,17 @@ public class MovementController : MonoBehaviour
         burstDragRoutine = null;
     }
 
+    public bool CheckCannotCombat()
+    {
+        return currentState == MovementState.GroundDash ||
+                currentState == MovementState.AirDash ||
+                currentState == MovementState.Roll ||
+                currentState == MovementState.LungeRoll ||
+                currentState == MovementState.LedgeGrab ||
+                currentState == MovementState.Plunge ||
+                currentState == MovementState.Knockback;
+    }
+
     private void OnDisable()
     {
         OnPlungeEnd = null;

@@ -21,6 +21,7 @@ public class EnemyStatBar : MonoBehaviour
 
     private Coroutine DelayBarRoutine;
     private Coroutine BarShakeRoutine;
+    private Coroutine increaseDelayBarRoutine;
 
     private Vector3 originalBarPosition;
 
@@ -50,6 +51,13 @@ public class EnemyStatBar : MonoBehaviour
         DelayBarRoutine = StartCoroutine(SetDelayBar(amount, maxAmount, true));
     }
 
+    public void IncreaseDelayBar(int amount, int maxAmount, float duration)
+    {
+        if (increaseDelayBarRoutine != null)
+            StopCoroutine(increaseDelayBarRoutine);
+        increaseDelayBarRoutine = StartCoroutine(IncreaseDelayBarRoutine(amount, maxAmount, duration));
+    }
+
     private void StopShakeRoutine()
     {
         if (BarShakeRoutine == null)
@@ -60,9 +68,10 @@ public class EnemyStatBar : MonoBehaviour
 
     private IEnumerator SetDelayBar(int amount, int maxAmount, bool increase)
     {
+        statBar.maxValue = maxAmount;
+
         if (!increase)
         {
-            statBar.maxValue = maxAmount;
             statBar.value = amount;
 
             yield return new WaitForSeconds(delayDuration);
@@ -76,17 +85,52 @@ public class EnemyStatBar : MonoBehaviour
             }
 
             delayBar.sizeDelta = new Vector2(targetWidth, delayBar.sizeDelta.y);
+            DelayBarRoutine = null;
         }
-
-        if (increase)
+        else
         {
-            while (statBar.value != statBar.maxValue)
+            float initialValue = statBar.value;
+            float progress = 0f;
+
+            while (progress < 1f)
             {
-                statBar.value = Mathf.Lerp(amount, maxAmount, Time.deltaTime * delayBarSpeed);
+                progress += Time.deltaTime * delayBarSpeed;
+                statBar.value = Mathf.Lerp(initialValue, maxAmount, progress);
                 delayBar.sizeDelta = new Vector2(statBar.value / statBar.maxValue * delayBarWidth, delayBar.sizeDelta.y);
                 yield return null;
             }
+
+            statBar.value = maxAmount;
+            DelayBarRoutine = null;
         }
+    }
+    private IEnumerator IncreaseDelayBarRoutine(int amount, int maxAmount, float duration)
+    {
+        float elapsedTime = 0f;
+
+        while (DelayBarRoutine != null)
+        {
+            duration -= Time.deltaTime;
+            yield return null;
+        }
+
+        float initialDelayBarWidth = (float)amount / maxAmount * delayBarWidth;
+        float targetDelayBarWidth = (float)maxAmount / maxAmount * delayBarWidth;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float progress = Mathf.Clamp01(elapsedTime / duration);
+
+            float currentDelayBarWidth = Mathf.Lerp(initialDelayBarWidth, targetDelayBarWidth, progress);
+            delayBar.sizeDelta = new Vector2(currentDelayBarWidth, delayBar.sizeDelta.y);
+
+            yield return null;
+        }
+
+        delayBar.sizeDelta = new Vector2(targetDelayBarWidth, delayBar.sizeDelta.y);
+        statBar.value = maxAmount;
+        increaseDelayBarRoutine = null;
     }
 
     private IEnumerator ShakeRoutine(bool crit)

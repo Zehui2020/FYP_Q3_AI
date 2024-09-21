@@ -110,8 +110,7 @@ public class PlayerController : PlayerStats
         // Combat Inputs
         if (Input.GetMouseButton(0))
         {
-            if (movementController.currentState == MovementState.GroundDash ||
-                movementController.currentState == MovementState.AirDash)
+            if (movementController.CheckCannotCombat())
                 return;
 
             currentState = PlayerStates.Combat;
@@ -124,6 +123,9 @@ public class PlayerController : PlayerStats
 
         if (Input.GetMouseButton(1))
         {
+            if (movementController.CheckCannotCombat())
+                return;
+
             if (combatController.HandleParry())
                 currentState = PlayerStates.Combat;
         }
@@ -188,7 +190,7 @@ public class PlayerController : PlayerStats
                     if (!col.TryGetComponent<Enemy>(out Enemy enemy))
                         continue;
 
-                    enemy.TriggerStatusState(StatusEffect.StatusType.Status.Dazed);
+                    enemy.TriggerStatusState(StatusEffect.StatusType.Status.Dazed, statusEffectStats.dazeDuration);
                 }
             }
         }
@@ -294,6 +296,10 @@ public class PlayerController : PlayerStats
 
             // Rebate Token
             gold += itemStats.rebateGold;
+
+            // Charged Defibrillators
+            if (itemStats.defibrillatorHealMultiplier != 0)
+                StartCoroutine(DefibrillatorRoutine());
         }
         else
         {
@@ -372,6 +378,10 @@ public class PlayerController : PlayerStats
         if (damageSource == DamageSource.Plunge)
             damageMultipler.RemoveModifier(plungerDamageMultiplier);
 
+        // Vampiric Stake
+        if (isCrit && itemStats.stakeHealAmount > 0)
+            Heal(Mathf.CeilToInt(itemStats.stakeHealAmount * maxHealth));
+
         //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), 1);
         //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), 1);
         //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), 1);
@@ -400,7 +410,8 @@ public class PlayerController : PlayerStats
         if (Vector2.Distance(transform.position, target.transform.position) <= itemStats.crudeKnifeDistanceCheck)
             damageMultipler.AddModifier(itemStats.crudeKnifeDamageModifier);
         // Overloaded Capcitor
-        if (target.shield <= 0)
+        if (target.states.Contains(StatusEffect.StatusType.Status.Stunned) || 
+            target.states.Contains(StatusEffect.StatusType.Status.Dazed))
             damageMultipler.AddModifier(itemStats.capacitorDamageModifier);
     }
     private void RemoveItemMultipliers()
@@ -413,13 +424,13 @@ public class PlayerController : PlayerStats
         damageMultipler.RemoveModifier(itemStats.capacitorDamageModifier);
     }
 
-    public override IEnumerator FrozenRoutine()
+    public override IEnumerator FrozenRoutine(float duration)
     {
         particleVFXManager.OnFrozen();
         movementController.StopPlayer();
         isFrozen = true;
 
-        yield return new WaitForSeconds(statusEffectStats.frozenDuration);
+        yield return new WaitForSeconds(duration);
 
         FrozenEnd();
     }
@@ -429,13 +440,14 @@ public class PlayerController : PlayerStats
         isFrozen = false;
         particleVFXManager.StopFrozen();
         frozenRoutine = null;
+        states.Dequeue();
     }
 
-    public override IEnumerator StunnedRoutine()
+    public override IEnumerator StunnedRoutine(float duration)
     {
         movementController.StopPlayer();
 
-        yield return new WaitForSeconds(statusEffectStats.stunDuration);
+        yield return new WaitForSeconds(duration);
 
         StunEnd();
     }
@@ -443,13 +455,14 @@ public class PlayerController : PlayerStats
     {
         movementController.ResumePlayer();
         stunnedRoutine = null;
+        states.Dequeue();
     }
 
-    public override IEnumerator DazedRoutine()
+    public override IEnumerator DazedRoutine(float duration)
     {
         movementController.StopPlayer();
 
-        yield return new WaitForSeconds(statusEffectStats.stunDuration);
+        yield return new WaitForSeconds(duration);
 
         DazeEnd();
     }
@@ -457,6 +470,7 @@ public class PlayerController : PlayerStats
     {
         movementController.ResumePlayer();
         dazedRoutine = null;
+        states.Dequeue();
     }
 
     public override void OnCleanse(StatusEffect.StatusType.Status status)
@@ -584,6 +598,10 @@ public class PlayerController : PlayerStats
             }
         }
 
+        // Blood Fungi
+        if (itemStats.fungiHealAmount > 0)
+            Heal(itemStats.fungiHealAmount);
+
         damageQueue.Dequeue();
     }
     public void OnEnemyDie(BaseStats target)
@@ -688,6 +706,14 @@ public class PlayerController : PlayerStats
 
         transceiverBuffRoutine = null;
     }
+
+    private IEnumerator DefibrillatorRoutine()
+    {
+        yield return new WaitForSeconds(itemStats.defibrillatorHealDelay);
+
+        Heal(Mathf.CeilToInt(itemStats.defibrillatorHealMultiplier * maxHealth));
+    }
+
 
     public void ChangeState(PlayerStates newState)
     {

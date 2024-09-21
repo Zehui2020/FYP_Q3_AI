@@ -1,5 +1,4 @@
 using UnityEngine;
-using TMPro;
 
 public class EnemyUIController : MonoBehaviour
 {
@@ -29,7 +28,7 @@ public class EnemyUIController : MonoBehaviour
             healthBar.OnIncreased(health, maxHealth, critical);
     }
 
-    public void OnShieldChanged(int shield, int maxShield, bool increase, bool critical)
+    public void OnShieldChanged(int shield, int maxShield, bool increase, float increaseDuration, bool critical)
     {
         if (shieldBar == null)
             return;
@@ -37,7 +36,7 @@ public class EnemyUIController : MonoBehaviour
         if (!increase)
             shieldBar.OnDecrease(shield, maxShield, critical);
         else
-            shieldBar.OnIncreased(shield, maxShield, critical);
+            shieldBar.IncreaseDelayBar(shield, maxShield, increaseDuration);
     }
 
     public void ShowAlertSignal()

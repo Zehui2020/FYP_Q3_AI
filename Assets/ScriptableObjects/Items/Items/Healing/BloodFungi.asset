@@ -9,17 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e520ad5318b2714cbffe12a28443c92, type: 3}
-  m_Name: BloodBag
+  m_Script: {fileID: 11500000, guid: 68477663bf5d8ef4c95e5e5791971fb2, type: 3}
+  m_Name: BloodFungi
   m_EditorClassIdentifier: 
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
-  itemRarity: 0
-  itemType: 19
-  itemCatagory: 2
+  itemRarity: 1
+  itemType: 29
+  itemCatagory: 1
   spriteIcon: {fileID: 0}
-  title: Blood Bag
-  description: Increases max health by +5%(+5%/stack)
+  title: Blood Fungi
+  description: Dealing damage heals you by 1(+1/stack).
   itemStack: 0
   alertDuration: 5
-  itemOutlineMaterial: {fileID: 2100000, guid: beaaf0a23b32bc74eb6b85b967db3d75, type: 2}
-  healthIncreaseMultiplier: 0.05
+  itemOutlineMaterial: {fileID: 2100000, guid: bfa784bb779ec4640b45b1d4088e126c, type: 2}
+  baseHealingAmount: 1
+  stackHealingAmount: 1

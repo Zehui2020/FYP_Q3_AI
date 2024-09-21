@@ -66,11 +66,11 @@ public class Enemy : EnemyStats
 
         onPlayerInChaseRange += () => { isInCombat = true; uiController.SetCanvasActive(true); };
         OnHealthChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };
-        OnShieldChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnShieldChanged(shield, maxShield, increase, isCrit); };
+        OnShieldChanged += (increase, isCrit, duration) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnShieldChanged(shield, maxShield, increase, duration, isCrit); };
         OnBreached += (multiplier) => 
         {
             ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Breached), 0);
-            dazedRoutine = StartCoroutine(DazedRoutine());
+            TriggerStatusState(StatusEffect.StatusType.Status.Dazed, shieldRegenDelay);
             PlayerEffectsController.Instance.HitStop(0.2f); 
         };
 
@@ -232,7 +232,7 @@ public class Enemy : EnemyStats
         isInCombat = true;
     }
 
-    public override IEnumerator FrozenRoutine()
+    public override IEnumerator FrozenRoutine(float duration)
     {
         particleVFXManager.OnFrozen();
 
@@ -247,7 +247,7 @@ public class Enemy : EnemyStats
 
         ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Frozen), 0);
 
-        yield return new WaitForSeconds(statusEffectStats.frozenDuration);
+        yield return new WaitForSeconds(duration);
 
         OnFrozenEnd();
     }
@@ -266,13 +266,14 @@ public class Enemy : EnemyStats
         isFrozen = false;
         canUpdate = true;
         particleVFXManager.StopFrozen();
+        states.Dequeue();
     }
 
-    public override IEnumerator StunnedRoutine()
+    public override IEnumerator StunnedRoutine(float duration)
     {
         currentShield = shield;
         shield = 0;
-        InvokeOnShieldChanged(false, true);
+        InvokeOnShieldChanged(false, 0, true);
 
         aiNavigation.StopNavigationUntilResume();
         canUpdate = false;
@@ -282,7 +283,8 @@ public class Enemy : EnemyStats
 
         ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Stunned), 0);
 
-        float timer = statusEffectStats.stunDuration;
+        float timer = duration;
+        InvokeOnShieldChanged(true, duration, false);
 
         while (timer > 0)
         {
@@ -302,7 +304,6 @@ public class Enemy : EnemyStats
 
         animator.speed = previousAnimSpeed;
         shield = currentShield;
-        InvokeOnShieldChanged(true, false);
         stunnedRoutine = null;
 
         if (health <= 0)
@@ -311,17 +312,19 @@ public class Enemy : EnemyStats
         if (!isInCombat)
             aiNavigation.ResumeNavigationFromStop();
         canUpdate = true;
+        states.Dequeue();
     }
 
-    public override IEnumerator DazedRoutine()
+    public override IEnumerator DazedRoutine(float duration)
     {
         aiNavigation.StopNavigationUntilResume();
         previousAnimSpeed = animator.speed;
         animator.speed = 0;
         canUpdate = false;
         ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Dazed), 0);
+        InvokeOnShieldChanged(true, duration, false);
 
-        yield return new WaitForSeconds(statusEffectStats.dazeDuration);
+        yield return new WaitForSeconds(duration);
 
         OnDazeEnd();
     }
@@ -331,7 +334,6 @@ public class Enemy : EnemyStats
 
         animator.speed = previousAnimSpeed;
         shield = maxShield;
-        InvokeOnShieldChanged(true, false);
         dazedRoutine = null;
 
         if (health <= 0)
@@ -340,6 +342,7 @@ public class Enemy : EnemyStats
         if (!isInCombat)
             aiNavigation.ResumeNavigationFromStop();
         canUpdate = true;
+        states.Dequeue();
     }
 
     public override void OnCleanse(StatusEffect.StatusType.Status status)

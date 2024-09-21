@@ -68,6 +68,15 @@ public class ItemStats : ScriptableObject
 
     public float dazeGrenadeRadius;
 
+    public float defibrillatorHealDelay;
+    public float defibrillatorHealMultiplier;
+
+    public float stakeHealAmount;
+
+    public int fungiHealAmount;
+
+    public int algaeHealingMultiplier;
+
     public void ResetStats()
     {
         ritualBleedChance = 0;
@@ -132,5 +141,14 @@ public class ItemStats : ScriptableObject
         nrgBarChance = 0;
 
         dazeGrenadeRadius = 0;
+
+        defibrillatorHealDelay = 0;
+        defibrillatorHealMultiplier = 0;
+
+        stakeHealAmount = 0;
+
+        fungiHealAmount = 0;
+
+        algaeHealingMultiplier = 1;
     }
 }
