@@ -27,6 +27,8 @@ public class PlayerController : PlayerStats
     private PlayerEffectsController playerEffectsController;
     private Rigidbody2D playerRB;
 
+    private Coroutine hurtRoutine;
+
     [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
     [SerializeField] private LayerMask enemyLayer;
 
@@ -202,6 +204,19 @@ public class PlayerController : PlayerStats
         }
     }
 
+    private IEnumerator HurtRoutine()
+    {
+        ChangeState(PlayerStates.Hurt);
+        playerRB.velocity = Vector2.zero;
+        playerRB.isKinematic = true;
+
+        yield return new WaitForSeconds(0.5f);
+
+        ChangeState(PlayerStates.Movement);
+        hurtRoutine = null;
+        playerRB.isKinematic = false;
+    }
+
     private void FixedUpdate()
     {
         if (health <= 0)
@@ -278,8 +293,10 @@ public class PlayerController : PlayerStats
                 movementController.currentState == MovementState.LedgeGrab)
                 return true;
 
-            playerRB.velocity = Vector2.zero;
-            ChangeState(PlayerStates.Hurt);
+            if (hurtRoutine != null)
+                StopCoroutine(hurtRoutine);
+            hurtRoutine = StartCoroutine(HurtRoutine());
+
             combatController.ResetComboInstantly();
             animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);
 

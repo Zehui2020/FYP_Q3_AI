@@ -61,13 +61,9 @@ public class Skeleton : Enemy
                 UpdatePlayerDirection();
                 break;
             case State.Teleport:
+                UpdatePlayerDirection();
                 aiNavigation.StopNavigation();
-                animator.Play(TeleportAnim, -1, 0f);
-
-                StartCoroutine(TeleportTrail());
-                transform.position = player.transform.position;
-
-                StartCoroutine(TeleportCooldown());
+                StartCoroutine(TeleportRoutine());
                 break;
             case State.Die:
                 animator.speed = 1;
@@ -108,14 +104,19 @@ public class Skeleton : Enemy
             UpdatePlayerDirection();
     }
 
-    private IEnumerator TeleportTrail()
+    private IEnumerator TeleportRoutine()
     {
-        teleportTrail.Reinit();
         teleportTrail.Play();
+
+        yield return new WaitForSeconds(0.3f);
+
+        animator.Play(TeleportAnim, -1, 0f);
+        transform.position = player.transform.position;
 
         yield return new WaitForSeconds(1f);
 
         teleportTrail.Stop();
+        StartCoroutine(TeleportCooldown());
     }
 
     private IEnumerator TeleportCooldown()

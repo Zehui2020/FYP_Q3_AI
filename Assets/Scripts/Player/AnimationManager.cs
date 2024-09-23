@@ -12,7 +12,6 @@ public class AnimationManager : MonoBehaviour
     private Animator animator;
     private int currentState;
     private float transitionDelay;
-    private bool allowOverride = true;
 
     // Idles
     public readonly int Idle = Animator.StringToHash("Idle");
@@ -41,19 +40,8 @@ public class AnimationManager : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    public void SetAllowOverride()
-    {
-        allowOverride = true;
-    }
-
     public void ChangeAnimation(int state, float transitionDuration, float delayDuration, AnimType animType)
     {
-        if (!allowOverride)
-            return;
-
-        if (animType == AnimType.CannotOverride)
-            allowOverride = false;
-
         if (state == currentState && animType == AnimType.ResetIfSame)
         {
             animator.Play(state, -1, 0f);
