@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 // PlayerMoneyDisplay
 //
-// プレイヤーの所持金を表示するクラス
+// Class for displaying the player's money
 //
 // Data: 30/8/2024
 // Author: Shimba Sakai
@@ -12,27 +12,28 @@ using UnityEngine;
 
 public class PlayerMoneyDisplay : MonoBehaviour
 {
-    [Header("TextMeshProUGUI for displaying player's money / プレイヤーの所持金表示用")]
+    [Header("TextMeshProUGUI for displaying player's money")]
     public TextMeshProUGUI m_moneyText;
 
-    // アイテムマネージャークラス
+    // Item manager class
     public ItemShopManager m_itemManager;
+
     private void Start()
     {
-        // アイテムマネージャークラスが設定されていない場合の処理
-        if(m_itemManager == null)
+        // If the item manager class is not set
+        if (m_itemManager == null)
         {
-            // アイテムマネージャークラスを設定する
+            // Set the item manager class
             m_itemManager = FindAnyObjectByType<ItemShopManager>();
         }
     }
 
     void Update()
     {
-        // プレイヤーの所持金がテキストに設定されている場合、プレイヤーの所持金のインスタンスが有効な場合の処理
+        // If the money text is set and the player's wallet instance is valid
         if (m_moneyText != null && PlayerWallet.Instance != null)
         {
-            // プレイヤーの所持金を設定する
+            // Set the player's money
             m_moneyText.text = "Money : " + PlayerWallet.Instance.GetMoney() + m_itemManager.GetItemUnit();
         }
     }
