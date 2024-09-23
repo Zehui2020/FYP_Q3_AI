@@ -61,7 +61,7 @@ public class ItemShopUIHandler : MonoBehaviour
 
     // Image start here ---------------------------------------------------
 
-    [Header("アイテムのイメージ画像表示用")]
+    //[Header("アイテムのイメージ画像表示用")]
     public Image m_forDisplayingItemImages;
 
     // Image end here -----------------------------------------------------
@@ -87,7 +87,7 @@ public class ItemShopUIHandler : MonoBehaviour
     [Header("アイテム購入時のメッセージ")]
     public TextMeshProUGUI m_itemPurchaseMessage;
 
-    [Header("アイテム購入額の表示")]
+    //[Header("アイテム購入額の表示")]
     public TextMeshProUGUI m_itemPurchaseDisplay;
 
     // TextMeshProUGUI end here -------------------------------------------

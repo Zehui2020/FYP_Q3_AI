@@ -14,11 +14,11 @@ using System.Collections.Generic;
 
 public class ItemDisplay : MonoBehaviour
 {
-    [Header("UI Image for Item Sprite / アイテムスプライト表示用")]
+    //[Header("UI Image for Item Sprite / アイテムスプライト表示用")]
     public Image m_itemImage;
-    [Header("TextMeshProUGUI for Item Name / アイテム名表示用")]
+    //[Header("TextMeshProUGUI for Item Name / アイテム名表示用")]
     public TextMeshProUGUI m_itemNameText;
-    [Header("TextMeshProUGUI for Item Price / アイテム価格表示用")]
+    //[Header("TextMeshProUGUI for Item Price / アイテム価格表示用")]
     public TextMeshProUGUI m_itemPriceText;
 
     // 現在のアイテムデータ

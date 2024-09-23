@@ -12,7 +12,7 @@ using UnityEngine;
 
 public class PlayerMoneyDisplay : MonoBehaviour
 {
-    [Header("TextMeshProUGUI for displaying player's money / プレイヤーの所持金表示用")]
+    //[Header("TextMeshProUGUI for displaying player's money / プレイヤーの所持金表示用")]
     public TextMeshProUGUI m_moneyText;
 
     // アイテムマネージャークラス
