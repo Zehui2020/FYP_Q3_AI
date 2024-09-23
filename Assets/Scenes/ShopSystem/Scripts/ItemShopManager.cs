@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 // ItemShopManager
 //
-// アイテムを管理するクラス
+// アイテムショップを管理するクラス
 //
 // Data: 8/28/2024
 // Author: Shimba Sakai
@@ -45,6 +45,8 @@ public class ItemShopManager : MonoBehaviour
 
     private IEnumerator Start()
     {
+        // Currently, when the Exit button is pressed, it is set to exit the scene.If you want to change this behavior, I recommend modifying the SceneExitHandler class.
+
         // アイテムショップUI管理クラスが設定されていない場合の処理
         if (m_itemShopUIHandler == null)
         {
@@ -57,13 +59,6 @@ public class ItemShopManager : MonoBehaviour
         {
             // アイテム読み込みクラスを設定する
             m_itemLoader = FindAnyObjectByType<ItemLoader>();
-        }
-
-        // 出口ボタンが設定されている場合の処理
-        if (m_itemShopUIHandler.m_exitTextButton != null)
-        {
-            // ボタンがクリックされた時にSwitchShopDisplayを呼び出す
-            m_itemShopUIHandler.m_exitTextButton.onClick.AddListener(SwitchShopDisplay);
         }
 
         // アイテム読み込みクラスが設定されている場合の処理
@@ -215,6 +210,7 @@ public class ItemShopManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
+
 
     // アイテム単位の取得
     public string GetItemUnit()

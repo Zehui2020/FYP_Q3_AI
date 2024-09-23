@@ -1,5 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
+//----------------------------------------------------------------------
+// ItemShopUIHandler
+//
+// アイテムショップUI管理クラス
+//
+// Data: 19/9/2024
+// Author: Shimba Sakai
+//----------------------------------------------------------------------
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
