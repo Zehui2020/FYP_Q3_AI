@@ -1,11 +1,12 @@
 //----------------------------------------------------------------------
 // TextFadeAndMove
 //
-// 購入時の金額を表示するクラス
+// Class for displaying the purchase amount
 //
 // Data: 17/9/2024
 // Author: Shimba Sakai
 //----------------------------------------------------------------------
+
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -18,53 +19,53 @@ public class TextFadeAndMove : MonoBehaviour
     [Header("Move Distance")]
     public Vector3 m_moveDistance = new Vector3(0, -50, 0);
 
-    // アイテムショップUI管理クラス
+    // Item shop UI management class
     ItemShopUIHandler m_itemShopUIHandler;
 
     private Vector3 m_initialPosition;
 
-    // 購入金額表示テキストのコピー
+    // Copy of the purchase amount display text
     private GameObject m_itemPurchaseDisplayPrefab;
 
-    // 現在の購入金額表示テキストのコピー
-    private GameObject m_currentitemPurchaseDisplayPrefab;
+    // Current copy of the purchase amount display text
+    private GameObject m_currentItemPurchaseDisplayPrefab;
 
     void Start()
     {
-        // アイテムショップUI管理管理クラスが設定されていない場合の処理
-        if(m_itemShopUIHandler == null)
+        // Handle case when item shop UI management class is not set
+        if (m_itemShopUIHandler == null)
         {
-            // アイテムショップUI管理クラスを設定する
+            // Set the item shop UI management class
             m_itemShopUIHandler = FindAnyObjectByType<ItemShopUIHandler>();
         }
 
-        // 購入金額表示テキストののコピーを作る
+        // Create a copy of the purchase amount display text
         m_itemPurchaseDisplayPrefab = m_itemShopUIHandler.m_itemPurchaseDisplay.gameObject;
-        // 初期の色と位置を保存
+        // Save the initial color and position
         m_initialPosition = m_itemShopUIHandler.m_itemPurchaseDisplay.rectTransform.anchoredPosition;
 
-        // アイテム購入額の表示を非表示にする
+        // Hide the item purchase amount display
         m_itemShopUIHandler.m_itemPurchaseDisplay.gameObject.SetActive(false);
     }
 
-    // テキストのフェード
+    // Fade the text
     public IEnumerator FadeMoveAndResetText(string text, float price, string itemUnit)
     {
-        // 新しいテキストオブジェクトを生成
+        // Instantiate a new text object
         GameObject newPurchaseDisplay = Instantiate(m_itemPurchaseDisplayPrefab, m_itemShopUIHandler.m_itemPurchaseDisplay.transform.parent);
         var textComponent = newPurchaseDisplay.GetComponent<TextMeshProUGUI>();
         textComponent.text = text + price + itemUnit;
         textComponent.color = new Color(textComponent.color.r, textComponent.color.g, textComponent.color.b, 1f);
         newPurchaseDisplay.SetActive(true);
 
-        // フェードアウトしながら移動
+        // Fade out and move
         yield return StartCoroutine(FadeAndMoveText(1, 0, newPurchaseDisplay.transform.position, newPurchaseDisplay.transform.position + m_moveDistance, newPurchaseDisplay));
 
-        // 少し待つ
+        // Wait a moment
         yield return new WaitForSeconds(0.5f);
 
-        // テキストを削除
-        Destroy(newPurchaseDisplay); // 生成したテキストを削除
+        // Destroy the created text
+        Destroy(newPurchaseDisplay);
     }
 
     private IEnumerator FadeAndMoveText(float startAlpha, float endAlpha, Vector3 startPosition, Vector3 endPosition, GameObject textObject)
@@ -75,12 +76,12 @@ public class TextFadeAndMove : MonoBehaviour
         {
             float t = elapsedTime / m_duration;
 
-            // テキストの位置を補間して移動
+            // Interpolate the position of the text
             if (textObject != null)
             {
                 textObject.transform.position = Vector3.Lerp(startPosition, endPosition, t);
 
-                // テキストの透明度を変更
+                // Change the transparency of the text
                 Color newColor = textObject.GetComponent<TextMeshProUGUI>().color;
                 newColor.a = Mathf.Lerp(startAlpha, endAlpha, t);
                 textObject.GetComponent<TextMeshProUGUI>().color = newColor;
@@ -90,7 +91,7 @@ public class TextFadeAndMove : MonoBehaviour
             yield return null;
         }
 
-        // 最終的な位置と透明度を設定
+        // Set the final position and transparency
         if (textObject != null)
         {
             textObject.transform.position = endPosition;
@@ -99,18 +100,19 @@ public class TextFadeAndMove : MonoBehaviour
             textObject.GetComponent<TextMeshProUGUI>().color = finalColor;
         }
     }
-    // 透明度と位置をリセットする
+
+    // Reset the position and transparency
     private void ResetTextPositionAndAlpha()
     {
-        // 位置を元に戻す
+        // Reset the position
         m_itemShopUIHandler.m_itemPurchaseDisplay.rectTransform.anchoredPosition = m_initialPosition;
 
-        // 透明度を元に戻す
+        // Reset the transparency
         Color resetColor = m_itemShopUIHandler.m_itemPurchaseDisplay.color;
         resetColor.a = 1f;
         m_itemShopUIHandler.m_itemPurchaseDisplay.color = resetColor;
 
-        // 購入時の金額を非表示にする
+        // Hide the purchase amount display
         m_itemShopUIHandler.m_itemPurchaseDisplay.gameObject.SetActive(false);
     }
 }

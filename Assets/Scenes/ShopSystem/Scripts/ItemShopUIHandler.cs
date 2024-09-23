@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 // ItemShopUIHandler
 //
-// アイテムショップUI管理クラス
+// Class for managing the item shop UI
 //
 // Data: 19/9/2024
 // Author: Shimba Sakai
@@ -15,16 +15,16 @@ public class ItemShopUIHandler : MonoBehaviour
 {
     // GameObject start here ----------------------------------------------
 
-    [Header("アイテムのPrefab")]
+    [Header("Item Prefab")]
     public GameObject m_itemPrefab;
 
-    [Header("購入画面の背景パネル")]
+    [Header("Purchase Screen Background Panel")]
     public GameObject m_purchaseScreenBackground;
 
-    [Header("アイテムショップ")]
+    [Header("Item Shop")]
     public GameObject m_itemShop;
 
-    [Header("アイテムショップの背景")]
+    [Header("Item Shop Background")]
     public GameObject m_itemShopBackground;
 
     // GameObject end here ------------------------------------------------
@@ -32,25 +32,24 @@ public class ItemShopUIHandler : MonoBehaviour
 
 
 
-
     // Button start here --------------------------------------------------
 
-    [Header("出口ボタン")]
+    [Header("Exit Button")]
     public Button m_exitTextButton;
 
-    [Header("デバッグ用ボタン")]
+    [Header("Debug Button")]
     public Button m_debugButton;
 
-    [Header("アイテムの個数を増やすボタン")]
+    [Header("Increase Item Quantity Button")]
     public Button m_plusButton;
 
-    [Header("アイテムの個数を減らすボタン")]
+    [Header("Decrease Item Quantity Button")]
     public Button m_minusButton;
 
-    [Header("購入ボタン")]
+    [Header("Purchase Button")]
     public Button m_purchaseButton;
 
-    [Header("キャンセルボタン")]
+    [Header("Cancel Button")]
     public Button m_cancelButton;
 
     // Button end here ----------------------------------------------------
@@ -58,10 +57,9 @@ public class ItemShopUIHandler : MonoBehaviour
 
 
 
-
     // Image start here ---------------------------------------------------
 
-    //[Header("アイテムのイメージ画像表示用")]
+    [Header("Image Display for Items")]
     public Image m_forDisplayingItemImages;
 
     // Image end here -----------------------------------------------------
@@ -69,27 +67,25 @@ public class ItemShopUIHandler : MonoBehaviour
 
 
 
-
     // TextMeshProUGUI start here -----------------------------------------
 
-    [Header("アイテムの名前")]
+    [Header("Item Name")]
     public TextMeshProUGUI m_itemName;
 
-    [Header("アイテムの単価")]
+    [Header("Item Unit Price")]
     public TextMeshProUGUI m_itemPerPrice;
 
-    [Header("アイテムの合計金額")]
+    [Header("Item Total Price")]
     public TextMeshProUGUI m_itemTotalPrice;
 
-    [Header("アイテムの個数")]
+    [Header("Item Quantity")]
     public TextMeshProUGUI m_itemQuantity;
 
-    [Header("アイテム購入時のメッセージ")]
+    [Header("Item Purchase Message")]
     public TextMeshProUGUI m_itemPurchaseMessage;
 
-    //[Header("アイテム購入額の表示")]
+    [Header("Item Purchase Amount Display")]
     public TextMeshProUGUI m_itemPurchaseDisplay;
 
     // TextMeshProUGUI end here -------------------------------------------
-
 }

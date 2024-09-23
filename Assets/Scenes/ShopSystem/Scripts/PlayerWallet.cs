@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 // PlayerWallet
 //
-// プレイヤーの所持金を管理するクラス
+// Class for managing the player's wallet
 //
 // Data: 2024/08/30
 // Author: Shimba Sakai
@@ -12,122 +12,156 @@ using UnityEngine;
 
 public class PlayerWallet : MonoBehaviour
 {
-    // プレイヤーの所持金
+    // Player's current wallet instance
     public static PlayerWallet Instance { get; private set; }
 
-    // ゲームが開始されたときのみResourcesのjsonファイルから読み込む
-    [Header("JSON File Name in Resources / Resourcesフォルダ内のJSONファイル名")]
+    // Load JSON file name in Resources only when the game starts
+    [Header("JSON File Name in Resources")]
     public string m_jsonFileName = "money";
 
-    // 現在のプレイヤーの所持金
+    // Current player's money
     private int m_currentMoney;
 
     void Start()
     {
-        // 保存先確認用
+        // For checking the save path
         Debug.Log("Persistent Data Path: " + Application.persistentDataPath);
-    }
 
-    void Awake()
-    {
-        // シングルトンパターンの実装: インスタンスが設定されていない場合の処理
-        if (Instance == null)
+        // Flag to determine if it's the first play
+        if (IsFirstPlay())
         {
-            // インスタンスとしてオブジェクトを設定する
-            Instance = this;
-            // シーンが切り替わってもオブジェクトを破壊しない
-            DontDestroyOnLoad(gameObject);
-            // 起動時にJSONから所持金を読み込む
+            // Load from the Load folder on the first play
             LoadMoney();
         }
         else
         {
-            // 重複するインスタンスを破壊する
+            // Load from the Save folder on resuming
+            LoadMoneyForContinue();
+        }
+    }
+
+    // Method to check if it's the first play
+    private bool IsFirstPlay()
+    {
+        string path = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Load/Money/money.json");
+        return !File.Exists(path); // If the file does not exist in the Load folder, it's the first play
+    }
+
+    void Awake()
+    {
+        // Implementing the Singleton pattern: check if the instance is not set
+        if (Instance == null)
+        {
+            // Set the instance as the current object
+            Instance = this;
+            // Do not destroy the object when switching scenes
+            DontDestroyOnLoad(gameObject);
+            // Load money from JSON at startup
+            LoadMoney();
+        }
+        else
+        {
+            // Destroy duplicate instances
             Destroy(gameObject);
         }
     }
 
-    // プレイヤーの所持金を取得する処理
+    // Method to get the player's money
     public int GetMoney()
     {
-        // プレイヤーの現在の所持金を取得する
+        // Get the current player's money
         return m_currentMoney;
     }
 
-    // プレイヤーの所持金を追加する処理
+    // Method to add money to the player's wallet
     public void AddMoney(int amount)
     {
-        // プレイヤーの所持金を追加した後に保存する
+        // Add the specified amount to the player's money and save it
         m_currentMoney += amount;
-        // プレイヤーの所持金を保存する
+        // Save the player's money
         SaveMoney();
     }
 
-    // プレイヤーの所持金を使用する処理
+    // Method to spend money from the player's wallet
     public bool SpendMoney(int amount)
     {
-        // プレイヤーの所持金が購入額以上の場合の処理
+        // If the player's money is greater than or equal to the purchase amount
         if (m_currentMoney >= amount)
         {
-            // プレイヤーの所持金から指定された額を減らす
+            // Deduct the specified amount from the player's money
             m_currentMoney -= amount;
-            // プレイヤーの所持金を保存する
+            // Save the player's money
             SaveMoney();
-            // 購入を成功させる
+            // Purchase is successful
             return true;
         }
-        // プレイヤーの所持金が購入額未満の場合の処理
+        // If the player's money is less than the purchase amount
         else
         {
-            // 購入を失敗させる
+            // Purchase fails
             return false;
         }
     }
 
-    // プレイヤーの所持金を保存する処理
+    // Method to save the player's money
     private void SaveMoney()
     {
-        // 所持金を保存するためのデータクラスのインスタンスを作成し、現在の所持金を設定する
+        // Create an instance of the data class to save the current money
         var data = new PlayerWalletData { money = m_currentMoney };
 
-        // データクラスをJSON形式の文字列に変換する
+        // Convert the data class to a JSON string
         string json = JsonUtility.ToJson(data);
 
-        // JSONデータを保存するファイルのパスを決定する
-        string path = Path.Combine(Application.persistentDataPath, m_jsonFileName + ".json");
+        // Determine the path for saving JSON data
+        string path = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Save/Money/money.json");
 
-        // JSONデータをファイルに書き込む
+        // Write the JSON data to the file
         File.WriteAllText(path, json);
     }
 
-    // プレイヤーの所持金を読み込む処理
+    // Method to load the player's money
     private void LoadMoney()
     {
-        // 所持金データを保存するファイルのパスを決定する
-        string path = Path.Combine(Application.persistentDataPath, m_jsonFileName + ".json");
+        // Load from the Load folder on the first play
+        string loadPath = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Load/Money/money.json");
 
-        // 指定したパスにファイルが存在する場合の処理
-        if (File.Exists(path))
+        // Check if the saved data exists
+        if (File.Exists(loadPath))
         {
-            // ファイルからJSONデータを読み込む
-            string json = File.ReadAllText(path);
-
-            // JSONデータをプレイヤーの所持金データに変換する
+            // Read JSON data from the file
+            string json = File.ReadAllText(loadPath);
             PlayerWalletData data = JsonUtility.FromJson<PlayerWalletData>(json);
-
-            // 読み込んだ所持金データを現在の所持金として設定する
             m_currentMoney = data.money;
         }
-        // ファイルが存在しない場合の処理
         else
         {
-            // デフォルトの所持金（10000G）を設定する
+            // Set default money (10000G)
+            m_currentMoney = 10000;
+        }
+    }
+
+    // Method to load the player's money for resuming
+    public void LoadMoneyForContinue()
+    {
+        // Load from the Save folder when resuming
+        string savePath = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Save/Money/money.json");
+
+        // Load data if the file exists
+        if (File.Exists(savePath))
+        {
+            string json = File.ReadAllText(savePath);
+            PlayerWalletData data = JsonUtility.FromJson<PlayerWalletData>(json);
+            m_currentMoney = data.money;
+        }
+        else
+        {
+            // Set default money (10000G)
             m_currentMoney = 10000;
         }
     }
 }
 
-// プレイヤーの所持金を保存するためのデータクラス
+// Data class for saving the player's wallet
 [System.Serializable]
 public class PlayerWalletData
 {

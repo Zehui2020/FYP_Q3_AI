@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 // ItemPurchaseDisplay
 //
-// アイテムの購入表示を管理するクラス
+// Class that manages the display for item purchases
 //
 // Data: 2/9/2024
 // Author: Shimba Sakai
@@ -9,273 +9,302 @@
 
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.EventSystems;
 
 public class ItemPurchaseDisplay : MonoBehaviour
 {
-    [Header("アイテムのイメージ画像を描画する座標")]
+    [Header("Coordinates for drawing the item image")]
     public Vector2 m_ItemImageTexturePosition;
 
-    // アイテムデータ
+    // Item data
     private ItemData m_itemData;
-    // 現在のアイテムオブジェクト
+    // Current item object
     private GameObject m_currentItemObject;
-    // ポップアップしているかどうかのフラグ
+    // Flag indicating whether the popup is active
     private bool m_isPopupActive = false;
-    // アイテムの個数
+    // Quantity of the item
     private int m_itemQuantity = 1;
-    // 現在のアイテムの個数
+    // Current quantity of the item
     private int m_currentItemMQuantity;
-    // アイテムの個数の最小値
-    private const int ITEMQUANTITY_MIN = 1;
-    // アイテムの個数の初期値
-    private const int ITEMQUANTITY_INITIAL = 1;
-    // アイテムの合計金額
+    // Minimum value for item quantity
+    private const int ITEMQUANTITY_MIN = 0;
+    // Initial value for item quantity
+    private const int ITEMQUANTITY_INITIAL = 0;
+    // Total price of the item
     private int m_itemTotalPrice;
 
-
-    // ボタンが長押しされているかのフラグ
+    // Flag for whether the + button is held down
     private bool m_isPlusButtonHeld = false;
+    // Flag for whether the - button is held down
     private bool m_isMinusButtonHeld = false;
-    private float m_holdDuration = 0.0f;
-    private const float HOLD_THRESHOLD = 0.5f;  // 長押しの閾値
-    private const float HOLD_REPEAT_RATE = 0.1f;  // 長押し後の繰り返し速度
+    // Threshold for enabling long press
+    private const float HOLD_THRESHOLD = 0.5f;
+    // Repeat rate after long press
+    private const float HOLD_REPEAT_RATE = 0.1f;
 
-    // アイテムマネージャークラス
-    public ItemShopManager m_itemManager;
+    // Prefab for the purchase message
+    private GameObject m_itemPurchaseMessagePrefab;
 
-    // 購入額表示用クラス
-    TextFadeAndMove m_textFadeAndMove;
+    // Class for loading items
+    private ItemLoader m_itemLoader;
 
-    // アイテムショップUI管理クラス
-    ItemShopUIHandler m_itemShopUIHandler;
+    // Class for managing items
+    private ItemShopManager m_itemManager;
+
+    // Class responsible for displaying purchase amounts
+    private TextFadeAndMove m_textFadeAndMove;
+
+    // Class managing the item shop UI
+    private ItemShopUIHandler m_itemShopUIHandler;
 
     void Start()
     {
-        // アイテムショップUI管理クラスが設定されていない場合の処理
+        // Handling if the item loader class is not set
+        if (m_itemLoader == null)
+        {
+            // Setting the item loader class
+            m_itemLoader = FindAnyObjectByType<ItemLoader>();
+        }
+
+        // Handling if the item shop UI manager class is not set
         if (m_itemShopUIHandler == null)
         {
-            // アイテムショップUI管理クラスを設定する
+            // Setting the item shop UI manager class
             m_itemShopUIHandler = FindAnyObjectByType<ItemShopUIHandler>();
         }
 
-        // アイテムマネージャークラスが設定されていない場合の処理
+        // Handling if the item manager class is not set
         if (m_itemManager == null)
         {
-            // アイテムマネージャークラスを設定する
+            // Setting the item manager class
             m_itemManager = FindAnyObjectByType<ItemShopManager>();
         }
 
-        // アイテム購入額表示用クラスが設定されていない場合の処理
-        if(m_textFadeAndMove == null)
+        // Handling if the purchase amount display class is not set
+        if (m_textFadeAndMove == null)
         {
-            // アイテム購入額表示用クラスを設定する
+            // Setting the purchase amount display class
             m_textFadeAndMove = FindAnyObjectByType<TextFadeAndMove>();
         }
 
-        // ポップアップパネルを非表示にする
+        // Setting the prefab for the purchase message
+        m_itemPurchaseMessagePrefab = m_itemShopUIHandler.m_itemPurchaseMessage.gameObject;
+
+        // Hiding the popup panel
         m_itemShopUIHandler.m_itemShopBackground.SetActive(false);
-        // 購入ボタンが押された時の処理
+        // Handling when the purchase button is clicked
         m_itemShopUIHandler.m_purchaseButton.onClick.AddListener(PurchaseButtonClicked);
-        // キャンセルボタンが押された時の処理
+        // Handling when the cancel button is clicked
         m_itemShopUIHandler.m_cancelButton.onClick.AddListener(CancelButtonClicked);
 
-        // アイテムの個数を増やすボタンが押された時の処理
+        // Handling when the increase quantity button is clicked
         m_itemShopUIHandler.m_plusButton.onClick.AddListener(IncreaseQuantity);
 
-        // +ボタンにEventTriggerを追加して、長押し時の処理を設定
+        // Setting up click listener for the + button
         var plusButtonTrigger = m_itemShopUIHandler.m_plusButton.gameObject.AddComponent<EventTrigger>();
 
-        // PointerDownイベント（ボタンが押された時）の処理
+        // Handling when the + button is pressed
         var plusDownEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-        plusDownEntry.callback.AddListener((data) => { StartButtonHold(true); }); // 長押し開始
+        plusDownEntry.callback.AddListener((data) => { StartButtonHold(true); }); // Start long press
         plusButtonTrigger.triggers.Add(plusDownEntry);
 
-        // PointerUpイベント（ボタンが離された時）の処理
+        // Handling when the + button is released
         var plusUpEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
-        plusUpEntry.callback.AddListener((data) => { StopButtonHold(); }); // 長押し停止
+        plusUpEntry.callback.AddListener((data) => { StopButtonHold(); }); // Stop long press
         plusButtonTrigger.triggers.Add(plusUpEntry);
 
-        // アイテムの個数を減らすボタンが押された時の処理
+        // Handling when the decrease quantity button is clicked
         m_itemShopUIHandler.m_minusButton.onClick.AddListener(DecreaseQuantity);
 
-        // -ボタンにEventTriggerを追加して、長押し時の処理を設定
+        // Setting up click listener for the - button
         var minusButtonTrigger = m_itemShopUIHandler.m_minusButton.gameObject.AddComponent<EventTrigger>();
 
-        // PointerDownイベント（ボタンが押された時）の処理
+        // Handling when the - button is pressed
         var minusDownEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-        minusDownEntry.callback.AddListener((data) => { StartButtonHold(false); }); // 長押し開始
+        minusDownEntry.callback.AddListener((data) => { StartButtonHold(false); }); // Start long press
         minusButtonTrigger.triggers.Add(minusDownEntry);
 
-        // PointerUpイベント（ボタンが離された時）の処理
+        // Handling when the - button is released
         var minusUpEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
-        minusUpEntry.callback.AddListener((data) => { StopButtonHold(); }); // 長押し停止
+        minusUpEntry.callback.AddListener((data) => { StopButtonHold(); }); // Stop long press
         minusButtonTrigger.triggers.Add(minusUpEntry);
 
-
-        // 初期状態で購入画面を非表示にする
+        // Hiding the purchase screen initially
         m_itemShopUIHandler.m_purchaseScreenBackground.SetActive(false);
-        // 初期状態で購入結果のメッセージを非表示にする
+        // Hiding the purchase result message initially
         m_itemShopUIHandler.m_itemPurchaseMessage.gameObject.SetActive(false);
-
-
     }
 
-    // アイテムをクリックした時の処理
+    // Handling when an item is clicked
     public void OnItemClicked(ItemData itemdata, Dictionary<string, Sprite> spriteDictionary)
     {
-        // ポップアップが表示されている間は他のアイテムをクリックできないようにする
+        // Setting the item data
+        m_itemData = itemdata;
+
+        // Handling when the item quantity is 0
+        if (m_itemData.itemQuantity <= 0)
+        {
+            // Displaying a message
+            m_itemShopUIHandler.m_itemPurchaseMessage.text = "Unable to purchase item";
+            m_itemShopUIHandler.m_itemPurchaseMessage.color = Color.red;
+            m_itemShopUIHandler.m_itemPurchaseMessage.gameObject.SetActive(true);
+            StartCoroutine(HideMessageAfterDelay(2.0f)); // Hide message after a certain time
+            return;
+        }
+
+        // Preventing clicks on other items while the popup is displayed
         if (m_isPopupActive)
         {
             return;
         }
 
-        // 前回のアイテムが残っている場合の処理
+        // Handling if there is a previous item remaining
         if (m_currentItemObject != null)
         {
-            // 前回のアイテムを削除する
+            // Destroying the previous item
             Destroy(m_currentItemObject);
         }
 
-        // アイテムのイメージ画像のRectTransformを取得する
+        // Getting the RectTransform for the item image display
         RectTransform rectTransform = m_itemShopUIHandler.m_forDisplayingItemImages.GetComponent<RectTransform>();
 
-        // アンカーとピボットの設定を中央に変更する
+        // Setting the anchor and pivot to the center
         rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
         rectTransform.pivot = new Vector2(0.5f, 0.5f);
 
-        // 親オブジェクトを基準とし、指定した座標分移動させる
+        // Moving based on the specified coordinates
         rectTransform.anchoredPosition += new Vector2(m_ItemImageTexturePosition.x, -m_ItemImageTexturePosition.y);
 
-        // アイテムデータを設定する
-        m_itemData = itemdata;
-
-        // アイテムのイメージ画像が設定されている場合、アイテムデータからスプライトを辞書から取得できる場合の処理
+        // Handling when the item image is set and the sprite can be obtained from the dictionary
         if (m_itemShopUIHandler.m_forDisplayingItemImages != null && spriteDictionary.TryGetValue(m_itemData.itemSprite, out Sprite sprite))
         {
-            // アイテムのイメージ画像を設定する
+            // Setting the item image
             m_itemShopUIHandler.m_forDisplayingItemImages.sprite = sprite;
         }
-        // アイテムの名前を設定する
+        // Setting the item name
         m_itemShopUIHandler.m_itemName.text = itemdata.itemName;
-        // アイテム1つの値段を設定する
+        // Setting the price for one item
         m_itemShopUIHandler.m_itemPerPrice.text = itemdata.itemPrice.ToString() + m_itemManager.GetItemUnit();
-        // アイテムの個数を設定する
+        // Setting the current item quantity
         m_currentItemMQuantity = itemdata.itemQuantity;
-        // アイテムの個数を更新する
+        // Updating the item quantity
         UpdateItemQuantity();
-        // 合計金額を更新する
+        // Updating the total price
         UpdateTotalPrice();
-        // ポップアップパネルを表示する
+        // Displaying the popup panel
         m_itemShopUIHandler.m_purchaseScreenBackground.SetActive(true);
-        // ポップアップをアクティブに設定する
+        // Setting the popup to active
         m_isPopupActive = true;
     }
 
-    // 購入するアイテムの個数を増やす
+    // Increase the quantity of the item to purchase
     private void IncreaseQuantity()
     {
-        // アイテムの個数の上限値を決める
+        // Setting the upper limit for item quantity
         if (m_itemQuantity < m_currentItemMQuantity)
         {
-            // アイテムの個数を増やす
+            // Increasing the item quantity
             m_itemQuantity++;
             UpdateItemQuantity();
-            // 合計金額を更新する
+            // Updating the total price
             UpdateTotalPrice();
         }
-
     }
 
-    // 購入するアイテムの個数を減らす
+    // Decrease the quantity of the item to purchase
     private void DecreaseQuantity()
     {
-        // アイテムの個数が最小値未満になった場合の処理
+        // Handling if the item quantity is below the minimum
         if (m_itemQuantity > ITEMQUANTITY_MIN)
         {
-            // アイテムの個数を減らす
+            // Decreasing the item quantity
             m_itemQuantity--;
             UpdateItemQuantity();
-            // 合計金額を更新する
+            // Updating the total price
             UpdateTotalPrice();
         }
     }
 
-    // アイテムの個数を更新する
+    // Update the item quantity
     private void UpdateItemQuantity()
     {
-        // アイテムの個数を表示するテキストが設定されている場合の処理
+        // Handling if the item quantity display text is set
         if (m_itemShopUIHandler.m_itemQuantity != null)
         {
-            // アイテムの個数を設定する
+            // Setting the item quantity
             m_itemShopUIHandler.m_itemQuantity.text = "x" + m_itemQuantity.ToString();
         }
     }
 
-    // 合計金額を更新する
+    // Update the total price
     private void UpdateTotalPrice()
     {
-        // アイテムデータが設定されている場合の処理
+        // Handling if the item data is set
         if (m_itemData != null)
         {
-            // 合計金額を設定する
+            // Setting the total price
             m_itemTotalPrice = m_itemData.itemPrice * m_itemQuantity;
-            m_itemShopUIHandler.m_itemTotalPrice.text = m_itemTotalPrice.ToString() + m_itemManager.GetItemUnit(); ;
+            m_itemShopUIHandler.m_itemTotalPrice.text = m_itemTotalPrice.ToString() + m_itemManager.GetItemUnit();
 
-            // プレイヤーの所持金よりも購入金額が高かった場合の処理
+            // Handling if the purchase price is higher than the player's money
             if (PlayerWallet.Instance.GetMoney() < m_itemTotalPrice)
             {
-                // テキストの色を赤色にする
+                // Changing the text color to red
                 m_itemShopUIHandler.m_itemTotalPrice.color = Color.red;
             }
-            // プレイヤーの所持金よりも購入金額が低かった場合の処理
+            // Handling if the purchase price is lower than the player's money
             else
             {
-                // テキストの色を白色にする
+                // Changing the text color to white
                 m_itemShopUIHandler.m_itemTotalPrice.color = Color.white;
             }
         }
     }
 
-    // 購入ボタンの処理
+    // Process when the purchase button is clicked
     public void PurchaseButtonClicked()
     {
-        // プレイヤーの所持金が購入金額より少ない場合の処理
+        // Calculating the total price
+        int totalPrice = m_itemData.itemPrice * m_itemQuantity;
+
+        // Handling if the player's money is less than the purchase price
         if (m_itemTotalPrice > PlayerWallet.Instance.GetMoney())
         {
-            // 購入に失敗しました
+            // Purchase failed
             m_itemShopUIHandler.m_itemPurchaseMessage.text = "Purchase failed";
             m_itemShopUIHandler.m_itemPurchaseMessage.color = Color.red;
         }
         else
         {
-            // アイテムを購入する
+            // Purchasing the item
             PurchaseItem(m_itemQuantity);
-            // 購入に成功しました
+            // Updating the stock
+            m_itemData.itemQuantity -= m_itemQuantity;
+            // Purchase successful
             m_itemShopUIHandler.m_itemPurchaseMessage.text = "Purchase successful";
             m_itemShopUIHandler.m_itemPurchaseMessage.color = Color.green;
 
+            // Saving item data
+            m_itemLoader.SaveItemData();
 
-            // 購入金額をテキストとして表示
+            // Displaying the purchase amount as text
             StartCoroutine(m_textFadeAndMove.FadeMoveAndResetText("-", m_itemTotalPrice, m_itemManager.GetItemUnit()));
-
         }
 
-        // 購入結果のメッセージを表示する
+        // Displaying the purchase result message
         m_itemShopUIHandler.m_itemPurchaseMessage.gameObject.SetActive(true);
 
-        // メッセージを一定時間後(秒)に非表示にする
+        // Hiding the message after a certain time (seconds)
         StartCoroutine(HideMessageAfterDelay(2.0f));
     }
 
-    // ボタンが長押しされ始めた時の処理
+    // Handling when the button is held down
     private void StartButtonHold(bool isPlusButton)
     {
-        // 長押しフラグを設定する
+        // Setting the long press flag
         if (isPlusButton)
         {
             m_isPlusButtonHeld = true;
@@ -285,20 +314,20 @@ public class ItemPurchaseDisplay : MonoBehaviour
             m_isMinusButtonHeld = true;
         }
 
-        // コルーチンを開始する
+        // Starting the coroutine
         StartCoroutine(HoldButtonCoroutine(isPlusButton));
     }
 
-    // ボタンが長押しされた時の処理
+    // Processing when the button is held down
     private IEnumerator HoldButtonCoroutine(bool isPlusButton)
     {
-        // 一定時間長押しされるまで待機
+        // Waiting until a certain time has passed
         yield return new WaitForSeconds(HOLD_THRESHOLD);
 
-        // ボタンが押され続けている間の処理
+        // Processing while the button is held down
         while (isPlusButton ? m_isPlusButtonHeld : m_isMinusButtonHeld)
         {
-            // アイテムの個数を増減する
+            // Increasing or decreasing the item quantity
             if (isPlusButton)
             {
                 IncreaseQuantity();
@@ -308,121 +337,133 @@ public class ItemPurchaseDisplay : MonoBehaviour
                 DecreaseQuantity();
             }
 
-            // 繰り返し速度を制御
+            // Controlling the repeat rate
             yield return new WaitForSeconds(HOLD_REPEAT_RATE);
         }
     }
 
-    // ボタンが離された時の処理
+    // Handling when the button is released
     private void StopButtonHold()
     {
-        // 長押しフラグを解除する
+        // Resetting the long press flags
         m_isPlusButtonHeld = false;
         m_isMinusButtonHeld = false;
     }
 
-
-    // 購入するアイテムの処理
+    // Processing for purchasing the item
     private void PurchaseItem(int quantity)
     {
-        // アイテムデータが設定されている場合の処理
+        // Handling if the item data is set
         if (m_itemData != null)
         {
-            // プレイヤーの所持金から減らす
+            // Deducting from the player's money
             PlayerWallet.Instance.SpendMoney(m_itemData.itemPrice * quantity);
+
+            // Updating the item quantity
+            m_itemData.itemQuantity -= quantity;
+
+            // Saving the item data
+            m_itemLoader.SaveItemData();
         }
-        // 生成したオブジェクトを削除する
+
+        // Destroying the created object
         DestroyObject();
-        // アイテムの個数を初期化する
+        // Resetting the item quantity
         m_itemQuantity = ITEMQUANTITY_INITIAL;
     }
 
-    // キャンセルボタンの処理
+    // Processing when the cancel button is clicked
     public void CancelButtonClicked()
     {
-        // アイテムを購入することをやめる
+        // Cancelling the item purchase
         CancelItem();
     }
 
-    // キャンセルするアイテムの処理
+    // Processing for cancelling the item
     void CancelItem()
     {
-        // 生成したオブジェクトを削除する
+        // Destroying the created object
         DestroyObject();
-        // アイテムの個数を初期化する
+        // Resetting the item quantity
         m_itemQuantity = ITEMQUANTITY_INITIAL;
     }
 
-    // 一定時間経過後にメッセージを非表示にする処理
+    // Processing to hide the message after a certain time
     private IEnumerator HideMessageAfterDelay(float delay)
     {
-        // 指定した時間待機する
+        // Creating a new text object
+        GameObject newPurchaseDisplay = Instantiate(m_itemPurchaseMessagePrefab, m_itemShopUIHandler.m_itemPurchaseMessage.transform.parent);
+        var textComponent = newPurchaseDisplay.GetComponent<TextMeshProUGUI>();
+
+        // Waiting for the specified time
         yield return new WaitForSeconds(delay);
 
-        // メッセージを非表示にする
+        // Hiding the message
         m_itemShopUIHandler.m_itemPurchaseMessage.gameObject.SetActive(false);
+
+        // Destroying the generated text
+        Destroy(newPurchaseDisplay);
     }
 
-    // オブジェクトを消去する
+    // Destroy the object
     void DestroyObject()
     {
-        // ポップアップを非表示にする
+        // Hiding the popup
         m_itemShopUIHandler.m_purchaseScreenBackground.SetActive(false);
 
-        // アイテム画像が設定されている場合の処理
+        // Handling if the item image is set
         if (m_itemShopUIHandler.m_forDisplayingItemImages != null)
         {
-            // アイテム画像のスプライトを削除する
+            // Clearing the item image sprite
             m_itemShopUIHandler.m_forDisplayingItemImages.sprite = null;
         }
 
-        // アイテムの名前が設定されている場合の処理
+        // Handling if the item name is set
         if (m_itemShopUIHandler.m_itemName != null)
         {
-            // アイテムの名前を削除する
+            // Clearing the item name
             m_itemShopUIHandler.m_itemName.text = string.Empty;
         }
 
-        // アイテムの単価が設定されている場合の処理
+        // Handling if the item price is set
         if (m_itemShopUIHandler.m_itemPerPrice != null)
         {
-            // アイテムの単価を削除する
+            // Clearing the item price
             m_itemShopUIHandler.m_itemPerPrice.text = string.Empty;
         }
 
-        // アイテムの合計金額が設定されている場合の処理
+        // Handling if the total price is set
         if (m_itemShopUIHandler.m_itemTotalPrice != null)
         {
-            // アイテムの合計金額を削除する
+            // Clearing the total price
             m_itemShopUIHandler.m_itemTotalPrice.text = string.Empty;
         }
 
-        // アイテムの個数が設定されている場合の処理
+        // Handling if the item quantity is set
         if (m_itemShopUIHandler.m_itemQuantity != null)
         {
-            // アイテムの個数を削除する
-            m_itemShopUIHandler.m_itemQuantity.text = string.Empty; // アイテムの個数をクリア
+            // Clearing the item quantity
+            m_itemShopUIHandler.m_itemQuantity.text = string.Empty; // Clear item quantity
         }
 
-        // 現在のアイテムオブジェクトが設定されている場合の処理
+        // Handling if the current item object is set
         if (m_currentItemObject != null)
         {
             Destroy(m_currentItemObject);
             m_currentItemObject = null;
         }
 
-        // ポップアップを非アクティブにする
+        // Deactivating the popup
         m_isPopupActive = false;
 
-        // アイテムの個数を初期値にする
+        // Resetting the item quantity to the initial value
         m_itemQuantity = ITEMQUANTITY_INITIAL;
     }
 
-
-    // ポップアップしているかどうかのフラグを取得する
+    // Getting the popup active flag
     public bool GetPopupFlag()
     {
-        // ポップアップフラグを返す
+        // Returning the popup flag
         return m_isPopupActive;
     }
 }

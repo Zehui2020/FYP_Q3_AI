@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 // ItemInteraction
 //
-// アイテムとユーザーのやり取りを管理するクラス
+// Class that manages interactions between items and the user
 //
 // Data: 28/8/2024
 // Author: Shimba Sakai
@@ -12,81 +12,80 @@ using UnityEngine;
 
 public class ItemInteraction : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    // アイテムエフェクト
+    // Item effect
     private ItemEffect m_itemEffect;
-    // アイテム購入表示クラス
+    // Item purchase display class
     public ItemPurchaseDisplay m_itemPurchaseDisplay;
 
     void Start()
     {
-        // アイテムエフェクトが設定されていない場合の処理
+        // Process when item effect is not set
         if (m_itemEffect == null)
         {
-            // アイテムエフェクトを取得する
+            // Get the item effect
             m_itemEffect = this.GetComponent<ItemEffect>();
         }
-        // アイテム購入表示クラスが設定されていない場合の処理
-        if(m_itemPurchaseDisplay == null)
+        // Process when item purchase display class is not set
+        if (m_itemPurchaseDisplay == null)
         {
-            // アイテム購入表示クラスを設定する
+            // Set the item purchase display class
             m_itemPurchaseDisplay = FindAnyObjectByType<ItemPurchaseDisplay>();
         }
     }
 
-    // ポインターがアイテムに触れた時の処理
+    // Process when pointer enters the item
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // スケールエフェクトを発動させる
+        // Activate scale effect
         m_itemEffect.OnMouseEnter();
 
-        // アイテム購入画面が表示されている場合の処理
-        if(m_itemPurchaseDisplay.GetPopupFlag() == true)
-        {
-            // エフェクトをしない
-            m_itemEffect.StopEffect();
-        }
-    }
-
-    // ポインターがアイテムから離れた時の処理
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        // スケールエフェクトを発動させる
-        m_itemEffect.OnMouseExit();
-        // アイテム購入画面が表示されている場合の処理
+        // Process when item purchase screen is displayed
         if (m_itemPurchaseDisplay.GetPopupFlag() == true)
         {
-            // エフェクトをしない
+            // Do not apply effect
             m_itemEffect.StopEffect();
         }
     }
 
-    // ポインターがアイテムと触れている時にクリックを押した処理
+    // Process when pointer exits the item
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        // Activate scale effect
+        m_itemEffect.OnMouseExit();
+        // Process when item purchase screen is displayed
+        if (m_itemPurchaseDisplay.GetPopupFlag() == true)
+        {
+            // Do not apply effect
+            m_itemEffect.StopEffect();
+        }
+    }
+
+    // Process when pointer clicks on the item
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            // クリックされたアイテムのItemDisplayを取得する
+            // Get the ItemDisplay of the clicked item
             ItemDisplay clickedItemDisplay = eventData.pointerPress.GetComponent<ItemDisplay>();
 
             if (clickedItemDisplay != null)
             {
-                // アイテムエフェクトを開始する
+                // Start item effect
                 m_itemEffect.OnMouseEnter();
 
-                // クリックされたアイテムのデータでポップアップ表示する
+                // Display popup with clicked item's data
                 m_itemPurchaseDisplay.OnItemClicked(clickedItemDisplay.GetCurrentItemData(), clickedItemDisplay.GetCurrentSpriteDictionary());
-                // アイテム購入画面が表示されている場合の処理
+                // Process when item purchase screen is displayed
                 if (m_itemPurchaseDisplay.GetPopupFlag() == true)
                 {
-                    // エフェクトをしない
+                    // Do not apply effect
                     m_itemEffect.StopEffect();
                 }
-
             }
         }
         else
         {
-            // アイテムエフェクトを終了する
+            // End item effect
             m_itemEffect.OnMouseExit();
         }
     }
