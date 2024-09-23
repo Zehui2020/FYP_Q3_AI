@@ -8,4 +8,6 @@ public class MapTile : MonoBehaviour
     [SerializeField] public List<GameObject> availableTilesDown;
     [SerializeField] public List<GameObject> availableTilesLeft;
     [SerializeField] public List<GameObject> availableTilesRight;
+
+    [SerializeField] public Chest chest;
 }

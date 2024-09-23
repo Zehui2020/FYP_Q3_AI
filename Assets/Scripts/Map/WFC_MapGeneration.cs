@@ -25,10 +25,12 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private List<GameObject> bottomRightCornerTiles;
     [Header("Perimeter")]
     [SerializeField] private List<GameObject> solidTile;
+    [Header("Other")]
+    [SerializeField] private List<Chest> chestsInMap;
 
     private Vector2 currTile;
     private Vector2 startingPos;
-    private List<MapTile> mapTiles = new List<MapTile>();
+    [SerializeField] private List<MapTile> mapTiles = new List<MapTile>();
     private List<Vector2> collapsableTiles = new List<Vector2>();
     private List<Vector2> collapsedTiles = new List<Vector2>();
     private List<int> collapsableTileNum = new List<int>();
@@ -63,6 +65,7 @@ public class WFC_MapGeneration : MonoBehaviour
 
     public void GenerateMap()
     {
+        mapSize -= Vector2.one * 2;
         // init maptiles list
         for (int i = 0; i < mapSize.x * mapSize.y; i++)
         {
@@ -84,6 +87,8 @@ public class WFC_MapGeneration : MonoBehaviour
         SetNextTile();
         // set borders
         SetBorderTiles();
+        // get list of chests
+        GetAllChests();
     }
 
     private void SetNextTile()
@@ -145,10 +150,11 @@ public class WFC_MapGeneration : MonoBehaviour
             GameObject tileToSet = availableTiles[Random.Range(0, availableTiles.Count)];
             if (tileToSet == null)
                 return;
-            //place room
+            // set room
+            mapTiles.Add(tileToSet.GetComponent<MapTile>());
+            // place room
             GameObject obj = Instantiate(tileToSet, transform);
             obj.transform.localPosition = tilePos * tileSize;
-            Debug.Log("Placed Border Up");
         }
         // bottom
         for (int i = 0; i < mapSize.x; i++)
@@ -160,7 +166,9 @@ public class WFC_MapGeneration : MonoBehaviour
             GameObject tileToSet = availableTiles[Random.Range(0, availableTiles.Count)];
             if (tileToSet == null)
                 return;
-            //place room
+            // set room
+            mapTiles.Add(tileToSet.GetComponent<MapTile>());
+            // place room
             GameObject obj = Instantiate(tileToSet, transform);
             obj.transform.localPosition = tilePos * tileSize;
         }
@@ -174,7 +182,9 @@ public class WFC_MapGeneration : MonoBehaviour
             GameObject tileToSet = availableTiles[Random.Range(0, availableTiles.Count)];
             if (tileToSet == null)
                 return;
-            //place room
+            // set room
+            mapTiles.Add(tileToSet.GetComponent<MapTile>());
+            // place room
             GameObject obj = Instantiate(tileToSet, transform);
             obj.transform.localPosition = tilePos * tileSize;
         }
@@ -188,7 +198,9 @@ public class WFC_MapGeneration : MonoBehaviour
             GameObject tileToSet = availableTiles[Random.Range(0, availableTiles.Count)];
             if (tileToSet == null)
                 return;
-            //place room
+            // set room
+            mapTiles.Add(tileToSet.GetComponent<MapTile>());
+            // place room
             GameObject obj = Instantiate(tileToSet, transform);
             obj.transform.localPosition = tilePos * tileSize;
         }
@@ -197,15 +209,26 @@ public class WFC_MapGeneration : MonoBehaviour
         // top left corner
         corner = Instantiate(topLeftCornerTiles[Random.Range(0, topLeftCornerTiles.Count)], transform);
         corner.transform.localPosition = new Vector2(-1, mapSize.y) * tileSize;
+        // set room
+        mapTiles.Add(corner.GetComponent<MapTile>());
+
         // top right corner
         corner = Instantiate(topRightCornerTiles[Random.Range(0, topRightCornerTiles.Count)], transform);
         corner.transform.localPosition = new Vector2(mapSize.x, mapSize.y) * tileSize;
+        // set room
+        mapTiles.Add(corner.GetComponent<MapTile>());
+
         // bottom left corner
         corner = Instantiate(bottomLeftCornerTiles[Random.Range(0, bottomLeftCornerTiles.Count)], transform);
         corner.transform.localPosition = new Vector2(-1, -1) * tileSize;
+        // set room
+        mapTiles.Add(corner.GetComponent<MapTile>());
+
         // bottom right corner
         corner = Instantiate(bottomRightCornerTiles[Random.Range(0, bottomRightCornerTiles.Count)], transform);
         corner.transform.localPosition = new Vector2(mapSize.x, -1) * tileSize;
+        // set room
+        mapTiles.Add(corner.GetComponent<MapTile>());
 
         PlaceSolidBorderTiles();
     }
@@ -223,6 +246,15 @@ public class WFC_MapGeneration : MonoBehaviour
                     obj.transform.localPosition = new Vector2(i, j) * tileSize;
                 }
             }
+        }
+    }
+
+    private void GetAllChests()
+    {
+        for (int i = 0; i < mapTiles.Count; i++)
+        {
+            if (mapTiles[i].chest != null)
+                chestsInMap.Add(mapTiles[i].chest);
         }
     }
 
