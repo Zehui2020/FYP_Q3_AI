@@ -37,8 +37,6 @@ public class Skeleton : Enemy
         onPlayerInChaseRange += () => { ChangeState(State.Chase); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
         OnBreached += (multiplier) => { ChangeState(State.Idle); };
-
-        HideTrail();
     }
 
     private void ChangeState(State newState)
@@ -63,9 +61,10 @@ public class Skeleton : Enemy
                 UpdatePlayerDirection();
                 break;
             case State.Teleport:
-                ShowTrail();
                 aiNavigation.StopNavigation();
                 animator.Play(TeleportAnim, -1, 0f);
+
+                StartCoroutine(TeleportTrail());
                 transform.position = player.transform.position;
 
                 StartCoroutine(TeleportCooldown());
@@ -109,6 +108,16 @@ public class Skeleton : Enemy
             UpdatePlayerDirection();
     }
 
+    private IEnumerator TeleportTrail()
+    {
+        teleportTrail.Reinit();
+        teleportTrail.Play();
+
+        yield return new WaitForSeconds(1f);
+
+        teleportTrail.Stop();
+    }
+
     private IEnumerator TeleportCooldown()
     {
         canTeleport = false;
@@ -116,15 +125,5 @@ public class Skeleton : Enemy
         yield return new WaitForSeconds(teleportCooldown);
 
         canTeleport = true;
-    }
-
-    public void ShowTrail()
-    {
-        teleportTrail.Play();
-    }
-
-    public void HideTrail()
-    {
-        //teleportTrail.Stop();
     }
 }
