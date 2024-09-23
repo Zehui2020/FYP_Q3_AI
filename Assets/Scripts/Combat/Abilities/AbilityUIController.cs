@@ -10,6 +10,7 @@ public class AbilityUIController : MonoBehaviour
     [SerializeField] private Image cooldownSlider;
     [SerializeField] private TMP_Text durationText;
     [SerializeField] private Image abilityIcon;
+    [SerializeField] private TMP_Text chargeText;
 
     private void Start()
     {
@@ -23,9 +24,14 @@ public class AbilityUIController : MonoBehaviour
         durationText.gameObject.SetActive(active);
     }
 
-    public void SetCooldown(float amount)
+    public void SetCooldown(float amount, int charge)
     {
         cooldownSlider.fillAmount = amount;
+        chargeText.text = "";
+        for (int i = 0; i < charge; i++)
+        {
+            chargeText.text += ".";
+        }
     }
 
     public void SetIcon(Sprite icon)

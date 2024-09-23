@@ -3,18 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class AbilityController : MonoBehaviour
 {
-    [SerializeField] private List<BaseAbility> abilities;
+    [SerializeField] public List<BaseAbility> abilities;
     [SerializeField] private List<AbilityUIController> abilityUI;
+    [SerializeField] private GameObject abilityUIPrefab;
+    [SerializeField] private Transform abilityUIParent;
     [SerializeField] LayerMask targetLayer;
     [SerializeField] LayerMask groundLayer;
 
     private PlayerController player;
-    private List<Coroutine> abilityDurationRoutines = new List<Coroutine> { null, null };
+    private List<Coroutine> abilityCooldownRoutines = new List<Coroutine> { null, null };
+    private List<int> charges = new List<int>();
+    private List<int> maxCharges = new List<int>();
 
     public void InitializeAbilityController()
     {
@@ -22,12 +27,65 @@ public class AbilityController : MonoBehaviour
         for (int i = 0; i < abilities.Count; i++)
         {
             abilityUI[i].SetIcon(abilities[i].abilityIcon);
+            abilityUI[i].SetCooldown(0, abilities[i].abilityCharges);
+            charges.Add(abilities[i].abilityCharges);
+            maxCharges.Add(abilities[i].abilityMaxCharges);
+        }
+        InitializeAbility(-1);
+    }
+
+    private void AddAbility(BaseAbility newAbility)
+    {
+        // add ability
+        abilities.Add(newAbility);
+        abilityCooldownRoutines.Add(null);
+        charges.Add(newAbility.abilityCharges);
+        maxCharges.Add(newAbility.abilityMaxCharges);
+        // add ui
+        GameObject obj = Instantiate(abilityUIPrefab, abilityUIParent);
+        abilityUI.Add(obj.GetComponent<AbilityUIController>());
+        abilityUI[abilityUI.Count - 1].SetIcon(newAbility.abilityIcon);
+        abilityUI[abilityUI.Count - 1].SetCooldown(0, newAbility.abilityCharges);
+        // init ability
+        InitializeAbility(abilities.Count - 1);
+        // debug
+        Debug.Log("Added: " + newAbility.abilityName);
+        string text = "";
+        for (int i = 0; i < abilities.Count; i++)
+        {
+            text = text + abilities[i].abilityName + ", ";
+        }
+        Debug.Log("Abilities: " + text);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            AddAbility(abilities[0]);
+        }
+    }
+
+    private void InitializeAbility(int abilityNo)
+    {
+        if (abilityNo < 0)
+        {
+            for (int i = 0; i < abilities.Count; i++)
+            {
+                if (charges[i] < maxCharges[i])
+                    abilityCooldownRoutines[i] = StartCoroutine(AbilityCooldownRoutine(i, abilities[i]));
+            }
+        }
+        else
+        {
+            if (charges[abilityNo] < maxCharges[abilityNo])
+                abilityCooldownRoutines[abilityNo] = StartCoroutine(AbilityCooldownRoutine(abilityNo, abilities[abilityNo]));
         }
     }
 
     public void HandleAbility(int abilityNo)
     {
-        if (abilityDurationRoutines[abilityNo] != null)
+        if (charges[abilityNo] <= 0)
             return;
 
         BaseAbility ability = abilities[abilityNo];
@@ -68,60 +126,85 @@ public class AbilityController : MonoBehaviour
         {
             abilities[abilityNo].OnUseAbility(player, player);
         }
-        abilityDurationRoutines[abilityNo] = StartCoroutine(AbilityDurationRoutine(abilityNo, ability));
+
+        charges[abilityNo]--;
+        if (abilityCooldownRoutines[abilityNo] == null)
+            abilityCooldownRoutines[abilityNo] = StartCoroutine(AbilityCooldownRoutine(abilityNo, ability));
     }
 
-    public IEnumerator AbilityDurationRoutine(int abilityNo, BaseAbility ability)
+    public IEnumerator AbilityCooldownRoutine(int abilityNo, BaseAbility ability)
     {
-        // track duration
-        float timer = ability.abilityDuration;
-        // if ability for self
-        if (ability.abilityUseType == BaseAbility.AbilityUseType.Self)
-        {
-            timer = ability.abilityDuration;
-            abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), true);
-            abilityUI[abilityNo].SetCooldown(1);
-            while (timer > 0)
-            {
-                abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), true);
-                timer -= Time.deltaTime;
-                yield return null;
-            }
-            timer = 0;
-            abilityUI[abilityNo].SetDurationText(((int)timer).ToString(), false);
-        }
-
         // track cooldown
-        timer = ability.abilityCooldown;
+        float timer = ability.abilityCooldown;
         while (timer > 0)
         {
             float fill = timer / ability.abilityCooldown;
-            abilityUI[abilityNo].SetCooldown(fill);
+            abilityUI[abilityNo].SetCooldown(fill, charges[abilityNo]);
             timer -= Time.deltaTime;
             yield return null;
         }
 
-        abilityUI[abilityNo].SetCooldown(0);
-        abilityDurationRoutines[abilityNo] = null;
+        charges[abilityNo]++;
+        abilityUI[abilityNo].SetCooldown(0, charges[abilityNo]);
+        if (charges[abilityNo] < maxCharges[abilityNo])
+            abilityCooldownRoutines[abilityNo] = StartCoroutine(AbilityCooldownRoutine(abilityNo, ability));
+        else
+            abilityCooldownRoutines[abilityNo] = null;
     }
 
     public void ResetAbilityCooldowns()
     {
-        for (int i = 0; i < abilityDurationRoutines.Count; i++)
+        for (int i = 0; i < abilityCooldownRoutines.Count; i++)
         {
-            if (abilityDurationRoutines[i] == null)
+            if (abilityCooldownRoutines[i] != null)
                 continue;
 
-            StopCoroutine(abilityDurationRoutines[i]);
+            StopCoroutine(abilityCooldownRoutines[i]);
 
-            abilityUI[i].SetCooldown(0);
-            abilityDurationRoutines[i] = null;
+            charges[i]++;
+            abilityUI[i].SetCooldown(0, charges[i]);
+            if (charges[i] < maxCharges[i])
+                abilityCooldownRoutines[i] = StartCoroutine(AbilityCooldownRoutine(i, abilities[i]));
+            else
+                abilityCooldownRoutines[i] = null;
         }
     }
 
-    public void SetAbility(int abilityNo, BaseAbility ability)
+    public void AddAbilityMaxCharges(int amt)
     {
-        abilities[abilityNo] = ability;
-        abilityUI[abilityNo].SetIcon(abilities[abilityNo].abilityIcon);
+        for(int i = 0; i < maxCharges.Count; i++)
+        {
+            maxCharges[i] += amt;
+            if (charges[i] < maxCharges[i])
+                abilityCooldownRoutines[i] = StartCoroutine(AbilityCooldownRoutine(i, abilities[i]));
+        }
+    }
+
+    public void AddAbilityMaxCharges(int amt, int abilityNo)
+    {
+        if (abilities[abilityNo] == null)
+            return;
+
+        maxCharges[abilityNo] += amt;
+        if (charges[abilityNo] < maxCharges[abilityNo])
+            abilityCooldownRoutines[abilityNo] = StartCoroutine(AbilityCooldownRoutine(abilityNo, abilities[abilityNo]));
+    }
+
+    public void AddAbilityMaxCharges(int amt, int numOfAbilities, bool isRandom)
+    {
+        for (int i = 0; i < numOfAbilities; i++)
+        {
+            int randomIndex = i;
+
+            if (isRandom)
+                randomIndex = Random.Range(0, abilities.Count);
+
+            if (abilities[randomIndex] == null)
+                return;
+
+            maxCharges[randomIndex] += amt;
+            if (charges[randomIndex] < maxCharges[randomIndex])
+                abilityCooldownRoutines[randomIndex] = StartCoroutine(AbilityCooldownRoutine(randomIndex, abilities[randomIndex]));
+        }
     }
 }

@@ -35,25 +35,11 @@ public abstract class BaseAbility : ScriptableObject
     public AbilityUseType abilityUseType;
 
     public float abilityRange;
-
-    public enum AbilityEffectType
-    {
-        Increase,
-        Decrease
-    }
-    public AbilityEffectType abilityEffectType;
-
-    public enum AbilityEffectValueType
-    {
-        Flat,
-        Percentage
-    }
-    public AbilityEffectValueType abilityEffectValueType;
-
-    public float abilityEffectValue;
-
+    public float abilityStrength;
     public float abilityDuration;
     public float abilityCooldown;
+    public int abilityCharges;
+    public int abilityMaxCharges;
 
     public abstract void OnUseAbility(BaseStats self, BaseStats target);
 }
