@@ -28,7 +28,6 @@ public class WFC_MapGeneration : MonoBehaviour
     [Header("Other")]
     [SerializeField] private List<Chest> chestsInMap;
     [SerializeField] private TilemapManager tilemapManager;
-    [SerializeField] private List<TileBase> targetTiles;
 
     private List<Sprite> tileSprites = new();
 
@@ -240,7 +239,7 @@ public class WFC_MapGeneration : MonoBehaviour
         {
             Tile tile = ScriptableObject.CreateInstance<Tile>();
             tile.sprite = tileSprites[i];
-            newTile.InitializeTile(targetTiles[i], tile);
+            newTile.InitializeTile(tilemapManager.targetTiles[i], tile);
         }
 
         return newTile.gameObject;

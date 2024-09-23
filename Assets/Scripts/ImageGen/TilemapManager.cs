@@ -12,7 +12,7 @@ public class TilemapManager : MonoBehaviour
 
     [Header("Tilemap Manipulation")]
     [SerializeField] private List<Tilemap> tilemaps;
-    [SerializeField] private List<TileBase> targetTiles;
+    public List<TileBase> targetTiles;
 
     private void Start()
     {
