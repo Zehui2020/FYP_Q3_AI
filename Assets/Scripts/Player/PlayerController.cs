@@ -195,10 +195,11 @@ public class PlayerController : PlayerStats
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
-            abilityController.HandleAbility(0);
-        if (Input.GetKeyDown(KeyCode.Q))
-            abilityController.HandleAbility(1);
+        for (int i = 0; i < abilityController.abilities.Count; i++)
+        {
+            if (Input.GetKeyDown((i + 1).ToString()))
+                abilityController.HandleAbility(i);
+        }
     }
 
     private void FixedUpdate()
