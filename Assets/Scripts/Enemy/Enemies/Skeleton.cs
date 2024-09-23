@@ -20,7 +20,10 @@ public class Skeleton : Enemy
     private readonly int TeleportAnim = Animator.StringToHash("SkeletonTeleport");
     private readonly int DieAnim = Animator.StringToHash("SkeletonDie");
 
+    [SerializeField] private TrailRenderer teleportTrail;
     [SerializeField] private float teleportThreshold;
+    [SerializeField] private float teleportCooldown;
+    private bool canTeleport = true;
 
     public override void InitializeEnemy()
     {
@@ -57,9 +60,12 @@ public class Skeleton : Enemy
                 UpdatePlayerDirection();
                 break;
             case State.Teleport:
+                teleportTrail.enabled = true;
                 aiNavigation.StopNavigation();
                 animator.Play(TeleportAnim, -1, 0f);
                 transform.position = player.transform.position;
+
+                StartCoroutine(TeleportCooldown());
                 break;
             case State.Die:
                 animator.speed = 1;
@@ -90,7 +96,7 @@ public class Skeleton : Enemy
                 if (Vector2.Distance(player.transform.position, transform.position) <= attackRange)
                     ChangeState(State.Attack);
 
-                if (Vector2.Distance(player.transform.position, transform.position) >= teleportThreshold)
+                if (Vector2.Distance(player.transform.position, transform.position) >= teleportThreshold && canTeleport)
                     ChangeState(State.Teleport);
                 break;
         }
@@ -98,5 +104,14 @@ public class Skeleton : Enemy
         if (currentState != State.Attack &&
             currentState != State.Teleport)
             UpdatePlayerDirection();
+    }
+
+    private IEnumerator TeleportCooldown()
+    {
+        canTeleport = false;
+
+        yield return new WaitForSeconds(teleportCooldown);
+
+        canTeleport = true;
     }
 }
