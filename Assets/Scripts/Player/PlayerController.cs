@@ -214,6 +214,7 @@ public class PlayerController : PlayerStats
         plungeEndPos = transform.position;
         combatController.HandlePlungeAttack();
         movementController.StopPlayer();
+        playerEffectsController.ShakeCamera(8f, 5f, 0.3f);
     }
 
     public void OnPlayerOverlap(bool overlap)
