@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Skeleton : Enemy
 {
@@ -20,7 +21,7 @@ public class Skeleton : Enemy
     private readonly int TeleportAnim = Animator.StringToHash("SkeletonTeleport");
     private readonly int DieAnim = Animator.StringToHash("SkeletonDie");
 
-    [SerializeField] private TrailRenderer teleportTrail;
+    [SerializeField] private VisualEffect teleportTrail;
     [SerializeField] private float teleportThreshold;
     [SerializeField] private float teleportCooldown;
     private bool canTeleport = true;
@@ -36,6 +37,8 @@ public class Skeleton : Enemy
         onPlayerInChaseRange += () => { ChangeState(State.Chase); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
         OnBreached += (multiplier) => { ChangeState(State.Idle); };
+
+        HideTrail();
     }
 
     private void ChangeState(State newState)
@@ -60,7 +63,7 @@ public class Skeleton : Enemy
                 UpdatePlayerDirection();
                 break;
             case State.Teleport:
-                teleportTrail.enabled = true;
+                ShowTrail();
                 aiNavigation.StopNavigation();
                 animator.Play(TeleportAnim, -1, 0f);
                 transform.position = player.transform.position;
@@ -113,5 +116,15 @@ public class Skeleton : Enemy
         yield return new WaitForSeconds(teleportCooldown);
 
         canTeleport = true;
+    }
+
+    public void ShowTrail()
+    {
+        teleportTrail.Play();
+    }
+
+    public void HideTrail()
+    {
+        //teleportTrail.Stop();
     }
 }
