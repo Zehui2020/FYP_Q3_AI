@@ -206,17 +206,20 @@ public class PlayerController : PlayerStats
 
     private IEnumerator HurtRoutine()
     {
-        ChangeState(PlayerStates.Hurt);
         movementController.canMove = false;
         playerRB.velocity = Vector2.zero;
         playerRB.isKinematic = true;
 
+        ChangeState(PlayerStates.Hurt);
+
         yield return new WaitForSeconds(0.5f);
 
-        ChangeState(PlayerStates.Movement);
         movementController.canMove = true;
-        hurtRoutine = null;
         playerRB.isKinematic = false;
+        hurtRoutine = null;
+
+        movementController.ChangeState(MovementState.Idle);
+        ChangeState(PlayerStates.Movement);
     }
 
     private void FixedUpdate()
