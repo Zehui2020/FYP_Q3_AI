@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class WFC_MapGeneration : MonoBehaviour
@@ -34,6 +33,8 @@ public class WFC_MapGeneration : MonoBehaviour
     private List<Vector2> collapsableTiles = new List<Vector2>();
     private List<Vector2> collapsedTiles = new List<Vector2>();
     private List<int> collapsableTileNum = new List<int>();
+
+    [SerializeField] private ItemStats itemStats;
 
     private void Update()
     {
@@ -256,6 +257,10 @@ public class WFC_MapGeneration : MonoBehaviour
             if (mapTiles[i].chest != null)
                 chestsInMap.Add(mapTiles[i].chest);
         }
+
+        // Black Card
+        for (int i = 0; i < itemStats.blackCardChestAmount; i++)
+            chestsInMap[i].SetCost(0);
     }
 
     private List<GameObject> GetAvailableBorderTilesList(Vector2 checkTilePos, Vector2 direction)

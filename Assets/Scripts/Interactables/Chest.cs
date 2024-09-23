@@ -110,4 +110,10 @@ public class Chest : MonoBehaviour, IInteractable
     {
         canvas.gameObject.SetActive(false);
     }
+
+    public void SetCost(int newCost)
+    {
+        cost = newCost;
+        costText.text = newCost.ToString();
+    }
 }
