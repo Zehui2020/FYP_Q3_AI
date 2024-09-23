@@ -1,138 +1,133 @@
 //----------------------------------------------------------------------
 // ItemShopManager
 //
-// アイテムショップを管理するクラス
+// Class for managing the item shop
 //
 // Data: 8/28/2024
 // Author: Shimba Sakai
 //----------------------------------------------------------------------
+
 using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
-using UnityEditorInternal.Profiling.Memory.Experimental;
-using UnityEditor.Rendering;
-using Unity.VisualScripting;
-using UnityEngine.EventSystems;
 using System.Collections;
 
 public class ItemShopManager : MonoBehaviour
 {
-    [Header("アイテムの初期配置座標")]
+    [Header("Initial Item Position")]
     public Vector2 m_itemStartPosition;
 
-    [Header("Item Spacing / アイテム間隔")]
+    [Header("Item Spacing")]
     public Vector2 m_itemSpacing;
 
-    [Header("Number of Columns / 列の数")]
-    public int m_numberOfColumns = 4; // Defaul: 4
+    [Header("Number of Columns")]
+    public int m_numberOfColumns = 4; // Default: 4
 
-    [Header("アイテムのスケール")]
-    public float m_itemScale = 1.0f; // Defaul: 1.0
+    [Header("Item Scale")]
+    public float m_itemScale = 1.0f; // Default: 1.0
 
-    // アイテムショップUI管理クラス
+    // Item Shop UI Manager
     ItemShopUIHandler m_itemShopUIHandler;
 
-    // アイテムの単位
+    // Item Unit
     private string m_itemUnit = " G";
 
-    // アイテムデータ配列
+    // Item Data Array
     private ItemData[] m_itemDataArray;
 
-    // アイテム読み込みクラス
+    // Item Loader Class
     public ItemLoader m_itemLoader;
-
 
     private IEnumerator Start()
     {
-        // Currently, when the Exit button is pressed, it is set to exit the scene.If you want to change this behavior, I recommend modifying the SceneExitHandler class.
+        // Currently, when the Exit button is pressed, it is set to exit the scene. If you want to change this behavior, I recommend modifying the SceneExitHandler class.
 
-        // アイテムショップUI管理クラスが設定されていない場合の処理
+        // Check if the Item Shop UI Manager is set
         if (m_itemShopUIHandler == null)
         {
-            // アイテムショップUI管理クラスを設定する
+            // Set the Item Shop UI Manager
             m_itemShopUIHandler = FindAnyObjectByType<ItemShopUIHandler>();
         }
 
-        // アイテム読み込みクラスが設定されていない場合の処理
+        // Check if the Item Loader is set
         if (m_itemLoader == null)
         {
-            // アイテム読み込みクラスを設定する
+            // Set the Item Loader
             m_itemLoader = FindAnyObjectByType<ItemLoader>();
         }
 
-        // アイテム読み込みクラスが設定されている場合の処理
+        // If the Item Loader is set
         if (m_itemLoader != null)
         {
-            // アイテム読み込みが完了するまで待つ
+            // Wait until the item loading is complete
             yield return new WaitUntil(() => m_itemLoader.IsDataLoaded());
 
-            // アイテムを表示する
+            // Show the shop
             ShowShop();
         }
 
-        // デバッグボタン
+        // Debug button
         if (m_itemShopUIHandler.m_debugButton != null)
         {
             m_itemShopUIHandler.m_debugButton.onClick.AddListener(SwitchShopDisplay);
         }
     }
 
-
-    // ショップの表示切り替え
+    // Switch shop display
     public void SwitchShopDisplay()
     {
-        // ショップが表示されている場合の処理
+        // If the shop is currently displayed
         if (m_itemShopUIHandler.m_itemShopBackground.activeSelf)
         {
-            // ショップを非表示する
+            // Hide the shop
             HideShop();
         }
-        // ショップが非表示になっている場合の処理
+        // If the shop is currently hidden
         else
         {
-            // ショップを表示にする
+            // Show the shop
             ShowShop();
         }
     }
 
-    // ショップを表示
+    // Show the shop
     private void ShowShop()
     {
-        // アイテムを再設定する
+        // Reset the items
         SetItem();
-        // ショップを表示する
+        // Display the shop
         m_itemShopUIHandler.m_itemShopBackground.SetActive(true);
     }
 
-    // ショップを非表示
+    // Hide the shop
     private void HideShop()
     {
-        // ショップを非表示にする
+        // Hide the shop
         m_itemShopUIHandler.m_itemShopBackground.SetActive(false);
-        // アイテムを削除する
+        // Clear the items
         ClearItems();
     }
 
-    // アイテムの設定
+    // Set the items
     private void SetItem()
     {
-        // ショップのRectTransformを取得
+        // Get the RectTransform of the shop
         RectTransform parentRectTransform = m_itemShopUIHandler.m_itemShopBackground.GetComponent<RectTransform>();
         float parentWidth = parentRectTransform.rect.width;
         float parentHeight = parentRectTransform.rect.height;
 
-        // アイテムデータ配列を取得
+        // Get the item data array
         m_itemDataArray = m_itemLoader.GetItemDataArray();
 
         if (m_itemDataArray != null && m_itemDataArray.Length > 0)
         {
-            // アイテムを配置する
+            // Arrange the items
             ArrangeItems(parentWidth, parentHeight);
         }
     }
 
-    // アイテムの配置
+    // Arrange the items
     private void ArrangeItems(float parentWidth, float parentHeight)
     {
         int row = 0;
@@ -142,18 +137,18 @@ public class ItemShopManager : MonoBehaviour
 
         foreach (ItemData itemData in m_itemDataArray)
         {
-            // アイテムの生成と設定する
+            // Create and set the item
             RectTransform rectTransform = CreateItem(itemData);
 
-            // アイテムを配置する
+            // Place the item
             PlaceItem(rectTransform, ref itemStartXPosition, ref itemStartYPosition, row, column);
 
-            // 列と行の更新をする
+            // Update the row and column
             UpdateRowAndColumn(ref row, ref column, rectTransform, ref itemStartXPosition, ref itemStartYPosition);
         }
     }
 
-    // アイテムの生成
+    // Create the item
     private RectTransform CreateItem(ItemData itemData)
     {
         GameObject itemPrefab = Instantiate(m_itemShopUIHandler.m_itemPrefab, m_itemShopUIHandler.m_itemShop.transform);
@@ -173,7 +168,7 @@ public class ItemShopManager : MonoBehaviour
         return rectTransform;
     }
 
-    // アイテムの配置
+    // Place the item
     private void PlaceItem(RectTransform rectTransform, ref float itemStartXPosition, ref float itemStartYPosition, int row, int column)
     {
         rectTransform.anchoredPosition = new Vector2(
@@ -182,7 +177,7 @@ public class ItemShopManager : MonoBehaviour
         );
     }
 
-    // 行と列の更新
+    // Update the row and column
     private void UpdateRowAndColumn(ref int row, ref int column, RectTransform rectTransform, ref float itemStartXPosition, ref float itemStartYPosition)
     {
         column++;
@@ -199,29 +194,28 @@ public class ItemShopManager : MonoBehaviour
         }
     }
 
-    // アイテムの削除
+    // Clear the items
     private void ClearItems()
     {
-        // ショップのアイテムを取得する(アイテムを設定している親がItemShopObject)
+        // Get the shop items (the parent for the items is ItemShopObject)
         Transform shopCanvas = m_itemShopUIHandler.m_itemShopBackground.transform.Find("ItemShopObject");
-        // アイテムリストの親オブジェクト内の全ての子オブジェクトを削除する
+        // Destroy all child objects within the item list parent object
         foreach (Transform child in shopCanvas)
         {
             Destroy(child.gameObject);
         }
     }
 
-
-    // アイテム単位の取得
+    // Get item unit
     public string GetItemUnit()
     {
         return m_itemUnit;
     }
 
-    // アイテムデータリストを返すメソッド
+    // Return the item data list
     public ItemDataList GetItemDataList()
     {
-        // ItemDataListを新しく作成し、現在のアイテムデータを設定する
+        // Create a new ItemDataList and set the current item data
         ItemDataList itemDataList = new ItemDataList();
         itemDataList.items = m_itemDataArray;
         return itemDataList;

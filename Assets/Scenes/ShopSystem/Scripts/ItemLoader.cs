@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 // ItemLoader
 //
-// アイテムを読み込むクラス
+// Class that loads items
 //
 // Data: 9/13/2024
 // Author: Shimba Sakai
@@ -14,102 +14,151 @@ using System.IO;
 [System.Serializable]
 public class ItemData
 {
-    // jsonファイルで読み込むため名前はjsonファイルと同じ名前を使用する
-    [Header("Item Sprite Path / アイテムスプライトのパス")]
+    [Header("Item Sprite Path")]
     public string itemSprite;
-    [Header("Item Name / アイテム名")]
+    [Header("Item Name")]
     public string itemName;
-    [Header("Item Price / アイテムの値段")]
+    [Header("Item Price")]
     public int itemPrice;
-    [Header("アイテムの個数")]
+    [Header("Item Quantity")]
     public int itemQuantity;
 }
 
 [System.Serializable]
 public class ItemDataList
 {
-    // jsonファイルで読み込むため名前はjsonファイルと同じ名前を使用する
-    [Header("List of Items / アイテムのリスト")]
+    [Header("List of Items")]
     public ItemData[] items;
 }
 
+// Class that loads items
 public class ItemLoader : MonoBehaviour
 {
-    [Header("Path to JSON File / JSONファイルのパス")]
-    public string m_jsonFilePath = "items";
-
-    // アイテムデータの配列
+    // Item data array
     private ItemData[] m_itemDataArray;
-    // アイテムデータ
+    // Item data
     public ItemData m_itemData;
-    // アイテムデータリスト
+    // Item data list
     public ItemDataList m_itemDataList;
-    // スプライトを名前で管理する辞書
+    // Sprites
     private Dictionary<string, Sprite> m_spriteDictionary;
+
+    // Flag to check if it's the first run
+    private bool m_isFirstRun = true;
 
     private void Start()
     {
-        // スプライトを一括でロードして辞書に格納する
+        // Load all sprites and store them in the dictionary
         LoadAllSprites();
 
-        // JSONファイルからアイテムデータを読み込む
+        // Load item data from JSON file
         m_itemDataList = LoadItemData();
-        // アイテムデータリストが設定されている場合の処理
         if (m_itemDataList != null)
         {
-            // アイテムを設定する
             m_itemDataArray = m_itemDataList.items;
         }
-
     }
 
-    // すべてのスクリプトを読み込む
     private void LoadAllSprites()
     {
-        // "items"フォルダから全てのスプライトを読み込む
-        Sprite[] sprites = Resources.LoadAll<Sprite>("items");
-
-        // スプライトの名前とスプライト本体を格納する辞書を初期化する
+        // Set the path for the "Items/items" folder
+        string spriteFolderPath = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Load/Items/items");
+        string[] spriteFiles = Directory.GetFiles(spriteFolderPath, "*.png");
         m_spriteDictionary = new Dictionary<string, Sprite>();
 
-        // 読み込んだスプライトを辞書に追加する
-        foreach (Sprite sprite in sprites)
+        foreach (string file in spriteFiles)
         {
-            m_spriteDictionary[sprite.name] = sprite;
+            string fileName = Path.GetFileNameWithoutExtension(file);
+            byte[] fileData = File.ReadAllBytes(file);
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(fileData);
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+            if (sprite != null)
+            {
+                m_spriteDictionary[fileName] = sprite;
+            }
         }
     }
 
-    // アイテムを読み込む
+    // Process to load item data
     private ItemDataList LoadItemData()
     {
-        // ResourcesフォルダからJSONファイルを読み込む
-        TextAsset jsonText = Resources.Load<TextAsset>(m_jsonFilePath);
+        string path;
 
-        // JSONデータをItemDataListに変換
-        ItemDataList itemDataList = JsonUtility.FromJson<ItemDataList>(jsonText.text);
-        return itemDataList;
+        // Check if it's the first run
+        if (m_isFirstRun)
+        {
+            // Load the JSON file only on the first run
+            path = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Load/Items/items.json");
+        }
+        else
+        {
+            // Load the JSON file on subsequent runs
+            path = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Save/Items/items.json");
+        }
+
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            return JsonUtility.FromJson<ItemDataList>(json);
+        }
+        else
+        {
+            Debug.LogError($"JSON file not found: {path}");
+            return null;
+        }
     }
 
-    // データがロードされているかを確認
+    // Process to save item data
+    public void SaveItemData()
+    {
+        // Create item data list
+        ItemDataList itemDataList = new ItemDataList { items = m_itemDataArray };
+
+        // Convert data to JSON format
+        string json = JsonUtility.ToJson(itemDataList, true);
+
+        // Determine save path
+        string path = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Save/Items/items.json");
+
+        // Write JSON data to file
+        File.WriteAllText(path, json);
+    }
+
+    // Check if data has been loaded
     public bool IsDataLoaded()
     {
-        // アイテムデータとスプライト辞書がロードされているかどうかを確認する
+        // Return item data array
         return m_itemDataArray != null && m_itemDataArray.Length > 0 && m_spriteDictionary != null && m_spriteDictionary.Count > 0;
     }
 
-    // アイテムデータ取得
+    // Get item data
     public ItemData GetItemData()
     {
+        // Return item data
         return m_itemData;
     }
-    // アイテムデータ配列取得
+
+    // Get item data array
     public ItemData[] GetItemDataArray()
     {
         return m_itemDataArray;
     }
-    // スプライト取得
+
+    // Get sprites
     public Dictionary<string, Sprite> GetSpriteDictionary()
     {
+        // Return sprites
         return m_spriteDictionary;
+    }
+
+    // Process called on game restart
+    public void OnGameRestart()
+    {
+        // Update flag
+        m_isFirstRun = false;
+        // Reload item data
+        m_itemDataList = LoadItemData();
     }
 }
