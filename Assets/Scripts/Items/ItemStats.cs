@@ -77,6 +77,8 @@ public class ItemStats : ScriptableObject
 
     public int algaeHealingMultiplier;
 
+    public int blackCardChestAmount;
+
     public void ResetStats()
     {
         ritualBleedChance = 0;
@@ -150,5 +152,7 @@ public class ItemStats : ScriptableObject
         fungiHealAmount = 0;
 
         algaeHealingMultiplier = 1;
+
+        blackCardChestAmount = 0;
     }
 }

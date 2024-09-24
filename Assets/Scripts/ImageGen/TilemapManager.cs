@@ -12,7 +12,7 @@ public class TilemapManager : MonoBehaviour
 
     [Header("Tilemap Manipulation")]
     [SerializeField] private List<Tilemap> tilemaps;
-    [SerializeField] private List<TileBase> targetTiles;
+    public List<TileBase> targetTiles;
 
     private void Start()
     {
@@ -36,6 +36,21 @@ public class TilemapManager : MonoBehaviour
         }
 
         AssignTileSprites();
+    }
+
+    public List<Sprite> GetAllTileSprites()
+    {
+        List<Sprite> sprites = new();
+
+        Texture2D texture = imageSaver.GetTextureFromLocalDisk(fileName);
+
+        foreach (Rect rect in tileRects)
+        {
+            Sprite newSprite = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f), 302);
+            sprites.Add(newSprite);
+        }
+
+        return sprites;
     }
 
     public void AssignTileSprites()

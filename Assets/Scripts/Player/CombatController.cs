@@ -95,11 +95,11 @@ public class CombatController : MonoBehaviour
         weaponEffectAnimator.Play(Animator.StringToHash(wData.attackEffectAnimations[attackComboCount].name), -1, 0);
 
         if (attackComboCount - 1 >= 0)
-            player.breachedMultiplier.RemoveModifier(wData.breachMultipliers[attackComboCount - 1]);
+            player.breachDamageMultiplier.RemoveModifier(wData.breachMultipliers[attackComboCount - 1]);
         else
-            player.breachedMultiplier.RemoveModifier(wData.breachMultipliers[wData.breachMultipliers.Count - 1]);
+            player.breachDamageMultiplier.RemoveModifier(wData.breachMultipliers[wData.breachMultipliers.Count - 1]);
 
-        player.breachedMultiplier.AddModifier(wData.breachMultipliers[attackComboCount]);
+        player.breachDamageMultiplier.AddModifier(wData.breachMultipliers[attackComboCount]);
 
         attackComboCount++;
         if (attackComboCount >= wData.attackAnimations.Count)

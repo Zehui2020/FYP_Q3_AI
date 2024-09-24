@@ -11,7 +11,7 @@ public class Item : ScriptableObject
         HDHUD, RitualSickle, KnuckleDuster, JaggedDagger, CrudeKnife, FrazzledWire, IcyCrampon, GasolineTank, OverloadedCapacitor, AdrenalineShot,
         MetalBat, HiddenKunai, SpikedChestplate, EmergencyTransceiver, LeadPlunger, Dynamight, AncientGavel, BottleOfSurprises, FeatheredCape,
         BloodBag, TatteredVoucher, AztecTotem, InterestContract, RebateToken, NRGBar, DazeGrenade, PocketBarrier, ChargedDefibrillators,
-        VampiricStake, BloodFungi, SentientAlgae
+        VampiricStake, BloodFungi, SentientAlgae, BlackCard
     };
     public ItemType itemType;
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : EnemyStats
 {
-    public enum EnemyClass { Undead, Slime, Dummy }
+    public enum EnemyClass { Undead, Slime, Dummy, Skeleton }
     public EnemyClass enemyClass;
 
     public enum EnemyType { Normal, Elite, Boss }
