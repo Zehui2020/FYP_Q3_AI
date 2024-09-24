@@ -26,8 +26,7 @@ public class AbilityController : MonoBehaviour
         player = GetComponent<PlayerController>();
         for (int i = 0; i < abilities.Count; i++)
         {
-            abilityUI[i].SetIcon(abilities[i].abilityIcon);
-            abilityUI[i].SetCooldown(0, abilities[i].abilityCharges);
+            abilityUI[i].InitAbilityUI(abilities[i].abilityIcon, 0, abilities[i].abilityCharges, "[ " + (i + 1).ToString() + " ]");
             charges.Add(abilities[i].abilityCharges);
             maxCharges.Add(abilities[i].abilityMaxCharges);
         }
@@ -36,6 +35,9 @@ public class AbilityController : MonoBehaviour
 
     private void AddAbility(BaseAbility newAbility)
     {
+        if (abilities.Count >= 10)
+            return;
+
         // add ability
         abilities.Add(newAbility);
         abilityCooldownRoutines.Add(null);
@@ -44,8 +46,10 @@ public class AbilityController : MonoBehaviour
         // add ui
         GameObject obj = Instantiate(abilityUIPrefab, abilityUIParent);
         abilityUI.Add(obj.GetComponent<AbilityUIController>());
-        abilityUI[abilityUI.Count - 1].SetIcon(newAbility.abilityIcon);
-        abilityUI[abilityUI.Count - 1].SetCooldown(0, newAbility.abilityCharges);
+        if (abilityUI.Count == 10)
+            abilityUI[abilityUI.Count - 1].InitAbilityUI(newAbility.abilityIcon, 0, newAbility.abilityCharges, "[ 0 ]");
+        else
+            abilityUI[abilityUI.Count - 1].InitAbilityUI(newAbility.abilityIcon, 0, newAbility.abilityCharges, "[ " + abilityUI.Count.ToString() + " ]");
         // init ability
         InitializeAbility(abilities.Count - 1);
         // debug

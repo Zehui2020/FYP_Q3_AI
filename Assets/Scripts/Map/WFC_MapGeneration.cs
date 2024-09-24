@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -10,8 +11,8 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private int borderThickness;
     [SerializeField] private int mapSeed;
     [Header("Main Map Generation")]
+    [SerializeField] private MapTileController tileController;
     [SerializeField] private List<GameObject> startingTilePrefabs;
-    [SerializeField] private List<GameObject> allTilePrefabs;
     [Header("Border Generation")]
     [Header("Edges")]
     [SerializeField] private List<GameObject> topBorderTiles;
@@ -26,11 +27,12 @@ public class WFC_MapGeneration : MonoBehaviour
     [Header("Perimeter")]
     [SerializeField] private List<GameObject> solidTile;
     [Header("Other")]
+    [SerializeField] private GameObject doorPrefab;
     [SerializeField] private List<Chest> chestsInMap;
     [SerializeField] private TilemapManager tilemapManager;
 
     private List<Sprite> tileSprites = new();
-
+    private List<GameObject> allTilePrefabs;
     private Vector2 currTile;
     private Vector2 startingPos;
     [SerializeField] private List<MapTile> mapTiles = new List<MapTile>();
@@ -55,7 +57,9 @@ public class WFC_MapGeneration : MonoBehaviour
         tileSprites = tilemapManager.GetAllTileSprites();
 
         RandomizeSeed();
+        tileController.InitMapTiles();
         GenerateMap();
+        SetAStarNavMesh();
     }
 
     private void RandomizeSeed()
@@ -72,6 +76,7 @@ public class WFC_MapGeneration : MonoBehaviour
 
     public void GenerateMap()
     {
+        allTilePrefabs = tileController.allTilePrefabs;
         mapSize -= Vector2.one * 2;
         // init maptiles list
         for (int i = 0; i < mapSize.x * mapSize.y; i++)
@@ -83,9 +88,7 @@ public class WFC_MapGeneration : MonoBehaviour
         startingPos = currTile * tileSize;
         // set random starting room tile
         int randomIndex = Random.Range(0, startingTilePrefabs.Count);
-        mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = startingTilePrefabs[randomIndex].GetComponent<MapTile>();
-        //place room
-        InstantiateTile(startingTilePrefabs[randomIndex], currTile * tileSize);
+        mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = InstantiateTile(startingTilePrefabs[randomIndex], currTile * tileSize).GetComponent<MapTile>();
         // add new collapsable tiles
         collapsedTiles.Add(currTile);
         AddCollapsableTiles();
@@ -95,6 +98,8 @@ public class WFC_MapGeneration : MonoBehaviour
         SetBorderTiles();
         // get list of chests
         GetAllChests();
+        // set door
+        InitDoor();
     }
 
     private void SetNextTile()
@@ -129,9 +134,7 @@ public class WFC_MapGeneration : MonoBehaviour
         if (tileToSet == null)
             return;
         // set room tile
-        mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = tileToSet.GetComponent<MapTile>();
-        //place room
-        InstantiateTile(tileToSet, currTile * tileSize);
+        mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = InstantiateTile(tileToSet, currTile * tileSize).GetComponent<MapTile>();
         // remove tile from collapsable list
         collapsableTiles.Remove(tileToCollapse);
         collapsedTiles.Add(tileToCollapse);
@@ -257,6 +260,12 @@ public class WFC_MapGeneration : MonoBehaviour
         }
     }
 
+    private void SetAStarNavMesh()
+    {
+        AstarPath.active.data.gridGraph.RelocateNodes(center: ((mapSize - Vector2.one) * tileSize / 2) + new Vector2(0, 0.5f), rotation: Quaternion.Euler(-90, 0, 0), nodeSize: 1.0f);
+        AstarPath.active.Scan();
+    }
+
     private void GetAllChests()
     {
         for (int i = 0; i < mapTiles.Count; i++)
@@ -268,6 +277,27 @@ public class WFC_MapGeneration : MonoBehaviour
         // Black Card
         for (int i = 0; i < itemStats.blackCardChestAmount; i++)
             chestsInMap[i].SetCost(0);
+    }
+
+    private void InitDoor()
+    {
+        List<Transform> doors = new List<Transform>();
+        Transform doorTransform = null;
+        // get doors
+        for (int i = 0; i < mapTiles.Count; i++)
+        {
+            if (mapTiles[i].doorTransform != null)
+                doors.Add(mapTiles[i].doorTransform);
+        }
+        // choose furthest door
+        for (int i = 0; i < doors.Count; i++)
+        {
+            if (doorTransform == null || Vector2.Distance(doorTransform.position, transform.position) < Vector2.Distance(doors[i].position, transform.position))
+                doorTransform = doors[i];
+        }
+        // set door
+        GameObject door = Instantiate(doorPrefab, doorTransform, false);
+        Debug.Log(doorTransform.position);
     }
 
     private List<GameObject> GetAvailableBorderTilesList(Vector2 checkTilePos, Vector2 direction)

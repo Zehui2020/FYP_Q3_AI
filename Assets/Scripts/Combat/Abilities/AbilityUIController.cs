@@ -8,20 +8,20 @@ using UnityEngine.UI;
 public class AbilityUIController : MonoBehaviour
 {
     [SerializeField] private Image cooldownSlider;
-    [SerializeField] private TMP_Text durationText;
     [SerializeField] private Image abilityIcon;
     [SerializeField] private TMP_Text chargeText;
+    [SerializeField] private TMP_Text keybindText;
 
     private void Start()
     {
         cooldownSlider.fillAmount = 0;
-        durationText.gameObject.SetActive(false);
     }
 
-    public void SetDurationText(string text, bool active)
+    public void InitAbilityUI(Sprite icon, float amount, int charge, string keybind)
     {
-        durationText.text = text;
-        durationText.gameObject.SetActive(active);
+        SetIcon(icon);
+        SetCooldown(amount, charge);
+        keybindText.text = keybind;
     }
 
     public void SetCooldown(float amount, int charge)
