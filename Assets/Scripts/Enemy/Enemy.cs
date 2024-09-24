@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Enemy : EnemyStats
 {
+    [SerializeField] private bool isEnemy = true;
+
     public enum EnemyClass { Undead, Slime, Dummy, Skeleton }
     public EnemyClass enemyClass;
 
@@ -48,6 +50,9 @@ public class Enemy : EnemyStats
 
     public virtual void InitializeEnemy()
     {
+        if (!isEnemy)
+            return;
+
         aiNavigation = GetComponent<AINavigation>();
         enemyCol = GetComponent<Collider2D>();
         enemyRB = GetComponent<Rigidbody2D>();
@@ -89,6 +94,9 @@ public class Enemy : EnemyStats
 
     private void Update()
     {
+        if (!isEnemy)
+            return;
+
         if (!canUpdate)
             return;
 

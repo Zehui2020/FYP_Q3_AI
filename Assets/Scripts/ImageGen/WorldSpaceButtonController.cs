@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class WorldSpaceButtonController : MonoBehaviour
 {
-    [SerializeField] private List<string> prompts = new();
-    private List<WorldSpaceButton> buttons = new();
+    private PromptData promptData;
+
     [SerializeField] private WorldSpaceButton worldSpaceButtonPrefab;
+    private List<WorldSpaceButton> buttons = new();
+
     [SerializeField] private ComfyUIManager uiManager;
     [SerializeField] private MenuBackground menuBackground;
 
@@ -14,14 +16,16 @@ public class WorldSpaceButtonController : MonoBehaviour
     [SerializeField] private float maxSpawnXRange;
     [SerializeField] private float spawnY;
 
-    private void Start()
+    public void InitController(PromptData promptData)
     {
-        SpawnButtons();
+        this.promptData = promptData;
     }
 
-    public void SpawnButtons()
+    public void SpawnButtons(PromptData.BGPrompt.Type currentBGType)
     {
-        foreach (string prompt in prompts)
+        List<string> buttonPrompts = promptData.GetButtonPromptList(currentBGType);
+
+        foreach (string prompt in buttonPrompts)
         {
             float randX = Random.Range(minSpawnXRange, maxSpawnXRange);
             WorldSpaceButton button = Instantiate(worldSpaceButtonPrefab, new Vector3(randX, spawnY, 0), Quaternion.identity);

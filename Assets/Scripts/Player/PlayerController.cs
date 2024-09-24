@@ -181,7 +181,7 @@ public class PlayerController : PlayerStats
         }
 
         // Other Inputs
-        if (Input.GetKeyDown(KeyCode.F) && currentInteractable != null)
+        if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
         {
             if (currentInteractable.OnInteract())
             {

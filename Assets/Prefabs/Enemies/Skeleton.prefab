@@ -287,14 +287,40 @@ VisualEffect:
     m_Matrix4x4f:
       m_Array: []
     m_AnimationCurve:
-      m_Array: []
+      m_Array:
+      - m_Value:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: -0.0033538472
+            value: 0.20202926
+            inSlope: -0.20170997
+            outSlope: -0.20170997
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1.0003242
+            value: -0.00042260904
+            inSlope: -0.20170997
+            outSlope: -0.20170997
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        m_Name: AlphaOverLife
+        m_Overridden: 1
     m_Gradient:
       m_Array:
       - m_Value:
           serializedVersion: 2
           key0: {r: 2.1960785, g: 1.9166924, b: 0, a: 0}
-          key1: {r: 2, g: 1.7486911, b: 0, a: 0.19607843}
-          key2: {r: 0, g: 0, b: 0, a: 0.19607843}
+          key1: {r: 2, g: 1.7486911, b: 0, a: 0.039215688}
+          key2: {r: 0, g: 0, b: 0, a: 0.039215688}
           key3: {r: 0, g: 0, b: 0, a: 0}
           key4: {r: 0, g: 0, b: 0, a: 0}
           key5: {r: 0, g: 0, b: 0, a: 0}
@@ -1689,7 +1715,7 @@ MonoBehaviour:
   attackRange: 2
   idleDuration: 1
   patrolMovementSpeed: 2
-  chaseMovementSpeed: 5
+  chaseMovementSpeed: 10
   enemyClass: 3
   enemyType: 0
   canUpdate: 1
@@ -1706,7 +1732,7 @@ MonoBehaviour:
   currentState: 0
   teleportTrail: {fileID: 2080650195561953909}
   teleportThreshold: 6
-  teleportCooldown: 3
+  teleportCooldown: 1
 --- !u!114 &4254695898782168221
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -11,9 +11,10 @@ public class ComfyUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI loadingText;
 
     [Header("Prompt")]
+    [SerializeField] private TextMeshProUGUI title;
     [SerializeField] private TextMeshProUGUI promptText;
 
-    [SerializeField] private string setPrompts;
+    public string setPrompts;
 
     public void SetLoadingBar(int currentValue, int maxValue)
     {
@@ -44,5 +45,11 @@ public class ComfyUIManager : MonoBehaviour
     public void ResetPrompt()
     {
         promptText.text = setPrompts;
+    }
+
+    public void SetStartingPrompt(PromptData.BGPrompt.Type promptData)
+    {
+        title.text = promptData.ToString();
+        promptText.text = setPrompts + ", " + promptData.ToString();
     }
 }
