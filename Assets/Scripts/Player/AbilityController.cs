@@ -1,11 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Playables;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class AbilityController : MonoBehaviour
 {
@@ -122,13 +117,15 @@ public class AbilityController : MonoBehaviour
             }
             for (int i = 0; i < targetsInArea.Count; i++)
             {
-                abilities[abilityNo].OnUseAbility(player, targetsInArea[i]);
+                abilities[abilityNo].OnAbilityUse(player, targetsInArea[i]);
+                StartCoroutine(AbilityDurationRoutine(ability, player, targetsInArea[i]));
             }
         }
         // if ability for self or projectile
         else
         {
-            abilities[abilityNo].OnUseAbility(player, player);
+            abilities[abilityNo].OnAbilityUse(player, player);
+            StartCoroutine(AbilityDurationRoutine(ability, player, player));
         }
 
         charges[abilityNo]--;
@@ -136,7 +133,19 @@ public class AbilityController : MonoBehaviour
             abilityCooldownRoutines[abilityNo] = StartCoroutine(AbilityCooldownRoutine(abilityNo, ability));
     }
 
-    public IEnumerator AbilityCooldownRoutine(int abilityNo, BaseAbility ability)
+    private IEnumerator AbilityDurationRoutine(BaseAbility ability, BaseStats self, BaseStats target)
+    {
+        yield return new WaitForSeconds(ability.abilityDuration);
+
+        ability.OnAbilityEnd(self, target);
+    }
+
+    public void HandleAbilityDuration(BaseAbility ability, BaseStats self, BaseStats target)
+    {
+        StartCoroutine(AbilityDurationRoutine(ability, self, target));
+    }
+
+    private IEnumerator AbilityCooldownRoutine(int abilityNo, BaseAbility ability)
     {
         // track cooldown
         float timer = ability.abilityCooldown;

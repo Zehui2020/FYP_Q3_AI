@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class BaseAbility : ScriptableObject
 {
+    public AbilityStats abilityStats;
+
     public enum AbilityName
     {
         Heal,
@@ -41,5 +43,6 @@ public abstract class BaseAbility : ScriptableObject
     public int abilityCharges;
     public int abilityMaxCharges;
 
-    public abstract void OnUseAbility(BaseStats self, BaseStats target);
+    public abstract void OnAbilityUse(BaseStats self, BaseStats target);
+    public abstract void OnAbilityEnd(BaseStats self, BaseStats target);
 }

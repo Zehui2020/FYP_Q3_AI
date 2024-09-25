@@ -9,17 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d5f0ef4d8f09e947a2197126ffedb4a, type: 3}
-  m_Name: Freezing Orb
+  m_Script: {fileID: 11500000, guid: 19f8309c282f217429dd7658bedd9dc2, type: 3}
+  m_Name: Contagious Haze
   m_EditorClassIdentifier: 
   abilityStats: {fileID: 11400000, guid: 637d944b389817a4e8d8bbb63c6c2cda, type: 2}
-  abilityName: 7
+  abilityName: 13
   abilityIcon: {fileID: 0}
-  abilityUseType: 0
+  abilityUseType: 2
   abilityRange: 5
-  abilityStrength: 3
-  abilityDuration: 0
-  abilityCooldown: 15
-  abilityCharges: 2
-  abilityMaxCharges: 2
-  nadePrefab: {fileID: 7868943528924052238, guid: 77629334cc710954c89dfaa8d2f66939, type: 3}
+  abilityStrength: 300
+  abilityDuration: 0.25
+  abilityCooldown: 30
+  abilityCharges: 1
+  abilityMaxCharges: 1
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 128
