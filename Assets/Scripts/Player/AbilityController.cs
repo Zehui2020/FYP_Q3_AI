@@ -1,11 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Playables;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class AbilityController : MonoBehaviour
 {
@@ -26,8 +21,7 @@ public class AbilityController : MonoBehaviour
         player = GetComponent<PlayerController>();
         for (int i = 0; i < abilities.Count; i++)
         {
-            abilityUI[i].SetIcon(abilities[i].abilityIcon);
-            abilityUI[i].SetCooldown(0, abilities[i].abilityCharges);
+            abilityUI[i].InitAbilityUI(abilities[i].abilityIcon, 0, abilities[i].abilityCharges, "[ " + (i + 1).ToString() + " ]");
             charges.Add(abilities[i].abilityCharges);
             maxCharges.Add(abilities[i].abilityMaxCharges);
         }
@@ -36,6 +30,9 @@ public class AbilityController : MonoBehaviour
 
     private void AddAbility(BaseAbility newAbility)
     {
+        if (abilities.Count >= 10)
+            return;
+
         // add ability
         abilities.Add(newAbility);
         abilityCooldownRoutines.Add(null);
@@ -44,8 +41,10 @@ public class AbilityController : MonoBehaviour
         // add ui
         GameObject obj = Instantiate(abilityUIPrefab, abilityUIParent);
         abilityUI.Add(obj.GetComponent<AbilityUIController>());
-        abilityUI[abilityUI.Count - 1].SetIcon(newAbility.abilityIcon);
-        abilityUI[abilityUI.Count - 1].SetCooldown(0, newAbility.abilityCharges);
+        if (abilityUI.Count == 10)
+            abilityUI[abilityUI.Count - 1].InitAbilityUI(newAbility.abilityIcon, 0, newAbility.abilityCharges, "[ 0 ]");
+        else
+            abilityUI[abilityUI.Count - 1].InitAbilityUI(newAbility.abilityIcon, 0, newAbility.abilityCharges, "[ " + abilityUI.Count.ToString() + " ]");
         // init ability
         InitializeAbility(abilities.Count - 1);
         // debug
@@ -118,13 +117,15 @@ public class AbilityController : MonoBehaviour
             }
             for (int i = 0; i < targetsInArea.Count; i++)
             {
-                abilities[abilityNo].OnUseAbility(player, targetsInArea[i]);
+                abilities[abilityNo].OnAbilityUse(player, targetsInArea[i]);
+                StartCoroutine(AbilityDurationRoutine(ability, player, targetsInArea[i]));
             }
         }
         // if ability for self or projectile
         else
         {
-            abilities[abilityNo].OnUseAbility(player, player);
+            abilities[abilityNo].OnAbilityUse(player, player);
+            StartCoroutine(AbilityDurationRoutine(ability, player, player));
         }
 
         charges[abilityNo]--;
@@ -132,7 +133,19 @@ public class AbilityController : MonoBehaviour
             abilityCooldownRoutines[abilityNo] = StartCoroutine(AbilityCooldownRoutine(abilityNo, ability));
     }
 
-    public IEnumerator AbilityCooldownRoutine(int abilityNo, BaseAbility ability)
+    private IEnumerator AbilityDurationRoutine(BaseAbility ability, BaseStats self, BaseStats target)
+    {
+        yield return new WaitForSeconds(ability.abilityDuration);
+
+        ability.OnAbilityEnd(self, target);
+    }
+
+    public void HandleAbilityDuration(BaseAbility ability, BaseStats self, BaseStats target)
+    {
+        StartCoroutine(AbilityDurationRoutine(ability, self, target));
+    }
+
+    private IEnumerator AbilityCooldownRoutine(int abilityNo, BaseAbility ability)
     {
         // track cooldown
         float timer = ability.abilityCooldown;

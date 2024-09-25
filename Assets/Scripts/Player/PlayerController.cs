@@ -2,6 +2,7 @@ using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static BaseStats.Damage;
 using static MovementController;
@@ -21,7 +22,7 @@ public class PlayerController : PlayerStats
     private AnimationManager animationManager;
     private MovementController movementController;
     private CombatController combatController;
-    private AbilityController abilityController;
+    [HideInInspector] public AbilityController abilityController;
     private FadeTransition fadeTransition;
     private ItemManager itemManager;
     private PlayerEffectsController playerEffectsController;
@@ -199,7 +200,9 @@ public class PlayerController : PlayerStats
 
         for (int i = 0; i < abilityController.abilities.Count; i++)
         {
-            if (Input.GetKeyDown((i + 1).ToString()))
+            if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
+                abilityController.HandleAbility(i);
+            else if (i == 9 && Input.GetKeyDown(KeyCode.Alpha0))
                 abilityController.HandleAbility(i);
         }
     }
@@ -555,6 +558,15 @@ public class PlayerController : PlayerStats
             previousDamage = damage;
 
         int randNum;
+
+        // Blood Arts Bleed
+        randNum = Random.Range(0, 100);
+        if (randNum < abilityStats.bloodArtsBleedChance)
+            target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Bleed), 1);
+
+        // Blood Arts Lifesteal
+        if (abilityStats.bloodArtsLifestealMultiplier > 0)
+            Heal((int)(damage.damage * abilityStats.bloodArtsLifestealMultiplier));
 
         if (isCrit)
         {
