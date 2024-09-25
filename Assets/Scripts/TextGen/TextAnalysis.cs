@@ -8,6 +8,9 @@ public class TextAnalysis : MonoBehaviour
 {
     public SentimentAnalysis predictionObject;
 
+    //Mood Meter Variables
+    public float Mood_Meter_Change;
+
     private bool responseFromThread = false;
     private bool threadStarted = false;
     private Vector3 SentimentAnalysisResponse;
@@ -57,17 +60,34 @@ public class TextAnalysis : MonoBehaviour
             yield return null;
         }
         // Main Thread Action
-        PrintAnalysis();
+        AnalysisResults();
         // Reset
         responseFromThread = false;
         threadStarted = false;
     }
 
-    private void PrintAnalysis()
+    private void AnalysisResults()
     {
         Debug.Log(SentimentAnalysisResponse.x + " % : Positive");
         Debug.Log(SentimentAnalysisResponse.y + " % : Negative");
         Debug.Log(SentimentAnalysisResponse.z + " % : Neutral");
+
+        //Positive Mood
+        if (SentimentAnalysisResponse.x > 70.0f)
+        {
+            Mood_Meter_Change = Mathf.Ceil((SentimentAnalysisResponse.x % 70.0f)/2);
+        }
+        //Negative Mood
+        else if (SentimentAnalysisResponse.y > 50.0f)
+        {
+            Mood_Meter_Change = Mathf.Ceil((SentimentAnalysisResponse.y % 50.0f) / -2);
+        }
+        else
+        {
+            Mood_Meter_Change = 0;
+        }
+
+        Debug.Log(Mood_Meter_Change);
     }
 
     // Sentiment Analysis Thread

@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
+using static UnityEditor.Rendering.CameraUI;
 
 public class Shopkeeper_AI_Manager : MonoBehaviour
 {
@@ -45,8 +46,11 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
     private bool introFinished;
     private bool convoStartedAgain;
 
+    private bool introduction_inProgress;
+    private bool farewell_inProgress;
+
     //Mood Meter, 0 to 100
-    private int mood_Counter;
+    private float mood_Counter;
 
     // Start is called before the first frame update
     void Start()
@@ -54,6 +58,10 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
         inConvo = false;
         introFinished = false;
         convoStartedAgain = false;
+
+        introduction_inProgress = false;
+        farewell_inProgress = false;
+
         mood_Counter = 50;
     }
 
@@ -79,7 +87,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
     {
         AI_Gen_Prompt =
             '"' +
-            "[INST] <<SYS>> You are the voice of a NPC Shopkeeper in a video game. " +
+            "[INST] <<SYS>> You are the voice of a Shopkeeper in a video game. " +
             "This is the NPC's backstory:  " +
             "~" + AI_CharacterContext + "~ " +
             "In this environment, address the user as Adventurer, " +
@@ -98,7 +106,9 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
 
         StartCoroutine(OpenCommandPrompt(fullCommand_AIChat));
         UnityEngine.Debug.Log("Introducing...");
+
         introFinished = true;
+        introduction_inProgress = true;
     }
 
     public void AI_Chat_Response()
@@ -107,7 +117,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
         {
             AI_Gen_Prompt =
                 '"' +
-                "[INST] <<SYS>> You are the voice of a NPC Shopkeeper in a video game. " +
+                "[INST] <<SYS>> You are the voice of a Shopkeeper in a video game. " +
                 "This is the NPC's backstory:  " +
                 "~" + AI_CharacterContext + "~ " +
                 "In this environment, address the user as Adventurer, " +
@@ -142,7 +152,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
 
                     AI_Gen_Prompt =
                         '"' +
-                        "[INST] <<SYS>> You are the voice of a NPC Shopkeeper in a video game. " +
+                        "[INST] <<SYS>> You are the voice of a Shopkeeper in a video game. " +
                         "This is the NPC's backstory:  " +
                         "~" + AI_CharacterContext + "~ " +
                         "In this environment, address the user as Adventurer, " +
@@ -164,7 +174,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
 
                     AI_Gen_Prompt =
                         '"' +
-                        "[INST] <<SYS>> You are the voice of a NPC Shopkeeper in a video game. " +
+                        "[INST] <<SYS>> You are the voice of a Shopkeeper in a video game. " +
                         "This is the NPC's backstory:  " +
                         "~" + AI_CharacterContext + "~ " +
                         "In this environment, address the user as Adventurer, " +
@@ -190,7 +200,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
 
                     AI_Gen_Prompt =
                         '"' +
-                        "[INST] <<SYS>> You are the voice of a NPC Shopkeeper in a video game. " +
+                        "[INST] <<SYS>> You are the voice of a Shopkeeper in a video game. " +
                         "This is the NPC's backstory:  " +
                         "~" + AI_CharacterContext + "~ " +
                         "In this environment, address the user as Adventurer, " +
@@ -212,7 +222,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
 
                     AI_Gen_Prompt =
                         '"' +
-                        "[INST] <<SYS>> You are the voice of a NPC Shopkeeper in a video game. " +
+                        "[INST] <<SYS>> You are the voice of a Shopkeeper in a video game. " +
                         "This is the NPC's backstory:  " +
                         "~" + AI_CharacterContext + "~ " +
                         "In this environment, address the user as Adventurer, " +
@@ -252,7 +262,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
 
             AI_Gen_Prompt =
             '"' +
-            "[INST] <<SYS>> You are the voice of a NPC Shopkeeper in a video game. " +
+            "[INST] <<SYS>> You are the voice of a Shopkeeper in a video game. " +
             "This is the NPC's backstory:  " +
             "~" + AI_CharacterContext + "~ " +
             "In this environment, address the user as Adventurer, " +
@@ -272,7 +282,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
         {
             AI_Gen_Prompt =
             '"' +
-            "[INST] <<SYS>> You are the voice of a NPC Shopkeeper in a video game. " +
+            "[INST] <<SYS>> You are the voice of a Shopkeeper in a video game. " +
             "This is the NPC's backstory:  " +
             "~" + AI_CharacterContext + "~ " +
             "In this environment, address the user as Adventurer, " +
@@ -340,7 +350,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
                 //Debug Log shows that this is only updated when the full Generation from the AI is complete.
                 //Note: Ask Mr Tan for follow-up
 
-                StartCoroutine(UpdateChatboxOutput(AI_Output));
+                //StartCoroutine(UpdateChatboxOutput(AI_Output));
             }
         };
 
@@ -349,7 +359,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
             if (e.Data != null)
             {
                 //Note: These are actually errors. This is just to distinguish the Text Generation from the Statistics Output
-                UnityEngine.Debug.Log(e.Data);
+                //UnityEngine.Debug.Log(e.Data);
             }
         };
 
@@ -371,7 +381,11 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
                 //Bug: e.Data and AI_Output can contain AI_Text_Generation
                 //     but the UpdateChatboxOutput(ExtractContent(AI_Output)) could end up running with a null string.
                 UnityEngine.Debug.Log("Extracting Dialogue from Data: " + AI_Output);
-                StartCoroutine(UpdateChatboxOutput(ExtractContent(AI_Output)));
+
+                //StartCoroutine(UpdateChatboxOutput(AI_Final_Output));
+
+                Shopkeeper_Chat_Output.text = ExtractContent(AI_Output);
+                previousContext = ExtractContent(AI_Output);
 
                 AI_LoadingUI.SetActive(false);
                 AI_ChatUpdated = true;
@@ -379,16 +393,14 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
         }
         while (!AI_ChatUpdated);
 
+        AI_Sentiment_Analysis.SendPredictionText(ExtractContent(AI_Output));
+
     }
 
     IEnumerator UpdateChatboxOutput(string output)
     {
         Shopkeeper_Chat_Output.text = output;
         previousContext = output;
-
-        UnityEngine.Debug.Log("Chatbox should now show Data: " + output);
-
-        UnityEngine.Debug.Log("Chatbox now showing: " + Shopkeeper_Chat_Output.text);
 
         yield return null;
     }
