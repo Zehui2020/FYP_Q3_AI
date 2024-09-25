@@ -214,6 +214,9 @@ public class PlayerController : PlayerStats
         playerRB.isKinematic = true;
 
         ChangeState(PlayerStates.Hurt);
+        if (movementController.currentState == MovementState.GroundDash || 
+            movementController.currentState == MovementState.AirDash)
+            movementController.CancelDash();
 
         yield return new WaitForSeconds(0.5f);
 
@@ -244,6 +247,12 @@ public class PlayerController : PlayerStats
     public void OnPlayerOverlap(bool overlap)
     {
         movementController.OnPlayerOverlap(overlap);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (movementController.currentState == MovementState.GroundDash || movementController.currentState == MovementState.AirDash)
+            movementController.CancelDash();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
