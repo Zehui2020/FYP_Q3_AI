@@ -66,15 +66,15 @@ public class ComfyBGManager : ComfyManager
             startGenerating = false;
             uiManager.ResetPrompt();
 
-            currentBGType++;
-
-            Debug.Log("CURRNT TYPE: " + currentBGType.ToString());
-
-            uiManager.SetStartingPrompt(currentBGType);
             if (currentBGType == PromptData.BGPrompt.Type.TotalTypes)
+            {
                 tilesetGeneration.QueueTilesetPrompt(totalStringPrompt);
-            else
-                buttonController.SpawnButtons(currentBGType);
+                return false;
+            }
+
+            currentBGType++;
+            uiManager.SetStartingPrompt(currentBGType);
+            buttonController.SpawnButtons(currentBGType);
 
             return true;
         }

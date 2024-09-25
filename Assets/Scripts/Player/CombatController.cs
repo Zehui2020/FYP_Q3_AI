@@ -43,6 +43,11 @@ public class CombatController : MonoBehaviour
 
     public void ChangeWeapon(WeaponData newData)
     {
+        attackComboCount = 0;
+
+        player.critRate.RemoveModifier(wData.critRate);
+        player.critDamage.RemoveModifier(wData.critDamage);
+
         wData = newData;
         weaponEffectAnimator.runtimeAnimatorController = wData.effectController;
         player.critRate.AddModifier(wData.critRate);

@@ -29,6 +29,8 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private List<Chest> chestsInMap;
     [SerializeField] private TilemapManager tilemapManager;
 
+    [SerializeField] private ParallaxEffect[] bgs;
+
     private List<Sprite> tileSprites = new();
 
     private Vector2 currTile;
@@ -56,6 +58,9 @@ public class WFC_MapGeneration : MonoBehaviour
 
         RandomizeSeed();
         GenerateMap();
+
+        foreach (ParallaxEffect parallaxEffect in bgs)
+            parallaxEffect.InitParallaxEffect((mapSize.y + 1) * tileSize, startingPos);
     }
 
     private void RandomizeSeed()

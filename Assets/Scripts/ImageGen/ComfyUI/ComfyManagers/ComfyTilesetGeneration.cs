@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class ComfyTilesetGeneration : ComfyManager
 {
-    private bool recievedTileset;
+    private bool recievedTileset = false;
 
     [SerializeField] private string setPrompts;
     private PromptData promptData;
@@ -18,6 +18,9 @@ public class ComfyTilesetGeneration : ComfyManager
 
     public void QueueTilesetPrompt(string playerPrompt)
     {
+        if (recievedTileset)
+            return;
+
         string finalPrompt = string.Empty;
 
         foreach (PromptData.PromptChecker promptChecker in promptData.promptCheckers)

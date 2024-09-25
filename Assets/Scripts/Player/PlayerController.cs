@@ -258,6 +258,15 @@ public class PlayerController : PlayerStats
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
+        {
+            currentInteractable = interactable;
+            interactable.OnEnterRange();
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Rope"))
@@ -753,6 +762,11 @@ public class PlayerController : PlayerStats
     {
         movementController.wallJumpCount += count;
         movementController.maxWallJumps += count;
+    }
+
+    public void PickupWeapon(WeaponData weaponData)
+    {
+        combatController.ChangeWeapon(weaponData);
     }
 
     // For dev console
