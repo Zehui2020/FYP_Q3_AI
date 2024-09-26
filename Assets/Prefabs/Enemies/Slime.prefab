@@ -475,7 +475,7 @@ Transform:
   m_GameObject: {fileID: 3834777921152008899}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 22.04, y: -0.42, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1270,6 +1270,7 @@ MonoBehaviour:
   particleVFXManager: {fileID: 1573696278602898370}
   statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  abilityStats: {fileID: 0}
   health: 80
   maxHealth: 80
   shield: 0
@@ -1279,6 +1280,7 @@ MonoBehaviour:
   shieldRegenDelay: 0
   isImmune: 0
   isFrozen: 0
+  goldUponDeath: 8
   attackSpeedMultiplier:
     baseAmount: 1
     modifiers: []
@@ -1318,6 +1320,7 @@ MonoBehaviour:
   idleDuration: 0
   patrolMovementSpeed: 0
   chaseMovementSpeed: 0
+  isEnemy: 1
   enemyClass: 1
   enemyType: 0
   canUpdate: 1
@@ -1331,7 +1334,6 @@ MonoBehaviour:
   waypoints:
   - {fileID: 2139633979204247439}
   - {fileID: 5000193587285852631}
-  goldUponDeath: 8
   currentState: 0
   jumpForce: {x: 15, y: 20}
   jumpAngle: 60
