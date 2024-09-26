@@ -46,11 +46,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
     private bool introFinished;
     private bool convoStartedAgain;
 
-    private bool introduction_inProgress;
-    private bool farewell_inProgress;
-
-    //Mood Meter, 0 to 100
-    private float mood_Counter;
+    private bool analyseText;
 
     // Start is called before the first frame update
     void Start()
@@ -59,10 +55,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
         introFinished = false;
         convoStartedAgain = false;
 
-        introduction_inProgress = false;
-        farewell_inProgress = false;
-
-        mood_Counter = 50;
+        analyseText = false;
     }
 
     // Update is called once per frame
@@ -108,7 +101,6 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
         UnityEngine.Debug.Log("Introducing...");
 
         introFinished = true;
-        introduction_inProgress = true;
     }
 
     public void AI_Chat_Response()
@@ -129,7 +121,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
                 "Here are a few examples of what your output should look like: " +
                 "<result>" + AI_Example_Output_1 + "</result> " +
                 "<result>" + AI_Example_Output_2 + "</result> " +
-                "Here is the input: <</SYS>> {The player came back for another conversation. You've already spoken to them, speak to them again.} [/INST]" +
+                "Here is the input: <</SYS>> {The same player/customer came back for another conversation. You've already met them before, address them with familiarity.} [/INST]" +
                 '"';
 
             if (!string.IsNullOrEmpty(AI_Gen_Prompt))
@@ -275,8 +267,8 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
             "<result>" + AI_Example_Output_1 + "</result> " +
             "<result>" + AI_Example_Output_2 + "</result> " +
 
-            "Your previous response was : " + "~" + previousContext + "~" +
-            "Here is your prompt: <</SYS>> {Bid the player farewell after they say to you: " + userPrompt + "} [/INST]" + '"';
+            "Your previous response was: " + "~" + previousContext + "~" +
+            "Now this is your prompt: <</SYS>> {Bid the player farewell after they say to you: " + userPrompt + "} [/INST]" + '"';
         }
         else
         {
@@ -295,8 +287,8 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
             "<result>" + AI_Example_Output_1 + "</result> " +
             "<result>" + AI_Example_Output_2 + "</result> " +
 
-            "Your previous response was : " + "~" + previousContext + "~" +
-            "Here is your prompt: <</SYS>> {Bid the player farewell.} [/INST]" + '"';
+            "Your previous response was: " + "~" + previousContext + "~" +
+            "Now this is your prompt: <</SYS>> {Bid the player farewell.} [/INST]" + '"';
         }
 
         string fullCommand_AIChat = $"cd {llamaDirectory} && llama-cli -m {modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
@@ -317,6 +309,11 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
         Shopkeeper_Chat_Output.text = "";
         Shop_Chat_Canvas.SetActive(false);
         playerController.enabled = true;
+    }
+
+    public void SetAnalyseText()
+    {
+        analyseText = true;
     }
 
     IEnumerator OpenCommandPrompt(string command)
@@ -382,8 +379,6 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
                 //     but the UpdateChatboxOutput(ExtractContent(AI_Output)) could end up running with a null string.
                 UnityEngine.Debug.Log("Extracting Dialogue from Data: " + AI_Output);
 
-                //StartCoroutine(UpdateChatboxOutput(AI_Final_Output));
-
                 Shopkeeper_Chat_Output.text = ExtractContent(AI_Output);
                 previousContext = ExtractContent(AI_Output);
 
@@ -393,18 +388,13 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
         }
         while (!AI_ChatUpdated);
 
-        AI_Sentiment_Analysis.SendPredictionText(ExtractContent(AI_Output));
-
+        if (analyseText)
+        {
+            AI_Sentiment_Analysis.SendPredictionText(ExtractContent(AI_Output));
+            analyseText = false;
+        }
     }
-
-    IEnumerator UpdateChatboxOutput(string output)
-    {
-        Shopkeeper_Chat_Output.text = output;
-        previousContext = output;
-
-        yield return null;
-    }
-
+    
     string ExtractContent(string text)
     {
         string pattern = "<result>(.*?)</result>";
