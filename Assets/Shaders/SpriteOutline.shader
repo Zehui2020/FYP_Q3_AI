@@ -401,15 +401,16 @@
 					}
 					else if(_OutlineShape == 0 && _Thickness > 0) // Contour
 					{
-						if((_OutlinePosition != 2 && _OutlineShape == 1) && c.a != 0 && // inside and frame
+						if(_OutlineShape == 0 && c.a != 0 && // inside and contour
 							(
 								IN.texcoord.y + thicknessY > 1 ||
 								IN.texcoord.y - thicknessY < 0 ||
 								IN.texcoord.x + thicknessX > 1 ||
-								IN.texcoord.x - thicknessX < 0 || 
+								IN.texcoord.x - thicknessX < 0 ||
 								CheckOriginalSpriteTexture(IN.texcoord, true)
 							)
 						)
+
 						{
 							return outlineC;
 						}

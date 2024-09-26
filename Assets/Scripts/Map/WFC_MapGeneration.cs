@@ -301,8 +301,7 @@ public class WFC_MapGeneration : MonoBehaviour
                 doorTransform = doors[i];
         }
         // set door
-        GameObject door = Instantiate(doorPrefab, doorTransform, false);
-        Debug.Log(doorTransform.position);
+        Instantiate(doorPrefab, doorTransform, false);
     }
 
     private List<GameObject> GetAvailableBorderTilesList(Vector2 checkTilePos, Vector2 direction)

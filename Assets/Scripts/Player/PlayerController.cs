@@ -69,7 +69,10 @@ public class PlayerController : PlayerStats
         itemManager.InitItemManager();
         movementController.InitializeMovementController(animationManager);
         combatController.InitializeCombatController(this);
-        abilityController.InitializeAbilityController();
+
+        if (abilityController != null)
+            abilityController.InitializeAbilityController();
+
         playerEffectsController.InitializePlayerEffectsController();
         if (proceduralMapGenerator != null)
         {
@@ -92,7 +95,8 @@ public class PlayerController : PlayerStats
         if (health <= 0)
             return;
 
-        goldText.text = gold.ToString();
+        if (goldText != null)
+            goldText.text = gold.ToString();
 
         statusEffectManager.UpdateStatusEffects();
 
@@ -198,12 +202,15 @@ public class PlayerController : PlayerStats
             }
         }
 
-        for (int i = 0; i < abilityController.abilities.Count; i++)
+        if (abilityController != null)
         {
-            if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
-                abilityController.HandleAbility(i);
-            else if (i == 9 && Input.GetKeyDown(KeyCode.Alpha0))
-                abilityController.HandleAbility(i);
+            for (int i = 0; i < abilityController.abilities.Count; i++)
+            {
+                if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
+                    abilityController.HandleAbility(i);
+                else if (i == 9 && Input.GetKeyDown(KeyCode.Alpha0))
+                    abilityController.HandleAbility(i);
+            }
         }
     }
 
@@ -315,13 +322,14 @@ public class PlayerController : PlayerStats
             playerEffectsController.ShakeCamera(4f, 5f, 0.2f);
             playerEffectsController.Pulse(0.5f, 3f, 0f, 0.3f, true);
 
-            if (movementController.currentState == MovementState.Plunge ||
-                movementController.currentState == MovementState.LedgeGrab)
-                return true;
-
-            if (hurtRoutine != null)
-                StopCoroutine(hurtRoutine);
-            hurtRoutine = StartCoroutine(HurtRoutine());
+            if (movementController.currentState != MovementState.Plunge &&
+                movementController.currentState != MovementState.LedgeGrab &&
+                movementController.isGrounded)
+            {
+                if (hurtRoutine != null)
+                    StopCoroutine(hurtRoutine);
+                hurtRoutine = StartCoroutine(HurtRoutine());
+            }
 
             combatController.ResetComboInstantly();
             animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);

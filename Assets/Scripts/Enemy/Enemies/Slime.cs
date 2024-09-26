@@ -9,6 +9,7 @@ public class Slime : Enemy
         Jump,
         Attack,
         Teleport,
+        Hurt,
         Die
     }
     public State currentState;
@@ -42,6 +43,7 @@ public class Slime : Enemy
 
         onPlayerInChaseRange += () => { isPatroling = false; aiNavigation.SetTarget(player.transform); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
+        onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
     }
 
     private void ChangeState(State newState)
@@ -70,6 +72,9 @@ public class Slime : Enemy
                 break;
             case State.Teleport:
                 animator.CrossFade(SlimeTeleportStart, 0f);
+                break;
+            case State.Hurt:
+                //animator.CrossFade(SlimeIdleAnim, 0f);
                 break;
             case State.Die:
                 animator.speed = 1;

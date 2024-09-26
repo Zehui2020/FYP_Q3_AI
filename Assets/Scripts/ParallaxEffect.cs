@@ -50,10 +50,13 @@ public class ParallaxEffect : MonoBehaviour
         transform.position = new Vector3(startPos.x + dist, transform.position.y, 0);
 
         // Parallax Y
+        if (mapSizeY == 0)
+            return;
+
         float diff = transform.position.y - mapOriginY;
         float offsetY = Mathf.Abs(transform.position.y - mapSizeY) / mapSizeY * YDiff;
         offsetY = diff < 0 ? offsetY : -offsetY;
         offsetY = Mathf.Clamp(offsetY, -YDiff, YDiff);
-        transform.position = new Vector3(transform.position.x, followPos.transform.position.y + offsetY, 0);
+        transform.position = new Vector3(transform.position.x, followPos.transform.position.y + offsetY, 0); 
     }
 }

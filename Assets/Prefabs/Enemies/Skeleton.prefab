@@ -1054,7 +1054,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.13861054}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1065,7 +1065,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.5, y: 1.7705427}
+  m_Size: {x: 1.5, y: 2.6726108}
   m_EdgeRadius: 0
 --- !u!1 &6473628999490704748
 GameObject:
@@ -1449,6 +1449,7 @@ MonoBehaviour:
   particleVFXManager: {fileID: 8616100626519332858}
   statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  abilityStats: {fileID: 0}
   health: 100
   maxHealth: 100
   shield: 100
@@ -1512,6 +1513,7 @@ MonoBehaviour:
   waypoints:
   - {fileID: 7664433895671088423}
   - {fileID: 8630401135501763257}
+  hurtValue: 80
   currentState: 0
   lungeForce: {x: 20, y: 15}
   lungeAngle: 45
@@ -1756,7 +1758,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.22272682}
+  m_Offset: {x: 0, y: 0.34311008}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1767,7 +1769,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.7105594}
+  m_Size: {x: 1, y: 2.6673775}
   m_EdgeRadius: 0
 --- !u!1 &8115716494361646535
 GameObject:

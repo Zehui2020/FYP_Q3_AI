@@ -586,6 +586,7 @@ public class MovementController : MonoBehaviour
 
         ChangeState(MovementState.Plunge);
         StopGrappling();
+        CancelDash();
         plungeRoutine = StartCoroutine(PlungeRoutine());
 
         return true;

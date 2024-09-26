@@ -1,32 +1,31 @@
+using System.Collections;
 using UnityEngine;
 
-public class Skeleton : Enemy
+public class Scorpion : Enemy
 {
     public enum State
     {
         Idle,
         Patrol,
         Deciding,
-        Scratch,
-        Lunge,
-        Land,
+        Melee,
+        Throw,
         Hurt,
         Die
     }
     public State currentState;
 
-    private readonly int IdleAnim = Animator.StringToHash("SkeletonIdle");
-    private readonly int RunAnim = Animator.StringToHash("SkeletonRun");
-    private readonly int ScratchAnim = Animator.StringToHash("SkeletonScratch");
-    private readonly int LungeAnim = Animator.StringToHash("SkeletonLunge");
-    private readonly int LandAnim = Animator.StringToHash("SkeletonLand");
-    private readonly int HurtAnim = Animator.StringToHash("SkeletonHurt");
-    private readonly int DieAnim = Animator.StringToHash("SkeletonDie");
+    private readonly int IdleAnim = Animator.StringToHash("ScorpionIdle");
+    private readonly int RunAnim = Animator.StringToHash("ScorpionRun");
+    private readonly int MeleeAnim = Animator.StringToHash("ScorpionMelee");
+    private readonly int ThrowAnim = Animator.StringToHash("ScorpionThrow");
+    private readonly int HurtAnim = Animator.StringToHash("ScorpionHurt");
+    private readonly int DieAnim = Animator.StringToHash("ScorpionDie");
 
-    [Header("Skeleton Stats")]
-    [SerializeField] private Vector2 lungeForce;
-    [SerializeField] private float lungeAngle;
-    [SerializeField] private float scratchRange;
+    [Header("Scorpion Stats")]
+    [SerializeField] private float meleeRange;
+    [SerializeField] private float throwCooldown;
+    private bool canThrow;
 
     public override void InitializeEnemy()
     {
@@ -38,7 +37,7 @@ public class Skeleton : Enemy
         onFinishIdle += () => { ChangeState(State.Patrol); };
         onPlayerInChaseRange += () => { ChangeState(State.Deciding); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
-        OnBreached += (multiplier) => { ChangeState(State.Hurt); };
+        OnBreached += (multiplier) => { ChangeState(State.Idle); };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
     }
 
@@ -59,18 +58,13 @@ public class Skeleton : Enemy
                 aiNavigation.StopNavigation();
                 AttackDecision();
                 break;
-            case State.Scratch:
+            case State.Melee:
                 aiNavigation.StopNavigation();
-                animator.Play(ScratchAnim, -1, 0f);
+                animator.Play(MeleeAnim, -1, 0f);
                 break;
-            case State.Lunge:
+            case State.Throw:
                 aiNavigation.StopNavigation();
-                animator.Play(LungeAnim, -1, 0f);
-                break;
-            case State.Land:
-                enemyRB.velocity = Vector2.zero;
-                UpdatePlayerDirection();
-                animator.Play(LandAnim, -1, 0f);
+                animator.Play(ThrowAnim, -1, 0f);
                 break;
             case State.Hurt:
                 aiNavigation.StopNavigation();
@@ -102,8 +96,8 @@ public class Skeleton : Enemy
                 break;
         }
 
-        if (currentState != State.Scratch &&
-            currentState != State.Lunge)
+        if (currentState != State.Melee &&
+            currentState != State.Throw)
             UpdatePlayerDirection();
     }
 
@@ -114,23 +108,16 @@ public class Skeleton : Enemy
         else
             transform.localScale = new Vector3(-1, 1, 1);
 
-        Vector2 dir = transform.localScale.x < 0 ? -transform.right : transform.right;
-
-        if (Physics2D.Raycast(transform.position, dir.normalized, scratchRange, playerLayer))
-            ChangeState(State.Scratch);
+        if (Vector2.Distance(player.transform.position, transform.position) <= meleeRange)
+            ChangeState(State.Melee);
         else
-            ChangeState(State.Lunge);
+            ChangeState(State.Throw);
     }
 
-    public void Lunge()
-    {
-        float angleInRadians = lungeAngle * Mathf.Deg2Rad;
-        Vector2 direction = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians)).normalized;
-        if (transform.localScale.x < 0)
-            direction = new Vector2(-direction.x, direction.y);
+    //private IEnumerator ThrowRoutine()
+    //{
 
-        enemyRB.AddForce(direction * lungeForce, ForceMode2D.Impulse);
-    }
+    //}
 
     public override void Knockback(float initialSpeed, float distance)
     {
@@ -146,14 +133,5 @@ public class Skeleton : Enemy
             ChangeState(State.Die);
 
         return tookDamage;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (!Utility.Instance.CheckLayer(collision.gameObject, groundLayer) || currentState != State.Lunge)
-            return;
-
-        ChangeState(State.Land);
-        OnDamageEventEnd(0);
     }
 }

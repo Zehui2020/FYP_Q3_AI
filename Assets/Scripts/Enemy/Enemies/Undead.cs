@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -11,6 +12,7 @@ public class Undead : Enemy
         Chase,
         Attack,
         Teleport,
+        Hurt,
         Die
     }
     public State currentState;
@@ -37,6 +39,8 @@ public class Undead : Enemy
         onPlayerInChaseRange += () => { ChangeState(State.Chase); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
         OnBreached += (multiplier) => { ChangeState(State.Idle); };
+
+        onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
     }
 
     private void ChangeState(State newState)
@@ -64,6 +68,11 @@ public class Undead : Enemy
                 UpdatePlayerDirection();
                 aiNavigation.StopNavigation();
                 StartCoroutine(TeleportRoutine());
+                break;
+            case State.Hurt:
+                //aiNavigation.StopNavigation();
+                //animator.Play(IdleAnim, -1, 0f);
+                //ChangeState(State.Idle);
                 break;
             case State.Die:
                 animator.speed = 1;
