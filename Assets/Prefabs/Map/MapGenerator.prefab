@@ -49,13 +49,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allTilePrefabs:
   - {fileID: 4450227809201839608, guid: 2d35d05d5af80bd4b8a6e8e35da7f026, type: 3}
-  - {fileID: 1155350927852064588, guid: 70c332645cdf3d54480acf3c396c9093, type: 3}
-  - {fileID: 3203044740429275775, guid: 8c8c136228bff784b8813960b479950e, type: 3}
   - {fileID: 4352191659983094025, guid: 3a78eee6d6a0aaf4893557e4dd39d441, type: 3}
   - {fileID: 1460982275002135070, guid: 5386e21e35952f540a77313be28ab974, type: 3}
   - {fileID: 5969996894269893911, guid: c40a710bd265d5040a17dc4ba0c7992e, type: 3}
   - {fileID: 5826226428017990818, guid: c53140902d515fa43908650c81c6fb95, type: 3}
-  - {fileID: 2243080073317220501, guid: a0746599c574966438e10f5972922ec8, type: 3}
   - {fileID: 4808904068151551855, guid: 42a8d01a5e97d91499591b37d2a59b60, type: 3}
   - {fileID: 7686815597531899882, guid: e8755788598f43a42839afc8e418f9a7, type: 3}
   - {fileID: 4860586804391705185, guid: ba2d4cf3b02f1534da87f351f3ebfb90, type: 3}
@@ -74,10 +71,10 @@ MonoBehaviour:
   - {fileID: 1482475370514722715, guid: 2dc6dd3e214b5bf49aeb84b840cb375f, type: 3}
   - {fileID: 8850421551901978361, guid: ee830e66552b5c44fa46bbd187db15be, type: 3}
   - {fileID: 1368297007948134600, guid: 7f6ed0026afd3784eb2ba18e57fc8f63, type: 3}
+  - {fileID: 5013750763619678644, guid: 8154e31318d97654e8e8746113447ba0, type: 3}
   - {fileID: 8978470572339161771, guid: f3ce89c08d9357b42a9531dc967a2c2f, type: 3}
   - {fileID: 1955355487321799163, guid: 6affff973b397bd4e9d2a7ae1bb6ffc4, type: 3}
   - {fileID: 8008763548376602750, guid: 58deb613e418d0c42849be396cbcbd4b, type: 3}
-  - {fileID: 4102275637862436066, guid: 2580c5b1520a4fe49a0a00a4371942fa, type: 3}
   - {fileID: 2201529232221878568, guid: da104cbf8751dc94a84d1abcd86de9f0, type: 3}
   - {fileID: 3745716116628187415, guid: de6024a7fa0848c41a0e310afca136f3, type: 3}
   - {fileID: 1495822614930500698, guid: ef4309f954e63fc44bf6a1b8cfe9a982, type: 3}
@@ -120,10 +117,6 @@ MonoBehaviour:
   - {fileID: 8727535129727871693, guid: b56c7e33e1e612c428d3a6550bb4f30a, type: 3}
   - {fileID: 5450722941086569708, guid: 20971a8d9f746e64c86375d7f1118692, type: 3}
   - {fileID: 8726915468765883158, guid: ba4224d8fab271b478c13a18fe89577e, type: 3}
-  - {fileID: 1155350927852064588, guid: 70c332645cdf3d54480acf3c396c9093, type: 3}
-  - {fileID: 3203044740429275775, guid: 8c8c136228bff784b8813960b479950e, type: 3}
-  - {fileID: 2243080073317220501, guid: a0746599c574966438e10f5972922ec8, type: 3}
-  - {fileID: 4102275637862436066, guid: 2580c5b1520a4fe49a0a00a4371942fa, type: 3}
 --- !u!114 &6937396380385949449
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,9 +133,15 @@ MonoBehaviour:
   tileSize: 20
   borderThickness: 1
   mapSeed: 0
+  chestSpawn: {fileID: 11400000, guid: d576ae2423fdfac4b961ecdb0fc557b3, type: 2}
   tileController: {fileID: 7844018383726686566}
   startingTilePrefabs:
   - {fileID: 4352191659983094025, guid: b1ed6dddaeef6a04c83f0aa50c3e4833, type: 3}
+  allTilePrefabs:
+  - {fileID: 1155350927852064588, guid: 70c332645cdf3d54480acf3c396c9093, type: 3}
+  - {fileID: 3203044740429275775, guid: 8c8c136228bff784b8813960b479950e, type: 3}
+  - {fileID: 2243080073317220501, guid: a0746599c574966438e10f5972922ec8, type: 3}
+  - {fileID: 4102275637862436066, guid: 2580c5b1520a4fe49a0a00a4371942fa, type: 3}
   topBorderTiles:
   - {fileID: 4352191659983094025, guid: 3a78eee6d6a0aaf4893557e4dd39d441, type: 3}
   - {fileID: 1460982275002135070, guid: 5386e21e35952f540a77313be28ab974, type: 3}
@@ -233,9 +232,8 @@ MonoBehaviour:
   doorPrefab: {fileID: 4820102909102417710, guid: 86d530a28d4d99a439742af9f6956792, type: 3}
   chestsInMap: []
   tilemapManager: {fileID: 2109268654121522328}
-  bgs: []
-  mapTiles: []
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  bgs: []
 --- !u!114 &4252948386430941580
 MonoBehaviour:
   m_ObjectHideFlags: 0

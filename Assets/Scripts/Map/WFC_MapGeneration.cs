@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -10,9 +9,11 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private float tileSize;
     [SerializeField] private int borderThickness;
     [SerializeField] private int mapSeed;
+    [SerializeField] private ChestSpawnChance chestSpawn;
     [Header("Main Map Generation")]
     [SerializeField] private MapTileController tileController;
     [SerializeField] private List<GameObject> startingTilePrefabs;
+    [SerializeField] private List<GameObject> allTilePrefabs;
     [Header("Border Generation")]
     [Header("Edges")]
     [SerializeField] private List<GameObject> topBorderTiles;
@@ -30,19 +31,17 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private GameObject doorPrefab;
     [SerializeField] private List<Chest> chestsInMap;
     [SerializeField] private TilemapManager tilemapManager;
-
+    [SerializeField] private ItemStats itemStats;
     [SerializeField] private ParallaxEffect[] bgs;
 
     private List<Sprite> tileSprites = new();
-    private List<GameObject> allTilePrefabs;
     private Vector2 currTile;
     private Vector2 startingPos;
-    [SerializeField] private List<MapTile> mapTiles = new List<MapTile>();
+    private List<MapTile> mapTiles = new List<MapTile>();
     private List<Vector2> collapsableTiles = new List<Vector2>();
     private List<Vector2> collapsedTiles = new List<Vector2>();
     private List<int> collapsableTileNum = new List<int>();
 
-    [SerializeField] private ItemStats itemStats;
 
     public void InitMapGenerator()
     {
@@ -67,7 +66,7 @@ public class WFC_MapGeneration : MonoBehaviour
 
     public void GenerateMap()
     {
-        allTilePrefabs = tileController.allTilePrefabs;
+        allTilePrefabs.AddRange(tileController.allTilePrefabs);
         mapSize -= Vector2.one * 2;
         // init maptiles list
         for (int i = 0; i < mapSize.x * mapSize.y; i++)
@@ -88,7 +87,7 @@ public class WFC_MapGeneration : MonoBehaviour
         // set borders
         SetBorderTiles();
         // get list of chests
-        GetAllChests();
+        InitChests();
         // set door
         InitDoor();
 
@@ -262,15 +261,47 @@ public class WFC_MapGeneration : MonoBehaviour
         AstarPath.active.Scan();
     }
 
-    private void GetAllChests()
+    private void InitChests()
     {
+        // get all possible chest transforms
+        List<Transform> chests = new List<Transform>();
         for (int i = 0; i < mapTiles.Count; i++)
         {
-            if (mapTiles[i].chest != null)
-                chestsInMap.Add(mapTiles[i].chest);
+            if (mapTiles[i].chestTransform != null)
+                chests.Add(mapTiles[i].chestTransform);
+        }
+        // finalize chest amt
+        for (int i = chests.Count; i > chestSpawn.maxChests; i--)
+        {
+            chests.RemoveAt(Random.Range(0, chests.Count));
+        }
+        // place chests
+        if (chests.Count == 0)
+            return;
+
+        // legendary
+        int randomChestIndex = Random.Range(0, chests.Count);
+        chestsInMap.Add(Instantiate(chestSpawn.chestTypes[0], chests[randomChestIndex], false).GetComponent<Chest>());
+        chests.RemoveAt(randomChestIndex);
+
+        // other chests
+        while (chests.Count > 0)
+        {
+            int chestChance = Random.Range(0, 100) + 1;
+            int count = 0;
+            for (int i = 1; i < chestSpawn.chestTypes.Count; i++)
+            {
+                count += chestSpawn.spawnChances[i];
+                if (chestChance < count)
+                {
+                    randomChestIndex = Random.Range(0, chests.Count);
+                    chestsInMap.Add(Instantiate(chestSpawn.chestTypes[i], chests[randomChestIndex], false).GetComponent<Chest>());
+                    chests.RemoveAt(randomChestIndex);
+                }
+            }
         }
 
-        // Black Card
+        //Black Card
         for (int i = 0; i < itemStats.blackCardChestAmount; i++)
             chestsInMap[i].SetCost(0);
     }
@@ -288,12 +319,11 @@ public class WFC_MapGeneration : MonoBehaviour
         // choose furthest door
         for (int i = 0; i < doors.Count; i++)
         {
-            if (doorTransform == null || Vector2.Distance(doorTransform.position, transform.position) < Vector2.Distance(doors[i].position, transform.position))
+            if (doorTransform == null || Vector2.Distance(doorTransform.position, PlayerController.Instance.transform.position) < Vector2.Distance(doors[i].position, PlayerController.Instance.transform.position))
                 doorTransform = doors[i];
         }
         // set door
-        GameObject door = Instantiate(doorPrefab, doorTransform, false);
-        Debug.Log(doorTransform.position);
+        Instantiate(doorPrefab, doorTransform, false);
     }
 
     private List<GameObject> GetAvailableBorderTilesList(Vector2 checkTilePos, Vector2 direction)
@@ -390,26 +420,22 @@ public class WFC_MapGeneration : MonoBehaviour
         List<string> NameRight = new List<string>();
         foreach (GameObject obj in availableTilesFromUp)
         {
-            if (obj.name.Contains("(Clone)"))
-                obj.name = obj.name.Replace("(Clone)", "").Trim();
+            obj.name = obj.name.Replace("(Clone)", "").Trim();
             NameUp.Add(obj.name);
         }
         foreach (GameObject obj in availableTilesFromDown)
         {
-            if (obj.name.Contains("(Clone)"))
-                obj.name = obj.name.Replace("(Clone)", "").Trim();
+            obj.name = obj.name.Replace("(Clone)", "").Trim();
             NameDown.Add(obj.name);
         }
         foreach (GameObject obj in availableTilesFromLeft)
         {
-            if (obj.name.Contains("(Clone)"))
-                obj.name = obj.name.Replace("(Clone)", "").Trim();
+            obj.name = obj.name.Replace("(Clone)", "").Trim();
             NameLeft.Add(obj.name);
         }
         foreach (GameObject obj in availableTilesFromRight)
         {
-            if (obj.name.Contains("(Clone)"))
-                obj.name = obj.name.Replace("(Clone)", "").Trim();
+            obj.name = obj.name.Replace("(Clone)", "").Trim();
             NameRight.Add(obj.name);
         }
 
