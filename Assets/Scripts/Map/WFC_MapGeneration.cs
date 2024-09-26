@@ -294,6 +294,8 @@ public class WFC_MapGeneration : MonoBehaviour
                 count += chestSpawn.spawnChances[i];
                 if (chestChance < count)
                 {
+                    if (chests.Count == 0)
+                        break;
                     randomChestIndex = Random.Range(0, chests.Count);
                     chestsInMap.Add(Instantiate(chestSpawn.chestTypes[i], chests[randomChestIndex], false).GetComponent<Chest>());
                     chests.RemoveAt(randomChestIndex);

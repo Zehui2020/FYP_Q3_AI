@@ -18,5 +18,11 @@ public class MapTile : MonoBehaviour
 
         foreach (Tilemap tilemap in tilemaps)
             tilemap.SwapTile(targetTile, tile);
+
+        foreach (Transform obj in GetComponentsInChildren<Transform>())
+        {
+            if (obj.name.Contains("Chest"))
+                chestTransform = obj;
+        }
     }
 }
