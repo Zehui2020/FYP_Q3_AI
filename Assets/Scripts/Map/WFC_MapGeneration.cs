@@ -44,21 +44,11 @@ public class WFC_MapGeneration : MonoBehaviour
 
     [SerializeField] private ItemStats itemStats;
 
-    private void Update()
-    {
-        // debug inputs
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            RandomizeSeed();
-            GenerateMap();
-        }
-    }
-
     public void InitMapGenerator()
     {
         tileSprites = tilemapManager.GetAllTileSprites();
 
-        RandomizeSeed();
+        SetSeed();
         tileController.InitMapTiles();
         GenerateMap();
 
@@ -67,15 +57,11 @@ public class WFC_MapGeneration : MonoBehaviour
         SetAStarNavMesh();
     }
 
-    private void RandomizeSeed()
+    public void SetSeed()
     {
-        mapSeed = Random.Range(0, 1000000000);
-        Random.InitState(mapSeed);
-    }
+        if (mapSeed == 0)
+            mapSeed = Random.Range(0, 1000000000);
 
-    public void SetSeed(int seed)
-    {
-        mapSeed = seed;
         Random.InitState(mapSeed);
     }
 
@@ -105,6 +91,9 @@ public class WFC_MapGeneration : MonoBehaviour
         GetAllChests();
         // set door
         InitDoor();
+
+        mapSize += Vector2.one * 2;
+        Debug.Log("Generation Complete!");
     }
 
     private void SetNextTile()
@@ -134,6 +123,8 @@ public class WFC_MapGeneration : MonoBehaviour
         currTile = tileToCollapse;
         // check neighbouring tiles for placeable tiles in current tile
         List<GameObject> availableTiles = GetAvailableTilesList();
+        if (availableTiles.Count == 0)
+            Debug.Log(currTile);
         // choose random tile
         GameObject tileToSet = availableTiles[Random.Range(0, availableTiles.Count)];
         if (tileToSet == null)
@@ -392,16 +383,46 @@ public class WFC_MapGeneration : MonoBehaviour
         List<GameObject> availableTilesFromDown = GetAvailableTilesListFromNeighbour(Vector2.down);
         List<GameObject> availableTilesFromLeft = GetAvailableTilesListFromNeighbour(Vector2.left);
         List<GameObject> availableTilesFromRight = GetAvailableTilesListFromNeighbour(Vector2.right);
+
+        List<string> NameUp = new List<string>();
+        List<string> NameDown = new List<string>();
+        List<string> NameLeft = new List<string>();
+        List<string> NameRight = new List<string>();
+        foreach (GameObject obj in availableTilesFromUp)
+        {
+            if (obj.name.Contains("(Clone)"))
+                obj.name = obj.name.Replace("(Clone)", "").Trim();
+            NameUp.Add(obj.name);
+        }
+        foreach (GameObject obj in availableTilesFromDown)
+        {
+            if (obj.name.Contains("(Clone)"))
+                obj.name = obj.name.Replace("(Clone)", "").Trim();
+            NameDown.Add(obj.name);
+        }
+        foreach (GameObject obj in availableTilesFromLeft)
+        {
+            if (obj.name.Contains("(Clone)"))
+                obj.name = obj.name.Replace("(Clone)", "").Trim();
+            NameLeft.Add(obj.name);
+        }
+        foreach (GameObject obj in availableTilesFromRight)
+        {
+            if (obj.name.Contains("(Clone)"))
+                obj.name = obj.name.Replace("(Clone)", "").Trim();
+            NameRight.Add(obj.name);
+        }
+
         // get list of tiles that are available in each list
         List<GameObject> availableTiles = new List<GameObject>();
         List<GameObject> tilesToRemove = new List<GameObject>();
         availableTiles.AddRange(allTilePrefabs);
         for (int i = 0; i < availableTiles.Count; i++)
         {
-            if (!availableTilesFromUp.Contains(availableTiles[i]) || 
-                !availableTilesFromDown.Contains(availableTiles[i]) || 
-                !availableTilesFromLeft.Contains(availableTiles[i]) || 
-                !availableTilesFromRight.Contains(availableTiles[i]))
+            if (!NameUp.Contains(availableTiles[i].name) ||
+                !NameDown.Contains(availableTiles[i].name) ||
+                !NameLeft.Contains(availableTiles[i].name) ||
+                !NameRight.Contains(availableTiles[i].name))
             {
                 tilesToRemove.Add(availableTiles[i]);
             }
