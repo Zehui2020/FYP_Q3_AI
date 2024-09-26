@@ -1,43 +1,105 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ScorpionBomb : PooledObject
 {
     private Rigidbody2D bombRB;
-    private float lifetime;
+    private BoxCollider2D bombCol;
+    private Animator animator;
+
+    [SerializeField] private LayerMask groundLayer;
+
     [SerializeField] private float radius;
-    [SerializeField] private LayerMask playerLayer;
+    [SerializeField] private float speed;
+    [SerializeField] private float maxArcHeight;
 
     private Scorpion thrower;
-    private Vector2 targetPos;
+    private PlayerController player;
+    private Vector3 targetPos;
 
-    public void InitScorpionBomb(Scorpion thrower, Vector2 targetPos, float lifetime, Vector2 direction)
+    private bool isParried = false;
+
+    public override void Init()
     {
+        base.Init();
         bombRB = GetComponent<Rigidbody2D>();
-        this.lifetime = lifetime;
-        this.thrower = thrower;
-        this.targetPos = targetPos;
+        bombCol = GetComponent<BoxCollider2D>();
+        animator = GetComponent<Animator>();
     }
 
-    public IEnumerator ExplodeRoutine()
+    public void InitScorpionBomb(Scorpion thrower, Vector2 startPos, Vector2 targetPos)
     {
-        yield return new WaitForSeconds(lifetime);
+        this.thrower = thrower;
 
-        PlayerController player = Physics2D.OverlapCircle(transform.position, radius, playerLayer).GetComponent<PlayerController>();
+        player = PlayerController.Instance;
 
-        if (player != null)
+        LaunchBomb(startPos, targetPos, 1);
+    }
+
+    private void LaunchBomb(Vector2 startPos, Vector2 targetPos, float arcModifier)
+    {
+        bombCol.isTrigger = true;
+        this.targetPos = targetPos;
+
+        float maxArc = maxArcHeight * arcModifier;
+        // Check for ground and adjust arc height if necessary
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.down * maxArc, maxArc, groundLayer);
+        if (hit)
         {
-            float damage = thrower.CalculateDamageDealt(player, BaseStats.Damage.DamageSource.Normal, out bool crit, out DamagePopup.DamageType damageType);
-            player.TakeDamage(thrower, new BaseStats.Damage(damage), crit, player.transform.position, damageType);
+            maxArc = hit.distance;
+            Debug.Log(hit.collider.name);
+        }
+
+        float distance = targetPos.x - startPos.x;
+        float peakHeight = Mathf.Max(startPos.y, targetPos.y) + maxArc;
+
+        float gravity = Mathf.Abs(Physics2D.gravity.y);
+        float vy = Mathf.Sqrt(2 * gravity * (peakHeight - startPos.y));
+
+        float timeToPeak = vy / gravity;
+        float totalTime = 2 * timeToPeak;
+
+        float vx = distance / totalTime;
+        Vector2 velocity = new Vector2(vx, vy);
+        bombRB.velocity = velocity;
+    }
+
+    public void Explode()
+    {
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius);
+
+        foreach (Collider2D hit in hits)
+        {
+            if (!hit.TryGetComponent<BaseStats>(out BaseStats target))
+                continue;
+
+            float damage = thrower.CalculateDamageDealt(target, BaseStats.Damage.DamageSource.Normal, out bool crit, out DamagePopup.DamageType damageType);
+            target.TakeDamage(thrower, new BaseStats.Damage(damage), crit, target.transform.position, damageType);
         }
 
         Release();
         gameObject.SetActive(false);
+        animator.ResetTrigger("detonate");
+        isParried = false;
     }
 
     private void Update()
     {
+        if (Vector3.Distance(transform.position, targetPos) <= 3f && 
+            Physics2D.Raycast(transform.position, Vector2.down, 0.2f + bombCol.size.x, groundLayer))
+        {
+            animator.SetTrigger("detonate");
+            bombCol.isTrigger = false;
+        }
 
+        if (Physics2D.OverlapCircle(transform.position, bombCol.size.x / 2f) && 
+            player.immuneType == BaseStats.ImmuneType.Parry &&
+            !isParried)
+        {
+            isParried = true;
+            LaunchBomb(transform.position, thrower.transform.position, 0.4f);
+        }
     }
 }

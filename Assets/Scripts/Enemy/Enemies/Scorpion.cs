@@ -1,3 +1,4 @@
+using DesignPatterns.ObjectPool;
 using System.Collections;
 using UnityEngine;
 
@@ -7,7 +8,6 @@ public class Scorpion : Enemy
     {
         Idle,
         Patrol,
-        Deciding,
         Melee,
         Throw,
         Hurt,
@@ -16,7 +16,7 @@ public class Scorpion : Enemy
     public State currentState;
 
     private readonly int IdleAnim = Animator.StringToHash("ScorpionIdle");
-    private readonly int RunAnim = Animator.StringToHash("ScorpionRun");
+    private readonly int RunAnim = Animator.StringToHash("ScorpionWalk");
     private readonly int MeleeAnim = Animator.StringToHash("ScorpionMelee");
     private readonly int ThrowAnim = Animator.StringToHash("ScorpionThrow");
     private readonly int HurtAnim = Animator.StringToHash("ScorpionHurt");
@@ -25,7 +25,8 @@ public class Scorpion : Enemy
     [Header("Scorpion Stats")]
     [SerializeField] private float meleeRange;
     [SerializeField] private float throwCooldown;
-    private bool canThrow;
+    [SerializeField] private Transform bombSpawnPos;
+    private bool canThrow = true;
 
     public override void InitializeEnemy()
     {
@@ -35,7 +36,6 @@ public class Scorpion : Enemy
 
         onReachWaypoint += () => { ChangeState(State.Idle); };
         onFinishIdle += () => { ChangeState(State.Patrol); };
-        onPlayerInChaseRange += () => { ChangeState(State.Deciding); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
         OnBreached += (multiplier) => { ChangeState(State.Idle); };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
@@ -54,15 +54,13 @@ public class Scorpion : Enemy
             case State.Patrol:
                 animator.CrossFade(RunAnim, 0f);
                 break;
-            case State.Deciding:
-                aiNavigation.StopNavigation();
-                AttackDecision();
-                break;
             case State.Melee:
+                UpdateDirectionToPlayer();
                 aiNavigation.StopNavigation();
                 animator.Play(MeleeAnim, -1, 0f);
                 break;
             case State.Throw:
+                UpdateDirectionToPlayer();
                 aiNavigation.StopNavigation();
                 animator.Play(ThrowAnim, -1, 0f);
                 break;
@@ -83,6 +81,11 @@ public class Scorpion : Enemy
     {
         base.UpdateEnemy();
 
+        if (Vector2.Distance(player.transform.position, transform.position) <= meleeRange && currentState != State.Melee && currentState != State.Throw)
+            ChangeState(State.Melee);
+        else if (canThrow && Physics2D.OverlapCircle(transform.position, chaseRange, playerLayer) && currentState != State.Throw && currentState != State.Melee)
+            ChangeState(State.Throw);
+
         switch (currentState)
         {
             case State.Idle:
@@ -98,26 +101,26 @@ public class Scorpion : Enemy
 
         if (currentState != State.Melee &&
             currentState != State.Throw)
-            UpdatePlayerDirection();
+            UpdateMovementDirection();
     }
 
-    private void AttackDecision()
+    public void ThrowBomb()
     {
-        if (transform.position.x < player.transform.position.x)
-            transform.localScale = new Vector3(1, 1, 1);
-        else
-            transform.localScale = new Vector3(-1, 1, 1);
-
-        if (Vector2.Distance(player.transform.position, transform.position) <= meleeRange)
-            ChangeState(State.Melee);
-        else
-            ChangeState(State.Throw);
+        StartCoroutine(ThrowRoutine());
     }
 
-    //private IEnumerator ThrowRoutine()
-    //{
+    private IEnumerator ThrowRoutine()
+    {
+        canThrow = false;
 
-    //}
+        ScorpionBomb bomb = ObjectPool.Instance.GetPooledObject("ScorpionBomb", true) as ScorpionBomb;
+        bomb.transform.position = bombSpawnPos.position;
+        bomb.InitScorpionBomb(this, bombSpawnPos.position, PlayerController.Instance.transform.position);
+
+        yield return new WaitForSeconds(throwCooldown);
+
+        canThrow = true;
+    }
 
     public override void Knockback(float initialSpeed, float distance)
     {

@@ -69,7 +69,7 @@ public class Skeleton : Enemy
                 break;
             case State.Land:
                 enemyRB.velocity = Vector2.zero;
-                UpdatePlayerDirection();
+                UpdateMovementDirection();
                 animator.Play(LandAnim, -1, 0f);
                 break;
             case State.Hurt:
@@ -104,7 +104,7 @@ public class Skeleton : Enemy
 
         if (currentState != State.Scratch &&
             currentState != State.Lunge)
-            UpdatePlayerDirection();
+            UpdateMovementDirection();
     }
 
     private void AttackDecision()

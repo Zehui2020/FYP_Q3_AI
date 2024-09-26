@@ -40,7 +40,7 @@ public class Enemy : EnemyStats
     private Coroutine idleRoutine;
     private Coroutine knockbackRoutine;
 
-    private bool isInCombat = false;
+    protected bool isInCombat = false;
     private float previousAnimSpeed;
     private int currentShield;
 
@@ -214,12 +214,17 @@ public class Enemy : EnemyStats
         idleRoutine = null;
     }
 
-    protected void UpdatePlayerDirection()
+    protected void UpdateMovementDirection()
     {
         if (aiNavigation.GetMovementDirection() == Vector2.right)
             transform.localScale = Vector3.one;
         else
             transform.localScale = new Vector3(-1, 1, 1);
+    }
+
+    protected void UpdateDirectionToPlayer()
+    {
+        transform.localScale = transform.position.x > player.transform.position.x ? new Vector3(-1, 1, 1) : Vector3.one;
     }
 
     private void CheckPlayerOverlap()
