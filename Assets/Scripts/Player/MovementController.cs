@@ -143,6 +143,7 @@ public class MovementController : MonoBehaviour
     {
         Vector2 dir = transform.localScale.x > 0 ? -transform.right : transform.right;
         playerRB.AddForce(dir * force, ForceMode2D.Impulse);
+        playerRB.drag = movementData.groundDrag;
 
         while (playerRB.velocity.magnitude > 0.1f)
         {
