@@ -18,6 +18,7 @@ public class Slime : Enemy
     private readonly int SlimeJumpAnim = Animator.StringToHash("SlimeJump");
     private readonly int SlimeLandAnim = Animator.StringToHash("SlimeLand");
     private readonly int SlimeAttackAnim = Animator.StringToHash("SlimeAttack");
+    private readonly int SlimeHurt = Animator.StringToHash("SlimeHurt");
     private readonly int SlimeDieAnim = Animator.StringToHash("SlimeDie");
 
     private readonly int SlimeTeleportStart = Animator.StringToHash("SlimeTeleportStart");
@@ -65,16 +66,19 @@ public class Slime : Enemy
 
                 break;
             case State.Jump:
+                UpdateDirectionToPlayer();
                 animator.CrossFade(SlimeJumpAnim, 0f);
                 break;
             case State.Attack:
+                UpdateDirectionToPlayer();
                 animator.Play(SlimeAttackAnim, -1, 0f);
                 break;
             case State.Teleport:
+                UpdateDirectionToPlayer();
                 animator.CrossFade(SlimeTeleportStart, 0f);
                 break;
             case State.Hurt:
-                //animator.CrossFade(SlimeIdleAnim, 0f);
+                animator.CrossFade(SlimeHurt, 0f);
                 break;
             case State.Die:
                 animator.speed = 1;
@@ -151,8 +155,7 @@ public class Slime : Enemy
         float angleInRadians = jumpAngle * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians)).normalized;
 
-        if (transform.localScale.x < 0)
-            direction = new Vector2(-direction.x, direction.y);
+        direction = transform.position.x > player.transform.position.x ? new Vector2(-direction.x, direction.y) : new Vector2(direction.x, direction.y);
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.up, 100f, groundLayer);
         if (hit)
@@ -168,7 +171,7 @@ public class Slime : Enemy
         enemyRB.AddForce(direction * jumpForce, ForceMode2D.Impulse);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
         if (!Utility.Instance.CheckLayer(collision.gameObject, groundLayer) || !isJumping)
             return;

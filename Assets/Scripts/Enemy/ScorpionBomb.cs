@@ -95,14 +95,15 @@ public class ScorpionBomb : PooledObject
     private void Update()
     {
         if (Vector3.Distance(transform.position, targetPos) <= 3f && 
-            Physics2D.Raycast(transform.position, Vector2.down, 0.2f + bombCol.size.x, groundLayer))
+            Physics2D.Raycast(transform.position, Vector2.down, 0.2f + bombCol.size.x, groundLayer) &&
+            transform.position.y > targetPos.y)
         {
             animator.SetTrigger("detonate");
             bombCol.isTrigger = false;
         }
 
         if (transform.position.y > targetPos.y &&
-            Physics2D.OverlapCircle(transform.position, bombCol.size.x / 2f) && 
+            Physics2D.OverlapCircle(transform.position, bombCol.size.x / 5f) && 
             player.immuneType == BaseStats.ImmuneType.Parry &&
             !isParried)
         {

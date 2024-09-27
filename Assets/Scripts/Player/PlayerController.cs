@@ -243,7 +243,6 @@ public class PlayerController : PlayerStats
         playerRB.velocity = Vector2.zero;
         playerRB.isKinematic = true;
 
-        ChangeState(PlayerStates.Hurt);
         if (movementController.currentState == MovementState.GroundDash || 
             movementController.currentState == MovementState.AirDash)
             movementController.CancelDash();
@@ -349,13 +348,15 @@ public class PlayerController : PlayerStats
                 movementController.currentState != MovementState.LedgeGrab &&
                 movementController.isGrounded)
             {
+                ChangeState(PlayerStates.Hurt);
+                animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);
+
                 if (hurtRoutine != null)
                     StopCoroutine(hurtRoutine);
                 hurtRoutine = StartCoroutine(HurtRoutine());
             }
 
             combatController.ResetComboInstantly();
-            animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);
 
             // Spiked Chestplate
             if (itemStats.chestplateDamageModifier != 0)

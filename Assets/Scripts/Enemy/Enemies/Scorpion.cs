@@ -131,10 +131,10 @@ public class Scorpion : Enemy
         canThrow = true;
     }
 
-    public override void Knockback(float initialSpeed, float distance)
+    public override void Knockback(float force)
     {
         enemyRB.velocity = Vector2.zero;
-        base.Knockback(initialSpeed, distance);
+        base.Knockback(force);
     }
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)

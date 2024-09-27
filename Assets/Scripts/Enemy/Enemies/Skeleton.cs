@@ -27,6 +27,7 @@ public class Skeleton : Enemy
     [SerializeField] private Vector2 lungeForce;
     [SerializeField] private float lungeAngle;
     [SerializeField] private float scratchRange;
+    private bool isGivenUp = false;
 
     public override void InitializeEnemy()
     {
@@ -34,11 +35,11 @@ public class Skeleton : Enemy
 
         ChangeState(State.Patrol);
 
-        onReachWaypoint += () => { ChangeState(State.Idle); };
+        onReachWaypoint += () => { ChangeState(State.Idle); isGivenUp = false; };
         onFinishIdle += () => { ChangeState(State.Patrol); };
         onPlayerInChaseRange += () => { ChangeState(State.Deciding); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
-        OnBreached += (multiplier) => { ChangeState(State.Hurt); };
+        OnBreached += (multiplier) => { ChangeState(State.Idle); };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
     }
 
@@ -47,41 +48,46 @@ public class Skeleton : Enemy
         if (currentState == State.Die)
             return;
 
+        currentState = newState;
+
         switch (newState)
         {
             case State.Idle:
-                animator.CrossFade(IdleAnim, 0f);
+                animator.Play(IdleAnim, -1, 0);
+                aiNavigation.StopNavigation();
                 Idle();
                 break;
             case State.Patrol:
-                animator.CrossFade(RunAnim, 0f);
+                isInCombat = false;
+                aiNavigation.ResumeNavigation();
+                animator.Play(RunAnim, -1, 0);
                 break;
             case State.Deciding:
-                aiNavigation.StopNavigation();
+                animator.Play(IdleAnim, -1, 0);
                 AttackDecision();
+                aiNavigation.StopNavigation();
                 break;
             case State.Scratch:
+                UpdateDirectionToPlayer();
+                animator.Play(ScratchAnim, -1, 0);
                 aiNavigation.StopNavigation();
-                animator.Play(ScratchAnim, -1, 0f);
                 break;
             case State.Lunge:
+                UpdateDirectionToPlayer();
+                animator.Play(LungeAnim, -1, 0);
                 aiNavigation.StopNavigation();
-                animator.Play(LungeAnim, -1, 0f);
                 break;
             case State.Land:
-                enemyRB.velocity = Vector2.zero;
-                UpdateMovementDirection();
-                animator.Play(LandAnim, -1, 0f);
+                animator.Play(LandAnim, -1, 0);
+                aiNavigation.StopNavigation();
                 break;
             case State.Hurt:
+                animator.Play(HurtAnim, -1, 0);
                 aiNavigation.StopNavigation();
-                animator.Play(HurtAnim, -1, 0f);
                 break;
             case State.Die:
-                animator.speed = 1;
-                animator.CrossFade(DieAnim, 0f);
+                animator.Play(DieAnim, -1, 0);
                 aiNavigation.StopNavigation();
-                uiController.SetCanvasActive(false);
                 break;
         }
     }
@@ -96,16 +102,20 @@ public class Skeleton : Enemy
                 CheckChasePlayer();
                 break;
             case State.Patrol:
+                if (isGivenUp)
+                {
+                    PatrolUpdate();
+                    UpdateMovementDirection();
+                    return;
+                }
+
                 if (CheckChasePlayer())
                     return;
 
                 PatrolUpdate();
+                UpdateMovementDirection();
                 break;
         }
-
-        if (currentState != State.Scratch &&
-            currentState != State.Lunge)
-            UpdateMovementDirection();
     }
 
     private void AttackDecision()
@@ -117,26 +127,46 @@ public class Skeleton : Enemy
 
         Vector2 dir = transform.localScale.x < 0 ? -transform.right : transform.right;
 
+        // Lunge direction
+        float angleInRadians = lungeAngle * Mathf.Deg2Rad;
+        Vector2 direction = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians)).normalized;
+        direction = transform.position.x > player.transform.position.x ? new Vector2(-direction.x, direction.y) : new Vector2(direction.x, direction.y);
+
         if (Physics2D.Raycast(transform.position, dir.normalized, scratchRange, playerLayer))
             ChangeState(State.Scratch);
-        else
+        else if (!Physics2D.Raycast(transform.position, direction, 100f, groundLayer))
             ChangeState(State.Lunge);
+        else
+        {
+            isGivenUp = true;
+            ChangeState(State.Patrol);
+        }
     }
 
     public void Lunge()
     {
         float angleInRadians = lungeAngle * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians)).normalized;
-        if (transform.localScale.x < 0)
-            direction = new Vector2(-direction.x, direction.y);
+
+        direction = transform.position.x > player.transform.position.x ? new Vector2(-direction.x, direction.y) : new Vector2(direction.x, direction.y);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, 100f, groundLayer);
+
+        if (hit)
+        {
+            float distanceToCeiling = hit.distance;
+            float maxSafeJumpHeight = Mathf.Sqrt(2 * Mathf.Abs(Physics2D.gravity.y) * distanceToCeiling);
+
+            float maxYVelocity = Mathf.Min(maxSafeJumpHeight, direction.y * lungeForce.y);
+            direction = new Vector2(direction.x, maxYVelocity / lungeForce.y);
+        }
 
         enemyRB.AddForce(direction * lungeForce, ForceMode2D.Impulse);
     }
 
-    public override void Knockback(float initialSpeed, float distance)
+    public override void Knockback(float force)
     {
         enemyRB.velocity = Vector2.zero;
-        base.Knockback(initialSpeed, distance);
+        base.Knockback(force);
     }
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
@@ -149,9 +179,11 @@ public class Skeleton : Enemy
         return tookDamage;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        if (!Utility.Instance.CheckLayer(collision.gameObject, groundLayer) || currentState != State.Lunge)
+        if (!Utility.Instance.CheckLayer(collision.gameObject, groundLayer) || 
+            currentState != State.Lunge ||
+            enemyRB.velocity.y < 0)
             return;
 
         ChangeState(State.Land);

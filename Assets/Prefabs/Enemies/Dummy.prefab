@@ -19846,6 +19846,7 @@ MonoBehaviour:
   stunnedPS: {fileID: 6148087138412110673}
   bleedPS: {fileID: 5451145744669582177}
   bloodLossPS: {fileID: 3385915231753992946}
+  gasolinePS: {fileID: 0}
 --- !u!1 &1708339639012829567
 GameObject:
   m_ObjectHideFlags: 0
@@ -30453,9 +30454,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88384d1c5900f6b4a879af0cb3a175c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  immuneType: 0
   particleVFXManager: {fileID: 2269671507873526722}
   statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  abilityStats: {fileID: 0}
   health: 100000000
   maxHealth: 100000000
   shield: 100
@@ -30517,6 +30520,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   waypoints: []
+  hurtValue: 0
+  parryDazeDuration: 3
+  parryShieldReduction: 20
 --- !u!114 &1478723252960053222
 MonoBehaviour:
   m_ObjectHideFlags: 0
