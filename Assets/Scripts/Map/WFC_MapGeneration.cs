@@ -34,10 +34,10 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private ItemStats itemStats;
     [SerializeField] private ParallaxEffect[] bgs;
 
+    [SerializeField] private List<MapTile> mapTiles = new List<MapTile>();
     private List<Sprite> tileSprites = new();
     private Vector2 currTile;
     private Vector2 startingPos;
-    private List<MapTile> mapTiles = new List<MapTile>();
     private List<Vector2> collapsableTiles = new List<Vector2>();
     private List<Vector2> collapsedTiles = new List<Vector2>();
     private List<int> collapsableTileNum = new List<int>();
@@ -67,6 +67,7 @@ public class WFC_MapGeneration : MonoBehaviour
     public void GenerateMap()
     {
         allTilePrefabs.AddRange(tileController.allTilePrefabs);
+        allTilePrefabs.AddRange(tileController.constantTilePrefabs);
         mapSize -= Vector2.one * 2;
         // init maptiles list
         for (int i = 0; i < mapSize.x * mapSize.y; i++)
@@ -297,7 +298,10 @@ public class WFC_MapGeneration : MonoBehaviour
                     if (chests.Count == 0)
                         break;
                     randomChestIndex = Random.Range(0, chests.Count);
-                    chestsInMap.Add(Instantiate(chestSpawn.chestTypes[i], chests[randomChestIndex], false).GetComponent<Chest>());
+                    GameObject obj = Instantiate(chestSpawn.chestTypes[i]);
+                    chestsInMap.Add(obj.GetComponent<Chest>());
+                    obj.transform.SetParent(chests[randomChestIndex]);
+                    obj.transform.localPosition = Vector3.zero;
                     chests.RemoveAt(randomChestIndex);
                 }
             }
