@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 // PlayerMoneyDisplay
 //
-// Class to display the player's money
+// Class to display player's money
 //
 // Date: 30/8/2024
 // Author: Shimba Sakai
@@ -20,7 +20,7 @@ public class PlayerMoneyDisplay : MonoBehaviour
 
     private void Start()
     {
-        // Handle case where the item manager class is not set
+        // If the item manager class is not set
         if (m_itemManager == null)
         {
             // Set the item manager class
@@ -30,7 +30,7 @@ public class PlayerMoneyDisplay : MonoBehaviour
 
     void Update()
     {
-        // If the player's money text is set and the player's wallet instance is valid
+        // If the money text is set and the player's wallet instance is valid
         if (m_moneyText != null && PlayerWallet.Instance != null)
         {
             // Set the player's money in the text

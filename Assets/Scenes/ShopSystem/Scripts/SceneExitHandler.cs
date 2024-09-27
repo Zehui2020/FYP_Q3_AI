@@ -19,20 +19,20 @@ public class SceneExitHandler : MonoBehaviour
         // Set the item shop UI handler class
         m_itemShopUIHandler = FindObjectOfType<ItemShopUIHandler>();
 
-        // Add event listener to m_exitTextButton
+        // Add an event listener to the exit button
         if (m_itemShopUIHandler != null && m_itemShopUIHandler.m_exitTextButton != null)
         {
             m_itemShopUIHandler.m_exitTextButton.onClick.AddListener(OnExitButtonClicked);
         }
     }
 
-    // Process when the exit button is clicked
+    // Handle the button click event
     public void OnExitButtonClicked()
     {
         // Exit the current scene
         Application.Quit();
 
-        // For debugging purposes in the editor
+        // Debug check in the Unity editor
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif

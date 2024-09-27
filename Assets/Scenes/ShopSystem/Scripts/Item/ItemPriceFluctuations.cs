@@ -1,43 +1,45 @@
 //----------------------------------------------------------------------
 // ItemPriceFluctuations
 //
-// Class to handle fluctuations in item prices
+// Class to handle item price fluctuations
 //
 // Date: 25/9/2024
 // Author: Shimba Sakai
 //----------------------------------------------------------------------
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemPriceFluctuations : MonoBehaviour
 {
-    // Price fluctuation rate for items (10%)
+    // Percentage of price fluctuation (10%)
     public float m_priceChangeRate = 0.1f;
 
-    // Dictionaries to manage the initial and current prices of items
-    private Dictionary<string, float> m_initialItemPrices = new Dictionary<string, float>();
+    // Item data
+    private ItemData m_itemData;
+
+    // Dictionaries to manage initial and current item prices
+    private Dictionary<string, int> m_initialItemPrices = new Dictionary<string, int>();
     private Dictionary<string, float> m_currentItemPrices = new Dictionary<string, float>();
 
-    // Upper and lower limits for fluctuating prices
+    // Upper and lower bounds for fluctuating prices
     private float m_minPriceFactor = 0.5f;  // 50%
     private float m_maxPriceFactor = 1.0f;  // 100%
 
-    // Mood state (Bad: -1, Neutral: 0, Good: 1)
+    // Mood states (Bad: -1, Neutral: 0, Good: 1)
     public int m_mood = 0;
 
-    // Process to change prices based on mood
-    public void ChangePriceBasedOnMood(string itemName, ItemData[] itemDataArray, Dictionary<string, float> initialItemPrice, Dictionary<string, float> currentItemPrice, int isMood)
+    // Handle price changes based on mood
+    public void ChangePriceBasedOnMood(ItemData[] itemDataArray, int isMood)
     {
-        m_currentItemPrices = currentItemPrice;
-
-        // Set initial prices
+        // Set initial prices (only if not already set)
         foreach (var itemData in itemDataArray)
         {
-            // Set initial item prices (if not already initialized)
-            if (!initialItemPrice.ContainsKey(itemData.itemName))
+            if (!m_initialItemPrices.ContainsKey(itemData.itemName))
             {
-                initialItemPrice[itemData.itemName] = itemData.itemPrice;
+                // Initial price is set once and not changed afterward
+                m_initialItemPrices[itemData.itemName] = itemData.itemPrice;
             }
 
             if (!m_currentItemPrices.ContainsKey(itemData.itemName))
@@ -45,39 +47,29 @@ public class ItemPriceFluctuations : MonoBehaviour
                 m_currentItemPrices[itemData.itemName] = itemData.itemPrice;
             }
 
-            Debug.Log(itemData.itemName + " initial price: " + itemData.itemPrice);
+            // Get the current price
+            float currentPrice = m_currentItemPrices[itemData.itemName];
+            float initialPrice = m_initialItemPrices[itemData.itemName];
+
+            // Adjust price based on mood
+            if (isMood >= 1)
+            {
+                currentPrice -= initialPrice * m_priceChangeRate;
+            }
+            else if (isMood < 0)
+            {
+                currentPrice += initialPrice * m_priceChangeRate;
+            }
+
+            // Clamp the price between the minimum and maximum factors
+            currentPrice = Mathf.Clamp(currentPrice, initialPrice * m_minPriceFactor, initialPrice * m_maxPriceFactor);
+
+            // Save the updated price in the dictionary
+            m_currentItemPrices[itemData.itemName] = currentPrice;
         }
 
-        // Check if the item name exists in the dictionary
-        if (!m_currentItemPrices.ContainsKey(itemName))
-        {
-            Debug.LogError("Item name not found: " + itemName);
-            return;
-        }
-
-        // Get the current and initial prices
-        float currentPrice = m_currentItemPrices[itemName];
-        float initialPrice = initialItemPrice[itemName];
-
-        // Price change based on mood
-        if (isMood >= 1)
-        {
-            // Good mood: decrease price by 10%
-            currentPrice -= initialPrice * m_priceChangeRate;
-        }
-        else if (isMood < 0)
-        {
-            // Bad mood: increase price by 10%
-            currentPrice += initialPrice * m_priceChangeRate;
-        }
-
-        // Clamp the price between the minimum and maximum factors
-        currentPrice = Mathf.Clamp(currentPrice, initialPrice * m_minPriceFactor, initialPrice * m_maxPriceFactor);
-
-        // Save the updated price in the dictionary
-        m_currentItemPrices[itemName] = currentPrice;
-
-        Debug.Log("Price of " + itemName + " changed due to mood " + isMood + ": " + currentPrice);
+        // Set the mood
+        m_mood = isMood;
     }
 
     // Get the current price of the specified item
@@ -93,7 +85,19 @@ public class ItemPriceFluctuations : MonoBehaviour
         }
     }
 
-    // Get the current mood
+    // Set the item data
+    public void SetItemData(ItemData itemData)
+    {
+        m_itemData = itemData;
+    }
+
+    // Set the mood
+    public void SetMood(int mood)
+    {
+        m_mood = mood;
+    }
+
+    // Get the mood
     public int GetMood()
     {
         return m_mood;

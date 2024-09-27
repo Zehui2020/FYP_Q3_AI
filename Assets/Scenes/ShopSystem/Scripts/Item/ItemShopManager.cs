@@ -12,7 +12,7 @@ using System.Collections;
 
 public class ItemShopManager : MonoBehaviour
 {
-    [Header("Initial coordinates for item placement")]
+    [Header("Initial item placement coordinates")]
     public Vector2 m_itemStartPosition;
 
     [Header("Item Spacing")]
@@ -39,43 +39,45 @@ public class ItemShopManager : MonoBehaviour
     // AI system manager class
     public AISystemManager m_AISystemManager;
 
-    // Texture collision class
+    // Texture collision detection class
     public TextureCollision m_textureCollision;
 
-    // Flag to determine if the shop was closed due to a collision
+    // Flag indicating if the shop was closed due to collision
     private bool m_isShopClosedByCollision = false;
 
     private IEnumerator Start()
     {
-        // Handle case where the item shop UI handler class is not set
+        // If the item shop UI handler class is not set
         if (m_itemShopUIHandler == null)
         {
             m_itemShopUIHandler = FindAnyObjectByType<ItemShopUIHandler>();
         }
 
-        // Handle case where the AI system manager class is not set
+        // If the AI system manager class is not set
         if (m_AISystemManager == null)
         {
             m_AISystemManager = FindAnyObjectByType<AISystemManager>();
         }
 
-        // Handle case where the texture collision class is not set
+        // If the texture collision detection class is not set
         if (m_textureCollision == null)
         {
             m_textureCollision = FindAnyObjectByType<TextureCollision>();
         }
 
-        // Handle case where the item loader class is not set
+        // If the item loader class is not set
         if (m_itemLoader == null)
         {
             m_itemLoader = FindAnyObjectByType<ItemLoader>();
         }
 
-        // If the item loader class is set, wait until the data is loaded, then show the shop
+        // If the item loader class is set
         if (m_itemLoader != null)
         {
             yield return new WaitUntil(() => m_itemLoader.IsDataLoaded());
             ShowShop();
+            // Set item data for the AI system manager class
+            m_AISystemManager.SetItemData(m_itemLoader.m_itemData);
         }
 
         // Debug button
@@ -84,32 +86,32 @@ public class ItemShopManager : MonoBehaviour
             m_itemShopUIHandler.m_debugButton.onClick.AddListener(SwitchShopDisplay);
         }
 
-        // Handle the AI conversation end button click
-        m_itemShopUIHandler.m_AIConversationEndBotton.onClick.AddListener(ShowShop);
+        // Handle the button to end AI conversation
+        m_itemShopUIHandler.m_AIConversationEndBotton.onClick.AddListener(SwitchShopDisplay);
 
-        // For debugging
-        m_itemShopUIHandler.m_debugBadBotton.onClick.AddListener(ShowShop);
-        m_itemShopUIHandler.m_debugGoodBotton.onClick.AddListener(ShowShop);
-        m_itemShopUIHandler.m_debugNormalBotton.onClick.AddListener(ShowShop);
+        // Debug buttons
+        m_itemShopUIHandler.m_debugBadBotton.onClick.AddListener(SwitchShopDisplay);
+        m_itemShopUIHandler.m_debugGoodBotton.onClick.AddListener(SwitchShopDisplay);
+        m_itemShopUIHandler.m_debugNormalBotton.onClick.AddListener(SwitchShopDisplay);
     }
 
     void Update()
     {
-        // If a collision is detected and the shop is not yet closed
+        // If there is a collision and the shop has not yet been closed
         if (m_textureCollision != null && m_textureCollision.GetTransparencyHitDetectionFlag() && !m_isShopClosedByCollision)
         {
             // Close the shop
             HideShop();
-            // Set the shop closed flag
+            // Set the shop as closed
             m_isShopClosedByCollision = true;
             // Display the AI conversation
             m_AISystemManager.ShowAIConversationDisplay();
         }
 
-        // On click, reset the collision detection and allow the shop to be closed
+        // Reset collision detection on click and allow the shop to be closed
         if (Input.GetMouseButtonDown(0))
         {
-            // If an item is clicked, prevent the shop from closing
+            // Prevent the shop from closing when an item is clicked
             if (IsItemClicked())
             {
                 return;
@@ -122,33 +124,33 @@ public class ItemShopManager : MonoBehaviour
                 {
                     // Close the shop
                     HideShop();
-                    // Set the shop closed flag
+                    // Set the shop as closed
                     m_isShopClosedByCollision = true;
                 }
-                // If the shop is hidden
+                // If the shop is not displayed
                 else
                 {
-                    // Reset the flag to allow the shop to be reopened
+                    // Reset the flag to allow reopening
                     m_isShopClosedByCollision = false;
                 }
             }
         }
     }
 
-    // Check if an item was clicked
+    // Check if an item has been clicked
     private bool IsItemClicked()
     {
-        // Use a raycast to check if an item was hit
+        // Use raycast to detect if an item was hit
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
         if (hit.collider != null && hit.collider.gameObject.CompareTag("Item"))
         {
-            // If an item was clicked, prevent the shop from closing
+            // If an item was clicked, do not close the shop
             return true;
         }
         return false;
     }
 
-    // Toggle shop display
+    // Toggle the shop display
     public void SwitchShopDisplay()
     {
         if (m_itemShopUIHandler.m_itemShopBackground.activeSelf)
@@ -166,19 +168,18 @@ public class ItemShopManager : MonoBehaviour
     // Show the shop
     private void ShowShop()
     {
-        // Set up the items
-        SetItem();
-
         // Display the shop background
         m_itemShopUIHandler.m_itemShopBackground.SetActive(true);
 
         // Reset the shop closed flag
         m_isShopClosedByCollision = false;
 
-        // Hide the AI conversation
+        // Hide the AI system
         m_AISystemManager.HideAIConversationDisplay();
+        // Set items in place
+        SetItem();
 
-        // Reset the texture collision detection
+        // Reset the image collision detection
         if (m_textureCollision != null)
         {
             m_textureCollision.ResetHitDetection();
@@ -190,14 +191,14 @@ public class ItemShopManager : MonoBehaviour
     {
         // Hide the shop background
         m_itemShopUIHandler.m_itemShopBackground.SetActive(false);
-        // Clear the items
+        // Remove items
         ClearItems();
 
         // Display the AI system
         m_AISystemManager.ShowAIConversationDisplay();
     }
 
-    // Set up the items
+    // Set items in place
     private void SetItem()
     {
         RectTransform parentRectTransform = m_itemShopUIHandler.m_itemShopBackground.GetComponent<RectTransform>();
@@ -212,7 +213,7 @@ public class ItemShopManager : MonoBehaviour
         }
     }
 
-    // Arrange the items
+    // Arrange items in the shop
     private void ArrangeItems(float parentWidth, float parentHeight)
     {
         int row = 0;
@@ -226,28 +227,34 @@ public class ItemShopManager : MonoBehaviour
             PlaceItem(rectTransform, ref itemStartXPosition, ref itemStartYPosition, row, column);
             UpdateRowAndColumn(ref row, ref column, rectTransform, ref itemStartXPosition, ref itemStartYPosition);
         }
+        // Reset mood to neutral
+        m_AISystemManager.SetMood(0);
     }
 
-    // Create the item
+    // Create an item
     private RectTransform CreateItem(ItemData itemData)
     {
         GameObject itemPrefab = Instantiate(m_itemShopUIHandler.m_itemPrefab, m_itemShopUIHandler.m_itemShop.transform);
         ItemDisplay itemDisplay = itemPrefab.GetComponent<ItemDisplay>();
+
         if (itemDisplay != null)
         {
-            // Set up the item
+            // Set the item
             itemDisplay.Setup(itemData, m_itemLoader.GetSpriteDictionary(), m_itemUnit);
 
-            // Set item data
+            // Set the item data for the AI system manager
             m_AISystemManager.SetItemDataArray(m_itemDataArray);
-            m_AISystemManager.SetItemData(itemData);
 
             // If the mood is not neutral
             if (m_AISystemManager.GetMood() != 0)
             {
-                // If there were price fluctuations, set the price
-                itemDisplay.SetItemPrice(m_AISystemManager.GetItemPriceFluctuations(itemData.itemName));
+                // Adjust price based on fluctuations
+                int fluctuatedPrice = m_AISystemManager.GetItemPriceFluctuations(itemData.itemName);
+                itemDisplay.SetItemPrice(fluctuatedPrice);
             }
+
+            // Set the item
+            itemDisplay.Setup(itemData, m_itemLoader.GetSpriteDictionary(), m_itemUnit);
         }
 
         RectTransform rectTransform = itemPrefab.GetComponent<RectTransform>();
@@ -259,7 +266,7 @@ public class ItemShopManager : MonoBehaviour
         return rectTransform;
     }
 
-    // Place the item
+    // Place the item in the shop
     private void PlaceItem(RectTransform rectTransform, ref float itemStartXPosition, ref float itemStartYPosition, int row, int column)
     {
         rectTransform.anchoredPosition = new Vector2(
@@ -268,7 +275,7 @@ public class ItemShopManager : MonoBehaviour
         );
     }
 
-    // Update the row and column
+    // Update row and column positions for item placement
     private void UpdateRowAndColumn(ref int row, ref int column, RectTransform rectTransform, ref float itemStartXPosition, ref float itemStartYPosition)
     {
         column++;
@@ -285,7 +292,7 @@ public class ItemShopManager : MonoBehaviour
         }
     }
 
-    // Clear the items
+    // Clear all items
     private void ClearItems()
     {
         Transform shopCanvas = m_itemShopUIHandler.m_itemShopBackground.transform.Find("ItemShopObject");
@@ -301,7 +308,7 @@ public class ItemShopManager : MonoBehaviour
         return m_itemUnit;
     }
 
-    // Get the item data array
+    // Get the array of item data
     public ItemData[] GetItemDataArray()
     {
         return m_itemDataArray;

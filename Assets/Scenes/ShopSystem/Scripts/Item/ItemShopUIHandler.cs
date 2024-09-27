@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 // ItemShopUIHandler
 //
-// Item Shop UI management class
+// Class to manage the item shop UI
 //
 // Date: 19/9/2024
 // Author: Shimba Sakai
@@ -13,98 +13,95 @@ using UnityEngine.UI;
 
 public class ItemShopUIHandler : MonoBehaviour
 {
-    // GameObject start here ----------------------------------------------
+    // GameObject section start -------------------------------------------
 
     [Header("Item Prefab")]
     public GameObject m_itemPrefab;
 
-    [Header("Background panel for the purchase screen")]
+    [Header("Background panel for purchase screen")]
     public GameObject m_purchaseScreenBackground;
 
-    [Header("Item Shop")]
+    [Header("Item shop")]
     public GameObject m_itemShop;
 
-    [Header("Background for the item shop")]
+    [Header("Background of the item shop")]
     public GameObject m_itemShopBackground;
 
-    [Header("Object to display the AI conversation")]
+    [Header("Object to display conversation with AI")]
     public GameObject m_AIConversationDisplay;
 
-    // GameObject end here ------------------------------------------------
+    // GameObject section end ---------------------------------------------
 
 
 
 
+    // Button section start -----------------------------------------------
 
-    // Button start here --------------------------------------------------
-
-    [Header("Exit Button")]
+    [Header("Exit button")]
     public Button m_exitTextButton;
 
-    [Header("Debug Button")]
+    [Header("Debug button")]
     public Button m_debugButton;
 
-    [Header("Purchase Button")]
+    [Header("Purchase button")]
     public Button m_purchaseButton;
 
-    [Header("Cancel Button")]
+    [Header("Cancel button")]
     public Button m_cancelButton;
 
-    [Header("Button to end the AI conversation")]
+    [Header("Button to end conversation with AI")]
     public Button m_AIConversationEndBotton;
 
-    [Header("Debug Good Button")]
+    [Header("Debug Good button")]
     public Button m_debugGoodBotton;
 
-    [Header("Debug Normal Button")]
+    [Header("Debug Normal button")]
     public Button m_debugNormalBotton;
 
-    [Header("Debug Bad Button")]
+    [Header("Debug Bad button")]
     public Button m_debugBadBotton;
 
-    // Button end here ----------------------------------------------------
+    // Button section end -------------------------------------------------
 
 
 
 
+    // Image section start ------------------------------------------------
 
-    // Image start here ---------------------------------------------------
-
-    [Header("Image for displaying item images")]
+    [Header("Image display for item")]
     public Image m_forDisplayingItemImages;
 
-    [Header("Image for the AI system")]
+    [Header("Image for AI system")]
     public Image m_AISystemImage;
 
-    [Header("Background for AI conversation")]
+    [Header("Background for conversation with AI")]
     public Image m_AIConversationBackground;
 
-    // Image end here -----------------------------------------------------
+    // Image section end --------------------------------------------------
 
 
 
 
+    // TextMeshProUGUI section start --------------------------------------
 
-    // TextMeshProUGUI start here -----------------------------------------
-
-    [Header("Item Name")]
+    [Header("Item name")]
     public TextMeshProUGUI m_itemName;
 
-    [Header("Item Price per Unit")]
+    [Header("Unit price of item")]
     public TextMeshProUGUI m_itemPerPrice;
 
-    [Header("Total Price of the Item")]
+    [Header("Total price of item")]
     public TextMeshProUGUI m_itemTotalPrice;
 
-    [Header("Item Quantity")]
+    [Header("Item quantity")]
     public TextMeshProUGUI m_itemQuantity;
 
-    [Header("Message when purchasing an item")]
+    [Header("Message when item is purchased")]
     public TextMeshProUGUI m_itemPurchaseMessage;
 
     [Header("Display for item purchase amount")]
     public TextMeshProUGUI m_itemPurchaseDisplay;
 
-    // TextMeshProUGUI end here -------------------------------------------
+    // TextMeshProUGUI section end ----------------------------------------
 
 }
