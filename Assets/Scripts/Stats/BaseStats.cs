@@ -13,7 +13,7 @@ public class BaseStats : MonoBehaviour
         Block,
         Parry
     }
-    protected ImmuneType immuneType;
+    public ImmuneType immuneType;
 
     public struct Damage
     {

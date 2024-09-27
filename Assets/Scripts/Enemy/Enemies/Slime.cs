@@ -103,7 +103,7 @@ public class Slime : Enemy
 
         if (currentState == State.Idle)
         {
-            UpdatePlayerDirection();
+            UpdateMovementDirection();
             if (isPatroling)
                 return;
 

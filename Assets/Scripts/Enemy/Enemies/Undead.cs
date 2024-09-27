@@ -62,10 +62,10 @@ public class Undead : Enemy
             case State.Attack:
                 aiNavigation.StopNavigation();
                 animator.Play(AttackAnim, -1, 0f);
-                UpdatePlayerDirection();
+                UpdateMovementDirection();
                 break;
             case State.Teleport:
-                UpdatePlayerDirection();
+                UpdateMovementDirection();
                 aiNavigation.StopNavigation();
                 StartCoroutine(TeleportRoutine());
                 break;
@@ -110,7 +110,7 @@ public class Undead : Enemy
 
         if (currentState != State.Attack &&
             currentState != State.Teleport)
-            UpdatePlayerDirection();
+            UpdateMovementDirection();
     }
 
     private IEnumerator TeleportRoutine()

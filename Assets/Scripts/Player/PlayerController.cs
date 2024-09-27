@@ -237,7 +237,7 @@ public class PlayerController : PlayerStats
 
     private void FixedUpdate()
     {
-        if (health <= 0)
+        if (health <= 0 || movementController.currentState == MovementState.Knockback)
             return;
 
         movementController.MovePlayer(movementSpeedMultiplier.GetTotalModifier());
@@ -736,7 +736,7 @@ public class PlayerController : PlayerStats
         playerEffectsController.HitStop(0.5f);
         playerEffectsController.ShakeCamera(5, 20, 0.5f);
         playerEffectsController.SetCameraTrigger("parry");
-        movementController.Knockback(80f, 2f);
+        movementController.Knockback(20f);
 
         // Metal Bat
         int randNum = Random.Range(0, 100);
