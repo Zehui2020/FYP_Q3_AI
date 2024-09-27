@@ -53,10 +53,7 @@ public class ScorpionBomb : PooledObject
         // Check for ground and adjust arc height if necessary
         RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, -Vector2.down * maxArc, maxArc, groundLayer);
         if (hits.Length > 0)
-        {
             maxArc = hits[hits.Length - 1].distance;
-            Debug.Log(hits[hits.Length - 1].collider.name);
-        }
 
         float distance = targetPos.x - startPos.x;
         float peakHeight = Mathf.Max(startPos.y, targetPos.y) + maxArc;

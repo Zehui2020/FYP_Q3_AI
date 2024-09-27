@@ -33,6 +33,9 @@ public class PlayerController : PlayerStats
     [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
     [SerializeField] private LayerMask enemyLayer;
 
+    [SerializeField] private EnemyStatBar healthBar;
+    [SerializeField] private EnemyStatBar shieldBar;
+
     private IInteractable currentInteractable;
     private float ropeX;
     private Queue<Damage> damageQueue = new();
@@ -89,6 +92,25 @@ public class PlayerController : PlayerStats
         movementController.OnPlungeEnd += HandlePlungeAttack;
         movementController.ChangePlayerState += ChangeState;
         OnParry += OnParryEnemy;
+
+        healthBar.InitStatBar(health, maxHealth);
+        shieldBar.InitStatBar(shield, maxShield);
+
+        OnHealthChanged += (increase, isCrit) => 
+        { 
+            if (!increase) 
+                healthBar.OnDecrease(health, maxHealth, isCrit, false); 
+            else
+                healthBar.OnIncreased(health, maxHealth, isCrit);
+        };
+
+        OnShieldChanged += (increase, isCrit, duration) => 
+        {
+            if (!increase)
+                shieldBar.OnDecrease(shield, maxShield, isCrit, false);
+            else
+                shieldBar.OnIncreased(shield, maxShield, isCrit);
+        };
     }
 
     private void Update()
@@ -673,6 +695,8 @@ public class PlayerController : PlayerStats
 
         // Gasoline
         Collider2D[] enemies = Physics2D.OverlapCircleAll(target.transform.position, itemStats.gasolineRadius, enemyLayer);
+        if (itemStats.gasolineRadius > 0)
+            target.particleVFXManager.GasolineBurst();
         foreach (Collider2D enemy in enemies)
         {
             Enemy targetEnemy = enemy.GetComponent<Enemy>();

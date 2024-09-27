@@ -34,6 +34,7 @@ public class Enemy : EnemyStats
     protected event System.Action onFinishIdle;
     protected event System.Action onPlayerInChaseRange;
     protected event System.Action onReachChaseTarget;
+    protected event System.Action onDazeEnd;
 
     public event System.Action<BaseStats, Damage, bool, Vector3> onHitEvent;
 
@@ -84,6 +85,8 @@ public class Enemy : EnemyStats
         OnDieEvent += (target) => 
         {
             player.OnEnemyDie(target);
+            uiController.SetCanvasActive(false);
+            animator.speed = 1;
         };
 
         player.OnParry += (target) => 
@@ -366,6 +369,7 @@ public class Enemy : EnemyStats
             aiNavigation.ResumeNavigationFromStop();
         canUpdate = true;
         states.Dequeue();
+        onDazeEnd?.Invoke();
     }
 
     public override void OnCleanse(StatusEffect.StatusType.Status status)
@@ -460,5 +464,6 @@ public class Enemy : EnemyStats
         onPlayerInChaseRange = null;
         onReachChaseTarget = null;
         onHitEvent = null;
+        onDazeEnd = null;
     }
 }

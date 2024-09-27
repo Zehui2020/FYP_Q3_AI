@@ -43,6 +43,9 @@ public class Scorpion : Enemy
 
     private void ChangeState(State newState)
     {
+        if (currentState == State.Die)
+            return;
+
         currentState = newState;
 
         switch (newState)
@@ -79,9 +82,6 @@ public class Scorpion : Enemy
 
     public override void UpdateEnemy()
     {
-        if (health <= 0)
-            return;
-
         base.UpdateEnemy();
 
         if (Vector2.Distance(player.transform.position, transform.position) <= meleeRange && 

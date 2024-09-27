@@ -48,7 +48,7 @@ public class Slime : Enemy
 
     private void ChangeState(State newState)
     {
-        if (isFrozen || !canUpdate)
+        if (isFrozen || !canUpdate || currentState == State.Die)
             return;
 
         currentState = newState;
@@ -150,9 +150,21 @@ public class Slime : Enemy
         isJumping = true;
         float angleInRadians = jumpAngle * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians)).normalized;
+
         if (transform.localScale.x < 0)
             direction = new Vector2(-direction.x, direction.y);
 
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.up, 100f, groundLayer);
+        if (hit)
+        {
+            float distanceToCeiling = hit.distance;
+            float maxSafeJumpHeight = Mathf.Sqrt(2 * Mathf.Abs(Physics2D.gravity.y) * distanceToCeiling);
+
+            float maxYVelocity = Mathf.Min(maxSafeJumpHeight, direction.y * jumpForce.y);
+            direction = new Vector2(direction.x, maxYVelocity / jumpForce.y);
+        }
+
+        // Apply force to Rigidbody2D
         enemyRB.AddForce(direction * jumpForce, ForceMode2D.Impulse);
     }
 
