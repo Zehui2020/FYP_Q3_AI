@@ -28,6 +28,20 @@ public class AbilityController : MonoBehaviour
         InitializeAbility(-1);
     }
 
+    private void AddAbilitySlot()
+    {
+        if (abilities.Count >= 10)
+            return;
+
+        // add ui
+        GameObject obj = Instantiate(abilityUIPrefab, abilityUIParent);
+        abilityUI.Add(obj.GetComponent<AbilityUIController>());
+        if (abilityUI.Count == 10)
+            abilityUI[abilityUI.Count - 1].InitAbilityUI("[ 0 ]");
+        else
+            abilityUI[abilityUI.Count - 1].InitAbilityUI("[ " + abilityUI.Count.ToString() + " ]");
+    }
+
     private void AddAbility(BaseAbility newAbility)
     {
         if (abilities.Count >= 10)
@@ -39,12 +53,15 @@ public class AbilityController : MonoBehaviour
         charges.Add(newAbility.abilityCharges);
         maxCharges.Add(newAbility.abilityMaxCharges);
         // add ui
-        GameObject obj = Instantiate(abilityUIPrefab, abilityUIParent);
-        abilityUI.Add(obj.GetComponent<AbilityUIController>());
+        if (abilities.Count > abilityUI.Count)
+        {
+            GameObject obj = Instantiate(abilityUIPrefab, abilityUIParent);
+            abilityUI.Add(obj.GetComponent<AbilityUIController>());
+        }
         if (abilityUI.Count == 10)
-            abilityUI[abilityUI.Count - 1].InitAbilityUI(newAbility, "[ 0 ]");
+            abilityUI[abilities.Count - 1].InitAbilityUI(newAbility, "[ 0 ]");
         else
-            abilityUI[abilityUI.Count - 1].InitAbilityUI(newAbility, "[ " + abilityUI.Count.ToString() + " ]");
+            abilityUI[abilities.Count - 1].InitAbilityUI(newAbility, "[ " + abilities.Count.ToString() + " ]");
         // init ability
         InitializeAbility(abilities.Count - 1);
     }
@@ -52,9 +69,9 @@ public class AbilityController : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.H))
-        {
             AddAbility(abilities[0]);
-        }
+        if (Input.GetKeyDown(KeyCode.J))
+            AddAbilitySlot();
     }
 
     private void InitializeAbility(int abilityNo)

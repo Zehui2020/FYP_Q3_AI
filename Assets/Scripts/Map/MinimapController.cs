@@ -5,32 +5,24 @@ using UnityEngine;
 public class MinimapController : MonoBehaviour
 {
     [SerializeField] List<Transform> transforms;
-    [SerializeField] Camera cam;
-    [SerializeField] int minimapSize;
-    [SerializeField] int zoomSize;
+    [SerializeField] List<GameObject> cam;
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.M))
         {
-            ChangeView(1);
+            ChangeView(1, 0);
         }
         else if (Input.GetKeyUp(KeyCode.M))
         {
-            ChangeView(0);
+            ChangeView(0, 1);
         }
     }
 
-    private void ChangeView(int i)
+    private void ChangeView(int i, int j)
     {
-        if (i == 0)
-        {
-            cam.orthographicSize = minimapSize;
-        }
-        else
-        {
-            cam.orthographicSize = zoomSize;
-        }
+        cam[i].SetActive(true);
+        cam[j].SetActive(false);
 
         transform.SetParent(transforms[i]);
         transform.localPosition = Vector3.zero;
