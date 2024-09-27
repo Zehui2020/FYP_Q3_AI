@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using UnityEditor.Overlays;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ItemManager : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class ItemManager : MonoBehaviour
     [SerializeField] private ItemStats itemStats;
     [SerializeField] private ItemUI itemUIPrefab;
     [SerializeField] private Transform itemUIParent;
+    [SerializeField] private RectTransform itemInventory;
     private List<ItemUI> itemUIs = new List<ItemUI>();
 
     private ImageSaver imageSaver;
@@ -31,6 +34,7 @@ public class ItemManager : MonoBehaviour
             item.itemStack = 0;
             item.spriteIcon = imageSaver.GetSpriteFromLocalDisk(item.itemType.ToString());
         }
+        LayoutRebuilder.ForceRebuildLayoutImmediate(itemInventory);
     }
 
     public void AddItem(Item itemToAdd)
@@ -64,6 +68,7 @@ public class ItemManager : MonoBehaviour
         ItemUI newItemUI = Instantiate(itemUIPrefab, itemUIParent);
         newItemUI.SetupItemUI(item);
         itemUIs.Add(newItemUI);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(itemInventory);
     }
 
     public void DecreaseStack(Item itemToRemove)

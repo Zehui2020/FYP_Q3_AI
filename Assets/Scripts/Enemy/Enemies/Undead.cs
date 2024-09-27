@@ -21,9 +21,9 @@ public class Undead : Enemy
     private readonly int WalkAnim = Animator.StringToHash("UndeadWalk");
     private readonly int AttackAnim = Animator.StringToHash("UndeadAttack");
     private readonly int TeleportAnim = Animator.StringToHash("UndeadTeleport");
+    private readonly int HurtAnim = Animator.StringToHash("UndeadHurt");
     private readonly int DieAnim = Animator.StringToHash("UndeadDie");
 
-    [SerializeField] private VisualEffect teleportTrail;
     [SerializeField] private float teleportThreshold;
     [SerializeField] private float teleportCooldown;
     private bool canTeleport = true;
@@ -67,12 +67,21 @@ public class Undead : Enemy
             case State.Teleport:
                 UpdateMovementDirection();
                 aiNavigation.StopNavigation();
-                StartCoroutine(TeleportRoutine());
+
+                animator.Play(TeleportAnim, -1, 0f);
+
+                if (Physics2D.Raycast(transform.position, player.transform.position, 100f, groundLayer))
+                    transform.position = player.transform.position;
+                else
+                    transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
+
+                StartCoroutine(TeleportCooldown(1f));
+
                 break;
             case State.Hurt:
-                //aiNavigation.StopNavigation();
-                //animator.Play(IdleAnim, -1, 0f);
-                //ChangeState(State.Idle);
+                aiNavigation.StopNavigation();
+                animator.Play(HurtAnim, -1, 0f);
+                ChangeState(State.Idle);
                 break;
             case State.Die:
                 animator.speed = 1;
@@ -113,26 +122,11 @@ public class Undead : Enemy
             UpdateMovementDirection();
     }
 
-    private IEnumerator TeleportRoutine()
-    {
-        teleportTrail.Play();
-
-        yield return new WaitForSeconds(0.3f);
-
-        animator.Play(TeleportAnim, -1, 0f);
-        transform.position = player.transform.position;
-
-        yield return new WaitForSeconds(1f);
-
-        teleportTrail.Stop();
-        StartCoroutine(TeleportCooldown());
-    }
-
-    private IEnumerator TeleportCooldown()
+    private IEnumerator TeleportCooldown(float delay)
     {
         canTeleport = false;
 
-        yield return new WaitForSeconds(teleportCooldown);
+        yield return new WaitForSeconds(teleportCooldown + delay);
 
         canTeleport = true;
     }

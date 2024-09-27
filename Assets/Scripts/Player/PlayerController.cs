@@ -701,17 +701,21 @@ public class PlayerController : PlayerStats
 
             enemiesInRange.Add(enemy);
         }
-        for (int i = 0; i < itemStats.bottleStacks; i++)
+
+        if (enemiesInRange.Count != 0)
         {
-            randNum = Random.Range(0, enemiesInRange.Count);
+            for (int i = 0; i < itemStats.bottleStacks; i++)
+            {
+                randNum = Random.Range(0, enemiesInRange.Count);
 
-            StatusEffect.StatusType.Status randStatusEffect = (StatusEffect.StatusType.Status)Random.Range(0, (int)StatusEffect.StatusType.Status.TotalStatusEffect);
+                StatusEffect.StatusType.Status randStatusEffect = (StatusEffect.StatusType.Status)Random.Range(0, (int)StatusEffect.StatusType.Status.TotalStatusEffect);
 
-            StatusEffect.StatusType statusType = new StatusEffect.StatusType(
-                StatusEffect.StatusType.Type.Debuff,
-                randStatusEffect);
+                StatusEffect.StatusType statusType = new StatusEffect.StatusType(
+                    StatusEffect.StatusType.Type.Debuff,
+                    randStatusEffect);
 
-            enemiesInRange[randNum].ApplyStatusEffect(statusType, 1);
+                enemiesInRange[randNum].ApplyStatusEffect(statusType, 1);
+            }
         }
 
         // Interest Contract
