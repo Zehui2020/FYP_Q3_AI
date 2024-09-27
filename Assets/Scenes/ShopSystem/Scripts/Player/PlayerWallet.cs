@@ -1,9 +1,9 @@
 //----------------------------------------------------------------------
 // PlayerWallet
 //
-// Class for managing the player's wallet
+// Class to manage the player's money
 //
-// Data: 2024/08/30
+// Date: 2024/08/30
 // Author: Shimba Sakai
 //----------------------------------------------------------------------
 
@@ -12,51 +12,48 @@ using UnityEngine;
 
 public class PlayerWallet : MonoBehaviour
 {
-    // Player's current wallet instance
+    // Player's money
     public static PlayerWallet Instance { get; private set; }
 
-    // Load JSON file name in Resources only when the game starts
+    // Load from the JSON file in Resources only when the game starts
     [Header("JSON File Name in Resources")]
     public string m_jsonFileName = "money";
 
-    // Current player's money
+    // Player's current money
     private int m_currentMoney;
 
     void Start()
     {
-        // For checking the save path
-        Debug.Log("Persistent Data Path: " + Application.persistentDataPath);
-
-        // Flag to determine if it's the first play
+        // Flag to determine if it's the first playthrough
         if (IsFirstPlay())
         {
-            // Load from the Load folder on the first play
+            // On the first playthrough, load from the Load folder
             LoadMoney();
         }
         else
         {
-            // Load from the Save folder on resuming
+            // On game continuation, load from the Save folder
             LoadMoneyForContinue();
         }
     }
 
-    // Method to check if it's the first play
+    // Method to determine if it's the first playthrough
     private bool IsFirstPlay()
     {
         string path = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Load/Money/money.json");
-        return !File.Exists(path); // If the file does not exist in the Load folder, it's the first play
+        return !File.Exists(path); // If no file exists in the Load folder, it's the first playthrough
     }
 
     void Awake()
     {
-        // Implementing the Singleton pattern: check if the instance is not set
+        // Singleton pattern: handle case where the instance is not set
         if (Instance == null)
         {
-            // Set the instance as the current object
+            // Set the object as the instance
             Instance = this;
-            // Do not destroy the object when switching scenes
+            // Prevent the object from being destroyed when switching scenes
             DontDestroyOnLoad(gameObject);
-            // Load money from JSON at startup
+            // Load money from the JSON file at startup
             LoadMoney();
         }
         else
@@ -69,14 +66,14 @@ public class PlayerWallet : MonoBehaviour
     // Method to get the player's money
     public int GetMoney()
     {
-        // Get the current player's money
+        // Return the player's current money
         return m_currentMoney;
     }
 
     // Method to add money to the player's wallet
     public void AddMoney(int amount)
     {
-        // Add the specified amount to the player's money and save it
+        // Add money to the player's wallet and then save it
         m_currentMoney += amount;
         // Save the player's money
         SaveMoney();
@@ -85,20 +82,19 @@ public class PlayerWallet : MonoBehaviour
     // Method to spend money from the player's wallet
     public bool SpendMoney(int amount)
     {
-        // If the player's money is greater than or equal to the purchase amount
+        // If the player's money is greater than or equal to the amount
         if (m_currentMoney >= amount)
         {
-            // Deduct the specified amount from the player's money
+            // Subtract the specified amount from the player's wallet
             m_currentMoney -= amount;
             // Save the player's money
             SaveMoney();
-            // Purchase is successful
+            // Purchase successful
             return true;
         }
-        // If the player's money is less than the purchase amount
         else
         {
-            // Purchase fails
+            // Purchase failed
             return false;
         }
     }
@@ -106,13 +102,13 @@ public class PlayerWallet : MonoBehaviour
     // Method to save the player's money
     private void SaveMoney()
     {
-        // Create an instance of the data class to save the current money
+        // Create an instance of the data class to store the player's money and set the current amount
         var data = new PlayerWalletData { money = m_currentMoney };
 
         // Convert the data class to a JSON string
         string json = JsonUtility.ToJson(data);
 
-        // Determine the path for saving JSON data
+        // Determine the path to save the JSON data
         string path = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Save/Money/money.json");
 
         // Write the JSON data to the file
@@ -122,31 +118,31 @@ public class PlayerWallet : MonoBehaviour
     // Method to load the player's money
     private void LoadMoney()
     {
-        // Load from the Load folder on the first play
+        // On the first playthrough, load from the Load folder
         string loadPath = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Load/Money/money.json");
 
         // Check if the saved data exists
         if (File.Exists(loadPath))
         {
-            // Read JSON data from the file
+            // Read the JSON data from the file
             string json = File.ReadAllText(loadPath);
             PlayerWalletData data = JsonUtility.FromJson<PlayerWalletData>(json);
             m_currentMoney = data.money;
         }
         else
         {
-            // Set default money (10000G)
+            // Set the default money amount (10000G)
             m_currentMoney = 10000;
         }
     }
 
-    // Method to load the player's money for resuming
+    // Method to load the player's money on game continuation
     public void LoadMoneyForContinue()
     {
-        // Load from the Save folder when resuming
+        // On game continuation, load from the Save folder
         string savePath = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Save/Money/money.json");
 
-        // Load data if the file exists
+        // If the file exists, load the data
         if (File.Exists(savePath))
         {
             string json = File.ReadAllText(savePath);
@@ -155,13 +151,13 @@ public class PlayerWallet : MonoBehaviour
         }
         else
         {
-            // Set default money (10000G)
+            // Set the default money amount (10000G)
             m_currentMoney = 10000;
         }
     }
 }
 
-// Data class for saving the player's wallet
+// Data class to store the player's money
 [System.Serializable]
 public class PlayerWalletData
 {
