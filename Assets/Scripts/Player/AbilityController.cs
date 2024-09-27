@@ -21,7 +21,7 @@ public class AbilityController : MonoBehaviour
         player = GetComponent<PlayerController>();
         for (int i = 0; i < abilities.Count; i++)
         {
-            abilityUI[i].InitAbilityUI(abilities[i].abilityIcon, 0, abilities[i].abilityCharges, "[ " + (i + 1).ToString() + " ]");
+            abilityUI[i].InitAbilityUI(abilities[i], "[ " + (i + 1).ToString() + " ]");
             charges.Add(abilities[i].abilityCharges);
             maxCharges.Add(abilities[i].abilityMaxCharges);
         }
@@ -42,19 +42,11 @@ public class AbilityController : MonoBehaviour
         GameObject obj = Instantiate(abilityUIPrefab, abilityUIParent);
         abilityUI.Add(obj.GetComponent<AbilityUIController>());
         if (abilityUI.Count == 10)
-            abilityUI[abilityUI.Count - 1].InitAbilityUI(newAbility.abilityIcon, 0, newAbility.abilityCharges, "[ 0 ]");
+            abilityUI[abilityUI.Count - 1].InitAbilityUI(newAbility, "[ 0 ]");
         else
-            abilityUI[abilityUI.Count - 1].InitAbilityUI(newAbility.abilityIcon, 0, newAbility.abilityCharges, "[ " + abilityUI.Count.ToString() + " ]");
+            abilityUI[abilityUI.Count - 1].InitAbilityUI(newAbility, "[ " + abilityUI.Count.ToString() + " ]");
         // init ability
         InitializeAbility(abilities.Count - 1);
-        // debug
-        Debug.Log("Added: " + newAbility.abilityName);
-        string text = "";
-        for (int i = 0; i < abilities.Count; i++)
-        {
-            text = text + abilities[i].abilityName + ", ";
-        }
-        Debug.Log("Abilities: " + text);
     }
 
     private void Update()

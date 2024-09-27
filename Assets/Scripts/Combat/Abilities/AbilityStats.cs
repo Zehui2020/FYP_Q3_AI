@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using UnityEngine;
 
 [CreateAssetMenu]
@@ -6,8 +5,6 @@ public class AbilityStats : ScriptableObject
 {
     public int bloodArtsBleedChance;
     public float bloodArtsLifestealMultiplier;
-
-    public float requiemAtkSpdMultiplier;
 
     public BaseStats contagiousHazeTarget;
     public bool contagiousHazeHit;
@@ -17,8 +14,6 @@ public class AbilityStats : ScriptableObject
     {
         bloodArtsBleedChance = 0;
         bloodArtsLifestealMultiplier = 0;
-
-        requiemAtkSpdMultiplier = 0;
 
         contagiousHazeTarget = null;
         contagiousHazeHit = false;
