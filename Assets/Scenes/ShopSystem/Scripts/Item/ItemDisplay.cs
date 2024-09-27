@@ -1,9 +1,9 @@
 //----------------------------------------------------------------------
 // ItemDisplay
 //
-// アイテムを表示するためのクラス
+// Class for displaying items
 //
-// Data: 8/28/2024
+// Date: 8/28/2024
 // Author: Shimba Sakai
 //----------------------------------------------------------------------
 
@@ -14,55 +14,61 @@ using System.Collections.Generic;
 
 public class ItemDisplay : MonoBehaviour
 {
-    //[Header("UI Image for Item Sprite / アイテムスプライト表示用")]
+    [Header("UI Image for Item Sprite")]
     public Image m_itemImage;
-    //[Header("TextMeshProUGUI for Item Name / アイテム名表示用")]
+    [Header("TextMeshProUGUI for Item Name")]
     public TextMeshProUGUI m_itemNameText;
-    //[Header("TextMeshProUGUI for Item Price / アイテム価格表示用")]
+    [Header("TextMeshProUGUI for Item Price")]
     public TextMeshProUGUI m_itemPriceText;
 
-    // 現在のアイテムデータ
+    // Current item data
     private ItemData m_currentItemData;
-    // 現在のスプライト情報
+    // Current sprite information
     private Dictionary<string, Sprite> m_currentSpriteDictionary;
 
-    // アイテムの設定
+    // Item setup
     public void Setup(ItemData itemData, Dictionary<string, Sprite> spriteDictionary, string itemUnit)
     {
-        // 現在のアイテムデータを設定する
+        // Set the current item data
         m_currentItemData = itemData;
-        // 現在のスプライト情報を設定する
+        // Set the current sprite information
         m_currentSpriteDictionary = spriteDictionary;
 
-        // アイテムのイメージが設定されている場合、アイテムデータからスプライトを辞書から取得している場合の処理
+        // If the item image is set and the sprite is found in the dictionary, assign the sprite from the item data
         if (m_itemImage != null && spriteDictionary.TryGetValue(m_currentItemData.itemSprite, out Sprite sprite))
         {
-            // アイテムのスプライトを設定する
+            // Set the item sprite
             m_itemImage.sprite = sprite;
         }
 
-        // アイテムの名前が設定されている場合の処理
+        // If the item name is set, assign the item name from the item data
         if (m_itemNameText != null)
         {
-            // アイテムの名前を設定する
+            // Set the item name
             m_itemNameText.text = m_currentItemData.itemName;
         }
 
-        // アイテムの価格が設定されている場合の処理
+        // If the item price is set, assign the item price from the item data
         if (m_itemPriceText != null)
         {
-            // アイテムの価格を設定する
+            // Set the item price
             m_itemPriceText.text = m_currentItemData.itemPrice.ToString() + itemUnit;
         }
     }
 
-    // 現在のアイテムデータを取得
+    // Get the current item data
     public ItemData GetCurrentItemData()
     {
         return m_currentItemData;
     }
 
-    // 現在のスプライトの情報を取得
+    // Set the item price
+    public void SetItemPrice(int price)
+    {
+        m_currentItemData.itemPrice += price;
+    }
+
+    // Get the current sprite information
     public Dictionary<string, Sprite> GetCurrentSpriteDictionary()
     {
         return m_currentSpriteDictionary;
