@@ -23,7 +23,7 @@ public class EnemyUIController : MonoBehaviour
     public void OnHealthChanged(int health, int maxHealth, bool increase, bool critical)
     {
         if (!increase)
-            healthBar.OnDecrease(health, maxHealth, critical);
+            healthBar.OnDecrease(health, maxHealth, critical, true);
         else
             healthBar.OnIncreased(health, maxHealth, critical);
     }
@@ -34,7 +34,7 @@ public class EnemyUIController : MonoBehaviour
             return;
 
         if (!increase)
-            shieldBar.OnDecrease(shield, maxShield, critical);
+            shieldBar.OnDecrease(shield, maxShield, critical, true);
         else
             shieldBar.IncreaseDelayBar(shield, maxShield, increaseDuration);
     }

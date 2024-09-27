@@ -32,16 +32,24 @@ public class EnemyStatBar : MonoBehaviour
 
         delayBarWidth = delayBar.sizeDelta.x;
         originalBarPosition = transform.localPosition;
+
+        delayBar.sizeDelta = new Vector2((float)amount / maxAmount * delayBarWidth, delayBar.sizeDelta.y);
     }
 
-    public void OnDecrease(int amount, int maxAmount, bool critical)
+    public void OnDecrease(int amount, int maxAmount, bool critical, bool shake)
     {
+        if (amount == maxAmount)
+            return;
+
         if (DelayBarRoutine != null)
             StopCoroutine(DelayBarRoutine);
         DelayBarRoutine = StartCoroutine(SetDelayBar(amount, maxAmount, false));
 
-        StopShakeRoutine();
-        BarShakeRoutine = StartCoroutine(ShakeRoutine(critical));
+        if (shake)
+        {
+            StopShakeRoutine();
+            BarShakeRoutine = StartCoroutine(ShakeRoutine(critical));
+        }
     }
 
     public void OnIncreased(int amount, int maxAmount, bool critical)

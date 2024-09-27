@@ -1,7 +1,5 @@
 using System.Collections;
-using UnityEditor.VersionControl;
 using UnityEngine;
-using UnityEngine.VFX;
 
 public class Undead : Enemy
 {
@@ -38,56 +36,53 @@ public class Undead : Enemy
         onFinishIdle += () => { ChangeState(State.Patrol); };
         onPlayerInChaseRange += () => { ChangeState(State.Chase); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
-        OnBreached += (multiplier) => { ChangeState(State.Idle); };
-
+        OnBreached += (multiplier) => { ChangeState(State.Hurt); };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
     }
 
     private void ChangeState(State newState)
     {
+        if (currentState == State.Die)
+            return;
+
         currentState = newState;
 
-        switch (newState)
+        switch (currentState)
         {
             case State.Idle:
-                animator.CrossFade(IdleAnim, 0f);
+                animator.Play(IdleAnim, -1, 0);
+                aiNavigation.StopNavigation();
                 Idle();
                 break;
             case State.Patrol:
-                animator.CrossFade(WalkAnim, 0f);
+                animator.Play(WalkAnim, -1, 0);
                 break;
             case State.Chase:
-                animator.CrossFade(WalkAnim, 0f);
+                animator.Play(WalkAnim, -1, 0);
                 break;
             case State.Attack:
+                animator.Play(AttackAnim, -1, 0);
                 aiNavigation.StopNavigation();
-                animator.Play(AttackAnim, -1, 0f);
-                UpdateMovementDirection();
                 break;
             case State.Teleport:
-                UpdateMovementDirection();
+                animator.Play(TeleportAnim, -1, 0);
                 aiNavigation.StopNavigation();
 
-                animator.Play(TeleportAnim, -1, 0f);
-
-                if (Physics2D.Raycast(transform.position, player.transform.position, 100f, groundLayer))
+                if (Physics2D.Raycast(transform.position, (player.transform.position - transform.position).normalized, 100f, groundLayer))
                     transform.position = player.transform.position;
                 else
                     transform.position = new Vector3(player.transform.position.x, transform.position.y, transform.position.z);
 
-                StartCoroutine(TeleportCooldown(1f));
+                StartCoroutine(TeleportCooldown(0));
 
                 break;
             case State.Hurt:
+                animator.Play(HurtAnim, -1, 0);
                 aiNavigation.StopNavigation();
-                animator.Play(HurtAnim, -1, 0f);
-                ChangeState(State.Idle);
                 break;
             case State.Die:
-                animator.speed = 1;
-                animator.CrossFade(DieAnim, 0f);
+                animator.Play(DieAnim, -1, 0);
                 aiNavigation.StopNavigation();
-                uiController.SetCanvasActive(false);
                 break;
         }
     }
@@ -100,12 +95,14 @@ public class Undead : Enemy
         {
             case State.Idle:
                 CheckChasePlayer();
+                UpdateMovementDirection();
                 break;
             case State.Patrol:
                 if (CheckChasePlayer())
                     return;
 
                 PatrolUpdate();
+                UpdateMovementDirection();
                 break;
             case State.Chase:
                 aiNavigation.SetPathfindingTarget(player.transform, chaseMovementSpeed, true);
@@ -114,12 +111,10 @@ public class Undead : Enemy
 
                 if (Vector2.Distance(player.transform.position, transform.position) >= teleportThreshold && canTeleport)
                     ChangeState(State.Teleport);
-                break;
-        }
 
-        if (currentState != State.Attack &&
-            currentState != State.Teleport)
-            UpdateMovementDirection();
+                UpdateMovementDirection();
+                break;
+        }            
     }
 
     private IEnumerator TeleportCooldown(float delay)
