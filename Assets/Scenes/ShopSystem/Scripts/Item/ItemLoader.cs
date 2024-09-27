@@ -43,10 +43,10 @@ public class ItemLoader : MonoBehaviour
 
     private void Start()
     {
-        // Load all sprites into the dictionary
+        // Load all sprites and store them in the dictionary
         LoadAllSprites();
 
-        // Determine the path of the JSON file to load based on whether it's the first playthrough
+        // Determine the path of the JSON file based on whether the game is being run for the first time
         string path = Path.Combine(Application.dataPath, IsFirstPlay()
             ? "Scenes/ShopSystem/Json/Load/Items/items.json"
             : "Scenes/ShopSystem/Json/Save/Items/items.json");
@@ -59,14 +59,14 @@ public class ItemLoader : MonoBehaviour
         }
     }
 
-    // Method to determine if it's the first playthrough
+    // Method to check if this is the first playthrough
     private bool IsFirstPlay()
     {
         string loadPath = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Load/Items/items.json");
-        return !File.Exists(loadPath); // If no load data exists on first launch, it's the first playthrough
+        return !File.Exists(loadPath);
     }
 
-    // Process to load item data from a JSON file
+    // Method to load item data from a JSON file
     private ItemDataList LoadItemData(string path)
     {
         if (File.Exists(path))
@@ -81,6 +81,7 @@ public class ItemLoader : MonoBehaviour
         }
     }
 
+    // Load all sprites from the "items" folder
     private void LoadAllSprites()
     {
         // Set the path to the "items" folder
@@ -103,11 +104,12 @@ public class ItemLoader : MonoBehaviour
         }
     }
 
+    // Method to load item data based on whether it's the first run
     private ItemDataList LoadItemData()
     {
         string path;
 
-        // Change the path for the first run and subsequent runs
+        // Change path based on whether it's the first run
         if (isFirstRun)
         {
             path = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Load/Items/items.json");
@@ -129,19 +131,19 @@ public class ItemLoader : MonoBehaviour
         }
     }
 
-    // Process to save item data
+    // Method to save item data
     public void SaveItemData()
     {
-        // Create item data list
+        // Create an item data list
         ItemDataList itemDataList = new ItemDataList { items = m_itemDataArray };
 
         // Convert data to JSON format
         string json = JsonUtility.ToJson(itemDataList, true);
 
-        // Determine the save path
+        // Determine the path to save the data
         string path = Path.Combine(Application.dataPath, "Scenes/ShopSystem/Json/Save/Items/items.json");
 
-        // Write JSON data to the file
+        // Write the JSON data to a file
         File.WriteAllText(path, json);
     }
 
@@ -166,10 +168,10 @@ public class ItemLoader : MonoBehaviour
         return m_spriteDictionary;
     }
 
-    // Method to call when the game restarts
+    // Method called when restarting the game
     public void OnGameRestart()
     {
         isFirstRun = false; // Update the flag
-        m_itemDataList = LoadItemData(); // Reload item data
+        m_itemDataList = LoadItemData(); // Reload the item data
     }
 }

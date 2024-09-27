@@ -27,35 +27,35 @@ public class ItemEffect : MonoBehaviour
         m_originalScale = m_itemTransform.localScale;
     }
 
-    // Process when the mouse cursor enters the object
+    // When the mouse cursor enters the object
     public void OnMouseEnter()
     {
-        // Stop any ongoing scaling changes
+        // Stop any ongoing size changes
         StopAllCoroutines();
         // Enlarge the item
         StartCoroutine(ScaleEffect(m_originalScale, m_originalScale * m_scaleAmount));
     }
 
-    // Process when the mouse leaves the item
+    // When the mouse leaves the item
     public void OnMouseExit()
     {
-        // Stop any ongoing scaling changes
+        // Stop any ongoing size changes
         StopAllCoroutines();
-        // Restore the item to its original size
+        // Return the item to its original size
         StartCoroutine(ScaleEffect(m_itemTransform.localScale, m_originalScale));
     }
 
-    // Process to stop the item effect
+    // Stop the item effect
     public void StopEffect()
     {
-        // Restore the item to its original size
+        // Return the item to its original size
         m_itemTransform.localScale = m_originalScale;
 
-        // Stop any ongoing scaling changes
+        // Stop any ongoing size changes
         StopAllCoroutines();
     }
 
-    // Process to change the size of the item
+    // Method to change the item's size
     private IEnumerator ScaleEffect(Vector3 fromScale, Vector3 toScale)
     {
         float elapsedTime = 0f;
@@ -66,7 +66,7 @@ public class ItemEffect : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        // Set the item's size to the specified value
+        // Set the item's size to the target value
         m_itemTransform.localScale = toScale;
     }
 }
