@@ -130,55 +130,22 @@ public class MovementController : MonoBehaviour
         currentState = movementState;
     }
 
-    public void Knockback(float initialSpeed, float distance)
+    public void Knockback(float initialSpeed)
     {
+        ChangeState(MovementState.Knockback);
+
         if (knockbackRoutine != null)
             StopCoroutine(knockbackRoutine);
-        knockbackRoutine = StartCoroutine(KnockbackRoutine(initialSpeed, distance));
+        knockbackRoutine = StartCoroutine(KnockbackRoutine(initialSpeed));
     }
 
-    private IEnumerator KnockbackRoutine(float initialSpeed, float distance)
+    private IEnumerator KnockbackRoutine(float force)
     {
-        Vector2 dir;
-        if (transform.localScale.x > 0)
-            dir = Vector2.left;
-        else
-            dir = Vector2.right;
+        Vector2 dir = transform.localScale.x > 0 ? -transform.right : transform.right;
+        playerRB.AddForce(dir * force, ForceMode2D.Impulse);
 
-        float knockedBackDistance = 0f;
-        float currentSpeed;
-        Vector2 initialPosition = playerRB.position;
-        float remainingDistance = distance - knockedBackDistance;
-
-        while (remainingDistance > 0.3f)
+        while (playerRB.velocity.magnitude > 0.1f)
         {
-            currentState = MovementState.Knockback;
-
-            if (Time.timeScale == 0)
-                yield return null;
-
-            RaycastHit2D hit;
-            if (hit = Physics2D.Raycast(transform.position, dir, distance, groundLayer))
-            {
-                if (Vector2.Distance(transform.position, hit.point) <= 2f)
-                {
-                    while (Time.timeScale == 0)
-                        yield return null;
-
-                    knockbackRoutine = null;
-                    ChangeState(MovementState.Idle);
-                    ChangePlayerState?.Invoke(PlayerController.PlayerStates.Movement);
-                    yield break;
-                }
-            }
-
-            remainingDistance = distance - knockedBackDistance;
-            currentSpeed = Mathf.Lerp(initialSpeed, 0, knockedBackDistance / distance);
-            Vector2 newPosition = playerRB.position + dir * currentSpeed * Time.deltaTime;
-            playerRB.MovePosition(newPosition);
-
-            knockedBackDistance = Vector2.Distance(initialPosition, playerRB.position);
-
             yield return null;
         }
 

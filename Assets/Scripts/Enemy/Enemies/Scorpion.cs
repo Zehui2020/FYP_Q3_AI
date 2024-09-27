@@ -79,11 +79,20 @@ public class Scorpion : Enemy
 
     public override void UpdateEnemy()
     {
+        if (health <= 0)
+            return;
+
         base.UpdateEnemy();
 
-        if (Vector2.Distance(player.transform.position, transform.position) <= meleeRange && currentState != State.Melee && currentState != State.Throw)
+        if (Vector2.Distance(player.transform.position, transform.position) <= meleeRange && 
+            currentState != State.Melee && 
+            currentState != State.Throw &&
+            currentState != State.Hurt)
             ChangeState(State.Melee);
-        else if (canThrow && Physics2D.OverlapCircle(transform.position, chaseRange, playerLayer) && currentState != State.Throw && currentState != State.Melee)
+        else if (canThrow && Physics2D.OverlapCircle(transform.position, chaseRange, playerLayer) && 
+            currentState != State.Throw && 
+            currentState != State.Melee &&
+            currentState != State.Hurt)
             ChangeState(State.Throw);
 
         switch (currentState)
@@ -113,7 +122,7 @@ public class Scorpion : Enemy
     {
         canThrow = false;
 
-        ScorpionBomb bomb = ObjectPool.Instance.GetPooledObject("ScorpionBomb", true) as ScorpionBomb;
+        ScorpionBomb bomb = ObjectPool.Instance.GetPooledObject("ScorpionBomb", false) as ScorpionBomb;
         bomb.transform.position = bombSpawnPos.position;
         bomb.InitScorpionBomb(this, bombSpawnPos.position, PlayerController.Instance.transform.position);
 

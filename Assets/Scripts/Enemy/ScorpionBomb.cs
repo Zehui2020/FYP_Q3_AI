@@ -14,6 +14,7 @@ public class ScorpionBomb : PooledObject
     [SerializeField] private float radius;
     [SerializeField] private float speed;
     [SerializeField] private float maxArcHeight;
+    [SerializeField] private float damageMultToSelf;
 
     private Scorpion thrower;
     private PlayerController player;
@@ -31,8 +32,10 @@ public class ScorpionBomb : PooledObject
 
     public void InitScorpionBomb(Scorpion thrower, Vector2 startPos, Vector2 targetPos)
     {
-        this.thrower = thrower;
+        gameObject.SetActive(true);
+        bombCol.isTrigger = true;
 
+        this.thrower = thrower;
         player = PlayerController.Instance;
 
         LaunchBomb(startPos, targetPos, 1);
@@ -40,22 +43,25 @@ public class ScorpionBomb : PooledObject
 
     private void LaunchBomb(Vector2 startPos, Vector2 targetPos, float arcModifier)
     {
-        bombCol.isTrigger = true;
         this.targetPos = targetPos;
+
+        RaycastHit2D hit = Physics2D.Raycast(targetPos, Vector2.down, 100f, groundLayer);
+        if (hit)
+            this.targetPos = new Vector2(targetPos.x, hit.point.y);
 
         float maxArc = maxArcHeight * arcModifier;
         // Check for ground and adjust arc height if necessary
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.down * maxArc, maxArc, groundLayer);
-        if (hit)
+        RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, -Vector2.down * maxArc, maxArc, groundLayer);
+        if (hits.Length > 0)
         {
-            maxArc = hit.distance;
-            Debug.Log(hit.collider.name);
+            maxArc = hits[hits.Length - 1].distance;
+            Debug.Log(hits[hits.Length - 1].collider.name);
         }
 
         float distance = targetPos.x - startPos.x;
         float peakHeight = Mathf.Max(startPos.y, targetPos.y) + maxArc;
 
-        float gravity = Mathf.Abs(Physics2D.gravity.y);
+        float gravity = Mathf.Abs(Physics2D.gravity.y * bombRB.gravityScale);
         float vy = Mathf.Sqrt(2 * gravity * (peakHeight - startPos.y));
 
         float timeToPeak = vy / gravity;
@@ -76,7 +82,11 @@ public class ScorpionBomb : PooledObject
                 continue;
 
             float damage = thrower.CalculateDamageDealt(target, BaseStats.Damage.DamageSource.Normal, out bool crit, out DamagePopup.DamageType damageType);
-            target.TakeDamage(thrower, new BaseStats.Damage(damage), crit, target.transform.position, damageType);
+
+            if (isParried && target == thrower)
+                target.TakeDamage(thrower, new BaseStats.Damage(damage * damageMultToSelf), crit, target.transform.position, damageType);
+            else
+                target.TakeDamage(thrower, new BaseStats.Damage(damage), crit, target.transform.position, damageType);
         }
 
         Release();
@@ -94,12 +104,14 @@ public class ScorpionBomb : PooledObject
             bombCol.isTrigger = false;
         }
 
-        if (Physics2D.OverlapCircle(transform.position, bombCol.size.x / 2f) && 
+        if (transform.position.y > targetPos.y &&
+            Physics2D.OverlapCircle(transform.position, bombCol.size.x / 2f) && 
             player.immuneType == BaseStats.ImmuneType.Parry &&
             !isParried)
         {
             isParried = true;
             LaunchBomb(transform.position, thrower.transform.position, 0.4f);
+            player.OnParryEnemy(thrower);
         }
     }
 }
