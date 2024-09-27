@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 // TextureCollision
 //
-// Class to handle texture-based hit detection (hit detection based on transparency)
+// Class for handling texture collision detection (based on transparency)
 //
 // Date: 25/9/2024
 // Author: Shimba Sakai
@@ -14,21 +14,21 @@ using System.Collections.Generic;
 
 public class TextureCollision : MonoBehaviour
 {
-    // Ray required for hit detection
+    // Raycaster needed for collision detection
     public GraphicRaycaster m_raycaster;
     // Event system
     public EventSystem m_eventSystem;
-    // Image to display
+    // Image to be displayed
     public Image m_image;
-    // AI system image to display
+    // Texture of the displayed AI system image
     private Texture2D m_texture;
 
-    // Flag for hit detection
+    // Flag for hit detection based on transparency
     private bool m_isTransparencyHitDetection = false;
 
     void Start()
     {
-        // Get the texture from the sprite
+        // Get the texture of the sprite
         m_texture = m_image.sprite.texture;
 
         // Check if the texture is readable
@@ -47,7 +47,7 @@ public class TextureCollision : MonoBehaviour
             PointerEventData pointerEventData = new PointerEventData(m_eventSystem);
             pointerEventData.position = Input.mousePosition;
 
-            // List to store the results of the raycast
+            // List to store raycast results
             List<RaycastResult> results = new List<RaycastResult>();
             m_raycaster.Raycast(pointerEventData, results);
 
@@ -64,7 +64,7 @@ public class TextureCollision : MonoBehaviour
                         out localPoint
                     );
 
-                    // Convert local coordinates to pixel coordinates within the sprite
+                    // Convert local coordinates to pixel coordinates in the sprite
                     Rect rect = m_image.sprite.textureRect;
                     float x = (localPoint.x + m_image.rectTransform.rect.width * 0.5f) * rect.width / m_image.rectTransform.rect.width;
                     float y = (localPoint.y + m_image.rectTransform.rect.height * 0.5f) * rect.height / m_image.rectTransform.rect.height;
@@ -74,17 +74,17 @@ public class TextureCollision : MonoBehaviour
                     y = Mathf.Clamp(y, 0, m_texture.height - 1);
                     Color pixelColor = m_texture.GetPixel((int)x, (int)y);
 
-                    // Apply hit detection based on transparency
+                    // Apply collision detection based on transparency
                     if (pixelColor.a > 0.1f)
                     {
-                        Debug.Log("Hit an opaque part");
-                        // Set to true if hit on an opaque (visible) part
+                        Debug.Log("Hit an opaque area");
+                        // If hit an opaque (visible) part, set to true
                         m_isTransparencyHitDetection = true;
                     }
                     else
                     {
-                        Debug.Log("Hit a transparent part");
-                        // Set to false if hit on a transparent (invisible) part
+                        Debug.Log("Hit a transparent area");
+                        // If hit a transparent (invisible) part, set to false
                         m_isTransparencyHitDetection = false;
                     }
                 }
@@ -92,13 +92,13 @@ public class TextureCollision : MonoBehaviour
         }
     }
 
-    // Reset the hit detection flag
+    // Reset hit detection flag
     public void ResetHitDetection()
     {
         m_isTransparencyHitDetection = false;
     }
 
-    // Get the hit detection flag
+    // Get the transparency hit detection flag
     public bool GetTransparencyHitDetectionFlag()
     {
         // Return the hit detection flag

@@ -26,7 +26,7 @@ public class ItemDisplay : MonoBehaviour
     // Current sprite information
     private Dictionary<string, Sprite> m_currentSpriteDictionary;
 
-    // Item setup
+    // Setup the item
     public void Setup(ItemData itemData, Dictionary<string, Sprite> spriteDictionary, string itemUnit)
     {
         // Set the current item data
@@ -34,21 +34,21 @@ public class ItemDisplay : MonoBehaviour
         // Set the current sprite information
         m_currentSpriteDictionary = spriteDictionary;
 
-        // If the item image is set and the sprite is found in the dictionary, assign the sprite from the item data
+        // If the item image is set and the sprite for the item data is found in the dictionary
         if (m_itemImage != null && spriteDictionary.TryGetValue(m_currentItemData.itemSprite, out Sprite sprite))
         {
-            // Set the item sprite
+            // Set the sprite for the item
             m_itemImage.sprite = sprite;
         }
 
-        // If the item name is set, assign the item name from the item data
+        // If the item name text is set
         if (m_itemNameText != null)
         {
             // Set the item name
             m_itemNameText.text = m_currentItemData.itemName;
         }
 
-        // If the item price is set, assign the item price from the item data
+        // If the item price text is set
         if (m_itemPriceText != null)
         {
             // Set the item price
@@ -65,7 +65,7 @@ public class ItemDisplay : MonoBehaviour
     // Set the item price
     public void SetItemPrice(int price)
     {
-        m_currentItemData.itemPrice += price;
+        m_currentItemData.itemPrice = price;
     }
 
     // Get the current sprite information

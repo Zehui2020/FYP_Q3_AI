@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 // ItemInteraction
 //
-// Class to manage interaction between items and the user
+// Class to manage interactions between the item and the user
 //
 // Date: 28/8/2024
 // Author: Shimba Sakai
@@ -19,13 +19,13 @@ public class ItemInteraction : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     void Start()
     {
-        // Handle case where the item effect is not set
+        // If the item effect is not set
         if (m_itemEffect == null)
         {
-            // Retrieve the item effect
+            // Get the item effect component
             m_itemEffect = this.GetComponent<ItemEffect>();
         }
-        // Handle case where the item purchase display class is not set
+        // If the item purchase display class is not set
         if (m_itemPurchaseDisplay == null)
         {
             // Set the item purchase display class
@@ -33,35 +33,34 @@ public class ItemInteraction : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
     }
 
-    // Process when the pointer enters the item
+    // When the pointer enters the item
     public void OnPointerEnter(PointerEventData eventData)
     {
         // Trigger the scale effect
         m_itemEffect.OnMouseEnter();
 
-        // Handle case where the item purchase screen is displayed
+        // If the item purchase popup is being displayed
         if (m_itemPurchaseDisplay.GetPopupFlag() == true)
         {
-            // Stop the effect
+            // Do not trigger the effect
             m_itemEffect.StopEffect();
         }
     }
 
-    // Process when the pointer exits the item
+    // When the pointer exits the item
     public void OnPointerExit(PointerEventData eventData)
     {
         // Trigger the scale effect
         m_itemEffect.OnMouseExit();
-
-        // Handle case where the item purchase screen is displayed
+        // If the item purchase popup is being displayed
         if (m_itemPurchaseDisplay.GetPopupFlag() == true)
         {
-            // Stop the effect
+            // Do not trigger the effect
             m_itemEffect.StopEffect();
         }
     }
 
-    // Process when the pointer clicks on the item
+    // When the pointer clicks on the item
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
@@ -71,16 +70,15 @@ public class ItemInteraction : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
             if (clickedItemDisplay != null)
             {
-                // Start the item effect
+                // Trigger the item effect
                 m_itemEffect.OnMouseEnter();
 
-                // Display popup with the data of the clicked item
+                // Display the popup with the clicked item's data
                 m_itemPurchaseDisplay.OnItemClicked(clickedItemDisplay.GetCurrentItemData(), clickedItemDisplay.GetCurrentSpriteDictionary());
-
-                // Handle case where the item purchase screen is displayed
+                // If the item purchase popup is being displayed
                 if (m_itemPurchaseDisplay.GetPopupFlag() == true)
                 {
-                    // Stop the effect
+                    // Do not trigger the effect
                     m_itemEffect.StopEffect();
                 }
             }

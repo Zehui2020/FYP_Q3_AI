@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------
 // TextFadeAndMove
 //
-// Class to display the purchase amount during transactions
+// Class to display the purchase amount with fade and movement
 //
 // Date: 17/9/2024
 // Author: Shimba Sakai
@@ -28,7 +28,7 @@ public class TextFadeAndMove : MonoBehaviour
     private GameObject m_itemPurchaseDisplayPrefab;
 
     // Current copy of the purchase amount display text
-    private GameObject m_currentitemPurchaseDisplayPrefab;
+    private GameObject m_currentItemPurchaseDisplayPrefab;
 
     void Start()
     {
@@ -41,27 +41,27 @@ public class TextFadeAndMove : MonoBehaviour
 
         // Create a copy of the purchase amount display text
         m_itemPurchaseDisplayPrefab = m_itemShopUIHandler.m_itemPurchaseDisplay.gameObject;
-        // Save the initial color and position
+        // Save the initial position and color
         m_initialPosition = m_itemShopUIHandler.m_itemPurchaseDisplay.rectTransform.anchoredPosition;
 
-        // Hide the purchase amount display
+        // Initially hide the purchase amount display
         m_itemShopUIHandler.m_itemPurchaseDisplay.gameObject.SetActive(false);
     }
 
-    // Fade the text
+    // Fade, move, and reset the text
     public IEnumerator FadeMoveAndResetText(string text, float price, string itemUnit)
     {
-        // Generate a new text object
+        // Create a new text object
         GameObject newPurchaseDisplay = Instantiate(m_itemPurchaseDisplayPrefab, m_itemShopUIHandler.m_itemPurchaseDisplay.transform.parent);
         var textComponent = newPurchaseDisplay.GetComponent<TextMeshProUGUI>();
         textComponent.text = text + price + itemUnit;
         textComponent.color = new Color(textComponent.color.r, textComponent.color.g, textComponent.color.b, 1f);
         newPurchaseDisplay.SetActive(true);
 
-        // Move the text while fading it out
+        // Fade out and move the text
         yield return StartCoroutine(FadeAndMoveText(1, 0, newPurchaseDisplay.transform.position, newPurchaseDisplay.transform.position + m_moveDistance, newPurchaseDisplay));
 
-        // Wait a little
+        // Wait for a short period
         yield return new WaitForSeconds(0.5f);
 
         // Destroy the generated text
@@ -76,7 +76,7 @@ public class TextFadeAndMove : MonoBehaviour
         {
             float t = elapsedTime / m_duration;
 
-            // Interpolate the position of the text and move it
+            // Interpolate the position to move the text
             if (textObject != null)
             {
                 textObject.transform.position = Vector3.Lerp(startPosition, endPosition, t);
@@ -101,7 +101,7 @@ public class TextFadeAndMove : MonoBehaviour
         }
     }
 
-    // Reset the position and transparency
+    // Reset the text's position and transparency
     private void ResetTextPositionAndAlpha()
     {
         // Reset the position

@@ -1,19 +1,18 @@
 //----------------------------------------------------------------------
 // AISystemManager
 //
-// Class to manage the AI system
+// Class that manages the AI system
 //
 // Date: 25/9/2024
 // Author: Shimba Sakai
 //----------------------------------------------------------------------
 
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class AISystemManager : MonoBehaviour
 {
-    // Item shop UI management class
+    // Item shop UI handler class
     public ItemShopUIHandler m_itemShopUIHandler;
 
     // Texture collision detection class
@@ -28,60 +27,60 @@ public class AISystemManager : MonoBehaviour
     // Array of item data
     private ItemData[] m_itemDataArray;
 
-    // Dictionaries to manage item prices
-    private Dictionary<string, float> m_initialItemPrice = new Dictionary<string, float>();
+    // Dictionary to manage the price for each item
     private Dictionary<string, float> m_currentItemPrice = new Dictionary<string, float>();
 
     void Start()
     {
-        // Handle case where the item shop UI management class is not set
+        // Handle when the item shop UI handler class is not set
         if (m_itemShopUIHandler == null)
         {
-            // Set the item shop UI management class
+            // Set the item shop UI handler class
             m_itemShopUIHandler = FindAnyObjectByType<ItemShopUIHandler>();
         }
 
-        // Handle case where the texture collision class is not set
+        // Handle when the texture collision detection class is not set
         if (m_textureCollision == null)
         {
             // Set the texture collision detection class
             m_textureCollision = GetComponent<TextureCollision>();
         }
 
-        // Handle case where the item price fluctuation class is not set
+        // Handle when the item price fluctuation class is not set
         if (m_itemPriceFluctuations == null)
         {
             // Set the item price fluctuation class
             m_itemPriceFluctuations = FindAnyObjectByType<ItemPriceFluctuations>();
         }
-
-        // Initially display the AI system
+        // By default, display the AI system
         m_itemShopUIHandler.m_AISystemImage.gameObject.SetActive(true);
 
-        // Initially hide the object that displays AI conversations
+        // Initially, hide the object that displays the conversation with AI
         m_itemShopUIHandler.m_AIConversationDisplay.SetActive(false);
 
-        // For debugging
+        // Debug setup
         m_itemShopUIHandler.m_debugBadBotton.onClick.AddListener(TheNumberMinus1);
         m_itemShopUIHandler.m_debugNormalBotton.onClick.AddListener(TheNumber0);
         m_itemShopUIHandler.m_debugGoodBotton.onClick.AddListener(TheNumberPlus1);
     }
 
-    // For debugging
+    // Debug methods
     private void TheNumberMinus1()
     {
-        m_itemPriceFluctuations.ChangePriceBasedOnMood(m_itemData.itemName, m_itemDataArray, m_initialItemPrice, m_currentItemPrice, -1);
-    }
-    private void TheNumber0()
-    {
-        m_itemPriceFluctuations.ChangePriceBasedOnMood(m_itemData.itemName, m_itemDataArray, m_initialItemPrice, m_currentItemPrice, 0);
-    }
-    private void TheNumberPlus1()
-    {
-        m_itemPriceFluctuations.ChangePriceBasedOnMood(m_itemData.itemName, m_itemDataArray, m_initialItemPrice, m_currentItemPrice, 1);
+        m_itemPriceFluctuations.ChangePriceBasedOnMood(m_itemDataArray, -1);
     }
 
-    // Show the AI system
+    private void TheNumber0()
+    {
+        m_itemPriceFluctuations.ChangePriceBasedOnMood(m_itemDataArray, 0);
+    }
+
+    private void TheNumberPlus1()
+    {
+        m_itemPriceFluctuations.ChangePriceBasedOnMood(m_itemDataArray, 1);
+    }
+
+    // Display the AI system
     public void ShowAISystem()
     {
         // Display the AI system
@@ -95,25 +94,25 @@ public class AISystemManager : MonoBehaviour
         m_itemShopUIHandler.m_AISystemImage.gameObject.SetActive(false);
     }
 
-    // Show background for AI conversation
+    // Show the background for conversations with AI
     public void ShowAIConversationBackground()
     {
         m_itemShopUIHandler.m_AIConversationBackground.gameObject.SetActive(true);
     }
 
-    // Show the object that displays AI conversations
+    // Show the object that displays the conversation with AI
     public void ShowAIConversationDisplay()
     {
         m_itemShopUIHandler.m_AIConversationDisplay.SetActive(true);
     }
 
-    // Hide the object that displays AI conversations
+    // Hide the object that displays the conversation with AI
     public void HideAIConversationDisplay()
     {
         m_itemShopUIHandler.m_AIConversationDisplay.SetActive(false);
     }
 
-    // Get item price fluctuations
+    // Get the fluctuation of item prices
     public int GetItemPriceFluctuations(string itemName)
     {
         return m_itemPriceFluctuations.GetCurrentPrice(itemName);
@@ -122,25 +121,25 @@ public class AISystemManager : MonoBehaviour
     // Set item data
     public void SetItemData(ItemData itemData)
     {
-        m_itemData = itemData;
+        m_itemPriceFluctuations.SetItemData(itemData);
     }
 
-    // Set item data array
+    // Set the array of item data
     public void SetItemDataArray(ItemData[] itemDataArray)
     {
         m_itemDataArray = itemDataArray;
     }
 
-    // Set the dictionary for managing initial item prices
-    public void SetInitialItemPriceDictionary(Dictionary<string, float> initialItemPrice)
-    {
-        m_initialItemPrice = initialItemPrice;
-    }
-
-    // Set the dictionary for managing current item prices
+    // Set the dictionary that manages the current price for each item
     public void SetCurrentItemPriceDictionary(Dictionary<string, float> currentItemPrice)
     {
         m_currentItemPrice = currentItemPrice;
+    }
+
+    // Initialize mood
+    public void SetMood(int mood)
+    {
+        m_itemPriceFluctuations.SetMood(mood);
     }
 
     // Get mood
