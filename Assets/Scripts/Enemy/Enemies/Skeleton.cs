@@ -27,7 +27,7 @@ public class Skeleton : Enemy
     [SerializeField] private Vector2 lungeForce;
     [SerializeField] private float lungeAngle;
     [SerializeField] private float scratchRange;
-    private bool isGivenUp = false;
+    private bool isLunging = false;
 
     public override void InitializeEnemy()
     {
@@ -35,7 +35,7 @@ public class Skeleton : Enemy
 
         ChangeState(State.Patrol);
 
-        onReachWaypoint += () => { ChangeState(State.Idle); isGivenUp = false; };
+        onReachWaypoint += () => { ChangeState(State.Idle); };
         onFinishIdle += () => { ChangeState(State.Patrol); };
         onPlayerInChaseRange += () => { ChangeState(State.Deciding); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
@@ -102,13 +102,6 @@ public class Skeleton : Enemy
                 CheckChasePlayer();
                 break;
             case State.Patrol:
-                if (isGivenUp)
-                {
-                    PatrolUpdate();
-                    UpdateMovementDirection();
-                    return;
-                }
-
                 if (CheckChasePlayer())
                     return;
 
@@ -134,13 +127,8 @@ public class Skeleton : Enemy
 
         if (Physics2D.Raycast(transform.position, dir.normalized, scratchRange, playerLayer))
             ChangeState(State.Scratch);
-        else if (!Physics2D.Raycast(transform.position, direction, 100f, groundLayer))
-            ChangeState(State.Lunge);
         else
-        {
-            isGivenUp = true;
-            ChangeState(State.Patrol);
-        }
+            ChangeState(State.Lunge);
     }
 
     public void Lunge()
@@ -179,14 +167,23 @@ public class Skeleton : Enemy
         return tookDamage;
     }
 
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (!Utility.Instance.CheckLayer(collision.gameObject, groundLayer))
+            return;
+
+        isLunging = true;
+    }
+
     private void OnCollisionStay2D(Collision2D collision)
     {
         if (!Utility.Instance.CheckLayer(collision.gameObject, groundLayer) || 
             currentState != State.Lunge ||
-            enemyRB.velocity.y < 0)
+            !isLunging)
             return;
 
         ChangeState(State.Land);
         OnDamageEventEnd(0);
+        isLunging = false;
     }
 }

@@ -89,8 +89,15 @@ public class Scorpion : Enemy
             currentState != State.Throw &&
             currentState != State.Hurt)
             ChangeState(State.Melee);
-        else if (canThrow && Physics2D.OverlapCircle(transform.position, chaseRange, playerLayer) && 
-            currentState != State.Throw && 
+        else if (isInCombat && 
+            canThrow &&
+            currentState != State.Throw &&
+            currentState != State.Melee &&
+            currentState != State.Hurt)
+            ChangeState(State.Throw);
+        else if (canThrow &&
+            CheckChasePlayer() &&
+            currentState != State.Throw &&
             currentState != State.Melee &&
             currentState != State.Hurt)
             ChangeState(State.Throw);
