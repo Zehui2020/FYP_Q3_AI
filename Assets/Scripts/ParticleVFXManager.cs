@@ -15,6 +15,8 @@ public class ParticleVFXManager : MonoBehaviour
     [SerializeField] private ParticleManager bleedPS;
     [SerializeField] private ParticleManager bloodLossPS;
 
+    [SerializeField] private ParticleManager gasolinePS;
+
     public void OnBurning(int count)
     {
         firePS.SetAllEmissionRate(count + 10);
@@ -71,6 +73,11 @@ public class ParticleVFXManager : MonoBehaviour
     public void OnBloodLoss()
     {
         bloodLossPS.PlayAll();
+    }
+
+    public void GasolineBurst()
+    {
+        gasolinePS.PlayAll();
     }
 
     public void StopEverything()

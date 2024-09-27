@@ -44,7 +44,8 @@ public class Skeleton : Enemy
 
     private void ChangeState(State newState)
     {
-        currentState = newState;
+        if (currentState == State.Die)
+            return;
 
         switch (newState)
         {
