@@ -11,6 +11,8 @@ public class TextAnalysis : MonoBehaviour
     //Mood Meter Variables
     private float Mood_Meter_Change;
     public float Mood_Meter = 50;
+    public float Mood_Price_Modifier;
+    private float previous_Mood;
 
     private bool responseFromThread = false;
     private bool threadStarted = false;
@@ -73,6 +75,8 @@ public class TextAnalysis : MonoBehaviour
         Debug.Log(SentimentAnalysisResponse.y + " % : Negative");
         Debug.Log(SentimentAnalysisResponse.z + " % : Neutral");
 
+        previous_Mood = Mood_Meter;
+
         //Positive Mood
         if (SentimentAnalysisResponse.x > 70.0f)
         {
@@ -87,7 +91,35 @@ public class TextAnalysis : MonoBehaviour
         {
             Mood_Meter_Change = 0;
         }
+
         Mood_Meter += Mood_Meter_Change;
+
+        //Make sure Mood Meter stays between 0 - 100
+        if (Mood_Meter <= 0)
+        {
+            Mood_Meter = 0;
+        }
+        else if (Mood_Meter >= 100)
+        {
+            Mood_Meter = 100;
+        }
+
+        //Positive Mood Change
+        if (Mood_Meter_Change > 0)
+        {
+           //
+        }
+        //Negative Mood Change
+        else if (Mood_Meter_Change < 0)
+        {
+            //
+        }
+        //No Mood Change
+        else
+        {
+            //
+        }
+
         Debug.Log("Mood Change: " + Mood_Meter_Change);
         Debug.Log("Mood Meter: " + Mood_Meter);
     }
@@ -98,3 +130,11 @@ public class TextAnalysis : MonoBehaviour
         Debug.Log(errorMessage + "\nCode: " + errorCode);
     }
 }
+
+
+//Mood Meter Affects Prices
+//Mood 60: 10%
+//Mood 70: 20%
+//Mood 80: 30%
+//Mood 90: 40%
+//Mood 100: 50%
