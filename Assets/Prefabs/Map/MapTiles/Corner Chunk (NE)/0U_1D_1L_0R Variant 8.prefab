@@ -66,6 +66,7 @@ Transform:
   - {fileID: 7251240535868986778}
   - {fileID: 3875406226896711282}
   - {fileID: 5995817978019448534}
+  - {fileID: 6884530870077729091}
   - {fileID: 1606657122531112367}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -210,7 +211,6 @@ MonoBehaviour:
   - {fileID: 8726915468765883158, guid: ba4224d8fab271b478c13a18fe89577e, type: 3}
   - {fileID: 1155350927852064588, guid: 70c332645cdf3d54480acf3c396c9093, type: 3}
   availableTilesRight:
-  - {fileID: 4450227809201839608, guid: 2d35d05d5af80bd4b8a6e8e35da7f026, type: 3}
   - {fileID: 4808904068151551855, guid: 42a8d01a5e97d91499591b37d2a59b60, type: 3}
   - {fileID: 7686815597531899882, guid: e8755788598f43a42839afc8e418f9a7, type: 3}
   - {fileID: 4860586804391705185, guid: ba2d4cf3b02f1534da87f351f3ebfb90, type: 3}
@@ -2794,6 +2794,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5995817978019448534}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8800652359750503411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6884530870077729091}
+  m_Layer: 0
+  m_Name: Door
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6884530870077729091
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8800652359750503411}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1.33, y: 6.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7056583136919946836}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4966546531900886480
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2809,6 +2840,10 @@ PrefabInstance:
     - target: {fileID: 3039103161929495251, guid: 8ed7be60f9c447945924bee474cbe9c8, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000639230962431731, guid: 8ed7be60f9c447945924bee474cbe9c8, type: 3}
+      propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.y
+      value: 7.9700003
       objectReference: {fileID: 0}
     - target: {fileID: 5080904586711507095, guid: 8ed7be60f9c447945924bee474cbe9c8, type: 3}
       propertyPath: m_Name

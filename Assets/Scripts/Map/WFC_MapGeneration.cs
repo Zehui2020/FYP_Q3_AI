@@ -29,10 +29,12 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private List<GameObject> solidTile;
     [Header("Other")]
     [SerializeField] private GameObject doorPrefab;
+    [SerializeField] private GameObject portalPrefab;
     [SerializeField] private List<Chest> chestsInMap;
     [SerializeField] private TilemapManager tilemapManager;
     [SerializeField] private ItemStats itemStats;
     [SerializeField] private ParallaxEffect[] bgs;
+    [SerializeField] private Transform cam;
 
     [SerializeField] private List<MapTile> mapTiles = new List<MapTile>();
     private List<Sprite> tileSprites = new();
@@ -92,6 +94,7 @@ public class WFC_MapGeneration : MonoBehaviour
         // set door
         InitDoor();
 
+        cam.position = new Vector3((mapSize.x - 1) * tileSize / 2, (mapSize.y - 1) * tileSize / 2, -10);
         mapSize += Vector2.one * 2;
         Debug.Log("Generation Complete!");
     }
@@ -314,6 +317,8 @@ public class WFC_MapGeneration : MonoBehaviour
 
     private void InitDoor()
     {
+        PlayerController.Instance.transform.position = GetStartingPos();
+
         List<Transform> doors = new List<Transform>();
         Transform doorTransform = null;
         // get doors
@@ -330,6 +335,12 @@ public class WFC_MapGeneration : MonoBehaviour
         }
         // set door
         Instantiate(doorPrefab, doorTransform, false);
+
+        doors.Remove(doorTransform);
+        for (int i = doors.Count - 1; i > doors.Count - 4; i--)
+        {
+            Instantiate(portalPrefab, doors[i], false);
+        }
     }
 
     private List<GameObject> GetAvailableBorderTilesList(Vector2 checkTilePos, Vector2 direction)
