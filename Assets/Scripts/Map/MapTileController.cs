@@ -1,11 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class MapTileController : MonoBehaviour
 {
     [SerializeField] public List<GameObject> allTilePrefabs;
+    [SerializeField] public List<GameObject> constantTilePrefabs;
 
     private List<GameObject> tile0U = new List<GameObject>();
     private List<GameObject> tile1U = new List<GameObject>();
@@ -45,6 +44,28 @@ public class MapTileController : MonoBehaviour
                 tile0R.Add(allTilePrefabs[i]);
             else if (allTilePrefabs[i].name.Contains("1R"))
                 tile1R.Add(allTilePrefabs[i]);
+        }
+        for (int i = 0; i < constantTilePrefabs.Count; i++)
+        {
+            if (constantTilePrefabs[i].name.Contains("0U"))
+                tile0U.Add(constantTilePrefabs[i]);
+            else if (constantTilePrefabs[i].name.Contains("1U"))
+                tile1U.Add(constantTilePrefabs[i]);
+
+            if (constantTilePrefabs[i].name.Contains("0D"))
+                tile0D.Add(constantTilePrefabs[i]);
+            else if (constantTilePrefabs[i].name.Contains("1D"))
+                tile1D.Add(constantTilePrefabs[i]);
+
+            if (constantTilePrefabs[i].name.Contains("0L"))
+                tile0L.Add(constantTilePrefabs[i]);
+            else if (constantTilePrefabs[i].name.Contains("1L"))
+                tile1L.Add(constantTilePrefabs[i]);
+
+            if (constantTilePrefabs[i].name.Contains("0R"))
+                tile0R.Add(constantTilePrefabs[i]);
+            else if (constantTilePrefabs[i].name.Contains("1R"))
+                tile1R.Add(constantTilePrefabs[i]);
         }
     }
 
