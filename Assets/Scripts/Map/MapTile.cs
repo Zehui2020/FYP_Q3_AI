@@ -23,6 +23,8 @@ public class MapTile : MonoBehaviour
         {
             if (obj.name.Contains("Chest"))
                 chestTransform = obj;
+            if (obj.name.Contains("Door"))
+                doorTransform = obj;
         }
     }
 }

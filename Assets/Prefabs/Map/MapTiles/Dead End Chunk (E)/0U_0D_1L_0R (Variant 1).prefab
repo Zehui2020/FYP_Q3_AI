@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &900989946300091970
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 37404724983178795}
+  m_Layer: 0
+  m_Name: Door
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &37404724983178795
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900989946300091970}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -7.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4808317438260740280}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2130573433363371116
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,7 +263,7 @@ MonoBehaviour:
   - {fileID: 3116948415897060614, guid: e8ad7febdb8ec1344848df203e7927a8, type: 3}
   - {fileID: 6416505323140514690, guid: b4ed4a627ba1f714195361e4c8a6cd03, type: 3}
   chestTransform: {fileID: 0}
-  doorTransform: {fileID: 37404724983178795}
+  doorTransform: {fileID: 0}
 --- !u!1 &6288485137675740036
 GameObject:
   m_ObjectHideFlags: 0
@@ -2747,69 +2778,6 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 9157533584402680796}
---- !u!1001 &1047450621114469945
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 4808317438260740280}
-    m_Modifications:
-    - target: {fileID: 146858878953324667, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-      propertyPath: m_Name
-      value: doorTransform
-      objectReference: {fileID: 0}
-    - target: {fileID: 1012652049554302994, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1012652049554302994, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -7.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1012652049554302994, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1012652049554302994, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1012652049554302994, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1012652049554302994, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1012652049554302994, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1012652049554302994, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1012652049554302994, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1012652049554302994, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 3797457657287174905, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
---- !u!4 &37404724983178795 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1012652049554302994, guid: bd13088136e522b42a9dc3651318b1a8, type: 3}
-  m_PrefabInstance: {fileID: 1047450621114469945}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2639626225826761440
 PrefabInstance:
   m_ObjectHideFlags: 0
