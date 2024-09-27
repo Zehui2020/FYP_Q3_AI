@@ -28,6 +28,13 @@ public class ComfyPromptCtr : MonoBehaviour
         StartCoroutine(QueuePromptCoroutineWithControlNet(prompt, controlNetImage));
     }
 
+    public void QueuePromptWithControlNet(string promptJSON, string prompt, string controlNetImage)
+    {
+        promptJson = promptJSON;
+        ChangeSeedInJson();
+        StartCoroutine(QueuePromptCoroutineWithControlNet(prompt, controlNetImage));
+    }
+
     private IEnumerator QueuePromptCoroutine(string positivePrompt)
     {
         string url = "http://127.0.0.1:8188/prompt";

@@ -1,6 +1,4 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.VFX;
 
 public class Skeleton : Enemy
 {
@@ -8,23 +6,27 @@ public class Skeleton : Enemy
     {
         Idle,
         Patrol,
-        Chase,
-        Attack,
-        Teleport,
+        Deciding,
+        Scratch,
+        Lunge,
+        Land,
+        Hurt,
         Die
     }
     public State currentState;
 
     private readonly int IdleAnim = Animator.StringToHash("SkeletonIdle");
-    private readonly int WalkAnim = Animator.StringToHash("SkeletonWalk");
-    private readonly int AttackAnim = Animator.StringToHash("SkeletonAttack");
-    private readonly int TeleportAnim = Animator.StringToHash("SkeletonTeleport");
+    private readonly int RunAnim = Animator.StringToHash("SkeletonRun");
+    private readonly int ScratchAnim = Animator.StringToHash("SkeletonScratch");
+    private readonly int LungeAnim = Animator.StringToHash("SkeletonLunge");
+    private readonly int LandAnim = Animator.StringToHash("SkeletonLand");
+    private readonly int HurtAnim = Animator.StringToHash("SkeletonHurt");
     private readonly int DieAnim = Animator.StringToHash("SkeletonDie");
 
-    [SerializeField] private VisualEffect teleportTrail;
-    [SerializeField] private float teleportThreshold;
-    [SerializeField] private float teleportCooldown;
-    private bool canTeleport = true;
+    [Header("Skeleton Stats")]
+    [SerializeField] private Vector2 lungeForce;
+    [SerializeField] private float lungeAngle;
+    [SerializeField] private float scratchRange;
 
     public override void InitializeEnemy()
     {
@@ -34,9 +36,10 @@ public class Skeleton : Enemy
 
         onReachWaypoint += () => { ChangeState(State.Idle); };
         onFinishIdle += () => { ChangeState(State.Patrol); };
-        onPlayerInChaseRange += () => { ChangeState(State.Chase); };
+        onPlayerInChaseRange += () => { ChangeState(State.Deciding); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
-        OnBreached += (multiplier) => { ChangeState(State.Idle); };
+        OnBreached += (multiplier) => { ChangeState(State.Hurt); };
+        onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
     }
 
     private void ChangeState(State newState)
@@ -50,24 +53,28 @@ public class Skeleton : Enemy
                 Idle();
                 break;
             case State.Patrol:
-                animator.CrossFade(WalkAnim, 0f);
+                animator.CrossFade(RunAnim, 0f);
                 break;
-            case State.Chase:
-                animator.CrossFade(WalkAnim, 0f);
-                break;
-            case State.Attack:
+            case State.Deciding:
                 aiNavigation.StopNavigation();
-                animator.Play(AttackAnim, -1, 0f);
+                AttackDecision();
+                break;
+            case State.Scratch:
+                aiNavigation.StopNavigation();
+                animator.Play(ScratchAnim, -1, 0f);
+                break;
+            case State.Lunge:
+                aiNavigation.StopNavigation();
+                animator.Play(LungeAnim, -1, 0f);
+                break;
+            case State.Land:
+                enemyRB.velocity = Vector2.zero;
                 UpdatePlayerDirection();
+                animator.Play(LandAnim, -1, 0f);
                 break;
-            case State.Teleport:
+            case State.Hurt:
                 aiNavigation.StopNavigation();
-                animator.Play(TeleportAnim, -1, 0f);
-
-                StartCoroutine(TeleportTrail());
-                transform.position = player.transform.position;
-
-                StartCoroutine(TeleportCooldown());
+                animator.Play(HurtAnim, -1, 0f);
                 break;
             case State.Die:
                 animator.speed = 1;
@@ -93,37 +100,60 @@ public class Skeleton : Enemy
 
                 PatrolUpdate();
                 break;
-            case State.Chase:
-                aiNavigation.SetPathfindingTarget(player.transform, chaseMovementSpeed, true);
-                if (Vector2.Distance(player.transform.position, transform.position) <= attackRange)
-                    ChangeState(State.Attack);
-
-                if (Vector2.Distance(player.transform.position, transform.position) >= teleportThreshold && canTeleport)
-                    ChangeState(State.Teleport);
-                break;
         }
 
-        if (currentState != State.Attack &&
-            currentState != State.Teleport)
+        if (currentState != State.Scratch &&
+            currentState != State.Lunge)
             UpdatePlayerDirection();
     }
 
-    private IEnumerator TeleportTrail()
+    private void AttackDecision()
     {
-        teleportTrail.Reinit();
-        teleportTrail.Play();
+        if (transform.position.x < player.transform.position.x)
+            transform.localScale = new Vector3(1, 1, 1);
+        else
+            transform.localScale = new Vector3(-1, 1, 1);
 
-        yield return new WaitForSeconds(1f);
+        Vector2 dir = transform.localScale.x < 0 ? -transform.right : transform.right;
 
-        teleportTrail.Stop();
+        if (Physics2D.Raycast(transform.position, dir.normalized, scratchRange, playerLayer))
+            ChangeState(State.Scratch);
+        else
+            ChangeState(State.Lunge);
     }
 
-    private IEnumerator TeleportCooldown()
+    public void Lunge()
     {
-        canTeleport = false;
+        float angleInRadians = lungeAngle * Mathf.Deg2Rad;
+        Vector2 direction = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians)).normalized;
+        if (transform.localScale.x < 0)
+            direction = new Vector2(-direction.x, direction.y);
 
-        yield return new WaitForSeconds(teleportCooldown);
+        enemyRB.AddForce(direction * lungeForce, ForceMode2D.Impulse);
+    }
 
-        canTeleport = true;
+    public override void Knockback(float initialSpeed, float distance)
+    {
+        enemyRB.velocity = Vector2.zero;
+        base.Knockback(initialSpeed, distance);
+    }
+
+    public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
+    {
+        bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
+
+        if (health <= 0)
+            ChangeState(State.Die);
+
+        return tookDamage;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!Utility.Instance.CheckLayer(collision.gameObject, groundLayer) || currentState != State.Lunge)
+            return;
+
+        ChangeState(State.Land);
+        OnDamageEventEnd(0);
     }
 }

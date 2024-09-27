@@ -5,31 +5,25 @@ using UnityEngine.Events;
 
 public class ComfyTilesetGeneration : ComfyManager
 {
-    [SerializeField] private ComfyUIManager uiManager;
-    public UnityEvent OnRecieveTileset;
+    private bool recievedTileset = false;
 
-    private bool recievedTileset;
-
-    [System.Serializable]
-    public struct PromptChecker
-    {
-        public string foundPrompts;
-        public string endPrompt;
-    }
-    public List<PromptChecker> promptCheckers = new();
     [SerializeField] private string setPrompts;
+    private PromptData promptData;
 
-    private void Start()
+    public void InitTilesetGeneration(PromptData promptData)
     {
+        this.promptData = promptData;
         InitManager();
     }
 
-    public void QueueTilesetPrompt()
+    public void QueueTilesetPrompt(string playerPrompt)
     {
-        string finalPrompt = string.Empty;
-        string playerPrompt = uiManager.GetPrompt();
+        if (recievedTileset)
+            return;
 
-        foreach (PromptChecker promptChecker in promptCheckers)
+        string finalPrompt = string.Empty;
+
+        foreach (PromptData.PromptChecker promptChecker in promptData.promptCheckers)
         {
             if (playerPrompt.Contains(promptChecker.foundPrompts))
                 finalPrompt = setPrompts + ", " + promptChecker.endPrompt;
@@ -47,16 +41,10 @@ public class ComfyTilesetGeneration : ComfyManager
     {
         if (base.OnRecieveImage(promptID, texture) && !recievedTileset)
         {
-            OnRecieveTileset?.Invoke();
             recievedTileset = true;
             return true;
         }
 
         return false;
-    }
-
-    private void OnDisable()
-    {
-        OnRecieveTileset = null;
     }
 }

@@ -48,7 +48,6 @@ public class ComfyImageCtr: MonoBehaviour
     
     string ExtractFilename(string jsonString)
     {
-        // Step 1: Identify the part of the string that contains the "filename" key
         string keyToLookFor;
         if (!isControlNet)
             keyToLookFor = "\"filename\":";
@@ -62,21 +61,15 @@ public class ComfyImageCtr: MonoBehaviour
             return "filename key not found";
         }
 
-        // Adjusting startIndex to get the position right after the keyToLookFor
         startIndex += keyToLookFor.Length;
 
-        // Step 2: Extract the substring starting from the "filename" key
         string fromFileName = jsonString.Substring(startIndex);
 
-        // Assuming that filename value is followed by a comma (,)
         int endIndex = fromFileName.IndexOf(',');
 
-        // Extracting the filename value (assuming it's wrapped in quotes)
         string filenameWithQuotes = fromFileName.Substring(0, endIndex).Trim();
 
-        // Removing leading and trailing quotes from the extracted value
         string filename = filenameWithQuotes.Trim('"');
-        //Debug.Log(filename);
         return filename;
     }
     

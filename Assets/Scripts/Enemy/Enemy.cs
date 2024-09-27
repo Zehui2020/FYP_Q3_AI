@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Enemy : EnemyStats
 {
-    public enum EnemyClass { Undead, Slime, Dummy, Skeleton }
+    [SerializeField] private bool isEnemy = true;
+
+    public enum EnemyClass { Undead, Slime, Dummy, Skeleton, Scorpion }
     public EnemyClass enemyClass;
 
     public enum EnemyType { Normal, Elite, Boss }
@@ -24,6 +26,7 @@ public class Enemy : EnemyStats
     [SerializeField] protected LayerMask groundLayer;
 
     [SerializeField] protected List<Transform> waypoints = new();
+    [SerializeField] protected int hurtValue;
 
     protected int currentWaypoint = 0;
 
@@ -48,6 +51,9 @@ public class Enemy : EnemyStats
 
     public virtual void InitializeEnemy()
     {
+        if (!isEnemy)
+            return;
+
         aiNavigation = GetComponent<AINavigation>();
         enemyCol = GetComponent<Collider2D>();
         enemyRB = GetComponent<Rigidbody2D>();
@@ -78,7 +84,7 @@ public class Enemy : EnemyStats
         OnDieEvent += (target) => 
         {
             player.OnEnemyDie(target);
-        }; 
+        };
 
         player.OnParry += (target) => 
         {
@@ -89,6 +95,9 @@ public class Enemy : EnemyStats
 
     private void Update()
     {
+        if (!isEnemy)
+            return;
+
         if (!canUpdate)
             return;
 
@@ -223,6 +232,15 @@ public class Enemy : EnemyStats
             player.OnPlayerOverlap(true);
         else
             player.OnPlayerOverlap(false);
+    }
+
+    public bool CheckHurt()
+    {
+        int randNum = Random.Range(0, 100);
+        if (randNum < hurtValue)
+            return true;
+
+        return false;
     }
 
     public override void ApplyStatusEffect(StatusEffect.StatusType statusEffect, int amount)

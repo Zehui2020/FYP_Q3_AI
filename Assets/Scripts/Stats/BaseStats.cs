@@ -38,7 +38,10 @@ public class BaseStats : MonoBehaviour
             Plunge,
             StatusEffect,
             Item,
-            Gavel
+            Gavel,
+            BloodArts,
+            ContagiousHaze,
+            Shatter
         }
 
         public DamageSource damageSource;
@@ -50,6 +53,7 @@ public class BaseStats : MonoBehaviour
     [SerializeField] public ParticleVFXManager particleVFXManager;
     [SerializeField] protected StatusEffectStats statusEffectStats;
     [SerializeField] protected ItemStats itemStats;
+    [SerializeField] protected AbilityStats abilityStats;
 
     [Header("Base Stats")]
     public int health;
@@ -102,6 +106,8 @@ public class BaseStats : MonoBehaviour
             return;
 
         health -= Mathf.CeilToInt(damage.damage);
+        if (damage.damageSource == Damage.DamageSource.BloodArts && health <= 0)
+            health = 1;
         OnHealthChanged?.Invoke(false, true);
 
         DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
@@ -188,6 +194,8 @@ public class BaseStats : MonoBehaviour
                 damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.blue, new Vector2(0, 3));
                 shield = 0;
                 OnBreached?.Invoke(breachedMultiplier.GetTotalModifier());
+                if (damage.damageSource == Damage.DamageSource.Shatter)
+                    TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
             }
 
             return true;
@@ -202,6 +210,12 @@ public class BaseStats : MonoBehaviour
 
         if (health <= 0)
         {
+            if (damage.damageSource == Damage.DamageSource.ContagiousHaze)
+            {
+                attacker.abilityStats.contagiousHazeHit = true;
+                attacker.abilityStats.contagiousHazeStacks = statusEffectManager.poisonStacks.stackCount;
+            }
+
             OnDieEvent?.Invoke(this);
             statusEffectManager.OnDie();
             particleVFXManager.StopEverything();

@@ -2,6 +2,7 @@ using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static BaseStats.Damage;
 using static MovementController;
@@ -21,11 +22,13 @@ public class PlayerController : PlayerStats
     private AnimationManager animationManager;
     private MovementController movementController;
     private CombatController combatController;
-    private AbilityController abilityController;
+    [HideInInspector] public AbilityController abilityController;
     private FadeTransition fadeTransition;
     private ItemManager itemManager;
     private PlayerEffectsController playerEffectsController;
     private Rigidbody2D playerRB;
+
+    private Coroutine hurtRoutine;
 
     [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
     [SerializeField] private LayerMask enemyLayer;
@@ -66,7 +69,10 @@ public class PlayerController : PlayerStats
         itemManager.InitItemManager();
         movementController.InitializeMovementController(animationManager);
         combatController.InitializeCombatController(this);
-        abilityController.InitializeAbilityController();
+
+        if (abilityController != null)
+            abilityController.InitializeAbilityController();
+
         playerEffectsController.InitializePlayerEffectsController();
         if (proceduralMapGenerator != null)
         {
@@ -89,7 +95,8 @@ public class PlayerController : PlayerStats
         if (health <= 0)
             return;
 
-        goldText.text = gold.ToString();
+        if (goldText != null)
+            goldText.text = gold.ToString();
 
         statusEffectManager.UpdateStatusEffects();
 
@@ -179,7 +186,7 @@ public class PlayerController : PlayerStats
         }
 
         // Other Inputs
-        if (Input.GetKeyDown(KeyCode.F) && currentInteractable != null)
+        if (Input.GetKeyDown(KeyCode.E) && currentInteractable != null)
         {
             if (currentInteractable.OnInteract())
             {
@@ -195,11 +202,37 @@ public class PlayerController : PlayerStats
             }
         }
 
-        for (int i = 0; i < abilityController.abilities.Count; i++)
+        if (abilityController != null)
         {
-            if (Input.GetKeyDown((i + 1).ToString()))
-                abilityController.HandleAbility(i);
+            for (int i = 0; i < abilityController.abilities.Count; i++)
+            {
+                if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
+                    abilityController.HandleAbility(i);
+                else if (i == 9 && Input.GetKeyDown(KeyCode.Alpha0))
+                    abilityController.HandleAbility(i);
+            }
         }
+    }
+
+    private IEnumerator HurtRoutine()
+    {
+        movementController.canMove = false;
+        playerRB.velocity = Vector2.zero;
+        playerRB.isKinematic = true;
+
+        ChangeState(PlayerStates.Hurt);
+        if (movementController.currentState == MovementState.GroundDash || 
+            movementController.currentState == MovementState.AirDash)
+            movementController.CancelDash();
+
+        yield return new WaitForSeconds(0.5f);
+
+        movementController.canMove = true;
+        playerRB.isKinematic = false;
+        hurtRoutine = null;
+
+        movementController.ChangeState(MovementState.Idle);
+        ChangeState(PlayerStates.Movement);
     }
 
     private void FixedUpdate()
@@ -223,6 +256,12 @@ public class PlayerController : PlayerStats
         movementController.OnPlayerOverlap(overlap);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (movementController.currentState == MovementState.GroundDash || movementController.currentState == MovementState.AirDash)
+            movementController.CancelDash();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Rope"))
@@ -231,6 +270,15 @@ public class PlayerController : PlayerStats
             movementController.canGrapple = true;
         }
 
+        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
+        {
+            currentInteractable = interactable;
+            interactable.OnEnterRange();
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
         if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
             currentInteractable = interactable;
@@ -274,12 +322,15 @@ public class PlayerController : PlayerStats
             playerEffectsController.ShakeCamera(4f, 5f, 0.2f);
             playerEffectsController.Pulse(0.5f, 3f, 0f, 0.3f, true);
 
-            if (movementController.currentState == MovementState.Plunge ||
-                movementController.currentState == MovementState.LedgeGrab)
-                return true;
+            if (movementController.currentState != MovementState.Plunge &&
+                movementController.currentState != MovementState.LedgeGrab &&
+                movementController.isGrounded)
+            {
+                if (hurtRoutine != null)
+                    StopCoroutine(hurtRoutine);
+                hurtRoutine = StartCoroutine(HurtRoutine());
+            }
 
-            playerRB.velocity = Vector2.zero;
-            ChangeState(PlayerStates.Hurt);
             combatController.ResetComboInstantly();
             animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);
 
@@ -525,6 +576,15 @@ public class PlayerController : PlayerStats
 
         int randNum;
 
+        // Blood Arts Bleed
+        randNum = Random.Range(0, 100);
+        if (randNum < abilityStats.bloodArtsBleedChance)
+            target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Bleed), 1);
+
+        // Blood Arts Lifesteal
+        if (abilityStats.bloodArtsLifestealMultiplier > 0)
+            Heal((int)(damage.damage * abilityStats.bloodArtsLifestealMultiplier));
+
         if (isCrit)
         {
             // Ritual Sickle
@@ -731,6 +791,11 @@ public class PlayerController : PlayerStats
     {
         movementController.wallJumpCount += count;
         movementController.maxWallJumps += count;
+    }
+
+    public void PickupWeapon(WeaponData weaponData)
+    {
+        combatController.ChangeWeapon(weaponData);
     }
 
     // For dev console

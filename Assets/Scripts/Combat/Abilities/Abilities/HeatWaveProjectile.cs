@@ -13,6 +13,7 @@ public class HeatWaveProjectile : AbilityProjectile
 
     protected override void OnHit(BaseStats target)
     {
+        target.TriggerStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), 1);
         target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), 1);
     }
 

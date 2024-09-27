@@ -5,15 +5,27 @@ using UnityEngine.Events;
 
 public class ComfyBGManager : ComfyManager
 {
+    [SerializeField] private WorldSpaceButtonController buttonController;
+    [SerializeField] protected ComfyTilesetGeneration tilesetGeneration;
     [SerializeField] private ComfyUIManager uiManager;
-    [SerializeField] private MenuBackground menuBackground;
-    public UnityEvent OnRecieveBackground;
 
-    private bool recievedBG;
+    [SerializeField] private PromptData promptData;
+    private bool startGenerating;
+
+    private string totalStringPrompt;
+
+    private PromptData.BGPrompt.Type currentBGType;
 
     private void Start()
     {
         InitManager();
+
+        buttonController.InitController(promptData);
+        buttonController.SpawnButtons(currentBGType);
+
+        tilesetGeneration.InitTilesetGeneration(promptData);
+
+        uiManager.SetStartingPrompt(currentBGType);
     }
 
     private void Update()
@@ -22,27 +34,51 @@ public class ComfyBGManager : ComfyManager
             uiManager.SetLoadingBar(comfyWebsocket.currentProgress, comfyWebsocket.maxProgress);
     }
 
+    public void StartBGGeneration()
+    {
+        if (startGenerating)
+            return;
+
+        if (uiManager.GetPrompt() == uiManager.setPrompts + ", " + currentBGType.ToString())
+            return;
+
+        if (currentBGType > PromptData.BGPrompt.Type.TotalTypes)
+            return;
+
+        startGenerating = true;
+        QueueBGPrompt();
+    }
+
     public void QueueBGPrompt()
     {
-        promptCtr.QueuePrompt(uiManager.GetPrompt());
+        totalStringPrompt += uiManager.GetPrompt();
+
+        PromptData.BGPrompt bgPrompt = promptData.GetBGPrompt(currentBGType, uiManager.GetPrompt());
+        promptCtr.QueuePromptWithControlNet(promptData.GetPromptJSON(bgPrompt.bgType), bgPrompt.prompt, bgPrompt.referenceImage);
     }
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
     {
-        if (base.OnRecieveImage(promptID, texture) && !recievedBG)
+        fileName = currentBGType.ToString();
+
+        if (base.OnRecieveImage(promptID, texture))
         {
-            menuBackground.SetupBackground();
-            OnRecieveBackground?.Invoke();
-            recievedBG = true;
-            Debug.Log("GOT BG!");
+            startGenerating = false;
+            uiManager.ResetPrompt();
+
+            if (currentBGType == PromptData.BGPrompt.Type.TotalTypes)
+            {
+                tilesetGeneration.QueueTilesetPrompt(totalStringPrompt);
+                return false;
+            }
+
+            currentBGType++;
+            uiManager.SetStartingPrompt(currentBGType);
+            buttonController.SpawnButtons(currentBGType);
+
             return true;
         }
 
         return false;
-    }
-
-    private void OnDisable()
-    {
-        OnRecieveBackground = null;
     }
 }

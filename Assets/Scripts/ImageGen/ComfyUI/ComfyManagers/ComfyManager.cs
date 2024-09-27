@@ -32,6 +32,7 @@ public class ComfyManager : MonoBehaviour
         if (promptID.Equals(this.promptID))
         {
             imageSaver.SaveImageToLocalDisk(texture, fileName);
+            Debug.Log("Obtained: " + fileName);
             return true;
         }
 
