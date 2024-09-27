@@ -9,7 +9,8 @@ public class TextAnalysis : MonoBehaviour
     public SentimentAnalysis predictionObject;
 
     //Mood Meter Variables
-    public float Mood_Meter_Change;
+    private float Mood_Meter_Change;
+    public float Mood_Meter = 50;
 
     private bool responseFromThread = false;
     private bool threadStarted = false;
@@ -86,8 +87,9 @@ public class TextAnalysis : MonoBehaviour
         {
             Mood_Meter_Change = 0;
         }
-
-        Debug.Log(Mood_Meter_Change);
+        Mood_Meter += Mood_Meter_Change;
+        Debug.Log("Mood Change: " + Mood_Meter_Change);
+        Debug.Log("Mood Meter: " + Mood_Meter);
     }
 
     // Sentiment Analysis Thread
