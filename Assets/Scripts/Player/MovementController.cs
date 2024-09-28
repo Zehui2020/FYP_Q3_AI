@@ -266,10 +266,10 @@ public class MovementController : MonoBehaviour
         if (jumpRoutine != null)
             return;
 
-        if (!isTouchingWall || wallJumpCount <= 0)
+        if (isTouchingWall && wallJumpCount > 0 && jumpCount != maxJumpCount)
+            HandleWallJump(col, horizontal);
+        else
             HandleJump(horizontal);
-        else if (isTouchingWall && wallJumpCount > 0)
-            HandleWallJump(col);
     }
 
     public void HandleJump(float horizontal)
@@ -305,7 +305,7 @@ public class MovementController : MonoBehaviour
 
         if (horizontal < 0)
             transform.localScale = new Vector3(-1, 1, 1);
-        else
+        else if (horizontal > 0)
             transform.localScale = new Vector3(1, 1, 1);
 
         if (maxJumpCount - jumpCount > 1)
@@ -325,12 +325,12 @@ public class MovementController : MonoBehaviour
         jumpRoutine = null;
     }
 
-    public void HandleWallJump(Collider2D col)
+    public void HandleWallJump(Collider2D col, float horizontal)
     {
         ChangeState(MovementState.WallJump);
-        jumpRoutine = StartCoroutine(WallJumpRoutine(col));
+        jumpRoutine = StartCoroutine(WallJumpRoutine(col, horizontal));
     }
-    private IEnumerator WallJumpRoutine(Collider2D col)
+    private IEnumerator WallJumpRoutine(Collider2D col, float horizontal)
     {
         wallJumpCount--;
 
@@ -343,7 +343,9 @@ public class MovementController : MonoBehaviour
         else
             dir = new Vector2(-movementData.wallJumpForceX, movementData.wallJumpForceY);
 
-        playerRB.AddForce(dir * movementData.baseJumpForce, ForceMode2D.Impulse);
+        dir = horizontal == 0 ? new Vector2(0, dir.y) : dir;
+
+        playerRB.AddForce(dir * movementData.wallJumpForce, ForceMode2D.Impulse);
 
         yield return new WaitForSeconds(movementData.jumpInterval);
 
@@ -571,16 +573,22 @@ public class MovementController : MonoBehaviour
         playerRB.AddForce(Vector2.down * movementData.plungeForce, ForceMode2D.Impulse);
     }
 
-    private void StopPlunge()
+    public void StopPlunge()
     {
         if (plungeRoutine == null)
             return;
 
+        playerRB.isKinematic = true;
         StopCoroutine(plungeRoutine);
         playerRB.gravityScale = movementData.gravityScale;
         playerRB.AddForce(Vector2.down * movementData.plungeForce, ForceMode2D.Impulse);
         plungeRoutine = null;
         OnPlungeEnd?.Invoke();
+    }
+
+    public void OnPlungeAnimEnd()
+    {
+        playerRB.isKinematic = false;
     }
 
     public void MovePlayer(float movementSpeedMultiplier)
@@ -637,8 +645,6 @@ public class MovementController : MonoBehaviour
                 && currentState != MovementState.Knockback &&
                 currentState != MovementState.Plunge)
                 ChangeState(MovementState.Idle);
-            else if (currentState == MovementState.Plunge)
-                StopPlunge();
 
             isGrounded = true;
             fallingDuration = 0;
