@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using DesignPatterns.ObjectPool;
 
-public class Chest : MonoBehaviour, IInteractable
+public class Chest : Interactable
 {
     [System.Serializable]
     public struct ChestType
@@ -31,7 +31,7 @@ public class Chest : MonoBehaviour, IInteractable
     [SerializeField] private ItemStats itemStats;
     private bool isOpened = false;
 
-    public bool OnInteract()
+    public override bool OnInteract()
     {
         if (isOpened || PlayerController.Instance.gold < cost)
             return false;
@@ -97,17 +97,21 @@ public class Chest : MonoBehaviour, IInteractable
         isOpened = true;
     }
 
-    public void OnEnterRange()
+    public override void OnEnterRange()
     {
         if (isOpened)
             return;
+
+        if (PlayerController.Instance.gold >= cost)
+            base.OnEnterRange();
 
         costText.text = cost.ToString();
         canvas.gameObject.SetActive(true);
     }
 
-    public void OnLeaveRange()
+    public override void OnLeaveRange()
     {
+        base.OnLeaveRange();
         canvas.gameObject.SetActive(false);
     }
 

@@ -1,18 +1,10 @@
 using UnityEngine;
 
-public class Door : MonoBehaviour, IInteractable
+public class Door : Interactable
 {
-    public bool OnInteract()
+    public override bool OnInteract()
     {
         SceneLoader.Instance.LoadScene("LevelImageGeneration");
         return true;
-    }
-
-    public void OnEnterRange()
-    {
-    }
-
-    public void OnLeaveRange()
-    {
     }
 }

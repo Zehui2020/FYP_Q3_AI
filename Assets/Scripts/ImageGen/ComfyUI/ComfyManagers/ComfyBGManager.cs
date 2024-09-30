@@ -15,6 +15,9 @@ public class ComfyBGManager : ComfyManager
     private string totalStringPrompt;
 
     private PromptData.BGPrompt.Type currentBGType;
+    private int bgRecievedCounter;
+
+    [SerializeField] private List<string> bgPrompts = new();
 
     private void Start()
     {
@@ -45,36 +48,46 @@ public class ComfyBGManager : ComfyManager
         if (currentBGType > PromptData.BGPrompt.Type.TotalTypes)
             return;
 
-        startGenerating = true;
-        QueueBGPrompt();
+        bgPrompts.Add(uiManager.GetPrompt());
+
+        if (bgPrompts.Count >= 3)
+        {
+            startGenerating = true;
+            QueueBGPrompt();
+        }
+        else
+        {
+            currentBGType++;
+
+            uiManager.ResetPrompt();
+            uiManager.SetStartingPrompt(currentBGType);
+            buttonController.SpawnButtons(currentBGType);
+        }
     }
 
     public void QueueBGPrompt()
     {
-        totalStringPrompt += uiManager.GetPrompt();
+        totalStringPrompt += bgPrompts[bgRecievedCounter];
 
-        PromptData.BGPrompt bgPrompt = promptData.GetBGPrompt(currentBGType, uiManager.GetPrompt());
+        PromptData.BGPrompt bgPrompt = promptData.GetBGPrompt((PromptData.BGPrompt.Type)bgRecievedCounter, bgPrompts[bgRecievedCounter]);
         promptCtr.QueuePromptWithControlNet(promptData.GetPromptJSON(bgPrompt.bgType), bgPrompt.prompt, bgPrompt.referenceImage);
     }
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
     {
-        fileName = currentBGType.ToString();
+        fileName = ((PromptData.BGPrompt.Type)bgRecievedCounter).ToString();
 
         if (base.OnRecieveImage(promptID, texture))
         {
-            startGenerating = false;
-            uiManager.ResetPrompt();
-
-            if (currentBGType == PromptData.BGPrompt.Type.TotalTypes)
+            if ((PromptData.BGPrompt.Type)bgRecievedCounter >= PromptData.BGPrompt.Type.Background)
             {
+                Debug.Log("QUEUED TIELSET");
                 tilesetGeneration.QueueTilesetPrompt(totalStringPrompt);
-                return false;
+                return true;
             }
 
-            currentBGType++;
-            uiManager.SetStartingPrompt(currentBGType);
-            buttonController.SpawnButtons(currentBGType);
+            bgRecievedCounter++;
+            QueueBGPrompt();
 
             return true;
         }

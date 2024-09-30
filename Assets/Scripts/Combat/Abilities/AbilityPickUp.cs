@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AbilityPickUp : MonoBehaviour, IInteractable
+public class AbilityPickUp : Interactable
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private BaseAbility ability;
@@ -17,19 +17,11 @@ public class AbilityPickUp : MonoBehaviour, IInteractable
         //spriteRenderer.material = newAbility.itemOutlineMaterial;
     }
 
-    public bool OnInteract()
+    public override bool OnInteract()
     {
         if (PlayerController.Instance.abilityController.HandleAbilityPickUp(ability))
             Destroy(gameObject);
 
         return true;
-    }
-
-    public void OnEnterRange()
-    {
-    }
-
-    public void OnLeaveRange()
-    {
     }
 }

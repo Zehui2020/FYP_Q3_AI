@@ -47,6 +47,7 @@ public class PromptData : ScriptableObject
     {
         public string foundPrompts;
         public string endPrompt;
+        public string controlnetImage;
     }
     public List<PromptChecker> promptCheckers = new();
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class WeaponPickup : MonoBehaviour, IInteractable
+public class WeaponPickup : Interactable
 {
     [SerializeField] private WeaponData weapon;
     private ObjectBobbing bobbing;
@@ -14,19 +14,11 @@ public class WeaponPickup : MonoBehaviour, IInteractable
         bobbing.InitBobbing();
     }
 
-    public bool OnInteract()
+    public override bool OnInteract()
     {
         PlayerController.Instance.PickupWeapon(weapon);
         OnPickup?.Invoke();
         gameObject.SetActive(false);
         return true;
-    }
-
-    public void OnEnterRange()
-    {
-    }
-
-    public void OnLeaveRange()
-    {
     }
 }

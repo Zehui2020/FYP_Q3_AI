@@ -5,7 +5,9 @@ using UnityEngine;
 public class WorldSpaceButton : MonoBehaviour
 {
     [SerializeField] private TextMeshPro promptText;
-    [SerializeField] protected Rigidbody2D buttonRB;
+    [SerializeField] private Rigidbody2D buttonRB;
+    [SerializeField] private SimpleAnimation keycodeUI;
+
     private ComfyUIManager uiManager;
 
     private bool isLaunched = false;
@@ -23,6 +25,7 @@ public class WorldSpaceButton : MonoBehaviour
         buttonRB.transform.SetParent(parent, false);
         buttonRB.transform.localPosition = Vector3.zero;
         buttonRB.transform.localRotation = Quaternion.identity;
+        keycodeUI.Hide();
     }
 
     public void ReleaseButton()
@@ -52,5 +55,17 @@ public class WorldSpaceButton : MonoBehaviour
             transform.position = Vector2.MoveTowards(transform.position, targetPoint.position, Time.deltaTime * 10f);
             yield return null;
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+            keycodeUI.Show();
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+            keycodeUI.Hide();
     }
 }

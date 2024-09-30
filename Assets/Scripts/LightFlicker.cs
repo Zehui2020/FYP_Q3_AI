@@ -4,6 +4,7 @@ using UnityEngine.Rendering.Universal;
 
 public class LightFlicker : MonoBehaviour
 {
+    public bool flickerOnStart;
     public float maximumDim;
     public float maximumBoost;
     public float speed;
@@ -27,6 +28,9 @@ public class LightFlicker : MonoBehaviour
         source = GetComponent<Light2D>();
         initialIntensity = source.intensity;
         source.intensity = 0;
+
+        if (flickerOnStart)
+            StartFlicker();
     }
 
     public void StartFlicker()

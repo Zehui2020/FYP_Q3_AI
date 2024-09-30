@@ -1,21 +1,18 @@
 using UnityEngine;
 
-public class Portal : MonoBehaviour, IInteractable
+public class Portal : Interactable
 {
     public bool isActivated = false;
 
-    public void OnEnterRange()
+    public override void OnEnterRange()
     {
+        base.OnEnterRange();
         isActivated = true;
     }
 
-    public bool OnInteract()
+    public override void OnLeaveRange()
     {
-        return true;
-    }
-
-    public void OnLeaveRange()
-    {
+        base.OnLeaveRange();
         isActivated = true;
     }
 }

@@ -36,7 +36,7 @@ public class PlayerController : PlayerStats
     [SerializeField] private EnemyStatBar healthBar;
     [SerializeField] private EnemyStatBar shieldBar;
 
-    private IInteractable currentInteractable;
+    private Interactable currentInteractable;
     private float ropeX;
     private Queue<Damage> damageQueue = new();
 
@@ -233,11 +233,6 @@ public class PlayerController : PlayerStats
                         abilityController.HandleAbility(i);
             }
         }
-
-        if (abilityController.swappingAbility)
-            currentState = PlayerStates.Combat;
-        else
-            currentState = PlayerStates.Movement;
     }
 
     private IEnumerator HurtRoutine()
@@ -298,7 +293,7 @@ public class PlayerController : PlayerStats
             movementController.canGrapple = true;
         }
 
-        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
+        if (collision.TryGetComponent<Interactable>(out Interactable interactable))
         {
             currentInteractable = interactable;
             interactable.OnEnterRange();
@@ -307,7 +302,7 @@ public class PlayerController : PlayerStats
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
+        if (collision.TryGetComponent<Interactable>(out Interactable interactable))
         {
             currentInteractable = interactable;
             interactable.OnEnterRange();
@@ -322,7 +317,7 @@ public class PlayerController : PlayerStats
             movementController.canGrapple = false;
         }
 
-        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
+        if (collision.TryGetComponent<Interactable>(out Interactable interactable))
         {
             interactable.OnLeaveRange();
             currentInteractable = null;

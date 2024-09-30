@@ -22,11 +22,15 @@ public class ComfyTilesetGeneration : ComfyManager
             return;
 
         string finalPrompt = string.Empty;
+        string controlnetImage = string.Empty;
 
         foreach (PromptData.PromptChecker promptChecker in promptData.promptCheckers)
         {
             if (playerPrompt.Contains(promptChecker.foundPrompts))
+            {
                 finalPrompt = setPrompts + ", " + promptChecker.endPrompt;
+                controlnetImage = promptChecker.controlnetImage;
+            }
         }
 
         if (finalPrompt == string.Empty)
@@ -34,7 +38,7 @@ public class ComfyTilesetGeneration : ComfyManager
 
         Debug.Log("Tileset Theme: " + finalPrompt);
 
-        promptCtr.QueuePrompt(setPrompts + finalPrompt);
+        promptCtr.QueuePromptWithControlNet(setPrompts + finalPrompt, controlnetImage);
     }
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
