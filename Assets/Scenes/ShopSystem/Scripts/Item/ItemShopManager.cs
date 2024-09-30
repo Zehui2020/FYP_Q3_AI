@@ -85,7 +85,7 @@ public class ItemShopManager : MonoBehaviour
         {
             m_itemShopUIHandler.m_debugButton.onClick.AddListener(SwitchShopDisplay);
         }
-
+        /*
         // Handle the button to end AI conversation
         m_itemShopUIHandler.m_AIConversationEndBotton.onClick.AddListener(SwitchShopDisplay);
 
@@ -93,6 +93,7 @@ public class ItemShopManager : MonoBehaviour
         m_itemShopUIHandler.m_debugBadBotton.onClick.AddListener(SwitchShopDisplay);
         m_itemShopUIHandler.m_debugGoodBotton.onClick.AddListener(SwitchShopDisplay);
         m_itemShopUIHandler.m_debugNormalBotton.onClick.AddListener(SwitchShopDisplay);
+        */
     }
 
     void Update()
@@ -142,7 +143,7 @@ public class ItemShopManager : MonoBehaviour
     {
         // Use raycast to detect if an item was hit
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        if (hit.collider != null && hit.collider.gameObject.CompareTag("Item"))
+        if (hit.collider != null && hit.collider.gameObject.CompareTag("ItemPrefab"))
         {
             // If an item was clicked, do not close the shop
             return true;
@@ -244,7 +245,7 @@ public class ItemShopManager : MonoBehaviour
 
             // Set the item data for the AI system manager
             m_AISystemManager.SetItemDataArray(m_itemDataArray);
-
+            
             // If the mood is not neutral
             if (m_AISystemManager.GetMood() != 0)
             {
@@ -252,6 +253,9 @@ public class ItemShopManager : MonoBehaviour
                 int fluctuatedPrice = m_AISystemManager.GetItemPriceFluctuations(itemData.itemName);
                 itemDisplay.SetItemPrice(fluctuatedPrice);
             }
+            
+            //int fluctuatedPrice = m_AISystemManager.GetItemPriceFluctuations(itemData.itemName);
+            //itemDisplay.SetItemPrice(fluctuatedPrice);
 
             // Set the item
             itemDisplay.Setup(itemData, m_itemLoader.GetSpriteDictionary(), m_itemUnit);

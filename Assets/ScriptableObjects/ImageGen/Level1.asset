@@ -39,31 +39,31 @@ MonoBehaviour:
   promptCheckers:
   - foundPrompts: Mountains
     endPrompt: stone themed
-  parallaxBGJSON: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 110921323190426,\r\n     
-    \"steps\": 20,\r\n      \"cfg\": 8,\r\n      \"sampler_name\": \"euler\",\r\n     
-    \"scheduler\": \"normal\",\r\n      \"denoise\": 1,\r\n      \"model\": [\r\n       
-    \"46\",\r\n        0\r\n      ],\r\n      \"positive\": [\r\n        \"12\",\r\n       
-    0\r\n      ],\r\n      \"negative\": [\r\n        \"12\",\r\n        1\r\n     
-    ],\r\n      \"latent_image\": [\r\n        \"5\",\r\n        0\r\n      ]\r\n   
-    },\r\n    \"class_type\": \"KSampler\",\r\n    \"_meta\": {\r\n      \"title\":
-    \"KSampler\"\r\n    }\r\n  },\r\n  \"4\": {\r\n    \"inputs\": {\r\n      \"ckpt_name\":
-    \"pixelstyleckpt_strength07.safetensors\"\r\n    },\r\n    \"class_type\": \"CheckpointLoaderSimple\",\r\n   
-    \"_meta\": {\r\n      \"title\": \"Load Checkpoint\"\r\n    }\r\n  },\r\n  \"5\":
-    {\r\n    \"inputs\": {\r\n      \"width\": 1920,\r\n      \"height\": 1920,\r\n     
-    \"batch_size\": 1\r\n    },\r\n    \"class_type\": \"EmptyLatentImage\",\r\n   
-    \"_meta\": {\r\n      \"title\": \"Empty Latent Image\"\r\n    }\r\n  },\r\n 
-    \"6\": {\r\n    \"inputs\": {\r\n      \"text\": \"Pprompt\",\r\n      \"clip\":
-    [\r\n        \"4\",\r\n        1\r\n      ]\r\n    },\r\n    \"class_type\":
-    \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\": \"Prompt\"\r\n   
-    }\r\n  },\r\n  \"7\": {\r\n    \"inputs\": {\r\n      \"text\": \"human, hands,
-    face, legs, background, shadow, shadows, drop shadow, aura, glow, body, arms,
-    feet, water, ocean\",\r\n      \"clip\": [\r\n        \"4\",\r\n        1\r\n     
-    ]\r\n    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n     
-    \"title\": \"Negative Prompt\"\r\n    }\r\n  },\r\n  \"8\": {\r\n    \"inputs\":
-    {\r\n      \"samples\": [\r\n        \"3\",\r\n        0\r\n      ],\r\n     
-    \"vae\": [\r\n        \"4\",\r\n        2\r\n      ]\r\n    },\r\n    \"class_type\":
-    \"VAEDecode\",\r\n    \"_meta\": {\r\n      \"title\": \"VAE Decode\"\r\n   
-    }\r\n  },\r\n  \"11\": {\r\n    \"inputs\": {\r\n      \"control_net_name\":
+  parallaxBGJSON: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 179574000892249,\r\n     
+    \"steps\": 5,\r\n      \"cfg\": 2,\r\n      \"sampler_name\": \"lcm\",\r\n     
+    \"scheduler\": \"sgm_uniform\",\r\n      \"denoise\": 1,\r\n      \"model\":
+    [\r\n        \"46\",\r\n        0\r\n      ],\r\n      \"positive\": [\r\n       
+    \"12\",\r\n        0\r\n      ],\r\n      \"negative\": [\r\n        \"12\",\r\n       
+    1\r\n      ],\r\n      \"latent_image\": [\r\n        \"5\",\r\n        0\r\n     
+    ]\r\n    },\r\n    \"class_type\": \"KSampler\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"KSampler\"\r\n    }\r\n  },\r\n  \"4\": {\r\n    \"inputs\": {\r\n     
+    \"ckpt_name\": \"pixelstyleckpt_strength07.safetensors\"\r\n    },\r\n    \"class_type\":
+    \"CheckpointLoaderSimple\",\r\n    \"_meta\": {\r\n      \"title\": \"Load Checkpoint\"\r\n   
+    }\r\n  },\r\n  \"5\": {\r\n    \"inputs\": {\r\n      \"width\": 1920,\r\n     
+    \"height\": 1920,\r\n      \"batch_size\": 1\r\n    },\r\n    \"class_type\":
+    \"EmptyLatentImage\",\r\n    \"_meta\": {\r\n      \"title\": \"Empty Latent
+    Image\"\r\n    }\r\n  },\r\n  \"6\": {\r\n    \"inputs\": {\r\n      \"text\":
+    \"Pprompt\",\r\n      \"clip\": [\r\n        \"4\",\r\n        1\r\n      ]\r\n   
+    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\":
+    \"Prompt\"\r\n    }\r\n  },\r\n  \"7\": {\r\n    \"inputs\": {\r\n      \"text\":
+    \"human, hands, face, legs, background, shadow, shadows, drop shadow, aura, glow,
+    body, arms, feet, water, ocean\",\r\n      \"clip\": [\r\n        \"4\",\r\n       
+    1\r\n      ]\r\n    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\":
+    {\r\n      \"title\": \"Negative Prompt\"\r\n    }\r\n  },\r\n  \"8\": {\r\n   
+    \"inputs\": {\r\n      \"samples\": [\r\n        \"3\",\r\n        0\r\n     
+    ],\r\n      \"vae\": [\r\n        \"4\",\r\n        2\r\n      ]\r\n    },\r\n   
+    \"class_type\": \"VAEDecode\",\r\n    \"_meta\": {\r\n      \"title\": \"VAE
+    Decode\"\r\n    }\r\n  },\r\n  \"11\": {\r\n    \"inputs\": {\r\n      \"control_net_name\":
     \"control_v11p_sd15_canny.pth\"\r\n    },\r\n    \"class_type\": \"ControlNetLoader\",\r\n   
     \"_meta\": {\r\n      \"title\": \"Load ControlNet Model\"\r\n    }\r\n  },\r\n 
     \"12\": {\r\n    \"inputs\": {\r\n      \"strength\": 1,\r\n      \"start_percent\":
@@ -98,10 +98,10 @@ MonoBehaviour:
     1920,\r\n      \"height\": 1920,\r\n      \"interpolation\": \"nearest\",\r\n     
     \"method\": \"stretch\",\r\n      \"condition\": \"always\",\r\n      \"multiple_of\":
     0,\r\n      \"image\": [\r\n        \"13\",\r\n        0\r\n      ]\r\n    },\r\n   
-    \"class_type\": \"ImageResize+\",\r\n    \"_meta\": {\r\n      \"title\": \"\U0001F527
+    \"class_type\": \"ImageResize+\",\r\n    \"_meta\": {\r\n      \"title\": \"\u25A1
     Image Resize\"\r\n    }\r\n  },\r\n  \"46\": {\r\n    \"inputs\": {\r\n     
     \"tiling\": \"x_only\",\r\n      \"copy_model\": \"Modify in place\",\r\n     
-    \"model\": [\r\n        \"4\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
+    \"model\": [\r\n        \"60\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
     \"SeamlessTile\",\r\n    \"_meta\": {\r\n      \"title\": \"Seamless Tile\"\r\n   
     }\r\n  },\r\n  \"47\": {\r\n    \"inputs\": {\r\n      \"images\": [\r\n       
     \"40\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"PreviewImage\",\r\n   
@@ -109,7 +109,7 @@ MonoBehaviour:
     {\r\n    \"inputs\": {\r\n      \"images\": [\r\n        \"35\",\r\n        0\r\n     
     ]\r\n    },\r\n    \"class_type\": \"PreviewImage\",\r\n    \"_meta\": {\r\n     
     \"title\": \"Preview Image\"\r\n    }\r\n  },\r\n  \"50\": {\r\n    \"inputs\":
-    {\r\n      \"low_threshold\": 0,\r\n      \"high_threshold\": 255,\r\n      \"resolution\":
+    {\r\n      \"low_threshold\": 0,\r\n      \"high_threshold\": 234,\r\n      \"resolution\":
     1920,\r\n      \"image\": [\r\n        \"58\",\r\n        0\r\n      ]\r\n   
     },\r\n    \"class_type\": \"CannyEdgePreprocessor\",\r\n    \"_meta\": {\r\n     
     \"title\": \"Canny Edge\"\r\n    }\r\n  },\r\n  \"51\": {\r\n    \"inputs\":
@@ -118,32 +118,41 @@ MonoBehaviour:
     Image\"\r\n    }\r\n  },\r\n  \"58\": {\r\n    \"inputs\": {\r\n      \"coarse\":
     \"disable\",\r\n      \"resolution\": 1024,\r\n      \"image\": [\r\n       
     \"13\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"LineArtPreprocessor\",\r\n   
-    \"_meta\": {\r\n      \"title\": \"Realistic Lineart\"\r\n    }\r\n  }\r\n}"
-  staticBGJSON: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 775581837875796,\r\n     
-    \"steps\": 20,\r\n      \"cfg\": 8,\r\n      \"sampler_name\": \"euler\",\r\n     
-    \"scheduler\": \"normal\",\r\n      \"denoise\": 1,\r\n      \"model\": [\r\n       
-    \"46\",\r\n        0\r\n      ],\r\n      \"positive\": [\r\n        \"12\",\r\n       
-    0\r\n      ],\r\n      \"negative\": [\r\n        \"12\",\r\n        1\r\n     
-    ],\r\n      \"latent_image\": [\r\n        \"5\",\r\n        0\r\n      ]\r\n   
-    },\r\n    \"class_type\": \"KSampler\",\r\n    \"_meta\": {\r\n      \"title\":
-    \"KSampler\"\r\n    }\r\n  },\r\n  \"4\": {\r\n    \"inputs\": {\r\n      \"ckpt_name\":
-    \"pixelstyleckpt_strength07.safetensors\"\r\n    },\r\n    \"class_type\": \"CheckpointLoaderSimple\",\r\n   
-    \"_meta\": {\r\n      \"title\": \"Load Checkpoint\"\r\n    }\r\n  },\r\n  \"5\":
-    {\r\n    \"inputs\": {\r\n      \"width\": 1920,\r\n      \"height\": 1920,\r\n     
-    \"batch_size\": 1\r\n    },\r\n    \"class_type\": \"EmptyLatentImage\",\r\n   
-    \"_meta\": {\r\n      \"title\": \"Empty Latent Image\"\r\n    }\r\n  },\r\n 
-    \"6\": {\r\n    \"inputs\": {\r\n      \"text\": \"Pprompt\",\r\n      \"clip\":
-    [\r\n        \"4\",\r\n        1\r\n      ]\r\n    },\r\n    \"class_type\":
-    \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\": \"Prompt\"\r\n   
-    }\r\n  },\r\n  \"7\": {\r\n    \"inputs\": {\r\n      \"text\": \"human, hands,
-    face, legs, background, shadow, shadows, drop shadow, aura, glow, body, arms,
-    feet, water, ocean\",\r\n      \"clip\": [\r\n        \"4\",\r\n        1\r\n     
-    ]\r\n    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n     
-    \"title\": \"Negative Prompt\"\r\n    }\r\n  },\r\n  \"8\": {\r\n    \"inputs\":
-    {\r\n      \"samples\": [\r\n        \"3\",\r\n        0\r\n      ],\r\n     
-    \"vae\": [\r\n        \"4\",\r\n        2\r\n      ]\r\n    },\r\n    \"class_type\":
-    \"VAEDecode\",\r\n    \"_meta\": {\r\n      \"title\": \"VAE Decode\"\r\n   
-    }\r\n  },\r\n  \"11\": {\r\n    \"inputs\": {\r\n      \"control_net_name\":
+    \"_meta\": {\r\n      \"title\": \"Realistic Lineart\"\r\n    }\r\n  },\r\n 
+    \"59\": {\r\n    \"inputs\": {\r\n      \"lora_name\": \"pytorch_lora_weights_sd15.safetensors\",\r\n     
+    \"strength_model\": 1,\r\n      \"strength_clip\": 1,\r\n      \"model\": [\r\n       
+    \"4\",\r\n        0\r\n      ],\r\n      \"clip\": [\r\n        \"4\",\r\n       
+    1\r\n      ]\r\n    },\r\n    \"class_type\": \"LoraLoader\",\r\n    \"_meta\":
+    {\r\n      \"title\": \"Load LoRA\"\r\n    }\r\n  },\r\n  \"60\": {\r\n    \"inputs\":
+    {\r\n      \"sampling\": \"lcm\",\r\n      \"zsnr\": false,\r\n      \"model\":
+    [\r\n        \"59\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
+    \"ModelSamplingDiscrete\",\r\n    \"_meta\": {\r\n      \"title\": \"ModelSamplingDiscrete\"\r\n   
+    }\r\n  }\r\n}"
+  staticBGJSON: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 320652654340884,\r\n     
+    \"steps\": 4,\r\n      \"cfg\": 1.3,\r\n      \"sampler_name\": \"lcm\",\r\n     
+    \"scheduler\": \"sgm_uniform\",\r\n      \"denoise\": 1,\r\n      \"model\":
+    [\r\n        \"46\",\r\n        0\r\n      ],\r\n      \"positive\": [\r\n       
+    \"12\",\r\n        0\r\n      ],\r\n      \"negative\": [\r\n        \"12\",\r\n       
+    1\r\n      ],\r\n      \"latent_image\": [\r\n        \"5\",\r\n        0\r\n     
+    ]\r\n    },\r\n    \"class_type\": \"KSampler\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"KSampler\"\r\n    }\r\n  },\r\n  \"4\": {\r\n    \"inputs\": {\r\n     
+    \"ckpt_name\": \"pixelstyleckpt_strength07.safetensors\"\r\n    },\r\n    \"class_type\":
+    \"CheckpointLoaderSimple\",\r\n    \"_meta\": {\r\n      \"title\": \"Load Checkpoint\"\r\n   
+    }\r\n  },\r\n  \"5\": {\r\n    \"inputs\": {\r\n      \"width\": 1920,\r\n     
+    \"height\": 1920,\r\n      \"batch_size\": 1\r\n    },\r\n    \"class_type\":
+    \"EmptyLatentImage\",\r\n    \"_meta\": {\r\n      \"title\": \"Empty Latent
+    Image\"\r\n    }\r\n  },\r\n  \"6\": {\r\n    \"inputs\": {\r\n      \"text\":
+    \"Pprompt\",\r\n      \"clip\": [\r\n        \"4\",\r\n        1\r\n      ]\r\n   
+    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\":
+    \"Prompt\"\r\n    }\r\n  },\r\n  \"7\": {\r\n    \"inputs\": {\r\n      \"text\":
+    \"human, hands, face, legs, background, shadow, shadows, drop shadow, aura, glow,
+    body, arms, feet, water, ocean\",\r\n      \"clip\": [\r\n        \"4\",\r\n       
+    1\r\n      ]\r\n    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\":
+    {\r\n      \"title\": \"Negative Prompt\"\r\n    }\r\n  },\r\n  \"8\": {\r\n   
+    \"inputs\": {\r\n      \"samples\": [\r\n        \"3\",\r\n        0\r\n     
+    ],\r\n      \"vae\": [\r\n        \"4\",\r\n        2\r\n      ]\r\n    },\r\n   
+    \"class_type\": \"VAEDecode\",\r\n    \"_meta\": {\r\n      \"title\": \"VAE
+    Decode\"\r\n    }\r\n  },\r\n  \"11\": {\r\n    \"inputs\": {\r\n      \"control_net_name\":
     \"control_v11p_sd15_canny.pth\"\r\n    },\r\n    \"class_type\": \"ControlNetLoader\",\r\n   
     \"_meta\": {\r\n      \"title\": \"Load ControlNet Model\"\r\n    }\r\n  },\r\n 
     \"12\": {\r\n    \"inputs\": {\r\n      \"strength\": 1,\r\n      \"start_percent\":
@@ -165,10 +174,19 @@ MonoBehaviour:
     \"image\": [\r\n        \"8\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
     \"Pixelization\",\r\n    \"_meta\": {\r\n      \"title\": \"Pixelization\"\r\n   
     }\r\n  },\r\n  \"46\": {\r\n    \"inputs\": {\r\n      \"tiling\": \"x_only\",\r\n     
-    \"copy_model\": \"Modify in place\",\r\n      \"model\": [\r\n        \"4\",\r\n       
+    \"copy_model\": \"Modify in place\",\r\n      \"model\": [\r\n        \"61\",\r\n       
     0\r\n      ]\r\n    },\r\n    \"class_type\": \"SeamlessTile\",\r\n    \"_meta\":
     {\r\n      \"title\": \"Seamless Tile\"\r\n    }\r\n  },\r\n  \"59\": {\r\n   
     \"inputs\": {\r\n      \"low_threshold\": 0,\r\n      \"high_threshold\": 255,\r\n     
     \"resolution\": 1920,\r\n      \"image\": [\r\n        \"13\",\r\n        0\r\n     
     ]\r\n    },\r\n    \"class_type\": \"CannyEdgePreprocessor\",\r\n    \"_meta\":
-    {\r\n      \"title\": \"Canny Edge\"\r\n    }\r\n  }\r\n}"
+    {\r\n      \"title\": \"Canny Edge\"\r\n    }\r\n  },\r\n  \"60\": {\r\n    \"inputs\":
+    {\r\n      \"lora_name\": \"pytorch_lora_weights_sd15.safetensors\",\r\n     
+    \"strength_model\": 1,\r\n      \"strength_clip\": 1,\r\n      \"model\": [\r\n       
+    \"4\",\r\n        0\r\n      ],\r\n      \"clip\": [\r\n        \"4\",\r\n       
+    1\r\n      ]\r\n    },\r\n    \"class_type\": \"LoraLoader\",\r\n    \"_meta\":
+    {\r\n      \"title\": \"Load LoRA\"\r\n    }\r\n  },\r\n  \"61\": {\r\n    \"inputs\":
+    {\r\n      \"sampling\": \"lcm\",\r\n      \"zsnr\": false,\r\n      \"model\":
+    [\r\n        \"60\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
+    \"ModelSamplingDiscrete\",\r\n    \"_meta\": {\r\n      \"title\": \"ModelSamplingDiscrete\"\r\n   
+    }\r\n  }\r\n}"

@@ -20,6 +20,14 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
     public string AI_Example_Output_1;
     public string AI_Example_Output_2;
 
+    [Header("Shimba's Shop UI")]
+    //Shimba's Shop UI
+    public GameObject Shop_Page_Canvas;
+    public GameObject Shop_Catalog_Parent;
+    public GameObject Shop_AI_Image;
+    public GameObject Shop_AI_Blocker;
+
+    [Header("Sentiment Analysis")]
     //Sentiment Analysis
     public TextAnalysis AI_Sentiment_Analysis;
 
@@ -305,6 +313,9 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
         inConvo = false;
         Shopkeeper_Chat_Output.text = "";
         Shop_Chat_Canvas.SetActive(false);
+
+        Shop_Page_Canvas.SetActive(false);
+
         playerController.enabled = true;
     }
 
@@ -390,6 +401,9 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
             AI_Sentiment_Analysis.SendPredictionText(ExtractContent(AI_Output));
             analyseText = false;
         }
+
+        //Handle Shimba's UI
+        //Block_AI_IMG(false);
     }
     
     string ExtractContent(string text)
@@ -407,6 +421,21 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
         }
     }
 
+    //Handle Shimba's AI Image UI
+    private void Block_AI_IMG(bool variable)
+    {
+        if (variable)
+        {
+            Shop_AI_Image.SetActive(false);
+            Shop_AI_Blocker.SetActive(true);
+        }
+        else
+        {
+            Shop_AI_Image.SetActive(true);
+            Shop_AI_Blocker.SetActive(false);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
@@ -414,6 +443,15 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
             if (!inConvo)
             {
                 Shop_Chat_Canvas.SetActive(true);
+
+                //{
+                //Shimba's UI
+                Shop_Page_Canvas.SetActive(true);
+                //Shop_Catalog_Parent.SetActive(false);
+
+                //Block_AI_IMG(true);
+                
+                //}
 
                 playerController = collision.GetComponent<PlayerController>();
                 playerRB = collision.GetComponent<Rigidbody2D>();

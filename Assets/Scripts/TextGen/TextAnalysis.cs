@@ -8,13 +8,17 @@ public class TextAnalysis : MonoBehaviour
 
     //Mood Meter Variables
     private float Mood_Meter_Change;
-    public float Mood_Meter = 50;
+    public float Mood_Meter = 59;
     public float Mood_Price_Modifier;
     private float previous_Mood;
 
     private bool responseFromThread = false;
     private bool threadStarted = false;
     private Vector3 SentimentAnalysisResponse;
+
+    //Shimba's shop system
+    public AISystemManager Mood_ShopSystem;
+
     void OnEnable()
     {
         Application.runInBackground = true;
@@ -102,24 +106,42 @@ public class TextAnalysis : MonoBehaviour
             Mood_Meter = 100;
         }
 
-        //Positive Mood Change
-        if (Mood_Meter_Change > 0)
+        if (Mood_Meter < 60)
         {
-           //
+            Mood_ShopSystem.BargainItemPrice(0);
+            Debug.Log("Mood Change: " + Mood_Meter_Change);
+            Debug.Log("Mood Meter: " + Mood_Meter);
         }
-        //Negative Mood Change
-        else if (Mood_Meter_Change < 0)
+        else if (Mood_Meter >= 60 && Mood_Meter < 70)
         {
-            //
+            Mood_ShopSystem.BargainItemPrice(1);
+            Debug.Log("Mood Change: " + Mood_Meter_Change);
+            Debug.Log("Mood Meter: " + Mood_Meter);
         }
-        //No Mood Change
-        else
+        else if (Mood_Meter >= 70 && Mood_Meter < 80)
         {
-            //
+            Mood_ShopSystem.BargainItemPrice(2);
+            Debug.Log("Mood Change: " + Mood_Meter_Change);
+            Debug.Log("Mood Meter: " + Mood_Meter);
         }
-
-        Debug.Log("Mood Change: " + Mood_Meter_Change);
-        Debug.Log("Mood Meter: " + Mood_Meter);
+        else if (Mood_Meter >= 80 && Mood_Meter < 90)
+        {
+            Mood_ShopSystem.BargainItemPrice(3);
+            Debug.Log("Mood Change: " + Mood_Meter_Change);
+            Debug.Log("Mood Meter: " + Mood_Meter);
+        }
+        else if (Mood_Meter >= 90 && Mood_Meter < 100)
+        {
+            Mood_ShopSystem.BargainItemPrice(4);
+            Debug.Log("Mood Change: " + Mood_Meter_Change);
+            Debug.Log("Mood Meter: " + Mood_Meter);
+        }
+        else if (Mood_Meter == 100)
+        {
+            Mood_ShopSystem.BargainItemPrice(5);
+            Debug.Log("Mood Change: " + Mood_Meter_Change);
+            Debug.Log("Mood Meter: " + Mood_Meter);
+        }
     }
 
     // Sentiment Analysis Thread

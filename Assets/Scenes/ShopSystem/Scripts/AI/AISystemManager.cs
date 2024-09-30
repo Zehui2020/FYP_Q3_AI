@@ -57,11 +57,17 @@ public class AISystemManager : MonoBehaviour
 
         // Initially, hide the object that displays the conversation with AI
         m_itemShopUIHandler.m_AIConversationDisplay.SetActive(false);
-
+        /*
         // Debug setup
         m_itemShopUIHandler.m_debugBadBotton.onClick.AddListener(TheNumberMinus1);
         m_itemShopUIHandler.m_debugNormalBotton.onClick.AddListener(TheNumber0);
         m_itemShopUIHandler.m_debugGoodBotton.onClick.AddListener(TheNumberPlus1);
+        */
+    }
+
+    public void BargainItemPrice(float modifier)
+    {
+        m_itemPriceFluctuations.ChangePriceBasedOnMood(m_itemDataArray, modifier);
     }
 
     // Debug methods
