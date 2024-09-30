@@ -97,9 +97,7 @@ public class Chest : Interactable
             if (chestType.type == ChestType.Type.Ability)
             {
                 randNum = Random.Range(0, abilities.Count);
-                AbilityPickUp ability = ObjectPool.Instance.GetPooledObject("AbilityPickUp", true) as AbilityPickUp;
-                ability.transform.position = transform.position;
-                ability.InitPickup(abilities[randNum]);
+                PlayerController.Instance.abilityController.SpawnAbilityPickUp(randNum);
                 continue;
             }
             randNum = Random.Range(0, items.Count);

@@ -20,10 +20,7 @@ public class AbilityPickUp : Interactable
     public override bool OnInteract()
     {
         if (PlayerController.Instance.abilityController.HandleAbilityPickUp(ability))
-        {
-            Release();
-            gameObject.SetActive(false);
-        }
+            Destroy(gameObject);
 
         return true;
     }

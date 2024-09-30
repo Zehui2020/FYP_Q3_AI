@@ -11,7 +11,7 @@ public class AbilityController : MonoBehaviour
     [SerializeField] private List<AbilityUIController> abilityUI;
     [SerializeField] private GameObject abilityUIPrefab;
     [SerializeField] private Transform abilityUIParent;
-    [SerializeField] private GameObject abilityPickUpPrefab;
+    [SerializeField] private AbilityPickUp abilityPickUpPrefab;
     [SerializeField] LayerMask targetLayer;
     [SerializeField] LayerMask groundLayer;
     [SerializeField] private int maxAbilitySlots;
@@ -75,7 +75,7 @@ public class AbilityController : MonoBehaviour
     public void SwapAbility()
     {
         // throw back out ability
-        AbilityPickUp ability = ObjectPool.Instance.GetPooledObject("AbilityPickUp", true) as AbilityPickUp;
+        AbilityPickUp ability = Instantiate(abilityPickUpPrefab);
         ability.transform.position = transform.position;
         ability.InitPickup(swapAbility);
 
@@ -86,7 +86,7 @@ public class AbilityController : MonoBehaviour
     public void SwapAbility(int i)
     {
         // throw out old ability
-        AbilityPickUp ability = ObjectPool.Instance.GetPooledObject("AbilityPickUp", true) as AbilityPickUp;
+        AbilityPickUp ability = Instantiate(abilityPickUpPrefab);
         ability.transform.position = transform.position;
         ability.InitPickup(swapAbility);
         // add ability
@@ -112,6 +112,13 @@ public class AbilityController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.J))
             AddAbilitySlot(1);
+    }
+
+    public void SpawnAbilityPickUp(int i)
+    {
+        AbilityPickUp ability = Instantiate(abilityPickUpPrefab);
+        ability.transform.position = transform.position;
+        ability.InitPickup(abilities[i]);
     }
 
     private void InitializeAbility(int abilityNo)
