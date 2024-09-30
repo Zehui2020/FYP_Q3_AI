@@ -4,10 +4,14 @@ using UnityEngine;
 public class PortalController : MonoBehaviour
 {
     [SerializeField] private WFC_MapGeneration mapGen;
+    [SerializeField] private List<GameObject> buttons;
 
-    public List<Portal> portals;
+    private List<Portal> portals;
 
-
+    private void PositionPortals()
+    {
+        portals = mapGen.portalsInMap;
+    }
 
     public void OnTeleport(int i)
     {
