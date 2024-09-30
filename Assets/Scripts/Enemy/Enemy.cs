@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static MovementController;
 
 public class Enemy : EnemyStats
 {
@@ -27,6 +28,8 @@ public class Enemy : EnemyStats
 
     [SerializeField] protected List<Transform> waypoints = new();
     [SerializeField] protected int hurtValue;
+    [SerializeField] protected float parryDazeDuration;
+    [SerializeField] protected float parryShieldReduction;
 
     protected int currentWaypoint = 0;
 
@@ -91,8 +94,11 @@ public class Enemy : EnemyStats
 
         player.OnParry += (target) => 
         {
-            if (target == this)
-                Knockback(60f, 2f); 
+            if (target != this)
+                return;
+
+            Knockback(15f);
+            OnGetParried();
         };
     }
 
@@ -105,6 +111,12 @@ public class Enemy : EnemyStats
             return;
 
         UpdateEnemy();
+    }
+
+    public virtual void OnGetParried()
+    {
+        TriggerStatusState(StatusEffect.StatusType.Status.Dazed, parryDazeDuration);
+        TakeShieldDamageOnly(player, new Damage(parryShieldReduction * player.breachDamageMultiplier.GetTotalModifier()), false, transform.position, DamagePopup.DamageType.Shield);
     }
 
     public override void TakeTrueDamage(Damage damage)
@@ -359,7 +371,10 @@ public class Enemy : EnemyStats
         statusEffectManager.RemoveEffectUI(StatusEffect.StatusType.Status.Dazed);
 
         animator.speed = previousAnimSpeed;
-        shield = maxShield;
+
+        if (shield <= 0)
+            shield = maxShield;
+
         dazedRoutine = null;
 
         if (health <= 0)
@@ -400,58 +415,26 @@ public class Enemy : EnemyStats
         }
     }
 
-    public virtual void Knockback(float initialSpeed, float distance)
+    public virtual void Knockback(float force)
     {
         if (knockbackRoutine != null)
             StopCoroutine(knockbackRoutine);
-        knockbackRoutine = StartCoroutine(KnockbackRoutine(initialSpeed, distance));
+        knockbackRoutine = StartCoroutine(KnockbackRoutine(force));
     }
 
-    private IEnumerator KnockbackRoutine(float initialSpeed, float distance)
+    private IEnumerator KnockbackRoutine(float force)
     {
         aiNavigation.StopNavigationUntilResume();
 
-        Vector2 dir;
-        if (transform.localScale.x > 0)
-            dir = Vector2.left;
-        else
-            dir = Vector2.right;
+        Vector2 dir = transform.localScale.x > 0 ? -transform.right : transform.right;
+        enemyRB.AddForce(dir * force, ForceMode2D.Impulse);
 
-        float knockedBackDistance = 0f;
-        float currentSpeed;
-        Vector2 initialPosition = enemyRB.position;
-        float remainingDistance = distance - knockedBackDistance;
-
-        while (remainingDistance > 0.3f)
+        while (enemyRB.velocity.magnitude > 0.1f)
         {
-            if (Time.timeScale == 0)
-                yield return null;
-
-            RaycastHit2D hit;
-            if (hit = Physics2D.Raycast(transform.position, dir, distance, groundLayer))
-            {
-                if (Vector2.Distance(transform.position, hit.point) <= 2f)
-                {
-                    while (Time.timeScale == 0)
-                        yield return null;
-
-                    knockbackRoutine = null;
-                    if (!isInCombat)
-                        aiNavigation.ResumeNavigationFromStop();
-                    yield break;
-                }
-            }
-
-            remainingDistance = distance - knockedBackDistance;
-            currentSpeed = Mathf.Lerp(initialSpeed, 0, knockedBackDistance / distance);
-            Vector2 newPosition = enemyRB.position + dir * currentSpeed * Time.deltaTime;
-            enemyRB.MovePosition(newPosition);
-
-            knockedBackDistance = Vector2.Distance(initialPosition, enemyRB.position);
-
             yield return null;
         }
 
+        knockbackRoutine = null;
         if (!isInCombat)
             aiNavigation.ResumeNavigationFromStop();
         knockbackRoutine = null;

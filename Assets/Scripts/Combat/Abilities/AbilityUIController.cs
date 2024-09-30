@@ -17,9 +17,17 @@ public class AbilityUIController : MonoBehaviour
         cooldownSlider.fillAmount = 0;
     }
 
+    public void InitAbilityUI(string keybind)
+    {
+        abilityIcon.enabled = false;
+        SetCooldown(0, 0);
+        keybindText.text = keybind;
+    }
+
     public void InitAbilityUI(BaseAbility ability, string keybind)
     {
-        SetIcon(ability.abilityIcon);
+        abilityIcon.enabled = true;
+        abilityIcon.sprite = ability.abilityIcon;
         SetCooldown(0, ability.abilityCharges);
         keybindText.text = keybind;
     }
@@ -32,10 +40,5 @@ public class AbilityUIController : MonoBehaviour
         {
             chargeText.text += ".";
         }
-    }
-
-    public void SetIcon(Sprite icon)
-    {
-        abilityIcon.sprite = icon;
     }
 }

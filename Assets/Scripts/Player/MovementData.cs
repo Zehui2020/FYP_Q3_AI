@@ -8,6 +8,7 @@ public class MovementData : ScriptableObject
     public float overlapSpeed;
     public float walkSpeed;
     public float baseJumpForce;
+    public float wallJumpForce;
     public float jumpInterval;
     public float oppositeJumpMultiplier;
 

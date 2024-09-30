@@ -254,7 +254,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.17291832, y: 0.6222495}
+  m_Offset: {x: -0.20012498, y: 0.49301934}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -265,7 +265,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 5.986084, y: 1.93699}
+  m_Size: {x: 4, y: 1.9777994}
   m_EdgeRadius: 0
 --- !u!1 &2005572433754972735
 GameObject:
@@ -1267,6 +1267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0ce66505916eab4a81a44c23aa9c8bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  immuneType: 0
   particleVFXManager: {fileID: 1573696278602898370}
   statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
@@ -1316,7 +1317,7 @@ MonoBehaviour:
     modifiers: []
   patrolThreshold: 3
   chaseRange: 10
-  attackRange: 3
+  attackRange: 2
   idleDuration: 0
   patrolMovementSpeed: 0
   chaseMovementSpeed: 0
@@ -1335,6 +1336,8 @@ MonoBehaviour:
   - {fileID: 2139633979204247439}
   - {fileID: 5000193587285852631}
   hurtValue: 0
+  parryDazeDuration: 5
+  parryShieldReduction: 0
   currentState: 0
   jumpForce: {x: 15, y: 20}
   jumpAngle: 60

@@ -2,7 +2,6 @@ using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static StatusEffectManager;
 
 public class BaseStats : MonoBehaviour
 {
@@ -143,6 +142,13 @@ public class BaseStats : MonoBehaviour
 
         damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
         damagePopup.SetupPopup(Mathf.CeilToInt(damage.damage).ToString(), transform.position, Color.blue, new Vector2(1, 2));
+    }
+    public void TakeShieldDamageOnly(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
+    {
+        if (shield <= 0)
+            return;
+
+        TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
     }
     public virtual bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
@@ -402,20 +408,21 @@ public class BaseStats : MonoBehaviour
                 break;
             case StatusEffect.StatusType.Status.Frozen:
                 if (frozenRoutine != null)
-                    return;
+                    StopCoroutine(frozenRoutine);
+
                 popup.SetupPopup("Frozen!", transform.position, Color.blue, new Vector2(0, 3));
                 frozenRoutine = StartCoroutine(FrozenRoutine(duration));
                 break;
             case StatusEffect.StatusType.Status.Dazed:
                 if (dazedRoutine != null)
-                    return;
+                    StopCoroutine(dazedRoutine);
 
                 popup.SetupPopup("Dazed!", transform.position, Color.yellow, new Vector2(0, 3));
                 dazedRoutine = StartCoroutine(DazedRoutine(duration));
                 break;
             case StatusEffect.StatusType.Status.Stunned:
                 if (stunnedRoutine != null)
-                    return;
+                    StopCoroutine(stunnedRoutine);
 
                 popup.SetupPopup("Stunned!", transform.position, Color.yellow, new Vector2(0, 3));
                 stunnedRoutine = StartCoroutine(StunnedRoutine(duration));

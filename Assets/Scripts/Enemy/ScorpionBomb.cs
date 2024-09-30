@@ -10,11 +10,11 @@ public class ScorpionBomb : PooledObject
     private Animator animator;
 
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask playerLayer;
 
     [SerializeField] private float radius;
     [SerializeField] private float speed;
     [SerializeField] private float maxArcHeight;
-    [SerializeField] private float damageMultToSelf;
 
     private Scorpion thrower;
     private PlayerController player;
@@ -81,7 +81,7 @@ public class ScorpionBomb : PooledObject
             float damage = thrower.CalculateDamageDealt(target, BaseStats.Damage.DamageSource.Normal, out bool crit, out DamagePopup.DamageType damageType);
 
             if (isParried && target == thrower)
-                target.TakeDamage(thrower, new BaseStats.Damage(damage * damageMultToSelf), crit, target.transform.position, damageType);
+                target.TakeDamage(thrower, new BaseStats.Damage(target.maxShield), crit, target.transform.position, damageType);
             else
                 target.TakeDamage(thrower, new BaseStats.Damage(damage), crit, target.transform.position, damageType);
         }
@@ -95,14 +95,14 @@ public class ScorpionBomb : PooledObject
     private void Update()
     {
         if (Vector3.Distance(transform.position, targetPos) <= 3f && 
-            Physics2D.Raycast(transform.position, Vector2.down, 0.2f + bombCol.size.x, groundLayer))
+            Physics2D.Raycast(transform.position, Vector2.down, 0.2f + bombCol.size.x, groundLayer) &&
+            transform.position.y > targetPos.y)
         {
             animator.SetTrigger("detonate");
             bombCol.isTrigger = false;
         }
 
-        if (transform.position.y > targetPos.y &&
-            Physics2D.OverlapCircle(transform.position, bombCol.size.x / 2f) && 
+        if (Physics2D.OverlapCircle(transform.position, bombCol.size.x / 2f, playerLayer) && 
             player.immuneType == BaseStats.ImmuneType.Parry &&
             !isParried)
         {

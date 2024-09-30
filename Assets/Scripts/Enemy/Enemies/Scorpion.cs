@@ -37,7 +37,7 @@ public class Scorpion : Enemy
         onReachWaypoint += () => { ChangeState(State.Idle); };
         onFinishIdle += () => { ChangeState(State.Patrol); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
-        OnBreached += (multiplier) => { ChangeState(State.Idle); };
+        OnBreached += (multiplier) => { ChangeState(State.Hurt); };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
     }
 
@@ -89,8 +89,15 @@ public class Scorpion : Enemy
             currentState != State.Throw &&
             currentState != State.Hurt)
             ChangeState(State.Melee);
-        else if (canThrow && Physics2D.OverlapCircle(transform.position, chaseRange, playerLayer) && 
-            currentState != State.Throw && 
+        else if (isInCombat && 
+            canThrow &&
+            currentState != State.Throw &&
+            currentState != State.Melee &&
+            currentState != State.Hurt)
+            ChangeState(State.Throw);
+        else if (canThrow &&
+            CheckChasePlayer() &&
+            currentState != State.Throw &&
             currentState != State.Melee &&
             currentState != State.Hurt)
             ChangeState(State.Throw);
@@ -131,10 +138,10 @@ public class Scorpion : Enemy
         canThrow = true;
     }
 
-    public override void Knockback(float initialSpeed, float distance)
+    public override void Knockback(float force)
     {
         enemyRB.velocity = Vector2.zero;
-        base.Knockback(initialSpeed, distance);
+        base.Knockback(force);
     }
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)

@@ -2,7 +2,6 @@ using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static BaseStats.Damage;
 using static MovementController;
@@ -78,10 +77,7 @@ public class PlayerController : PlayerStats
 
         playerEffectsController.InitializePlayerEffectsController();
         if (proceduralMapGenerator != null)
-        {
             proceduralMapGenerator.InitMapGenerator();
-            transform.position = proceduralMapGenerator.GetStartingPos();
-        }
         abilityStats.ResetAbilityStats();
 
         statusEffectManager.OnThresholdReached += TriggerStatusState;
@@ -243,7 +239,6 @@ public class PlayerController : PlayerStats
         playerRB.velocity = Vector2.zero;
         playerRB.isKinematic = true;
 
-        ChangeState(PlayerStates.Hurt);
         if (movementController.currentState == MovementState.GroundDash || 
             movementController.currentState == MovementState.AirDash)
             movementController.CancelDash();
@@ -283,6 +278,9 @@ public class PlayerController : PlayerStats
     {
         if (movementController.currentState == MovementState.GroundDash || movementController.currentState == MovementState.AirDash)
             movementController.CancelDash();
+
+        if (movementController.currentState == MovementState.Plunge)
+            movementController.StopPlunge();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -349,13 +347,15 @@ public class PlayerController : PlayerStats
                 movementController.currentState != MovementState.LedgeGrab &&
                 movementController.isGrounded)
             {
+                ChangeState(PlayerStates.Hurt);
+                animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);
+
                 if (hurtRoutine != null)
                     StopCoroutine(hurtRoutine);
                 hurtRoutine = StartCoroutine(HurtRoutine());
             }
 
             combatController.ResetComboInstantly();
-            animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);
 
             // Spiked Chestplate
             if (itemStats.chestplateDamageModifier != 0)
