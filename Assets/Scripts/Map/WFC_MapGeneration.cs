@@ -308,6 +308,7 @@ public class WFC_MapGeneration : MonoBehaviour
                     obj.transform.SetParent(chests[randomChestIndex]);
                     obj.transform.localPosition = Vector3.zero;
                     chests.RemoveAt(randomChestIndex);
+                    break;
                 }
             }
         }

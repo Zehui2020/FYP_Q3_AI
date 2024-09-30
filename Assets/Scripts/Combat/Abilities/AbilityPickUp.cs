@@ -1,6 +1,7 @@
+using DesignPatterns.ObjectPool;
 using UnityEngine;
 
-public class AbilityPickUp : MonoBehaviour, IInteractable
+public class AbilityPickUp : PooledObject, IInteractable
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private BaseAbility ability;
@@ -14,13 +15,15 @@ public class AbilityPickUp : MonoBehaviour, IInteractable
     {
         ability = newAbility;
         spriteRenderer.sprite = ability.abilityIcon;
-        //spriteRenderer.material = newAbility.itemOutlineMaterial;
     }
 
     public bool OnInteract()
     {
         if (PlayerController.Instance.abilityController.HandleAbilityPickUp(ability))
-            Destroy(gameObject);
+        {
+            Release();
+            gameObject.SetActive(false);
+        }
 
         return true;
     }

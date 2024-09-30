@@ -4,12 +4,10 @@ using UnityEngine.UI;
 public class Portal : MonoBehaviour, IInteractable
 {
     public bool isActivated = false;
-    public Button button;
 
     public void OnEnterRange()
     {
         isActivated = true;
-        button.interactable = true;
     }
 
     public bool OnInteract()
@@ -20,6 +18,5 @@ public class Portal : MonoBehaviour, IInteractable
     public void OnLeaveRange()
     {
         isActivated = true;
-        button.interactable = true;
     }
 }
