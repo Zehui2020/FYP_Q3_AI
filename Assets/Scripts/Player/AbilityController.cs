@@ -1,3 +1,4 @@
+using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.PlasticSCM.Editor.WebApi;
@@ -71,12 +72,12 @@ public class AbilityController : MonoBehaviour
         return true;
     }
 
-    private void SwapAbility()
+    public void SwapAbility()
     {
         // throw back out ability
-        GameObject obj = Instantiate(abilityPickUpPrefab);
-        obj.transform.position = transform.position;
-        obj.GetComponent<AbilityPickUp>().InitPickup(swapAbility);
+        AbilityPickUp ability = ObjectPool.Instance.GetPooledObject("AbilityPickUp", true) as AbilityPickUp;
+        ability.transform.position = transform.position;
+        ability.InitPickup(swapAbility);
 
         swappingAbility = false;
         swapAbility = null;
@@ -85,9 +86,9 @@ public class AbilityController : MonoBehaviour
     public void SwapAbility(int i)
     {
         // throw out old ability
-        GameObject obj = Instantiate(abilityPickUpPrefab);
-        obj.transform.position = transform.position;
-        obj.GetComponent<AbilityPickUp>().InitPickup(abilities[i]);
+        AbilityPickUp ability = ObjectPool.Instance.GetPooledObject("AbilityPickUp", true) as AbilityPickUp;
+        ability.transform.position = transform.position;
+        ability.InitPickup(swapAbility);
         // add ability
         abilities[i] = swapAbility;
         charges[i] = swapAbility.abilityCharges;
@@ -111,9 +112,6 @@ public class AbilityController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.J))
             AddAbilitySlot(1);
-
-        if (swappingAbility && Input.GetKeyDown(KeyCode.Escape))
-            SwapAbility();
     }
 
     private void InitializeAbility(int abilityNo)

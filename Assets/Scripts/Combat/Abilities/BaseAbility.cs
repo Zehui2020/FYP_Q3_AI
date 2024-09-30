@@ -6,6 +6,8 @@ public abstract class BaseAbility : ScriptableObject
 {
     public AbilityStats abilityStats;
 
+    public Item.Rarity abilityRarity;
+
     public enum AbilityName
     {
         Heal,

@@ -308,6 +308,7 @@ public class WFC_MapGeneration : MonoBehaviour
                     obj.transform.SetParent(chests[randomChestIndex]);
                     obj.transform.localPosition = Vector3.zero;
                     chests.RemoveAt(randomChestIndex);
+                    break;
                 }
             }
         }
@@ -343,6 +344,8 @@ public class WFC_MapGeneration : MonoBehaviour
         {
             portalsInMap.Add(Instantiate(portalPrefab, doors[i], false).GetComponent<Portal>());
         }
+
+        PlayerController.Instance.portalController.PositionPortals(portalsInMap);
     }
 
     private List<GameObject> GetAvailableBorderTilesList(Vector2 checkTilePos, Vector2 direction)

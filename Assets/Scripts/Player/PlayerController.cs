@@ -31,6 +31,7 @@ public class PlayerController : PlayerStats
     private Coroutine hurtRoutine;
 
     [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
+    [SerializeField] public PortalController portalController;
     [SerializeField] private LayerMask enemyLayer;
 
     [SerializeField] private EnemyStatBar healthBar;
@@ -228,11 +229,23 @@ public class PlayerController : PlayerStats
             {
                 if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
                     if (abilityController.swappingAbility)
+                    {
                         abilityController.SwapAbility(i);
+                        currentState = PlayerStates.Movement;
+                    }
                     else
                         abilityController.HandleAbility(i);
             }
+
+            if (abilityController.swappingAbility && Input.GetKeyDown(KeyCode.Escape))
+            {
+                abilityController.SwapAbility();
+                currentState = PlayerStates.Movement;
+            }
         }
+
+        if (abilityController.swappingAbility)
+            currentState = PlayerStates.Combat;
     }
 
     private IEnumerator HurtRoutine()

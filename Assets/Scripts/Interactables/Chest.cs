@@ -12,6 +12,7 @@ public class Chest : Interactable
         public enum Type
         {
             Normal,
+            Ability,
             Large,
             Damage,
             Healing,
@@ -61,6 +62,7 @@ public class Chest : Interactable
         for (int i = 0; i < itemSpawnCount; i++)
         {
             List<Item> items = new();
+            List<BaseAbility> abilities = new();
 
             switch (chestType.type)
             {
@@ -78,17 +80,29 @@ public class Chest : Interactable
                 case ChestType.Type.Legendary:
                     items = ItemManager.Instance.GetItemsFrom(rarity);
                     break;
+                case ChestType.Type.Ability:
+                    abilities = ItemManager.Instance.GetAbilitiesFrom(rarity);
+                    break;
             }
 
             Debug.Log("Rarity: " + rarity);
 
-            if (items.Count == 0)
+            if (items.Count == 0 && abilities.Count == 0)
             {
                 Debug.Log("MISSING ITEM!");
                 return;
             }
 
-            int randNum = Random.Range(0, items.Count);
+            int randNum;
+            if (chestType.type == ChestType.Type.Ability)
+            {
+                randNum = Random.Range(0, abilities.Count);
+                AbilityPickUp ability = ObjectPool.Instance.GetPooledObject("AbilityPickUp", true) as AbilityPickUp;
+                ability.transform.position = transform.position;
+                ability.InitPickup(abilities[randNum]);
+                continue;
+            }
+            randNum = Random.Range(0, items.Count);
             ItemPickup item = ObjectPool.Instance.GetPooledObject("ItemPickup", true) as ItemPickup;
             item.transform.position = transform.position;
             item.InitPickup(items[randNum]);

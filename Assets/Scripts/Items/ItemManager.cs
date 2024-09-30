@@ -7,6 +7,7 @@ public class ItemManager : MonoBehaviour
     public static ItemManager Instance;
     public List<Item> itemList;
     public List<Item> allItems;
+    public List<BaseAbility> allAbilities;
     [SerializeField] private ItemPickupAlert itemPickupAlert;
 
     [SerializeField] private ItemStats itemStats;
@@ -131,6 +132,19 @@ public class ItemManager : MonoBehaviour
         }
 
         return items;
+    }
+
+    public List<BaseAbility> GetAbilitiesFrom(Item.Rarity rarity)
+    {
+        List<BaseAbility> abilities = new();
+
+        foreach (BaseAbility ability in allAbilities)
+        {
+            if (ability.abilityRarity.Equals(rarity))
+                abilities.Add(ability);
+        }
+
+        return abilities;
     }
 
     // For dev console

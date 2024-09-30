@@ -1,21 +1,30 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PortalController : MonoBehaviour
 {
-    [SerializeField] private WFC_MapGeneration mapGen;
-    [SerializeField] private List<GameObject> buttons;
+    [SerializeField] public List<GameObject> buttons;
+    [SerializeField] private Transform buttonParent;
+    [SerializeField] public List<Portal> portals = new List<Portal>();
+    [SerializeField] private float multiplier = 5;
+    [SerializeField] private Vector3 offset;
 
-    private List<Portal> portals;
-
-    private void PositionPortals()
+    public void PositionPortals(List<Portal> mapPortals)
     {
-        portals = mapGen.portalsInMap;
+        portals.AddRange(mapPortals);
+
+        buttonParent.localPosition = offset;
+        for (int i = 0; i < buttons.Count; i++)
+        {
+            buttons[i].transform.localPosition = portals[i].transform.position * multiplier;
+        }
+        gameObject.SetActive(false);
     }
 
     public void OnTeleport(int i)
     {
-        if (portals[i] == null || !portals[i].isActivated)
+        if (!portals[i].isActivated)
             return;
 
         // teleport player

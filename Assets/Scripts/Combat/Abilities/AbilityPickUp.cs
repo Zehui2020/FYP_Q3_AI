@@ -1,3 +1,4 @@
+using DesignPatterns.ObjectPool;
 using UnityEngine;
 
 public class AbilityPickUp : Interactable
@@ -14,13 +15,15 @@ public class AbilityPickUp : Interactable
     {
         ability = newAbility;
         spriteRenderer.sprite = ability.abilityIcon;
-        //spriteRenderer.material = newAbility.itemOutlineMaterial;
     }
 
     public override bool OnInteract()
     {
         if (PlayerController.Instance.abilityController.HandleAbilityPickUp(ability))
-            Destroy(gameObject);
+        {
+            Release();
+            gameObject.SetActive(false);
+        }
 
         return true;
     }
