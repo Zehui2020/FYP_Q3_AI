@@ -36,7 +36,7 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private ParallaxEffect[] bgs;
     [SerializeField] private Transform cam;
 
-    [SerializeField] private List<MapTile> mapTiles = new List<MapTile>();
+    private List<MapTile> mapTiles = new List<MapTile>();
     private List<Sprite> tileSprites = new();
     private Vector2 currTile;
     private Vector2 startingPos;
@@ -44,6 +44,7 @@ public class WFC_MapGeneration : MonoBehaviour
     private List<Vector2> collapsedTiles = new List<Vector2>();
     private List<int> collapsableTileNum = new List<int>();
 
+    public List<Portal> portalsInMap;
 
     public void InitMapGenerator()
     {
@@ -82,6 +83,7 @@ public class WFC_MapGeneration : MonoBehaviour
         // set random starting room tile
         int randomIndex = Random.Range(0, startingTilePrefabs.Count);
         mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = InstantiateTile(startingTilePrefabs[randomIndex], currTile * tileSize).GetComponent<MapTile>();
+        portalsInMap.Add(mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)].doorTransform.GetComponent<Portal>());
         // add new collapsable tiles
         collapsedTiles.Add(currTile);
         AddCollapsableTiles();
@@ -339,7 +341,7 @@ public class WFC_MapGeneration : MonoBehaviour
         doors.Remove(doorTransform);
         for (int i = doors.Count - 1; i > doors.Count - 4; i--)
         {
-            Instantiate(portalPrefab, doors[i], false);
+            portalsInMap.Add(Instantiate(portalPrefab, doors[i], false).GetComponent<Portal>());
         }
     }
 

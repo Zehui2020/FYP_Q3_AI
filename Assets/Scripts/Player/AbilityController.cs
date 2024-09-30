@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.PlasticSCM.Editor.WebApi;
+using UnityEditor.Playables;
 using UnityEngine;
 
 public class AbilityController : MonoBehaviour
@@ -8,9 +10,15 @@ public class AbilityController : MonoBehaviour
     [SerializeField] private List<AbilityUIController> abilityUI;
     [SerializeField] private GameObject abilityUIPrefab;
     [SerializeField] private Transform abilityUIParent;
+    [SerializeField] private GameObject abilityPickUpPrefab;
     [SerializeField] LayerMask targetLayer;
     [SerializeField] LayerMask groundLayer;
+    [SerializeField] private int maxAbilitySlots;
 
+    public int currAbilitySlots = 0;
+    public bool swappingAbility = false;
+
+    private BaseAbility swapAbility;
     private PlayerController player;
     private List<Coroutine> abilityCooldownRoutines = new List<Coroutine> { null, null };
     private List<int> charges = new List<int>();
@@ -19,59 +27,93 @@ public class AbilityController : MonoBehaviour
     public void InitializeAbilityController()
     {
         player = GetComponent<PlayerController>();
-        for (int i = 0; i < abilities.Count; i++)
+        AddAbilitySlot(2);
+    }
+
+    private void AddAbilitySlot(int count)
+    {
+        for (int i = 0; i < count; i++)
         {
-            abilityUI[i].InitAbilityUI(abilities[i], "[ " + (i + 1).ToString() + " ]");
-            charges.Add(abilities[i].abilityCharges);
-            maxCharges.Add(abilities[i].abilityMaxCharges);
+            if (currAbilitySlots >= maxAbilitySlots)
+                return;
+
+            // add ui
+            GameObject obj = Instantiate(abilityUIPrefab, abilityUIParent);
+            abilityUI.Add(obj.GetComponent<AbilityUIController>());
+            if (abilityUI.Count == 10)
+                abilityUI[abilityUI.Count - 1].InitAbilityUI("[ 0 ]");
+            else
+                abilityUI[abilityUI.Count - 1].InitAbilityUI("[ " + abilityUI.Count.ToString() + " ]");
+            currAbilitySlots++;
         }
-        InitializeAbility(-1);
     }
 
-    private void AddAbilitySlot()
+    public bool HandleAbilityPickUp(BaseAbility newAbility)
     {
-        if (abilities.Count >= 10)
-            return;
-
-        // add ui
-        GameObject obj = Instantiate(abilityUIPrefab, abilityUIParent);
-        abilityUI.Add(obj.GetComponent<AbilityUIController>());
-        if (abilityUI.Count == 10)
-            abilityUI[abilityUI.Count - 1].InitAbilityUI("[ 0 ]");
-        else
-            abilityUI[abilityUI.Count - 1].InitAbilityUI("[ " + abilityUI.Count.ToString() + " ]");
-    }
-
-    private void AddAbility(BaseAbility newAbility)
-    {
-        if (abilities.Count >= 10)
-            return;
+        if (abilities.Count >= currAbilitySlots)
+        {
+            swappingAbility = true;
+            swapAbility = newAbility;
+            return true;
+        }
 
         // add ability
         abilities.Add(newAbility);
         abilityCooldownRoutines.Add(null);
         charges.Add(newAbility.abilityCharges);
         maxCharges.Add(newAbility.abilityMaxCharges);
-        // add ui
-        if (abilities.Count > abilityUI.Count)
-        {
-            GameObject obj = Instantiate(abilityUIPrefab, abilityUIParent);
-            abilityUI.Add(obj.GetComponent<AbilityUIController>());
-        }
         if (abilityUI.Count == 10)
             abilityUI[abilities.Count - 1].InitAbilityUI(newAbility, "[ 0 ]");
         else
             abilityUI[abilities.Count - 1].InitAbilityUI(newAbility, "[ " + abilities.Count.ToString() + " ]");
         // init ability
         InitializeAbility(abilities.Count - 1);
+        return true;
+    }
+
+    private void SwapAbility()
+    {
+        // throw back out ability
+        GameObject obj = Instantiate(abilityPickUpPrefab);
+        obj.transform.position = transform.position;
+        obj.GetComponent<AbilityPickUp>().InitPickup(swapAbility);
+
+        swappingAbility = false;
+        swapAbility = null;
+    }
+
+    public void SwapAbility(int i)
+    {
+        // throw out old ability
+        GameObject obj = Instantiate(abilityPickUpPrefab);
+        obj.transform.position = transform.position;
+        obj.GetComponent<AbilityPickUp>().InitPickup(abilities[i]);
+        // add ability
+        abilities[i] = swapAbility;
+        charges[i] = swapAbility.abilityCharges;
+        maxCharges[i] = swapAbility.abilityMaxCharges;
+        abilityUI[i].InitAbilityUI(swapAbility, "[ " + i.ToString() + " ]");
+
+        if (abilityCooldownRoutines[i] != null)
+        {
+            StopCoroutine(abilityCooldownRoutines[i]);
+            abilityCooldownRoutines[i] = null;
+            abilityUI[i].SetCooldown(0, charges[i]);
+        }
+        // init ability
+        InitializeAbility(i);
+
+        swappingAbility = false;
+        swapAbility = null;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.H))
-            AddAbility(abilities[0]);
         if (Input.GetKeyDown(KeyCode.J))
-            AddAbilitySlot();
+            AddAbilitySlot(1);
+
+        if (swappingAbility && Input.GetKeyDown(KeyCode.Escape))
+            SwapAbility();
     }
 
     private void InitializeAbility(int abilityNo)

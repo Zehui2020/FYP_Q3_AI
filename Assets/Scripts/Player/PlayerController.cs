@@ -2,6 +2,7 @@ using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static BaseStats.Damage;
 using static MovementController;
@@ -226,11 +227,17 @@ public class PlayerController : PlayerStats
             for (int i = 0; i < abilityController.abilities.Count; i++)
             {
                 if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
-                    abilityController.HandleAbility(i);
-                else if (i == 9 && Input.GetKeyDown(KeyCode.Alpha0))
-                    abilityController.HandleAbility(i);
+                    if (abilityController.swappingAbility)
+                        abilityController.SwapAbility(i);
+                    else
+                        abilityController.HandleAbility(i);
             }
         }
+
+        if (abilityController.swappingAbility)
+            currentState = PlayerStates.Combat;
+        else
+            currentState = PlayerStates.Movement;
     }
 
     private IEnumerator HurtRoutine()
