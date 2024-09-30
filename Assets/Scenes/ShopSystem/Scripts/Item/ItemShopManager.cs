@@ -143,7 +143,7 @@ public class ItemShopManager : MonoBehaviour
     {
         // Use raycast to detect if an item was hit
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        if (hit.collider != null && hit.collider.gameObject.CompareTag("Item"))
+        if (hit.collider != null && hit.collider.gameObject.CompareTag("ItemPrefab"))
         {
             // If an item was clicked, do not close the shop
             return true;
