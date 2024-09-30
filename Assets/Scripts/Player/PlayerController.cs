@@ -2,7 +2,6 @@ using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static BaseStats.Damage;
 using static MovementController;
@@ -30,6 +29,7 @@ public class PlayerController : PlayerStats
 
     private Coroutine hurtRoutine;
 
+    [SerializeField] public Canvas playerCanvas;
     [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
     [SerializeField] public PortalController portalController;
     [SerializeField] private LayerMask enemyLayer;
@@ -49,6 +49,8 @@ public class PlayerController : PlayerStats
 
     [SerializeField] private TextMeshProUGUI goldText;
     public int gold = 0;
+
+    private bool isDisabled = false;
 
     private Coroutine transceiverBuffRoutine;
 
@@ -113,7 +115,7 @@ public class PlayerController : PlayerStats
 
     private void Update()
     {
-        if (health <= 0)
+        if (health <= 0 || isDisabled)
             return;
 
         if (goldText != null)
@@ -840,6 +842,30 @@ public class PlayerController : PlayerStats
     public void PickupWeapon(WeaponData weaponData)
     {
         combatController.ChangeWeapon(weaponData);
+    }
+
+    public void DisablePlayer(bool hideCanvas)
+    {
+        if (hideCanvas)
+            HideCanvas();
+
+        isDisabled = true;
+    }
+
+    public void EnablePlayer()
+    {
+        isDisabled = false;
+        ShowCanvas();
+    }
+
+    public void HideCanvas()
+    {
+        playerCanvas.enabled = false;
+    }
+
+    public void ShowCanvas()
+    {
+        playerCanvas.enabled = true;
     }
 
     // For dev console

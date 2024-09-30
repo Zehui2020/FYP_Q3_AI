@@ -213,7 +213,8 @@ public class MovementController : MonoBehaviour
     {
         if (plungeRoutine != null || 
             !canGrapple || 
-            currentState == MovementState.LedgeGrab)
+            currentState == MovementState.LedgeGrab ||
+            currentState == MovementState.Plunge)
             return;
 
         if (vertical == 0)
