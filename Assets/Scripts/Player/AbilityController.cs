@@ -71,7 +71,7 @@ public class AbilityController : MonoBehaviour
         return true;
     }
 
-    private void SwapAbility()
+    public void SwapAbility()
     {
         // throw back out ability
         GameObject obj = Instantiate(abilityPickUpPrefab);
@@ -111,9 +111,6 @@ public class AbilityController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.J))
             AddAbilitySlot(1);
-
-        if (swappingAbility && Input.GetKeyDown(KeyCode.Escape))
-            SwapAbility();
     }
 
     private void InitializeAbility(int abilityNo)

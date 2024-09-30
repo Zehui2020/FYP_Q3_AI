@@ -343,6 +343,8 @@ public class WFC_MapGeneration : MonoBehaviour
         {
             portalsInMap.Add(Instantiate(portalPrefab, doors[i], false).GetComponent<Portal>());
         }
+
+        PlayerController.Instance.portalController.PositionPortals(portalsInMap);
     }
 
     private List<GameObject> GetAvailableBorderTilesList(Vector2 checkTilePos, Vector2 direction)
