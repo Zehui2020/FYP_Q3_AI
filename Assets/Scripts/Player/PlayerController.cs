@@ -146,7 +146,7 @@ public class PlayerController : PlayerStats
 
         if (Input.GetKeyDown(KeyCode.M))
         {
-            minimapController.ChangeView(1, 0, true);
+            minimapController.ChangeView(1, 0);
         }
         if (Input.GetKey(KeyCode.M))
         {
@@ -155,7 +155,7 @@ public class PlayerController : PlayerStats
         }
         else if (Input.GetKeyUp(KeyCode.M))
         {
-            minimapController.ChangeView(0, 1, false);
+            minimapController.ChangeView(0, 1);
         }
 
         if (goldText != null)

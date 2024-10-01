@@ -5,16 +5,17 @@ public class MinimapController : MonoBehaviour
 {
     [SerializeField] List<GameObject> maps;
     [SerializeField] List<GameObject> cam;
-    [SerializeField] PortalController portalController;
 
-    public void ChangeView(int i, int j, bool k)
+    public void ChangeView(int i, int j)
     {
-        cam[i].SetActive(true);
-        maps[i].SetActive(true);
+        if (cam.Count > i)
+            cam[i].SetActive(true);
+        if (maps.Count > i)
+            maps[i].SetActive(true);
 
-        cam[j].SetActive(false);
-        maps[j].SetActive(false);
-
-        portalController.gameObject.SetActive(k);
+        if (cam.Count > j)
+            cam[j].SetActive(false);
+        if (maps.Count > j)
+            maps[j].SetActive(false);
     }
 }
