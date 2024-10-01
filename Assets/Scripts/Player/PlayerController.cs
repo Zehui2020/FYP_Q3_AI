@@ -146,16 +146,18 @@ public class PlayerController : PlayerStats
 
         if (Input.GetKeyDown(KeyCode.M))
         {
-            minimapController.ChangeView(1, 0);
+            minimapController.ChangeView(true);
         }
         if (Input.GetKey(KeyCode.M))
         {
             movementController.ChangeState(MovementState.Idle);
+            ChangeState(PlayerStates.Map);
             return;
         }
         else if (Input.GetKeyUp(KeyCode.M))
         {
-            minimapController.ChangeView(0, 1);
+            minimapController.ChangeView(false);
+            ChangeState(PlayerStates.Movement);
         }
 
         if (goldText != null)
