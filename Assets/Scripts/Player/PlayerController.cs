@@ -31,6 +31,7 @@ public class PlayerController : PlayerStats
 
     [SerializeField] public Canvas playerCanvas;
     [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
+    [SerializeField] private MinimapController minimapController;
     [SerializeField] public PortalController portalController;
     [SerializeField] private LayerMask enemyLayer;
 
@@ -115,6 +116,9 @@ public class PlayerController : PlayerStats
 
     private void Update()
     {
+        if (health <= 0 || isDisabled)
+            return;
+
         if (abilityController != null && abilityController.swappingAbility)
         {
             for (int i = 0; i < abilityController.abilities.Count; i++)
@@ -124,11 +128,23 @@ public class PlayerController : PlayerStats
             }
             if (Input.GetKeyDown(KeyCode.Escape))
                 abilityController.SwapAbility();
+            movementController.ChangeState(MovementState.Idle);
             return;
         }
 
-        if (health <= 0 || isDisabled)
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            minimapController.ChangeView(1, 0, true);
+        }
+        if (Input.GetKey(KeyCode.M))
+        {
+            movementController.ChangeState(MovementState.Idle);
             return;
+        }
+        else if (Input.GetKeyUp(KeyCode.M))
+        {
+            minimapController.ChangeView(0, 1, false);
+        }
 
         if (goldText != null)
             goldText.text = gold.ToString();
