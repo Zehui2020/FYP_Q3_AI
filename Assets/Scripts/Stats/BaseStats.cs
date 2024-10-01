@@ -10,7 +10,8 @@ public class BaseStats : MonoBehaviour
         None,
         Dodge,
         Block,
-        Parry
+        Parry,
+        StoneSkin
     }
     public ImmuneType immuneType;
 
@@ -171,6 +172,9 @@ public class BaseStats : MonoBehaviour
                 case ImmuneType.Parry:
                     OnParry?.Invoke(attacker);
                     popup.SetupPopup("Parried!", transform.position, Color.white, new Vector2(1, 3));
+                    break;
+                case ImmuneType.StoneSkin:
+                    popup.SetupPopup("Stone Skin!", transform.position, Color.yellow, new Vector2(1, 3));
                     break;
             }
 

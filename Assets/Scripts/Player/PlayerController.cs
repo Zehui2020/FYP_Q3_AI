@@ -35,6 +35,7 @@ public class PlayerController : PlayerStats
     [SerializeField] public Canvas playerCanvas;
     [SerializeField] public DialogueManager dialogueManager;
     [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
+    [SerializeField] private MinimapController minimapController;
     [SerializeField] public PortalController portalController;
     [SerializeField] private LayerMask enemyLayer;
 
@@ -137,7 +138,22 @@ public class PlayerController : PlayerStats
             }
             if (Input.GetKeyDown(KeyCode.Escape))
                 abilityController.SwapAbility();
+            movementController.ChangeState(MovementState.Idle);
             return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            minimapController.ChangeView(1, 0, true);
+        }
+        if (Input.GetKey(KeyCode.M))
+        {
+            movementController.ChangeState(MovementState.Idle);
+            return;
+        }
+        else if (Input.GetKeyUp(KeyCode.M))
+        {
+            minimapController.ChangeView(0, 1, false);
         }
 
         if (goldText != null)
