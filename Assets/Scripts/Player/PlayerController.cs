@@ -128,7 +128,7 @@ public class PlayerController : PlayerStats
             }
         }
 
-        if (health <= 0 || currentState == PlayerStates.Dialogue)
+        if (health <= 0 || currentState == PlayerStates.Dialogue || currentState == PlayerStates.Ability)
             return;
 
         if (abilityController != null && abilityController.swappingAbility)
@@ -147,17 +147,12 @@ public class PlayerController : PlayerStats
         if (Input.GetKeyDown(KeyCode.M))
         {
             minimapController.ChangeView(true);
-        }
-        if (Input.GetKey(KeyCode.M))
-        {
-            movementController.ChangeState(MovementState.Idle);
-            ChangeState(PlayerStates.Map);
-            return;
+            Time.timeScale = 0;
         }
         else if (Input.GetKeyUp(KeyCode.M))
         {
             minimapController.ChangeView(false);
-            ChangeState(PlayerStates.Movement);
+            Time.timeScale = 1;
         }
 
         if (goldText != null)
