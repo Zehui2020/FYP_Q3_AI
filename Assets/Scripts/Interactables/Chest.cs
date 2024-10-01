@@ -97,7 +97,7 @@ public class Chest : Interactable
             if (chestType.type == ChestType.Type.Ability)
             {
                 randNum = Random.Range(0, abilities.Count);
-                PlayerController.Instance.abilityController.SpawnAbilityPickUp(randNum);
+                PlayerController.Instance.abilityController.SpawnAbilityPickUp(abilities[randNum]);
                 continue;
             }
             randNum = Random.Range(0, items.Count);
@@ -107,6 +107,7 @@ public class Chest : Interactable
         }
 
         isOpened = true;
+        OnLeaveRange();
     }
 
     public override void OnEnterRange()

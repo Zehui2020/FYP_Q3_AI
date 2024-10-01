@@ -114,11 +114,11 @@ public class AbilityController : MonoBehaviour
             AddAbilitySlot(1);
     }
 
-    public void SpawnAbilityPickUp(int i)
+    public void SpawnAbilityPickUp(BaseAbility newAbility)
     {
         AbilityPickUp ability = Instantiate(abilityPickUpPrefab);
         ability.transform.position = transform.position;
-        ability.InitPickup(abilities[i]);
+        ability.InitPickup(newAbility);
     }
 
     private void InitializeAbility(int abilityNo)
