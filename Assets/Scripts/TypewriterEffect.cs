@@ -7,17 +7,16 @@ public class TypewriterEffect : MonoBehaviour
 {
     [SerializeField] string leadingChar = "";
 
-    [TextArea(3, 10)]
-    [SerializeField] string message = "";
-
     [SerializeField] float timeBtwChars = 0.5f;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private TextMeshProUGUI speakerName;
 
     public UnityEvent OnFinishTyping;
 
-    private void OnEnable()
+    public void ShowMessage(string speaker, string message)
     {
+        dialogueText.text = string.Empty;
+        speakerName.text = speaker;
         StartCoroutine(TypeWriterTMP(message));
     }
 

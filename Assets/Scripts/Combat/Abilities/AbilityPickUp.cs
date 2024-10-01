@@ -1,8 +1,9 @@
 using DesignPatterns.ObjectPool;
 using UnityEngine;
 
-public class AbilityPickUp : Interactable
+public class AbilityPickUp : PooledObject, IInteractable
 {
+    [SerializeField] private SimpleAnimation keycodeUI;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private BaseAbility ability;
 
@@ -17,11 +18,23 @@ public class AbilityPickUp : Interactable
         spriteRenderer.sprite = ability.abilityIcon;
     }
 
-    public override bool OnInteract()
+    public bool OnInteract()
     {
         if (PlayerController.Instance.abilityController.HandleAbilityPickUp(ability))
             Destroy(gameObject);
 
+        keycodeUI.Hide();
+
         return true;
+    }
+
+    public void OnEnterRange()
+    {
+        keycodeUI.Show();
+    }
+
+    public void OnLeaveRange()
+    {
+        keycodeUI.Hide();
     }
 }

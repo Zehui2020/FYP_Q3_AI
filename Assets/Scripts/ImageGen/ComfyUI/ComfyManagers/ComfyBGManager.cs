@@ -8,6 +8,7 @@ public class ComfyBGManager : ComfyManager
     [SerializeField] private WorldSpaceButtonController buttonController;
     [SerializeField] protected ComfyTilesetGeneration tilesetGeneration;
     [SerializeField] private ComfyUIManager uiManager;
+    [SerializeField] private PlayerPrefs playerPrefs;
 
     [SerializeField] private PromptData promptData;
     private bool startGenerating;
@@ -24,7 +25,9 @@ public class ComfyBGManager : ComfyManager
         InitManager();
 
         buttonController.InitController(promptData);
-        buttonController.SpawnButtons(currentBGType);
+
+        if (playerPrefs.experiencedTutorial)
+            buttonController.SpawnButtons(currentBGType);
 
         tilesetGeneration.InitTilesetGeneration(promptData);
 

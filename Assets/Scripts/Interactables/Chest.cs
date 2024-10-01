@@ -1,10 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using DesignPatterns.ObjectPool;
 
-public class Chest : Interactable
+public class Chest : MonoBehaviour, IInteractable
 {
     [System.Serializable]
     public struct ChestType
@@ -26,13 +25,15 @@ public class Chest : Interactable
     }
     public ChestType chestType;
 
+    [SerializeField] private SimpleAnimation keycodeUI;
+
     [SerializeField] private GameObject canvas;
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private int cost;
     [SerializeField] private ItemStats itemStats;
     private bool isOpened = false;
 
-    public override bool OnInteract()
+    public bool OnInteract()
     {
         if (isOpened || PlayerController.Instance.gold < cost)
             return false;
@@ -48,6 +49,8 @@ public class Chest : Interactable
 
         PlayerController.Instance.chestUnlockCount++;
         PlayerController.Instance.gold -= cost;
+        keycodeUI.Hide();
+
         return true;
     }
 
@@ -109,21 +112,21 @@ public class Chest : Interactable
         isOpened = true;
     }
 
-    public override void OnEnterRange()
+    public void OnEnterRange()
     {
         if (isOpened)
             return;
 
         if (PlayerController.Instance.gold >= cost)
-            base.OnEnterRange();
+            keycodeUI.Show();
 
         costText.text = cost.ToString();
         canvas.gameObject.SetActive(true);
     }
 
-    public override void OnLeaveRange()
+    public void OnLeaveRange()
     {
-        base.OnLeaveRange();
+        keycodeUI.Hide();
         canvas.gameObject.SetActive(false);
     }
 

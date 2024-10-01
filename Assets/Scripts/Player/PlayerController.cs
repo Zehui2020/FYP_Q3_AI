@@ -2,8 +2,10 @@ using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using static BaseStats.Damage;
+using static DialogueManager;
 using static MovementController;
 
 public class PlayerController : PlayerStats
@@ -12,7 +14,8 @@ public class PlayerController : PlayerStats
     {
         Movement,
         Combat,
-        Hurt
+        Hurt,
+        Dialogue
     }
     public PlayerStates currentState;
 
@@ -30,6 +33,7 @@ public class PlayerController : PlayerStats
     private Coroutine hurtRoutine;
 
     [SerializeField] public Canvas playerCanvas;
+    [SerializeField] public DialogueManager dialogueManager;
     [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
     [SerializeField] public PortalController portalController;
     [SerializeField] private LayerMask enemyLayer;
@@ -37,7 +41,7 @@ public class PlayerController : PlayerStats
     [SerializeField] private EnemyStatBar healthBar;
     [SerializeField] private EnemyStatBar shieldBar;
 
-    private Interactable currentInteractable;
+    private IInteractable currentInteractable;
     private float ropeX;
     private Queue<Damage> damageQueue = new();
 
@@ -49,8 +53,6 @@ public class PlayerController : PlayerStats
 
     [SerializeField] private TextMeshProUGUI goldText;
     public int gold = 0;
-
-    private bool isDisabled = false;
 
     private Coroutine transceiverBuffRoutine;
 
@@ -115,7 +117,15 @@ public class PlayerController : PlayerStats
 
     private void Update()
     {
-        if (health <= 0 || isDisabled)
+        if (currentState == PlayerStates.Dialogue)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                dialogueManager.ShowNextDialogue();
+            }
+        }
+
+        if (health <= 0 || currentState == PlayerStates.Dialogue)
             return;
 
         if (goldText != null)
@@ -308,7 +318,7 @@ public class PlayerController : PlayerStats
             movementController.canGrapple = true;
         }
 
-        if (collision.TryGetComponent<Interactable>(out Interactable interactable))
+        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
             currentInteractable = interactable;
             interactable.OnEnterRange();
@@ -317,7 +327,7 @@ public class PlayerController : PlayerStats
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.TryGetComponent<Interactable>(out Interactable interactable))
+        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
             currentInteractable = interactable;
             interactable.OnEnterRange();
@@ -332,7 +342,7 @@ public class PlayerController : PlayerStats
             movementController.canGrapple = false;
         }
 
-        if (collision.TryGetComponent<Interactable>(out Interactable interactable))
+        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
             interactable.OnLeaveRange();
             currentInteractable = null;
@@ -844,20 +854,6 @@ public class PlayerController : PlayerStats
         combatController.ChangeWeapon(weaponData);
     }
 
-    public void DisablePlayer(bool hideCanvas)
-    {
-        if (hideCanvas)
-            HideCanvas();
-
-        isDisabled = true;
-    }
-
-    public void EnablePlayer()
-    {
-        isDisabled = false;
-        ShowCanvas();
-    }
-
     public void HideCanvas()
     {
         playerCanvas.enabled = false;
@@ -866,6 +862,26 @@ public class PlayerController : PlayerStats
     public void ShowCanvas()
     {
         playerCanvas.enabled = true;
+    }
+
+    public void TalkToNPC(BaseNPC npc)
+    {
+        ChangeState(PlayerStates.Dialogue);
+        movementController.ChangeState(MovementState.Idle);
+        HideCanvas();
+        dialogueManager.SetTalkingNPC(npc);
+    }
+
+    public void LeaveNPC()
+    {
+        ChangeState(PlayerStates.Movement);
+        ShowCanvas();
+        dialogueManager.HideDialogue();
+    }
+
+    public void ShowDialoguePopup(PopupDialogue popupDialogue)
+    {
+        dialogueManager.ShowDialoguePopup(popupDialogue);
     }
 
     // For dev console
@@ -877,5 +893,10 @@ public class PlayerController : PlayerStats
     public void GiveAllItems()
     {
         itemManager.GiveAllItems();
+    }
+
+    private void OnApplicationQuit()
+    {
+        itemStats.ResetStats();
     }
 }
