@@ -85,7 +85,6 @@ public class MovementController : MonoBehaviour
         {
             case MovementState.Idle:
                 animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f, AnimationManager.AnimType.None);
-                playerRB.velocity = Vector2.zero;
                 CancelDash();
                 break;
             case MovementState.Running:

@@ -1,14 +1,16 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static DialogueManager;
 
 public class BaseNPC : MonoBehaviour, IInteractable
 {
     private PlayerController player;
 
     [SerializeField] private SimpleAnimation keycodeUI;
-    [SerializeField] private List<DialogueManager.Dialogue> dialogues;
-    [SerializeField] private List<DialogueManager.PopupDialogue> popupDialogues;
+    [SerializeField] private List<Dialogue> dialogues;
+    [SerializeField] private List<PopupDialogue> popupDialogues;
 
     public UnityEvent InteractEvent;
 
@@ -37,36 +39,52 @@ public class BaseNPC : MonoBehaviour, IInteractable
         keycodeUI.Hide();
     }
 
-    public DialogueManager.Dialogue GetCurrentDialogue()
+    public Dialogue GetCurrentDialogue()
     {
         return dialogues[dialogueIndex];
     }
 
-    public void IncrementIndex()
+    public void IncrementIndex(int amount)
     {
-        dialogueIndex++;
+        dialogueIndex += amount;
     }
 
-    public DialogueManager.Dialogue GetNextDialogue()
+    public Dialogue GetNextDialogue()
     {
         if (dialogueIndex + 1 > dialogues.Count - 1)
         {
             player.LeaveNPC();
         }
         else
-            IncrementIndex();
+            IncrementIndex(1);
+
+        Dialogue dialogue = dialogues[dialogueIndex];
+        dialogue.SetIsShown(true);
+        dialogues[dialogueIndex] = dialogue;
 
         return dialogues[dialogueIndex];
     }
 
-    public DialogueManager.Dialogue GetDialogueFromIndex(int index)
+    public Dialogue GetDialogueFromIndex(int index)
     {
         dialogueIndex = index;
+
+        Dialogue dialogue = dialogues[dialogueIndex];
+        dialogue.SetIsShown(true);
+        dialogues[dialogueIndex] = dialogue;
+
         return dialogues[dialogueIndex];
     }
 
-    public DialogueManager.PopupDialogue GetDialoguePopupFromIndex(int index)
+    public PopupDialogue? GetDialoguePopupFromIndex(int index)
     {
+        if (popupDialogues[index].isShown)
+            return null;
+
+        PopupDialogue dialoguePopup = popupDialogues[index];
+        dialoguePopup.SetIsShown(true);
+        popupDialogues[index] = dialoguePopup;
+
         return popupDialogues[index];
     }
 }

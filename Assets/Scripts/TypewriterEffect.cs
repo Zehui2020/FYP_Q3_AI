@@ -13,11 +13,21 @@ public class TypewriterEffect : MonoBehaviour
 
     public UnityEvent OnFinishTyping;
 
+    private Coroutine TypeRoutine;
+
+    public void SetSpeakerName(string speaker)
+    {
+        speakerName.text = speaker;
+    }
+
     public void ShowMessage(string speaker, string message)
     {
+        if (TypeRoutine != null)
+            StopCoroutine(TypeRoutine);
+
         dialogueText.text = string.Empty;
         speakerName.text = speaker;
-        StartCoroutine(TypeWriterTMP(message));
+        TypeRoutine = StartCoroutine(TypeWriterTMP(message));
     }
 
     private IEnumerator TypeWriterTMP(string message)

@@ -8,6 +8,28 @@ using static DialogueManager;
 public class DialogueManager : MonoBehaviour
 {
     [System.Serializable]
+    public struct DialogueEvent
+    {
+        public bool playOnce;
+        private bool isInvoked;
+        public UnityEvent onDialogueDone;
+
+        public void InvokeEvent()
+        {
+            if (isInvoked && playOnce)
+                return;
+
+            onDialogueDone?.Invoke();
+            isInvoked = true;
+        }
+
+        public void ResetEvent()
+        {
+            isInvoked = false;
+        }
+    }
+
+    [System.Serializable]
     public struct Dialogue
     {
         public enum SpeakerType
@@ -23,23 +45,53 @@ public class DialogueManager : MonoBehaviour
             public int nextDialogueIndex;
         }
 
+        public bool showOnce;
+        public bool isLoopingDialogue;
+        [HideInInspector] public bool isShown;
+
         public SpeakerType speakerType;
         public string speakerName;
         public Sprite speakerIcon;
         public bool breakAfterDialogue;
-        public UnityEvent onDialogueDone;
+        public DialogueEvent onDialogueDone;
         [TextArea(1, 10)] public string dialogue;
         public List<DialogueChoice> playerChoices;
         public Transform questDestination;
+
+        public void SetIsShown(bool shown)
+        {
+            isShown = shown;
+        }
+
+        public void ResetDialogue()
+        {
+            isShown = false;
+            onDialogueDone.ResetEvent();
+        }
     }
 
     [System.Serializable]
     public struct PopupDialogue
     {
+        public bool showOnce;
+        [HideInInspector] public bool isShown;
+
         public string speakerName;
         public Sprite speakerIcon;
+        public DialogueEvent onDialogueDone;
         [TextArea(1, 10)] public string dialogue;
         public Transform questDestination;
+
+        public void SetIsShown(bool shown)
+        {
+            isShown = shown;
+        }
+
+        public void ResetDialoguePopup()
+        {
+            isShown = false;
+            onDialogueDone.ResetEvent();
+        }
     }
 
     [SerializeField] private DialoguePopup dialoguePopup;
@@ -57,7 +109,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject dialogueBox;
 
     private List<DialogueChoice> dalogueChoices = new();
-    private BaseNPC currentNPC;
+    [SerializeField] private BaseNPC currentNPC;
 
     private Dialogue currentDialogue;
     private bool canShowNextDialogue;
@@ -67,6 +119,7 @@ public class DialogueManager : MonoBehaviour
         currentNPC = npc;
         dialogueCanvas.enabled = true;
         ShowDialogue(npc.GetCurrentDialogue());
+        dialoguePopup.HidePopupImmediately();
     }
 
     public void SetCanShowNextDialogue(bool canShow)
@@ -91,12 +144,17 @@ public class DialogueManager : MonoBehaviour
         if (!canShowNextDialogue)
             return;
 
-        currentDialogue.onDialogueDone?.Invoke();
+        if (currentDialogue.showOnce && currentDialogue.isShown)
+            return;
+
+        currentDialogue.onDialogueDone.InvokeEvent();
 
         if (currentDialogue.breakAfterDialogue)
         {
+            if (!currentDialogue.isLoopingDialogue)
+                currentNPC.IncrementIndex(1);
+
             PlayerController.Instance.LeaveNPC();
-            currentNPC.IncrementIndex();
             return;
         }
 
@@ -106,7 +164,9 @@ public class DialogueManager : MonoBehaviour
     public void ShowDialogue(Dialogue dialogue)
     {
         currentDialogue = dialogue;
+
         canShowNextDialogue = false;
+        npcDialogue.SetSpeakerName(dialogue.speakerName);
 
         // Show message
         if (dialogue.speakerType != Dialogue.SpeakerType.Player)
@@ -130,6 +190,8 @@ public class DialogueManager : MonoBehaviour
         // Set pointer
         if (dialogue.questDestination != null)
             questPointer.Show(dialogue.questDestination);
+        else
+            questPointer.Hide();
     }
 
     public void ShowDialoguePopup(int index)

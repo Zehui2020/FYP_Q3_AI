@@ -40,16 +40,16 @@ public class ComfyBGManager : ComfyManager
             uiManager.SetLoadingBar(comfyWebsocket.currentProgress, comfyWebsocket.maxProgress);
     }
 
-    public void StartBGGeneration()
+    public bool StartBGGeneration()
     {
         if (startGenerating)
-            return;
+            return false;
 
         if (uiManager.GetPrompt() == uiManager.setPrompts + ", " + currentBGType.ToString())
-            return;
+            return false;
 
         if (currentBGType > PromptData.BGPrompt.Type.TotalTypes)
-            return;
+            return false;
 
         bgPrompts.Add(uiManager.GetPrompt());
 
@@ -66,6 +66,8 @@ public class ComfyBGManager : ComfyManager
             uiManager.SetStartingPrompt(currentBGType);
             buttonController.SpawnButtons(currentBGType);
         }
+
+        return true;
     }
 
     public void QueueBGPrompt()

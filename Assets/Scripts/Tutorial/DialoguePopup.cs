@@ -12,18 +12,52 @@ public class DialoguePopup : MonoBehaviour
 
     private DialogueManager.PopupDialogue currentDialogue;
 
-    public void ShowDialoguePopup(DialogueManager.PopupDialogue dialogue)
+    private Coroutine HideCoroutine;
+
+    public void ShowDialoguePopup(DialogueManager.PopupDialogue? dialogue)
     {
-        currentDialogue = dialogue;
+        if (!dialogue.HasValue)
+            return;
+
+        if (HideCoroutine != null)
+        {
+            StopCoroutine(HideCoroutine);
+            animator.ResetTrigger("hide");
+            SetCanvasEnabled(true);
+            HideCoroutine = null;
+        }
+
+        currentDialogue = dialogue.Value;
         SetCanvasEnabled(true);
         animator.SetTrigger("show");
-        characterIcon.sprite = dialogue.speakerIcon;
-        dialogueText.ShowMessage(dialogue.speakerName, dialogue.dialogue);
+        characterIcon.sprite = currentDialogue.speakerIcon;
+        dialogueText.ShowMessage(currentDialogue.speakerName, currentDialogue.dialogue);
+        currentDialogue.onDialogueDone.InvokeEvent();
+
+        if (currentDialogue.questDestination != null)
+            questPointer.Show(currentDialogue.questDestination);
+        else
+            questPointer.Hide();
     }
 
     public void HidePopup()
     {
-        StartCoroutine(HideRoutine());
+        HideCoroutine = StartCoroutine(HideRoutine());
+    }
+
+    public void HidePopupImmediately()
+    {
+        if (!popupCanvas.enabled)
+            return;
+
+        if (HideCoroutine != null)
+        {
+            StopCoroutine(HideCoroutine);
+            HideCoroutine = null;
+        }
+
+        animator.ResetTrigger("hide");
+        SetCanvasEnabled(false);
     }
 
     public void SetCanvasEnabled(bool enable)
@@ -36,8 +70,7 @@ public class DialoguePopup : MonoBehaviour
         yield return new WaitForSeconds(2f);
         animator.SetTrigger("hide");
         yield return new WaitForSeconds(0.3f);
-        if (currentDialogue.questDestination != null)
-            questPointer.Show(currentDialogue.questDestination);
         SetCanvasEnabled(false);
+        HideCoroutine = null;
     }
 }
