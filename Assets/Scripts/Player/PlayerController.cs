@@ -128,7 +128,20 @@ public class PlayerController : PlayerStats
             }
         }
 
-        if (health <= 0 || currentState == PlayerStates.Dialogue || currentState == PlayerStates.Ability)
+        if (currentState == PlayerStates.Map)
+        {
+            if (Input.GetKeyUp(KeyCode.Tab))
+            {
+                minimapController.ChangeView(false);
+                ChangeState(PlayerStates.Movement);
+            }
+
+            return;
+        }
+
+        if (health <= 0 || 
+            currentState == PlayerStates.Dialogue || 
+            currentState == PlayerStates.Ability)
             return;
 
         if (abilityController != null && abilityController.swappingAbility)
@@ -140,19 +153,13 @@ public class PlayerController : PlayerStats
             }
             if (Input.GetKeyDown(KeyCode.Escape))
                 abilityController.SwapAbility();
-            movementController.ChangeState(MovementState.Idle);
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             minimapController.ChangeView(true);
-            Time.timeScale = 0;
-        }
-        else if (Input.GetKeyUp(KeyCode.M))
-        {
-            minimapController.ChangeView(false);
-            Time.timeScale = 1;
+            ChangeState(PlayerStates.Map);
         }
 
         if (goldText != null)
@@ -163,7 +170,7 @@ public class PlayerController : PlayerStats
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.P))
             ConsoleManager.Instance.SetConsole();
 
         if (Input.GetKeyDown(KeyCode.Return))
