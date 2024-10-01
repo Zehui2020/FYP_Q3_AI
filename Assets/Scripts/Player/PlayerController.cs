@@ -15,7 +15,9 @@ public class PlayerController : PlayerStats
         Movement,
         Combat,
         Hurt,
-        Dialogue
+        Dialogue,
+        Ability,
+        Map
     }
     public PlayerStates currentState;
 
