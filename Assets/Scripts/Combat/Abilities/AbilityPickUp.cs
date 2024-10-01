@@ -6,21 +6,18 @@ public class AbilityPickUp : PooledObject, IInteractable
     [SerializeField] private SimpleAnimation keycodeUI;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private BaseAbility ability;
+    private int charges;
 
-    private void OnEnable()
-    {
-        InitPickup(ability);
-    }
-
-    public void InitPickup(BaseAbility newAbility)
+    public void InitPickup(BaseAbility newAbility, int charges)
     {
         ability = newAbility;
         spriteRenderer.sprite = ability.abilityIcon;
+        this.charges = charges;
     }
 
     public bool OnInteract()
     {
-        if (PlayerController.Instance.abilityController.HandleAbilityPickUp(ability))
+        if (PlayerController.Instance.abilityController.HandleAbilityPickUp(ability, charges))
             Destroy(gameObject);
 
         keycodeUI.Hide();

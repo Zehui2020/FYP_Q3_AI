@@ -128,6 +128,18 @@ public class PlayerController : PlayerStats
         if (health <= 0 || currentState == PlayerStates.Dialogue)
             return;
 
+        if (abilityController != null && abilityController.swappingAbility)
+        {
+            for (int i = 0; i < abilityController.abilities.Count; i++)
+            {
+                if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
+                    abilityController.SwapAbility(i);
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+                abilityController.SwapAbility();
+            return;
+        }
+
         if (goldText != null)
             goldText.text = gold.ToString();
 
@@ -235,29 +247,11 @@ public class PlayerController : PlayerStats
             }
         }
 
-        if (abilityController != null)
-        {
+        // abilities
+        if (abilityController != null && !abilityController.swappingAbility)
             for (int i = 0; i < abilityController.abilities.Count; i++)
-            {
                 if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
-                    if (abilityController.swappingAbility)
-                    {
-                        abilityController.SwapAbility(i);
-                        currentState = PlayerStates.Movement;
-                    }
-                    else
                         abilityController.HandleAbility(i);
-            }
-
-            if (abilityController.swappingAbility && Input.GetKeyDown(KeyCode.Escape))
-            {
-                abilityController.SwapAbility();
-                currentState = PlayerStates.Movement;
-            }
-        }
-
-        if (abilityController.swappingAbility)
-            currentState = PlayerStates.Combat;
     }
 
     private IEnumerator HurtRoutine()
