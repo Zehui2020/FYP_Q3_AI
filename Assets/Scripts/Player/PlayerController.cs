@@ -891,9 +891,9 @@ public class PlayerController : PlayerStats
         dialogueManager.HideDialogue();
     }
 
-    public void ShowDialoguePopup(PopupDialogue popupDialogue)
+    public void ShowDialoguePopup(int index)
     {
-        dialogueManager.ShowDialoguePopup(popupDialogue);
+        dialogueManager.ShowDialoguePopup(index);
     }
 
     // For dev console

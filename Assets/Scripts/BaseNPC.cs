@@ -64,4 +64,9 @@ public class BaseNPC : MonoBehaviour, IInteractable
         dialogueIndex = index;
         return dialogues[dialogueIndex];
     }
+
+    public DialogueManager.PopupDialogue GetDialoguePopupFromIndex(int index)
+    {
+        return popupDialogues[index];
+    }
 }

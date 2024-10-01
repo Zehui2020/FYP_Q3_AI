@@ -132,9 +132,9 @@ public class DialogueManager : MonoBehaviour
             questPointer.Show(dialogue.questDestination);
     }
 
-    public void ShowDialoguePopup(PopupDialogue popupDialogue)
+    public void ShowDialoguePopup(int index)
     {
-        dialoguePopup.ShowDialoguePopup(popupDialogue);
+        dialoguePopup.ShowDialoguePopup(currentNPC.GetDialoguePopupFromIndex(index));
     }
 
     public void ShowDialogueChoices(Dialogue dialogue)
