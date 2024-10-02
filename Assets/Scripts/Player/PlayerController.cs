@@ -120,12 +120,21 @@ public class PlayerController : PlayerStats
 
     private void Update()
     {
+        // Console
+        if (Input.GetKeyDown(KeyCode.P))
+            ConsoleManager.Instance.SetConsole();
+
+        if (Input.GetKeyDown(KeyCode.Return))
+            ConsoleManager.Instance.OnInputCommand();
+
         if (currentState == PlayerStates.Dialogue)
         {
             if (Input.GetMouseButtonDown(0))
             {
                 dialogueManager.ShowNextDialogue();
             }
+
+            return;
         }
 
         if (currentState == PlayerStates.Map)
@@ -140,7 +149,6 @@ public class PlayerController : PlayerStats
         }
 
         if (health <= 0 || 
-            currentState == PlayerStates.Dialogue || 
             currentState == PlayerStates.Ability)
             return;
 
@@ -169,12 +177,6 @@ public class PlayerController : PlayerStats
 
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
-
-        if (Input.GetKeyDown(KeyCode.P))
-            ConsoleManager.Instance.SetConsole();
-
-        if (Input.GetKeyDown(KeyCode.Return))
-            ConsoleManager.Instance.OnInputCommand();
 
         if (ConsoleManager.Instance.gameObject.activeInHierarchy || 
             movementController.currentState == MovementState.Knockback ||
@@ -322,6 +324,12 @@ public class PlayerController : PlayerStats
         if (movementController.currentState == MovementState.GroundDash || movementController.currentState == MovementState.AirDash)
             movementController.CancelDash();
 
+        if (movementController.currentState == MovementState.Plunge)
+            movementController.StopPlunge();
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
         if (movementController.currentState == MovementState.Plunge)
             movementController.StopPlunge();
     }
@@ -898,6 +906,11 @@ public class PlayerController : PlayerStats
     public void ShowDialoguePopup(int index)
     {
         dialogueManager.ShowDialoguePopup(index);
+    }
+
+    public bool IsGrounded()
+    {
+        return movementController.isGrounded;
     }
 
     // For dev console

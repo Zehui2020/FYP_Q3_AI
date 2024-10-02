@@ -73,7 +73,6 @@ public class Skeleton : Enemy
                 aiNavigation.StopNavigation();
                 break;
             case State.Lunge:
-                UpdateDirectionToPlayer();
                 animator.Play(LungeAnim, -1, 0);
                 aiNavigation.StopNavigation();
                 break;
@@ -108,6 +107,15 @@ public class Skeleton : Enemy
                 PatrolUpdate();
                 UpdateMovementDirection();
                 break;
+            case State.Lunge:
+                if (!isLunging || enemyRB.velocity.y > 0 || !Physics2D.Raycast(transform.position, Vector2.down, 2f, groundLayer))
+                    return;
+
+                ChangeState(State.Land);
+                OnDamageEventEnd(0);
+                isLunging = false;
+
+                break;
         }
     }
 
@@ -133,10 +141,11 @@ public class Skeleton : Enemy
 
     public void Lunge()
     {
+        isLunging = true;
         float angleInRadians = lungeAngle * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians)).normalized;
 
-        direction = transform.position.x > player.transform.position.x ? new Vector2(-direction.x, direction.y) : new Vector2(direction.x, direction.y);
+        direction = transform.localScale.x < 0 ? new Vector2(-direction.x, direction.y) : new Vector2(direction.x, direction.y);
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, 100f, groundLayer);
 
         if (hit)
@@ -165,25 +174,5 @@ public class Skeleton : Enemy
             ChangeState(State.Die);
 
         return tookDamage;
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (!Utility.Instance.CheckLayer(collision.gameObject, groundLayer))
-            return;
-
-        isLunging = true;
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (!Utility.Instance.CheckLayer(collision.gameObject, groundLayer) || 
-            currentState != State.Lunge ||
-            !isLunging)
-            return;
-
-        ChangeState(State.Land);
-        OnDamageEventEnd(0);
-        isLunging = false;
     }
 }
