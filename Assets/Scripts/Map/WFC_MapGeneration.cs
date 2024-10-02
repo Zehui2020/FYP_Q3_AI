@@ -35,6 +35,7 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private ItemStats itemStats;
     [SerializeField] private ParallaxEffect[] bgs;
     [SerializeField] private Transform cam;
+    [SerializeField] private FogOfWar fow;
 
     private List<MapTile> mapTiles = new List<MapTile>();
     private List<Sprite> tileSprites = new();
@@ -79,7 +80,7 @@ public class WFC_MapGeneration : MonoBehaviour
         }
         // randomize starting node
         currTile = new Vector2(Random.Range(0, (int)mapSize.x), Random.Range(0, (int)mapSize.y));
-        startingPos = currTile * tileSize;
+        startingPos = (currTile * tileSize) - new Vector2((mapSize.x - 1) * tileSize / 2, (mapSize.y - 1) * tileSize / 2);
         // set random starting room tile
         int randomIndex = Random.Range(0, startingTilePrefabs.Count);
         mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = InstantiateTile(startingTilePrefabs[randomIndex], currTile * tileSize).GetComponent<MapTile>();
@@ -91,13 +92,15 @@ public class WFC_MapGeneration : MonoBehaviour
         SetNextTile();
         // set borders
         SetBorderTiles();
+        transform.position -= new Vector3((mapSize.x - 1) * tileSize / 2, (mapSize.y - 1) * tileSize / 2, 0);
+        cam.localPosition = new Vector3(tileSize, tileSize, -10);
         // get list of chests
         InitChests();
         // set door
         InitDoor();
-
-        cam.position = new Vector3((mapSize.x - 1) * tileSize / 2, (mapSize.y - 1) * tileSize / 2, -10);
         mapSize += Vector2.one * 2;
+        if (fow != null)
+            fow.Initialize();
         Debug.Log("Generation Complete!");
     }
 
