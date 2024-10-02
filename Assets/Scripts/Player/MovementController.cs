@@ -1,8 +1,5 @@
-using Cinemachine.Utility;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class MovementController : MonoBehaviour
 {
@@ -178,6 +175,7 @@ public class MovementController : MonoBehaviour
 
         if (horizontal == 0 && 
             playerRB.velocity.magnitude <= 3f && 
+            currentState != MovementState.Idle &&
             currentState != MovementState.Roll &&
             currentState != MovementState.LedgeGrab &&
             currentState != MovementState.GroundDash &&
@@ -206,8 +204,6 @@ public class MovementController : MonoBehaviour
 
         SpeedControl();
         HandleLedgeGrab();
-
-        Debug.DrawRay(groundCheckPosition.position, Vector3.down * movementData.plungeThreshold, UnityEngine.Color.red);
     }
 
     public void HandleGrappling(float vertical, float posX)
@@ -405,11 +401,12 @@ public class MovementController : MonoBehaviour
 
     public void FinishLedgeClimb()
     {
-        ChangeState(MovementState.Idle);
         transform.position = ledgePos2;
         playerRB.gravityScale = movementData.gravityScale;
         playerCol.isTrigger = false;
         playerRB.gravityScale = movementData.gravityScale;
+
+        ChangeState(MovementState.Idle);
     }
 
     public bool HandleDash(float direction)
@@ -633,31 +630,37 @@ public class MovementController : MonoBehaviour
         RaycastHit2D groundHit1 = Physics2D.Raycast(raycastPos, Vector2.down, 100, groundLayer);
 
         float dist = Vector3.Distance(groundCheckPosition.position, groundHit.point);
+        float dist1 = Vector3.Distance(groundCheckPosition.position, groundHit1.point);
 
         if (!isGrounded && 
             playerRB.velocity.y < 0 && 
-            dist <= 2f &&
+            dist <= 1.5f &&
             currentState != MovementState.Plunge &&
-            !groundHit1)
+            dist1 <= 1.5f)
         {
             ChangeState(MovementState.Land);
         }
         else if (!isGrounded &&
             playerRB.velocity.y < 0 &&
-            dist > 2f &&
+            dist > 1.5f &&
             currentState != MovementState.Plunge &&
-            !groundHit1)
+            dist1 <= 1.5f)
         {
             ChangeState(MovementState.Falling);
         }
 
         if (dist <= movementData.minGroundDist)
         {
+            if (currentState == MovementState.Grapple ||
+                currentState == MovementState.GrappleIdle)
+                StopGrappling();
+
             if (!isGrounded && 
+                currentState != MovementState.Idle &&
                 currentState != MovementState.LedgeGrab
-                && currentState != MovementState.GroundDash
-                && currentState != MovementState.Knockback &&
-                currentState != MovementState.Plunge)
+                && currentState != MovementState.GroundDash &&
+                currentState != MovementState.Plunge &&
+                currentState != MovementState.Running)
                 ChangeState(MovementState.Idle);
 
             isGrounded = true;
@@ -670,10 +673,6 @@ public class MovementController : MonoBehaviour
             wallJumpCount = maxWallJumps;
             if (jumpRoutine == null)
                 jumpCount = maxJumpCount;
-
-            if (currentState == MovementState.Grapple ||
-                currentState == MovementState.GrappleIdle)
-                StopGrappling();
         }
         else if (dist > movementData.minGroundDist)
         {

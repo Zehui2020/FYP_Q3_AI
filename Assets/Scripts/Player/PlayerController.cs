@@ -2,10 +2,8 @@ using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using static BaseStats.Damage;
-using static DialogueManager;
 using static MovementController;
 
 public class PlayerController : PlayerStats
