@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using static BaseStats.Damage;
 using static MovementController;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerController : PlayerStats
 {
@@ -54,6 +55,9 @@ public class PlayerController : PlayerStats
 
     [SerializeField] private TextMeshProUGUI goldText;
     public int gold = 0;
+
+    private float horizontal;
+    private float vertical;
 
     private Coroutine transceiverBuffRoutine;
 
@@ -173,8 +177,8 @@ public class PlayerController : PlayerStats
 
         statusEffectManager.UpdateStatusEffects();
 
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        horizontal = Input.GetAxisRaw("Horizontal");
+        vertical = Input.GetAxisRaw("Vertical");
 
         if (ConsoleManager.Instance.gameObject.activeInHierarchy || 
             movementController.currentState == MovementState.Knockback ||
@@ -243,7 +247,6 @@ public class PlayerController : PlayerStats
             }
 
             movementController.CheckGroundCollision();
-            movementController.HandleGrappling(vertical, ropeX);
             movementController.HandleMovment(horizontal);
         }
         else
@@ -302,6 +305,9 @@ public class PlayerController : PlayerStats
             return;
 
         movementController.MovePlayer(movementSpeedMultiplier.GetTotalModifier());
+
+        if (currentState == PlayerStates.Movement)
+            movementController.HandleGrappling(vertical, ropeX);
     }
 
     private void HandlePlungeAttack()
@@ -328,12 +334,6 @@ public class PlayerController : PlayerStats
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Rope"))
-        {
-            ropeX = collision.transform.position.x;
-            movementController.canGrapple = true;
-        }
-
         if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
             currentInteractable = interactable;
@@ -343,6 +343,9 @@ public class PlayerController : PlayerStats
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+        if (movementController.RopeTriggerEnter(collision))
+            ropeX = collision.transform.position.x;
+
         if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
             currentInteractable = interactable;
@@ -352,11 +355,7 @@ public class PlayerController : PlayerStats
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Rope"))
-        {
-            movementController.StopGrappling();
-            movementController.canGrapple = false;
-        }
+        movementController.RopeTriggerExit(collision);
 
         if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
@@ -848,10 +847,11 @@ public class PlayerController : PlayerStats
         Heal(Mathf.CeilToInt(itemStats.defibrillatorHealMultiplier * maxHealth));
     }
 
-
     public void ChangeState(PlayerStates newState)
     {
         currentState = newState;
+        if (currentState == PlayerStates.Movement)
+            movementController.ChangeState(MovementState.Idle);
     }
 
     public void AddJumpCount(int count)

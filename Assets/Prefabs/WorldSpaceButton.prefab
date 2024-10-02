@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4786891700923930351}
   - component: {fileID: 8642525628325101293}
   - component: {fileID: 2424776798254625817}
+  - component: {fileID: 493418328252568291}
   m_Layer: 2
   m_Name: WorldSpaceButton
   m_TagString: Button
@@ -79,12 +80,12 @@ SpriteRenderer:
   m_SortingLayerID: -983140795
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1615222069, guid: 5eabbb3d86581f34dae1aae7c2d52ff1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 18dbb01af0351d040888ba253ec3a914, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.16, y: 0.16}
+  m_Size: {x: 0.34, y: 0.19}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -153,8 +154,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4, y: 4}
-    newSize: {x: 0.16, y: 0.16}
+    oldSize: {x: 3.4, y: 1.9}
+    newSize: {x: 0.34, y: 0.19}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -177,6 +178,21 @@ MonoBehaviour:
   promptText: {fileID: 1695402760669193879}
   buttonRB: {fileID: 4786891700923930351}
   keycodeUI: {fileID: 3964723282179009892}
+  followParent: {fileID: 493418328252568291}
+--- !u!114 &493418328252568291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 980530014316898699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 785d3da92d16fbf499b1abe6ef69ee8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followType: 0
+  followTarget: {fileID: 0}
 --- !u!1 &2828587348847674173
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,7 +275,7 @@ SpriteRenderer:
   m_Size: {x: 0.16, y: 0.16}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!61 &2566503258904676646
@@ -458,7 +474,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: -5884023353203661334, guid: cb9c488f4edba7d4e837966495519e3e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -502,8 +518,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Equilibria
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: cb9c488f4edba7d4e837966495519e3e, type: 2}
+  m_sharedMaterial: {fileID: -5884023353203661334, guid: cb9c488f4edba7d4e837966495519e3e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

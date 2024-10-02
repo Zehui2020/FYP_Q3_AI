@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour
@@ -26,6 +27,7 @@ public class MovementController : MonoBehaviour
 
     [SerializeField] private MovementData movementData;
 
+    [SerializeField] private LayerMask platformLayer;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallJumpCheck;
     [SerializeField] private Transform groundCheckPosition;
@@ -65,6 +67,8 @@ public class MovementController : MonoBehaviour
 
     public event System.Action OnPlungeEnd;
     public event System.Action<PlayerController.PlayerStates> ChangePlayerState;
+
+    private Rope rope;
 
     public void InitializeMovementController(AnimationManager animationManager)
     {
@@ -173,20 +177,23 @@ public class MovementController : MonoBehaviour
                 transform.localScale = new Vector3(-1, 1, 1);
         }
 
-        if (horizontal == 0 && 
-            playerRB.velocity.magnitude <= 3f && 
-            currentState != MovementState.Idle &&
+        if (horizontal == 0 &&
+            playerRB.velocity.magnitude <= 3f &&
             currentState != MovementState.Roll &&
             currentState != MovementState.LedgeGrab &&
             currentState != MovementState.GroundDash &&
             currentState != MovementState.Knockback &&
             currentState != MovementState.Plunge &&
+            currentState != MovementState.Grapple &&
+            currentState != MovementState.GrappleIdle &&
             isGrounded)
             ChangeState(MovementState.Idle);
 
         if (playerRB.velocity.y < -0.1f && 
             currentState != MovementState.Land &&
-            currentState != MovementState.Plunge)
+            currentState != MovementState.Plunge &&
+            currentState != MovementState.Grapple &&
+            currentState != MovementState.GrappleIdle)
             ChangeState(MovementState.Falling);
         else if (currentState == MovementState.Idle && horizontal != 0)
             ChangeState(MovementState.Running);
@@ -208,37 +215,47 @@ public class MovementController : MonoBehaviour
 
     public void HandleGrappling(float vertical, float posX)
     {
-        if (plungeRoutine != null || 
-            !canGrapple || 
+        if (plungeRoutine != null ||
+            !canGrapple ||
             currentState == MovementState.LedgeGrab ||
-            currentState == MovementState.Plunge)
+            currentState == MovementState.Plunge ||
+            rope == null)
             return;
 
         if (vertical == 0)
         {
             if (currentState == MovementState.Grapple)
                 ChangeState(MovementState.GrappleIdle);
-
             return;
         }
 
+        if (rope != null && vertical > 0 && rope.CheckCannotGrapple(transform))
+        {
+            StopGrappling();
+            ChangeState(MovementState.Idle);
+            return;
+        }
+
+        rope.GrappleStart();
         ChangeState(MovementState.Grapple);
 
-        transform.position = new Vector3(Mathf.Lerp(transform.position.x, posX, Time.deltaTime * 10f),
-            transform.position.y,
-            transform.position.z);
+        transform.position = new Vector3(posX, transform.position.y, transform.position.z);
 
         playerRB.gravityScale = 0;
+        playerRB.drag = 0;
         playerRB.velocity = Vector2.zero;
-        playerCol.isTrigger = true;
 
-        transform.position = new Vector3(transform.position.x, transform.position.y + Time.deltaTime * movementData.grappleSpeed * vertical, transform.position.z);
+        float grappleMovement = movementData.grappleSpeed * vertical;
+        playerRB.MovePosition(new Vector2(transform.position.x, transform.position.y + grappleMovement * Time.fixedDeltaTime));
     }
 
     public void StopGrappling()
     {
         playerRB.gravityScale = movementData.gravityScale;
-        playerCol.isTrigger = false;
+        playerRB.drag = movementData.airDrag;
+
+        rope.GrappleEnd();
+        rope = null;
     }
 
     public void OnJump(float horizontal)
@@ -352,7 +369,9 @@ public class MovementController : MonoBehaviour
 
     private void HandleLedgeGrab()
     {
-        if (currentState == MovementState.Plunge)
+        if (currentState == MovementState.Plunge ||
+            currentState == MovementState.Grapple ||
+            currentState == MovementState.GrappleIdle)
             return;
 
         Vector2 dir;
@@ -558,7 +577,6 @@ public class MovementController : MonoBehaviour
             return false;
 
         ChangeState(MovementState.Plunge);
-        StopGrappling();
         CancelDash();
         plungeRoutine = StartCoroutine(PlungeRoutine());
 
@@ -636,6 +654,8 @@ public class MovementController : MonoBehaviour
             playerRB.velocity.y < 0 && 
             dist <= 1.5f &&
             currentState != MovementState.Plunge &&
+            currentState != MovementState.Grapple &&
+            currentState != MovementState.GrappleIdle &&
             dist1 <= 1.5f)
         {
             ChangeState(MovementState.Land);
@@ -644,6 +664,8 @@ public class MovementController : MonoBehaviour
             playerRB.velocity.y < 0 &&
             dist > 1.5f &&
             currentState != MovementState.Plunge &&
+            currentState != MovementState.Grapple &&
+            currentState != MovementState.GrappleIdle &&
             dist1 <= 1.5f)
         {
             ChangeState(MovementState.Falling);
@@ -651,12 +673,7 @@ public class MovementController : MonoBehaviour
 
         if (dist <= movementData.minGroundDist)
         {
-            if (currentState == MovementState.Grapple ||
-                currentState == MovementState.GrappleIdle)
-                StopGrappling();
-
-            if (!isGrounded && 
-                currentState != MovementState.Idle &&
+            if (!isGrounded &&
                 currentState != MovementState.LedgeGrab
                 && currentState != MovementState.GroundDash &&
                 currentState != MovementState.Plunge &&
@@ -732,6 +749,28 @@ public class MovementController : MonoBehaviour
                 currentState == MovementState.LedgeGrab ||
                 currentState == MovementState.Plunge ||
                 currentState == MovementState.Knockback;
+    }
+
+    public bool RopeTriggerEnter(Collider2D collision)
+    {
+        if (collision.TryGetComponent<Rope>(out rope))
+        {
+            canGrapple = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool RopeTriggerExit(Collider2D collision)
+    {
+        if (collision.TryGetComponent<Rope>(out rope))
+        {
+            canGrapple = false;
+            return true;
+        }
+
+        return false;
     }
 
     private void OnDisable()

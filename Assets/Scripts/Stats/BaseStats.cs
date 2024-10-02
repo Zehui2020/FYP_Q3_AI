@@ -190,7 +190,7 @@ public class BaseStats : MonoBehaviour
         {
             shield -= finalDamage;
             damageType = DamagePopup.DamageType.Shield;
-            damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(1, 2));
+            damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(0, 2));
             OnShieldChanged?.Invoke(false, isCrit, 0);
 
             // Start regen shield
@@ -216,7 +216,7 @@ public class BaseStats : MonoBehaviour
         damageType = DamagePopup.DamageType.Health;
         if (isCrit)
             damageType = DamagePopup.DamageType.Crit;
-        damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(1, 1));
+        damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(0, 2));
 
         if (health <= 0)
         {
