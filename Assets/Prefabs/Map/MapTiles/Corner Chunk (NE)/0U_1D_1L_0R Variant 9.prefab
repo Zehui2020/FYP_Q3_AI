@@ -2301,6 +2301,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2746381968370540174}
   - {fileID: 5155682970550741791}
   - {fileID: 5266221980101504439}
   - {fileID: 6974149858673663256}
@@ -2406,6 +2407,11 @@ MonoBehaviour:
   - {fileID: 8727535129727871693, guid: b56c7e33e1e612c428d3a6550bb4f30a, type: 3}
   - {fileID: 5450722941086569708, guid: 20971a8d9f746e64c86375d7f1118692, type: 3}
   - {fileID: 8726915468765883158, guid: ba4224d8fab271b478c13a18fe89577e, type: 3}
+  - {fileID: 2357953806376254749, guid: 69f4e325a601a664b99418bdac70b02c, type: 3}
+  - {fileID: 2595277855235150990, guid: 66e1e6825419c4d41822dfb99976b89f, type: 3}
+  - {fileID: 1541584668766389942, guid: abef9211748776143bebd1ef72d10de4, type: 3}
+  - {fileID: 4293916910756694773, guid: 0b54f68f6375c2d42a136f2b8638251f, type: 3}
+  - {fileID: 4761372336937367604, guid: 54ff0b27c8e065449bae909fce20c12a, type: 3}
   - {fileID: 4102275637862436066, guid: 2580c5b1520a4fe49a0a00a4371942fa, type: 3}
   availableTilesLeft:
   - {fileID: 4352191659983094025, guid: 3a78eee6d6a0aaf4893557e4dd39d441, type: 3}
@@ -2444,6 +2450,11 @@ MonoBehaviour:
   - {fileID: 8727535129727871693, guid: b56c7e33e1e612c428d3a6550bb4f30a, type: 3}
   - {fileID: 5450722941086569708, guid: 20971a8d9f746e64c86375d7f1118692, type: 3}
   - {fileID: 8726915468765883158, guid: ba4224d8fab271b478c13a18fe89577e, type: 3}
+  - {fileID: 2357953806376254749, guid: 69f4e325a601a664b99418bdac70b02c, type: 3}
+  - {fileID: 2595277855235150990, guid: 66e1e6825419c4d41822dfb99976b89f, type: 3}
+  - {fileID: 1541584668766389942, guid: abef9211748776143bebd1ef72d10de4, type: 3}
+  - {fileID: 4293916910756694773, guid: 0b54f68f6375c2d42a136f2b8638251f, type: 3}
+  - {fileID: 4761372336937367604, guid: 54ff0b27c8e065449bae909fce20c12a, type: 3}
   - {fileID: 1155350927852064588, guid: 70c332645cdf3d54480acf3c396c9093, type: 3}
   availableTilesRight:
   - {fileID: 4808904068151551855, guid: 42a8d01a5e97d91499591b37d2a59b60, type: 3}
@@ -2483,6 +2494,37 @@ MonoBehaviour:
   - {fileID: 4102275637862436066, guid: 2580c5b1520a4fe49a0a00a4371942fa, type: 3}
   chestTransform: {fileID: 0}
   doorTransform: {fileID: 0}
+--- !u!1 &5900632293292487178
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2746381968370540174}
+  m_Layer: 0
+  m_Name: Door
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2746381968370540174
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5900632293292487178}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.17, y: 6.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5227637350945114373}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6281892089124139143
 GameObject:
   m_ObjectHideFlags: 0

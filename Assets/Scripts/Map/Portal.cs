@@ -10,6 +10,7 @@ public class Portal : MonoBehaviour, IInteractable
     {
         keycodeUI.Show();
         isActivated = true;
+        GetComponent<SpriteRenderer>().color = Color.blue;
     }
 
     public bool OnInteract()
@@ -21,5 +22,6 @@ public class Portal : MonoBehaviour, IInteractable
     {
         keycodeUI.Hide();
         isActivated = true;
+        GetComponent<SpriteRenderer>().color = Color.blue;
     }
 }
