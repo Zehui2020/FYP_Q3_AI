@@ -33,7 +33,9 @@ public class ParallaxEffect : MonoBehaviour
         foreach (SpriteRenderer spriteRenderer in spriteRenderers)
             spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename);
 
-        length = GetComponent<SpriteRenderer>().bounds.size.x;
+        // Calculate the screen width in world units
+        float screenWidth = Camera.main.orthographicSize * 2 * Camera.main.aspect;
+        length = screenWidth;
     }
 
     private void LateUpdate()
@@ -57,6 +59,8 @@ public class ParallaxEffect : MonoBehaviour
         float offsetY = Mathf.Abs(transform.position.y - mapSizeY) / mapSizeY * YDiff;
         offsetY = diff < 0 ? offsetY : -offsetY;
         offsetY = Mathf.Clamp(offsetY, -YDiff, YDiff);
-        transform.position = new Vector3(transform.position.x, followPos.transform.position.y + offsetY, 0); 
+
+        float targetY = followPos.transform.position.y + offsetY;
+        transform.position = new Vector3(transform.position.x, Mathf.Lerp(transform.position.y, targetY, Time.deltaTime * 5f), 0);
     }
 }
