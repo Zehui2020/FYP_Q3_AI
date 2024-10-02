@@ -2076,19 +2076,7 @@ MonoBehaviour:
   setPrompts: Pixel art
   OnRecievePrompt:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 833343970}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: ShowDialoguePopup
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &833343970 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8208378500340634490, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
@@ -2432,6 +2420,134 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1090325287
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1090325291}
+  - component: {fileID: 1090325290}
+  - component: {fileID: 1090325288}
+  m_Layer: 0
+  m_Name: MapCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1090325288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090325287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
+--- !u!20 &1090325290
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090325287}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0, g: 0.0440322, b: 0.4716981, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 1
+  orthographic size: 25
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 329
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 8400000, guid: da776b491135dd8438b6226f588eb99a, type: 2}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+--- !u!4 &1090325291
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090325287}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.5, y: 13, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8628,19 +8744,7 @@ MonoBehaviour:
   bgManager: {fileID: 8045318398188915861}
   OnTakeDamage:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 833343970}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: ShowDialoguePopup
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 3
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1001 &1485185102
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -80894,27 +80998,15 @@ MonoBehaviour:
     speakerIcon: {fileID: 0}
     breakAfterDialogue: 1
     onDialogueDone:
-      playOnce: 1
+      playOnce: 0
       onDialogueDone:
         m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 14822880}
-            m_TargetAssemblyTypeName: WorldSpaceButtonController, Assembly-CSharp
-            m_MethodName: SpawnForegroundButtons
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
+          m_Calls: []
     dialogue: Go there!
     playerChoices: []
     questDestination: {fileID: 147308862}
   - showOnce: 0
-    isLoopingDialogue: 1
+    isLoopingDialogue: 0
     isShown: 0
     speakerType: 1
     speakerName: Guide
@@ -81011,7 +81103,7 @@ MonoBehaviour:
     playerChoices: []
     questDestination: {fileID: 2001385487}
   - showOnce: 0
-    isLoopingDialogue: 1
+    isLoopingDialogue: 0
     isShown: 0
     speakerType: 1
     speakerName: Guide
@@ -81027,12 +81119,12 @@ MonoBehaviour:
     playerChoices: []
     questDestination: {fileID: 2001385487}
   popupDialogues:
-  - showOnce: 1
+  - showOnce: 0
     isShown: 0
     speakerName: Guide
     speakerIcon: {fileID: 1403662754, guid: e8aa5be94711d824b905d2b7127e4c35, type: 3}
     onDialogueDone:
-      playOnce: 1
+      playOnce: 0
       onDialogueDone:
         m_PersistentCalls:
           m_Calls: []
@@ -81049,118 +81141,94 @@ MonoBehaviour:
           m_Calls: []
     dialogue: Changing your mind?
     questDestination: {fileID: 0}
-  - showOnce: 1
+  - showOnce: 0
     isShown: 0
     speakerName: Guide
     speakerIcon: {fileID: 1403662754, guid: e8aa5be94711d824b905d2b7127e4c35, type: 3}
     onDialogueDone:
-      playOnce: 1
+      playOnce: 0
       onDialogueDone:
         m_PersistentCalls:
           m_Calls: []
     dialogue: Now <color=red>ATTACK</color> the button to confirm your prompt~
     questDestination: {fileID: 1753019067}
-  - showOnce: 1
+  - showOnce: 0
     isShown: 0
     speakerName: Guide
     speakerIcon: {fileID: 1403662754, guid: e8aa5be94711d824b905d2b7127e4c35, type: 3}
     onDialogueDone:
-      playOnce: 1
+      playOnce: 0
       onDialogueDone:
         m_PersistentCalls:
           m_Calls: []
     dialogue: Do the same for the Middleground and Background!
     questDestination: {fileID: 0}
-  - showOnce: 1
+  - showOnce: 0
     isShown: 0
     speakerName: Guide
     speakerIcon: {fileID: 1403662754, guid: e8aa5be94711d824b905d2b7127e4c35, type: 3}
     onDialogueDone:
-      playOnce: 1
+      playOnce: 0
       onDialogueDone:
         m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 1209754063}
-            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-            m_MethodName: SetActive
-            m_Mode: 6
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 1
-            m_CallState: 2
-          - m_Target: {fileID: 1804130304}
-            m_TargetAssemblyTypeName: BaseNPC, Assembly-CSharp
-            m_MethodName: IncrementIndex
-            m_Mode: 3
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 1
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 1
-            m_CallState: 2
+          m_Calls: []
     dialogue: Now as the backgrounds are being generated, come over here and I'll
       introduce some of the foes you'll be facing against!
     questDestination: {fileID: 2051246384}
-  - showOnce: 1
+  - showOnce: 0
     isShown: 0
     speakerName: Guide
     speakerIcon: {fileID: 1403662754, guid: e8aa5be94711d824b905d2b7127e4c35, type: 3}
     onDialogueDone:
-      playOnce: 1
+      playOnce: 0
       onDialogueDone:
         m_PersistentCalls:
           m_Calls: []
     dialogue: Once you're done testing the weapons, make sure to hold onto the weapon
       you'd like to bring with you~
     questDestination: {fileID: 2051246384}
-  - showOnce: 1
+  - showOnce: 0
     isShown: 0
     speakerName: Guide
     speakerIcon: {fileID: 1403662754, guid: e8aa5be94711d824b905d2b7127e4c35, type: 3}
     onDialogueDone:
-      playOnce: 1
+      playOnce: 0
       onDialogueDone:
         m_PersistentCalls:
           m_Calls: []
     dialogue: The Daggers boasts an <color=green>extremely fast</color> attack speed
       at the cost of <color=red>lower</color> damage and shield reduction.
     questDestination: {fileID: 0}
-  - showOnce: 1
+  - showOnce: 0
     isShown: 0
     speakerName: Guide
     speakerIcon: {fileID: 1403662754, guid: e8aa5be94711d824b905d2b7127e4c35, type: 3}
     onDialogueDone:
-      playOnce: 1
+      playOnce: 0
       onDialogueDone:
         m_PersistentCalls:
           m_Calls: []
     dialogue: The Axe boasts <color=green>High damage and high shield reduction</color>
       at the cost of an <color=red>extremely slow</color> attack speed.
     questDestination: {fileID: 0}
-  - showOnce: 1
+  - showOnce: 0
     isShown: 0
     speakerName: Guide
     speakerIcon: {fileID: 1403662754, guid: e8aa5be94711d824b905d2b7127e4c35, type: 3}
     onDialogueDone:
-      playOnce: 1
+      playOnce: 0
       onDialogueDone:
         m_PersistentCalls:
           m_Calls: []
     dialogue: The Sword has <color=green>decent</color> attack speed, damage, and
       shield reduction. The perfect balance!
     questDestination: {fileID: 0}
-  - showOnce: 1
+  - showOnce: 0
     isShown: 0
     speakerName: Guide
     speakerIcon: {fileID: 1403662754, guid: e8aa5be94711d824b905d2b7127e4c35, type: 3}
     onDialogueDone:
-      playOnce: 1
+      playOnce: 0
       onDialogueDone:
         m_PersistentCalls:
           m_Calls: []
@@ -84031,6 +84099,26 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1451933532471229561, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1451933532471229561, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1451933532471229561, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1451933532471229561, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1635613349319894912, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1693691017132057768, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -84231,6 +84319,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4771526541587477217, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4771526541587477217, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4771526541587477217, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4771526541587477217, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4902406630805563197, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -84271,6 +84375,22 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6535729997936636334, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6535729997936636334, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6535729997936636334, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6535729997936636334, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6655381356705071788, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -84286,6 +84406,38 @@ PrefabInstance:
     - target: {fileID: 6655381356705071788, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6961577896058381362, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6961577896058381362, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6961577896058381362, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6961577896058381362, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7167369452274556397, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532993718898945690, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: cam.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532993718898945690, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: cam.Array.data[1]
+      value: 
+      objectReference: {fileID: 1090325287}
+    - target: {fileID: 7673606026978836071, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_Color.a
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8014165915821958024, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: m_AnchorMax.y
@@ -84523,6 +84675,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 2003515508}
   - {fileID: 734428154}
+  - {fileID: 1090325291}
   - {fileID: 245454439}
   - {fileID: 1585725316}
   - {fileID: 5289916881907596508}
