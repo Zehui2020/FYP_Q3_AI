@@ -1,7 +1,7 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using static PlayerController;
 
 public class CombatController : MonoBehaviour
 {
