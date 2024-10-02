@@ -56,7 +56,7 @@ public class WFC_MapGeneration : MonoBehaviour
         GenerateMap();
 
         foreach (ParallaxEffect parallaxEffect in bgs)
-            parallaxEffect.InitParallaxEffect((mapSize.y + 1) * tileSize, startingPos);
+            parallaxEffect.InitParallaxEffect((mapSize.y + 1) * tileSize);
         SetAStarNavMesh();
     }
 

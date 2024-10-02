@@ -328,12 +328,6 @@ public class PlayerController : PlayerStats
             movementController.StopPlunge();
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (movementController.currentState == MovementState.Plunge)
-            movementController.StopPlunge();
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Rope"))

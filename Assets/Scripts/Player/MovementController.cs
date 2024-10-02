@@ -552,6 +552,10 @@ public class MovementController : MonoBehaviour
             currentState == MovementState.GrappleIdle)
             return false;
 
+        Collider2D areaHit = Physics2D.OverlapCircle(groundCheckPosition.position, 1f, groundLayer);
+        if (areaHit != null)
+            return false;
+
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, movementData.plungeThreshold, groundLayer);
         if (groundHit)
             return false;
@@ -621,20 +625,28 @@ public class MovementController : MonoBehaviour
         if (currentState == MovementState.Knockback)
             return;
 
+        Vector2 raycastPos = transform.localScale.x < 0 ? 
+            new Vector2(groundCheckPosition.position.x - 0.3f, groundCheckPosition.position.y) : 
+            new Vector2(groundCheckPosition.position.x + 0.3f, groundCheckPosition.position.y);
+
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, 100, groundLayer);
+        RaycastHit2D groundHit1 = Physics2D.Raycast(raycastPos, Vector2.down, 100, groundLayer);
+
         float dist = Vector3.Distance(groundCheckPosition.position, groundHit.point);
 
         if (!isGrounded && 
             playerRB.velocity.y < 0 && 
             dist <= 2f &&
-            currentState != MovementState.Plunge)
+            currentState != MovementState.Plunge &&
+            !groundHit1)
         {
             ChangeState(MovementState.Land);
         }
         else if (!isGrounded &&
             playerRB.velocity.y < 0 &&
             dist > 2f &&
-            currentState != MovementState.Plunge)
+            currentState != MovementState.Plunge &&
+            !groundHit1)
         {
             ChangeState(MovementState.Falling);
         }
