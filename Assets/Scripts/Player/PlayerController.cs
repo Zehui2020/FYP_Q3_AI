@@ -180,10 +180,15 @@ public class PlayerController : PlayerStats
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
 
-        if (ConsoleManager.Instance.gameObject.activeInHierarchy || 
-            movementController.currentState == MovementState.Knockback ||
+        if (ConsoleManager.Instance.gameObject.activeInHierarchy ||
             currentState == PlayerStates.Hurt)
             return;
+
+        if (movementController.currentState == MovementState.Knockback)
+        {
+            movementController.CheckGroundCollision();
+            return;
+        }
 
         // Combat Inputs
         if (Input.GetMouseButton(0))
@@ -301,7 +306,7 @@ public class PlayerController : PlayerStats
 
     private void FixedUpdate()
     {
-        if (health <= 0 || movementController.currentState == MovementState.Knockback)
+        if (health <= 0)
             return;
 
         movementController.MovePlayer(movementSpeedMultiplier.GetTotalModifier());
