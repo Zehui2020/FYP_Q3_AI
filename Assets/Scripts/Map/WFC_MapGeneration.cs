@@ -70,8 +70,10 @@ public class WFC_MapGeneration : MonoBehaviour
 
     public void GenerateMap()
     {
-        allTilePrefabs.AddRange(tileController.allTilePrefabs);
-        allTilePrefabs.AddRange(tileController.constantTilePrefabs);
+        startingTilePrefabs.AddRange(tileController.startTilePrefabs);
+        allTilePrefabs.AddRange(tileController.autoSetTilePrefabs);
+        allTilePrefabs.AddRange(tileController.deadEndTilePrefabs);
+        allTilePrefabs.AddRange(tileController.uniqueTilePrefabs);
         mapSize -= Vector2.one * 2;
         // init maptiles list
         for (int i = 0; i < mapSize.x * mapSize.y; i++)
