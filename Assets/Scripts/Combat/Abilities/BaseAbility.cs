@@ -12,7 +12,7 @@ public abstract class BaseAbility : ScriptableObject
 
     public enum AbilityName
     {
-        Heal,
+        HealthPotion,
         DivineBlessing,
         ProtectionSphere,
         Quake,

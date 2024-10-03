@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -164,5 +165,17 @@ public class ItemManager : MonoBehaviour
     {
         foreach (Item item in allItems)
             AddItem(item);
+    }
+
+    public void GiveAbility(string itemName, string amount)
+    {
+        foreach (BaseAbility ability in allAbilities)
+        {
+            if (!ability.abilityName.ToString().Equals(itemName))
+                continue;
+
+            for (int i = 0; i < int.Parse(amount); i++)
+                PlayerController.Instance.abilityController.HandleAbilityPickUp(ability, ability.abilityCharges);
+        }
     }
 }

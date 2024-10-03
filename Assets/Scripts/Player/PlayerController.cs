@@ -123,7 +123,7 @@ public class PlayerController : PlayerStats
     private void Update()
     {
         // Console
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.Backslash))
             ConsoleManager.Instance.SetConsole();
 
         if (Input.GetKeyDown(KeyCode.Return))
@@ -911,6 +911,11 @@ public class PlayerController : PlayerStats
     public void GiveAllItems()
     {
         itemManager.GiveAllItems();
+    }
+
+    public void GiveAbility(string itemName, string amount)
+    {
+        itemManager.GiveAbility(itemName, amount);
     }
 
     private void OnApplicationQuit()

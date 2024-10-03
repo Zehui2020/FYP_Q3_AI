@@ -1,11 +1,11 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Abilities/Heal")]
-public class Heal : BaseAbility
+[CreateAssetMenu(menuName = "Consumables/Health Potion")]
+public class HealthPotion : BaseAbility
 {
     public override void OnAbilityUse(BaseStats self, BaseStats target)
     {
-        target.Heal(25);
+        target.Heal((int)(self.maxHealth * abilityStrength / 100));
     }
 
     public override void OnAbilityEnd(BaseStats self, BaseStats target)
