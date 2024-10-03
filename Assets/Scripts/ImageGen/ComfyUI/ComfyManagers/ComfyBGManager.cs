@@ -15,10 +15,9 @@ public class ComfyBGManager : ComfyManager
 
     private string totalStringPrompt;
 
-    private PromptData.BGPrompt.Type currentBGType;
     private int bgRecievedCounter;
 
-    [SerializeField] private List<string> bgPrompts = new();
+    [SerializeField] private string bgPrompts;
 
     private void Start()
     {
@@ -27,17 +26,19 @@ public class ComfyBGManager : ComfyManager
         buttonController.InitController(promptData);
 
         if (playerPrefs.experiencedTutorial)
-            buttonController.SpawnButtons(currentBGType);
+            buttonController.SpawnButtons();
 
         tilesetGeneration.InitTilesetGeneration(promptData);
 
-        uiManager.SetStartingPrompt(currentBGType);
+        uiManager.SetStartingPrompt();
     }
 
     private void Update()
     {
         if (promptID == comfyWebsocket.promptID)
-            uiManager.SetLoadingBar(comfyWebsocket.currentProgress, comfyWebsocket.maxProgress);
+            uiManager.SetLoadingBar(comfyWebsocket.currentProgress, comfyWebsocket.maxProgress, "Background");
+        else
+            uiManager.SetLoadingText("Waiting for queue...");
     }
 
     public bool StartBGGeneration()
@@ -45,27 +46,13 @@ public class ComfyBGManager : ComfyManager
         if (startGenerating)
             return false;
 
-        if (uiManager.GetPrompt() == uiManager.setPrompts + ", " + currentBGType.ToString())
+        if (uiManager.GetPrompt() == uiManager.setPrompts)
             return false;
 
-        if (currentBGType > PromptData.BGPrompt.Type.TotalTypes)
-            return false;
+        bgPrompts = uiManager.GetPrompt();
 
-        bgPrompts.Add(uiManager.GetPrompt());
-
-        if (bgPrompts.Count >= 3)
-        {
-            startGenerating = true;
-            QueueBGPrompt();
-        }
-        else
-        {
-            currentBGType++;
-
-            uiManager.ResetPrompt();
-            uiManager.SetStartingPrompt(currentBGType);
-            buttonController.SpawnButtons(currentBGType);
-        }
+        startGenerating = true;
+        QueueBGPrompt();
 
         return true;
     }
@@ -74,7 +61,7 @@ public class ComfyBGManager : ComfyManager
     {
         totalStringPrompt += bgPrompts[bgRecievedCounter];
 
-        PromptData.BGPrompt bgPrompt = promptData.GetBGPrompt((PromptData.BGPrompt.Type)bgRecievedCounter, bgPrompts[bgRecievedCounter]);
+        PromptData.BGPrompt bgPrompt = promptData.GetBGPrompt((PromptData.BGPrompt.Type)bgRecievedCounter, bgPrompts);
         promptCtr.QueuePromptWithControlNet(promptData.GetPromptJSON(bgPrompt.bgType), bgPrompt.prompt, bgPrompt.referenceImage);
     }
 

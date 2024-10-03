@@ -12,33 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b1a5068364eb0649b9642252d4dbe3f, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
-  foregroundPrompts:
-  - Trees
-  middlegroundPrompts:
-  - Mountains
-  backgroundPrompts:
-  - Sky
+  themePrompts:
+  - Cave
   foregroundBGPrompts:
   - type: 0
     bgType: 0
-    keywords: Trees
-    prompt: pixel art, trees, side view
-    referenceImage: trees
+    keywords: Cave
+    prompt: pixel art, cave, dark brown rock, side view
+    referenceImage: cave_fg
   middleGroundBGPrompts:
   - type: 1
     bgType: 0
-    keywords: Mountains
-    prompt: pixel art, mountains, side view
-    referenceImage: mountains
+    keywords: Cave
+    prompt: pixel art, cave, side view
+    referenceImage: cave_mg
   backgroundBGPrompts:
   - type: 2
     bgType: 1
-    keywords: Sky
-    prompt: pixel art, sky, side view
-    referenceImage: sky
+    keywords: Cave
+    prompt: pixel art, cave, side view
+    referenceImage: cave_bg
   promptCheckers:
-  - foundPrompts: Mountains
-    endPrompt: stone themed
+  - foundPrompts: Cave
+    endPrompt: pixel art, stone themed, dark brown stone
     controlnetImage: stone_tileset
   parallaxBGJSON: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 800867887099984,\r\n     
     \"steps\": 20,\r\n      \"cfg\": 10,\r\n      \"sampler_name\": \"euler\",\r\n     

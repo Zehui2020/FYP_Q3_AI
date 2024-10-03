@@ -19,19 +19,24 @@ public class ComfyUIManager : MonoBehaviour
 
     public UnityEvent OnRecievePrompt;
 
-    public void SetLoadingBar(int currentValue, int maxValue)
+    public void SetLoadingText(string text)
+    {
+        loadingText.text = text;
+    }
+
+    public void SetLoadingBar(int currentValue, int maxValue, string currentGeneration)
     {
         if (currentValue < maxValue)
         {
             loadingBar.maxValue = maxValue;
             loadingBar.value = currentValue;
-            loadingText.text = "Generating Image (" + currentValue + " / " + maxValue + ")";
+            loadingText.text = "Generating " + currentGeneration + " (" + currentValue + " / " + maxValue + ")";
         }
         else
         {
             loadingBar.maxValue = maxValue;
             loadingBar.value = maxValue;
-            loadingText.text = "Processing Image...";
+            loadingText.text = "Processing " + currentGeneration + "...";
         }
     }
 
@@ -51,9 +56,9 @@ public class ComfyUIManager : MonoBehaviour
         promptText.text = setPrompts;
     }
 
-    public void SetStartingPrompt(PromptData.BGPrompt.Type promptData)
+    public void SetStartingPrompt()
     {
-        title.text = promptData.ToString();
-        promptText.text = setPrompts + ", " + promptData.ToString();
+        title.text = "Pick A Universe!";
+        promptText.text = setPrompts;
     }
 }
