@@ -1,34 +1,32 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MinimapController : MonoBehaviour
 {
-    [SerializeField] List<Transform> transforms;
+    [SerializeField] List<GameObject> maps;
     [SerializeField] List<GameObject> cam;
-    [SerializeField] PortalController portalController;
 
-    private void Update()
+    public void ChangeView(bool showMap)
     {
-        if (Input.GetKeyDown(KeyCode.M))
+        if (showMap)
         {
-            ChangeView(1, 0);
-            portalController.gameObject.SetActive(true);
+            if (cam.Count > 1)
+            {
+                cam[0].SetActive(false);
+                cam[1].SetActive(true);
+            }
+            maps[0].SetActive(false);
+            maps[1].SetActive(true);
         }
-        else if (Input.GetKeyUp(KeyCode.M))
+        else
         {
-            ChangeView(0, 1);
-            portalController.gameObject.SetActive(false);
+            if (cam.Count > 1)
+            {
+                cam[1].SetActive(false);
+                cam[0].SetActive(true);
+            }
+            maps[1].SetActive(false);
+            maps[0].SetActive(true);
         }
-    }
-
-    private void ChangeView(int i, int j)
-    {
-        cam[i].SetActive(true);
-        cam[j].SetActive(false);
-
-        transform.SetParent(transforms[i]);
-        transform.localPosition = Vector3.zero;
-        transform.localScale = Vector3.one;
     }
 }

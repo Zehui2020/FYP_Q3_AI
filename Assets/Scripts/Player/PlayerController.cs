@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using static BaseStats.Damage;
 using static MovementController;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerController : PlayerStats
 {
@@ -12,7 +13,10 @@ public class PlayerController : PlayerStats
     {
         Movement,
         Combat,
-        Hurt
+        Hurt,
+        Dialogue,
+        Ability,
+        Map
     }
     public PlayerStates currentState;
 
@@ -30,14 +34,16 @@ public class PlayerController : PlayerStats
     private Coroutine hurtRoutine;
 
     [SerializeField] public Canvas playerCanvas;
+    [SerializeField] public DialogueManager dialogueManager;
     [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
+    [SerializeField] private MinimapController minimapController;
     [SerializeField] public PortalController portalController;
     [SerializeField] private LayerMask enemyLayer;
 
     [SerializeField] private EnemyStatBar healthBar;
     [SerializeField] private EnemyStatBar shieldBar;
 
-    private Interactable currentInteractable;
+    private IInteractable currentInteractable;
     private float ropeX;
     private Queue<Damage> damageQueue = new();
 
@@ -50,7 +56,8 @@ public class PlayerController : PlayerStats
     [SerializeField] private TextMeshProUGUI goldText;
     public int gold = 0;
 
-    private bool isDisabled = false;
+    private float horizontal;
+    private float vertical;
 
     private Coroutine transceiverBuffRoutine;
 
@@ -115,22 +122,63 @@ public class PlayerController : PlayerStats
 
     private void Update()
     {
-        if (health <= 0 || isDisabled)
+        // Console
+        if (Input.GetKeyDown(KeyCode.P))
+            ConsoleManager.Instance.SetConsole();
+
+        if (Input.GetKeyDown(KeyCode.Return))
+            ConsoleManager.Instance.OnInputCommand();
+
+        if (currentState == PlayerStates.Dialogue)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                dialogueManager.ShowNextDialogue();
+            }
+
             return;
+        }
+
+        if (currentState == PlayerStates.Map)
+        {
+            if (Input.GetKeyUp(KeyCode.Tab))
+            {
+                minimapController.ChangeView(false);
+                ChangeState(PlayerStates.Movement);
+            }
+
+            return;
+        }
+
+        if (health <= 0 || 
+            currentState == PlayerStates.Ability)
+            return;
+
+        if (abilityController != null && abilityController.swappingAbility)
+        {
+            for (int i = 0; i < abilityController.abilities.Count; i++)
+            {
+                if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
+                    abilityController.SwapAbility(i);
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+                abilityController.SwapAbility();
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            minimapController.ChangeView(true);
+            ChangeState(PlayerStates.Map);
+        }
 
         if (goldText != null)
             goldText.text = gold.ToString();
 
         statusEffectManager.UpdateStatusEffects();
 
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-
-        if (Input.GetKeyDown(KeyCode.Tab))
-            ConsoleManager.Instance.SetConsole();
-
-        if (Input.GetKeyDown(KeyCode.Return))
-            ConsoleManager.Instance.OnInputCommand();
+        horizontal = Input.GetAxisRaw("Horizontal");
+        vertical = Input.GetAxisRaw("Vertical");
 
         if (ConsoleManager.Instance.gameObject.activeInHierarchy || 
             movementController.currentState == MovementState.Knockback ||
@@ -199,7 +247,6 @@ public class PlayerController : PlayerStats
             }
 
             movementController.CheckGroundCollision();
-            movementController.HandleGrappling(vertical, ropeX);
             movementController.HandleMovment(horizontal);
         }
         else
@@ -225,29 +272,11 @@ public class PlayerController : PlayerStats
             }
         }
 
-        if (abilityController != null)
-        {
+        // abilities
+        if (abilityController != null && !abilityController.swappingAbility)
             for (int i = 0; i < abilityController.abilities.Count; i++)
-            {
                 if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
-                    if (abilityController.swappingAbility)
-                    {
-                        abilityController.SwapAbility(i);
-                        currentState = PlayerStates.Movement;
-                    }
-                    else
                         abilityController.HandleAbility(i);
-            }
-
-            if (abilityController.swappingAbility && Input.GetKeyDown(KeyCode.Escape))
-            {
-                abilityController.SwapAbility();
-                currentState = PlayerStates.Movement;
-            }
-        }
-
-        if (abilityController.swappingAbility)
-            currentState = PlayerStates.Combat;
     }
 
     private IEnumerator HurtRoutine()
@@ -276,6 +305,9 @@ public class PlayerController : PlayerStats
             return;
 
         movementController.MovePlayer(movementSpeedMultiplier.GetTotalModifier());
+
+        if (currentState == PlayerStates.Movement)
+            movementController.HandleGrappling(vertical, ropeX);
     }
 
     private void HandlePlungeAttack()
@@ -302,13 +334,7 @@ public class PlayerController : PlayerStats
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Rope"))
-        {
-            ropeX = collision.transform.position.x;
-            movementController.canGrapple = true;
-        }
-
-        if (collision.TryGetComponent<Interactable>(out Interactable interactable))
+        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
             currentInteractable = interactable;
             interactable.OnEnterRange();
@@ -317,7 +343,10 @@ public class PlayerController : PlayerStats
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.TryGetComponent<Interactable>(out Interactable interactable))
+        if (movementController.RopeTriggerEnter(collision))
+            ropeX = collision.transform.position.x;
+
+        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
             currentInteractable = interactable;
             interactable.OnEnterRange();
@@ -326,13 +355,9 @@ public class PlayerController : PlayerStats
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Rope"))
-        {
-            movementController.StopGrappling();
-            movementController.canGrapple = false;
-        }
+        movementController.RopeTriggerExit(collision);
 
-        if (collision.TryGetComponent<Interactable>(out Interactable interactable))
+        if (collision.TryGetComponent<IInteractable>(out IInteractable interactable))
         {
             interactable.OnLeaveRange();
             currentInteractable = null;
@@ -822,10 +847,11 @@ public class PlayerController : PlayerStats
         Heal(Mathf.CeilToInt(itemStats.defibrillatorHealMultiplier * maxHealth));
     }
 
-
     public void ChangeState(PlayerStates newState)
     {
         currentState = newState;
+        if (currentState == PlayerStates.Movement)
+            movementController.ChangeState(MovementState.Idle);
     }
 
     public void AddJumpCount(int count)
@@ -844,20 +870,6 @@ public class PlayerController : PlayerStats
         combatController.ChangeWeapon(weaponData);
     }
 
-    public void DisablePlayer(bool hideCanvas)
-    {
-        if (hideCanvas)
-            HideCanvas();
-
-        isDisabled = true;
-    }
-
-    public void EnablePlayer()
-    {
-        isDisabled = false;
-        ShowCanvas();
-    }
-
     public void HideCanvas()
     {
         playerCanvas.enabled = false;
@@ -866,6 +878,31 @@ public class PlayerController : PlayerStats
     public void ShowCanvas()
     {
         playerCanvas.enabled = true;
+    }
+
+    public void TalkToNPC(BaseNPC npc)
+    {
+        ChangeState(PlayerStates.Dialogue);
+        movementController.ChangeState(MovementState.Idle);
+        HideCanvas();
+        dialogueManager.SetTalkingNPC(npc);
+    }
+
+    public void LeaveNPC()
+    {
+        ChangeState(PlayerStates.Movement);
+        ShowCanvas();
+        dialogueManager.HideDialogue();
+    }
+
+    public void ShowDialoguePopup(int index)
+    {
+        dialogueManager.ShowDialoguePopup(index);
+    }
+
+    public bool IsGrounded()
+    {
+        return movementController.isGrounded;
     }
 
     // For dev console
@@ -877,5 +914,10 @@ public class PlayerController : PlayerStats
     public void GiveAllItems()
     {
         itemManager.GiveAllItems();
+    }
+
+    private void OnApplicationQuit()
+    {
+        itemStats.ResetStats();
     }
 }

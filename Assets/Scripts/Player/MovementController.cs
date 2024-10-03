@@ -1,8 +1,6 @@
-using Cinemachine.Utility;
 using System.Collections;
-using Unity.VisualScripting;
+using System.Text.RegularExpressions;
 using UnityEngine;
-using UnityEngine.Playables;
 
 public class MovementController : MonoBehaviour
 {
@@ -29,6 +27,7 @@ public class MovementController : MonoBehaviour
 
     [SerializeField] private MovementData movementData;
 
+    [SerializeField] private LayerMask platformLayer;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallJumpCheck;
     [SerializeField] private Transform groundCheckPosition;
@@ -69,6 +68,8 @@ public class MovementController : MonoBehaviour
     public event System.Action OnPlungeEnd;
     public event System.Action<PlayerController.PlayerStates> ChangePlayerState;
 
+    private Rope rope;
+
     public void InitializeMovementController(AnimationManager animationManager)
     {
         playerCol = GetComponent<CapsuleCollider2D>();
@@ -85,6 +86,7 @@ public class MovementController : MonoBehaviour
         {
             case MovementState.Idle:
                 animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f, AnimationManager.AnimType.None);
+                CancelDash();
                 break;
             case MovementState.Running:
                 animationManager.ChangeAnimation(animationManager.Running, 0f, 0f, AnimationManager.AnimType.None);
@@ -175,19 +177,23 @@ public class MovementController : MonoBehaviour
                 transform.localScale = new Vector3(-1, 1, 1);
         }
 
-        if (horizontal == 0 && 
-            playerRB.velocity.magnitude <= 3f && 
+        if (horizontal == 0 &&
+            playerRB.velocity.magnitude <= 3f &&
             currentState != MovementState.Roll &&
             currentState != MovementState.LedgeGrab &&
             currentState != MovementState.GroundDash &&
             currentState != MovementState.Knockback &&
             currentState != MovementState.Plunge &&
+            currentState != MovementState.Grapple &&
+            currentState != MovementState.GrappleIdle &&
             isGrounded)
             ChangeState(MovementState.Idle);
 
         if (playerRB.velocity.y < -0.1f && 
             currentState != MovementState.Land &&
-            currentState != MovementState.Plunge)
+            currentState != MovementState.Plunge &&
+            currentState != MovementState.Grapple &&
+            currentState != MovementState.GrappleIdle)
             ChangeState(MovementState.Falling);
         else if (currentState == MovementState.Idle && horizontal != 0)
             ChangeState(MovementState.Running);
@@ -205,43 +211,51 @@ public class MovementController : MonoBehaviour
 
         SpeedControl();
         HandleLedgeGrab();
-
-        Debug.DrawRay(groundCheckPosition.position, Vector3.down * movementData.plungeThreshold, UnityEngine.Color.red);
     }
 
     public void HandleGrappling(float vertical, float posX)
     {
-        if (plungeRoutine != null || 
-            !canGrapple || 
+        if (plungeRoutine != null ||
+            !canGrapple ||
             currentState == MovementState.LedgeGrab ||
-            currentState == MovementState.Plunge)
+            currentState == MovementState.Plunge ||
+            rope == null)
             return;
 
         if (vertical == 0)
         {
             if (currentState == MovementState.Grapple)
                 ChangeState(MovementState.GrappleIdle);
-
             return;
         }
 
+        if (rope != null && vertical > 0 && rope.CheckCannotGrapple(transform))
+        {
+            StopGrappling();
+            ChangeState(MovementState.Idle);
+            return;
+        }
+
+        rope.GrappleStart();
         ChangeState(MovementState.Grapple);
 
-        transform.position = new Vector3(Mathf.Lerp(transform.position.x, posX, Time.deltaTime * 10f),
-            transform.position.y,
-            transform.position.z);
+        transform.position = new Vector3(posX, transform.position.y, transform.position.z);
 
         playerRB.gravityScale = 0;
+        playerRB.drag = 0;
         playerRB.velocity = Vector2.zero;
-        playerCol.isTrigger = true;
 
-        transform.position = new Vector3(transform.position.x, transform.position.y + Time.deltaTime * movementData.grappleSpeed * vertical, transform.position.z);
+        float grappleMovement = movementData.grappleSpeed * vertical;
+        playerRB.MovePosition(new Vector2(transform.position.x, transform.position.y + grappleMovement * Time.fixedDeltaTime));
     }
 
     public void StopGrappling()
     {
         playerRB.gravityScale = movementData.gravityScale;
-        playerCol.isTrigger = false;
+        playerRB.drag = movementData.airDrag;
+
+        rope.GrappleEnd();
+        rope = null;
     }
 
     public void OnJump(float horizontal)
@@ -355,7 +369,9 @@ public class MovementController : MonoBehaviour
 
     private void HandleLedgeGrab()
     {
-        if (currentState == MovementState.Plunge)
+        if (currentState == MovementState.Plunge ||
+            currentState == MovementState.Grapple ||
+            currentState == MovementState.GrappleIdle)
             return;
 
         Vector2 dir;
@@ -404,11 +420,12 @@ public class MovementController : MonoBehaviour
 
     public void FinishLedgeClimb()
     {
-        ChangeState(MovementState.Idle);
         transform.position = ledgePos2;
         playerRB.gravityScale = movementData.gravityScale;
         playerCol.isTrigger = false;
         playerRB.gravityScale = movementData.gravityScale;
+
+        ChangeState(MovementState.Idle);
     }
 
     public bool HandleDash(float direction)
@@ -551,12 +568,15 @@ public class MovementController : MonoBehaviour
             currentState == MovementState.GrappleIdle)
             return false;
 
+        Collider2D areaHit = Physics2D.OverlapCircle(groundCheckPosition.position, 1f, groundLayer);
+        if (areaHit != null)
+            return false;
+
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, movementData.plungeThreshold, groundLayer);
         if (groundHit)
             return false;
 
         ChangeState(MovementState.Plunge);
-        StopGrappling();
         CancelDash();
         plungeRoutine = StartCoroutine(PlungeRoutine());
 
@@ -620,31 +640,44 @@ public class MovementController : MonoBehaviour
         if (currentState == MovementState.Knockback)
             return;
 
+        Vector2 raycastPos = transform.localScale.x < 0 ? 
+            new Vector2(groundCheckPosition.position.x - 0.3f, groundCheckPosition.position.y) : 
+            new Vector2(groundCheckPosition.position.x + 0.3f, groundCheckPosition.position.y);
+
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, 100, groundLayer);
+        RaycastHit2D groundHit1 = Physics2D.Raycast(raycastPos, Vector2.down, 100, groundLayer);
+
         float dist = Vector3.Distance(groundCheckPosition.position, groundHit.point);
+        float dist1 = Vector3.Distance(groundCheckPosition.position, groundHit1.point);
 
         if (!isGrounded && 
             playerRB.velocity.y < 0 && 
-            dist <= 2f &&
-            currentState != MovementState.Plunge)
+            dist <= 1.5f &&
+            currentState != MovementState.Plunge &&
+            currentState != MovementState.Grapple &&
+            currentState != MovementState.GrappleIdle &&
+            dist1 <= 1.5f)
         {
             ChangeState(MovementState.Land);
         }
         else if (!isGrounded &&
             playerRB.velocity.y < 0 &&
-            dist > 2f &&
-            currentState != MovementState.Plunge)
+            dist > 1.5f &&
+            currentState != MovementState.Plunge &&
+            currentState != MovementState.Grapple &&
+            currentState != MovementState.GrappleIdle &&
+            dist1 <= 1.5f)
         {
             ChangeState(MovementState.Falling);
         }
 
         if (dist <= movementData.minGroundDist)
         {
-            if (!isGrounded && 
+            if (!isGrounded &&
                 currentState != MovementState.LedgeGrab
-                && currentState != MovementState.GroundDash
-                && currentState != MovementState.Knockback &&
-                currentState != MovementState.Plunge)
+                && currentState != MovementState.GroundDash &&
+                currentState != MovementState.Plunge &&
+                currentState != MovementState.Running)
                 ChangeState(MovementState.Idle);
 
             isGrounded = true;
@@ -657,10 +690,6 @@ public class MovementController : MonoBehaviour
             wallJumpCount = maxWallJumps;
             if (jumpRoutine == null)
                 jumpCount = maxJumpCount;
-
-            if (currentState == MovementState.Grapple ||
-                currentState == MovementState.GrappleIdle)
-                StopGrappling();
         }
         else if (dist > movementData.minGroundDist)
         {
@@ -720,6 +749,28 @@ public class MovementController : MonoBehaviour
                 currentState == MovementState.LedgeGrab ||
                 currentState == MovementState.Plunge ||
                 currentState == MovementState.Knockback;
+    }
+
+    public bool RopeTriggerEnter(Collider2D collision)
+    {
+        if (collision.TryGetComponent<Rope>(out rope))
+        {
+            canGrapple = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool RopeTriggerExit(Collider2D collision)
+    {
+        if (collision.TryGetComponent<Rope>(out rope))
+        {
+            canGrapple = false;
+            return true;
+        }
+
+        return false;
     }
 
     private void OnDisable()

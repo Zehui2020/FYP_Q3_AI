@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3628936643329398388}
   - component: {fileID: 468596795079572986}
   - component: {fileID: 4577306272711886335}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 1374186980291747837}
   - component: {fileID: 6182515123420261939}
   - component: {fileID: 1647894585524073524}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: E
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -303,7 +303,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -983140795
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 70d30219631ecf84f8173a001a755e44, type: 3}
   m_Color: {r: 0, g: 0.1753149, b: 1, a: 1}
   m_FlipX: 0
@@ -372,15 +372,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caeb30d3144c0a94cb9242aecf48dedb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keycodeUI: {fileID: 1647894585524073524}
   chestType:
     type: 0
     commonItemRate: 70
     uncommonItemRate: 25
     legendaryItemRate: 5
+  keycodeUI: {fileID: 1647894585524073524}
   canvas: {fileID: 7980088690679495498}
   costText: {fileID: 4577306272711886335}
-  cost: 50
+  cost: 25
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
 --- !u!1 &7980088690679495498
 GameObject:
@@ -393,7 +393,7 @@ GameObject:
   - component: {fileID: 1578101260662827234}
   - component: {fileID: 6666442096029486965}
   - component: {fileID: 4043833970901699083}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}

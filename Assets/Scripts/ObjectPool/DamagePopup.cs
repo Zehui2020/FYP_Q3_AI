@@ -6,6 +6,11 @@ using DesignPatterns.ObjectPool;
 public class DamagePopup : PooledObject
 {
     [SerializeField] private TextMeshProUGUI textMesh;
+
+    [ColorUsageAttribute(false, true)] [SerializeField] private Color critDamageColor;
+    [ColorUsageAttribute(false, true)] [SerializeField] private Color shieldDamageColor;
+    [ColorUsageAttribute(false, true)] [SerializeField] private Color healthDamageColor;
+
     private Vector2 driftDir;
 
     private Animator animator;
@@ -32,16 +37,16 @@ public class DamagePopup : PooledObject
         switch (damageType)
         {
             case DamageType.Shield:
-                textMesh.color = Color.blue;
+                textMesh.color = shieldDamageColor;
                 textMesh.SetText(damage.ToString());
                 break;
             case DamageType.Health:
-                textMesh.color = Color.yellow;
+                textMesh.color = healthDamageColor;
                 textMesh.SetText(damage.ToString());
                 break;
             case DamageType.Crit:
             case DamageType.OnHitProcc:
-                textMesh.color = Color.red;
+                textMesh.color = critDamageColor;
                 textMesh.SetText(damage.ToString() + "!");
                 break;
         }
@@ -72,12 +77,8 @@ public class DamagePopup : PooledObject
         float animationLength = animator.GetCurrentAnimatorStateInfo(0).length;
 
         Vector3 initialPosition = transform.position;
-        Vector3 randomDirection = Random.onUnitSphere;
-        if (randomDirection.y < 0)
-            randomDirection.y *= -1;
 
-        randomDirection.Normalize();
-        Vector3 targetPosition = initialPosition + new Vector3(randomDirection.x * driftDir.x, randomDirection.y * driftDir.y, randomDirection.z);
+        Vector3 targetPosition = initialPosition + new Vector3(driftDir.x, driftDir.y, 0);
 
         while (timer < animationLength)
         {

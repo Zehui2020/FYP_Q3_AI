@@ -1,19 +1,25 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Portal : Interactable
+public class Portal : MonoBehaviour, IInteractable
 {
+    [SerializeField] private SimpleAnimation keycodeUI;
     public bool isActivated = false;
 
-    public override void OnEnterRange()
+    public void OnEnterRange()
     {
-        base.OnEnterRange();
         isActivated = true;
+        GetComponent<SpriteRenderer>().color = Color.blue;
     }
 
-    public override void OnLeaveRange()
+    public bool OnInteract()
     {
-        base.OnLeaveRange();
+        return true;
+    }
+
+    public void OnLeaveRange()
+    {
         isActivated = true;
+        GetComponent<SpriteRenderer>().color = Color.blue;
     }
 }

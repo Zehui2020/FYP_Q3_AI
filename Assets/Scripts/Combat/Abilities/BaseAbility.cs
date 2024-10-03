@@ -8,6 +8,8 @@ public abstract class BaseAbility : ScriptableObject
 
     public Item.Rarity abilityRarity;
 
+    public bool isConsumable;
+
     public enum AbilityName
     {
         Heal,

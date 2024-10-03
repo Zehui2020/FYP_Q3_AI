@@ -1,18 +1,6 @@
 using UnityEngine;
 
-public class TutorialGuide : Interactable
+public class TutorialGuide : BaseNPC
 {
-    private PlayerController player;
 
-    private void Start()
-    {
-        player = PlayerController.Instance;
-    }
-
-    public override bool OnInteract()
-    {
-        player.DisablePlayer(true);
-
-        return true;
-    }
 }

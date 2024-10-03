@@ -20,6 +20,7 @@ public class AbilityController : MonoBehaviour
     public bool swappingAbility = false;
 
     private BaseAbility swapAbility;
+    private int swapAbilityCharges;
     private PlayerController player;
     private List<Coroutine> abilityCooldownRoutines = new List<Coroutine> { null, null };
     private List<int> charges = new List<int>();
@@ -49,19 +50,20 @@ public class AbilityController : MonoBehaviour
         }
     }
 
-    public bool HandleAbilityPickUp(BaseAbility newAbility)
+    public bool HandleAbilityPickUp(BaseAbility newAbility, int charges)
     {
         if (abilities.Count >= currAbilitySlots)
         {
             swappingAbility = true;
             swapAbility = newAbility;
+            swapAbilityCharges = charges;
             return true;
         }
 
         // add ability
         abilities.Add(newAbility);
         abilityCooldownRoutines.Add(null);
-        charges.Add(newAbility.abilityCharges);
+        this.charges.Add(charges);
         maxCharges.Add(newAbility.abilityMaxCharges);
         if (abilityUI.Count == 10)
             abilityUI[abilities.Count - 1].InitAbilityUI(newAbility, "[ 0 ]");
@@ -77,7 +79,7 @@ public class AbilityController : MonoBehaviour
         // throw back out ability
         AbilityPickUp ability = Instantiate(abilityPickUpPrefab);
         ability.transform.position = transform.position;
-        ability.InitPickup(swapAbility);
+        ability.InitPickup(swapAbility, swapAbility.abilityCharges);
 
         swappingAbility = false;
         swapAbility = null;
@@ -88,12 +90,12 @@ public class AbilityController : MonoBehaviour
         // throw out old ability
         AbilityPickUp ability = Instantiate(abilityPickUpPrefab);
         ability.transform.position = transform.position;
-        ability.InitPickup(swapAbility);
+        ability.InitPickup(abilities[i], charges[i]);
         // add ability
         abilities[i] = swapAbility;
-        charges[i] = swapAbility.abilityCharges;
+        charges[i] = swapAbilityCharges;
         maxCharges[i] = swapAbility.abilityMaxCharges;
-        abilityUI[i].InitAbilityUI(swapAbility, "[ " + i.ToString() + " ]");
+        abilityUI[i].InitAbilityUI(swapAbility, "[ " + (i + 1).ToString() + " ]");
 
         if (abilityCooldownRoutines[i] != null)
         {
@@ -114,11 +116,11 @@ public class AbilityController : MonoBehaviour
             AddAbilitySlot(1);
     }
 
-    public void SpawnAbilityPickUp(int i)
+    public void SpawnAbilityPickUp(BaseAbility newAbility)
     {
         AbilityPickUp ability = Instantiate(abilityPickUpPrefab);
         ability.transform.position = transform.position;
-        ability.InitPickup(abilities[i]);
+        ability.InitPickup(newAbility, newAbility.abilityCharges);
     }
 
     private void InitializeAbility(int abilityNo)

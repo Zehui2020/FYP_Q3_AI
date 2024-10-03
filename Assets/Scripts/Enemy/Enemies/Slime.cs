@@ -117,6 +117,15 @@ public class Slime : Enemy
             if (JumpRoutine != null)
                 StopCoroutine(JumpRoutine);
         }
+
+        if (currentState == State.Jump && isJumping)
+        {
+            if (!Physics2D.Raycast(transform.position, Vector2.down, 2f, groundLayer) || enemyRB.velocity.y > 0)
+                return;
+
+            isJumping = false;
+            animator.CrossFade(SlimeLandAnim, 0f);
+        }
     }
 
     private bool AttackDecision()
@@ -158,32 +167,16 @@ public class Slime : Enemy
         direction = transform.position.x > player.transform.position.x ? new Vector2(-direction.x, direction.y) : new Vector2(direction.x, direction.y);
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.up, 100f, groundLayer);
+
         if (hit)
         {
             float distanceToCeiling = hit.distance;
             float maxSafeJumpHeight = Mathf.Sqrt(2 * Mathf.Abs(Physics2D.gravity.y) * distanceToCeiling);
-
             float maxYVelocity = Mathf.Min(maxSafeJumpHeight, direction.y * jumpForce.y);
             direction = new Vector2(direction.x, maxYVelocity / jumpForce.y);
         }
 
         // Apply force to Rigidbody2D
         enemyRB.AddForce(direction * jumpForce, ForceMode2D.Impulse);
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (!Utility.Instance.CheckLayer(collision.gameObject, groundLayer) || !isJumping)
-            return;
-
-        isJumping = false;
-        enemyRB.velocity = Vector2.zero;
-        animator.CrossFade(SlimeLandAnim, 0f);
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(transform.position, chaseRange);
-        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }

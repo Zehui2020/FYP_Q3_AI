@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class ComfyUIManager : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class ComfyUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI promptText;
 
     public string setPrompts;
+
+    public UnityEvent OnRecievePrompt;
 
     public void SetLoadingBar(int currentValue, int maxValue)
     {
@@ -40,6 +43,7 @@ public class ComfyUIManager : MonoBehaviour
     public void AddPrompt(string text)
     {
         promptText.text += ", " + text;
+        OnRecievePrompt?.Invoke();
     }
 
     public void ResetPrompt()

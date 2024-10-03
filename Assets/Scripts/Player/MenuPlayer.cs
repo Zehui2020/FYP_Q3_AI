@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MenuPlayer : MonoBehaviour
 {
@@ -8,17 +9,22 @@ public class MenuPlayer : MonoBehaviour
     private WorldSpaceButton currentButton;
     public WorldSpaceButton heldButton;
 
+    public UnityEvent OnPickupButton;
+    public UnityEvent OnDropButton;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.E) && heldButton != null)
         {
             heldButton.ReleaseButton();
             heldButton = null;
+            OnDropButton?.Invoke();
         }
         else if (Input.GetKeyDown(KeyCode.E) && currentButton != null)
         {
             heldButton = currentButton;
             currentButton.PickupButton(holdButtonPos);
+            OnPickupButton?.Invoke();
         }
     }
 

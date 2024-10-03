@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class WeaponPickup : Interactable
+public class WeaponPickup : MonoBehaviour, IInteractable
 {
+    [SerializeField] private SimpleAnimation keycodeUI;
     [SerializeField] private WeaponData weapon;
     private ObjectBobbing bobbing;
 
@@ -14,11 +15,22 @@ public class WeaponPickup : Interactable
         bobbing.InitBobbing();
     }
 
-    public override bool OnInteract()
+    public bool OnInteract()
     {
+        keycodeUI.Hide();
         PlayerController.Instance.PickupWeapon(weapon);
         OnPickup?.Invoke();
         gameObject.SetActive(false);
         return true;
+    }
+
+    public void OnEnterRange()
+    {
+        keycodeUI.Show();
+    }
+
+    public void OnLeaveRange()
+    {
+        keycodeUI.Hide();
     }
 }

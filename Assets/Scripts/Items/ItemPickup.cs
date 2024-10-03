@@ -25,17 +25,13 @@ public class ItemPickup : PooledObject
         spriteRenderer.material = newItem.itemOutlineMaterial;
     }
 
-    public void PickupItem()
-    {
-        ItemManager.Instance.AddItem(item);
-
-        Release();
-        gameObject.SetActive(false);
-    }
-
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.CompareTag("Player"))
-            PickupItem();
+        if (col.TryGetComponent<ItemManager>(out ItemManager itemManager))
+        {
+            itemManager.AddItem(item);
+            Release();
+            gameObject.SetActive(false);
+        }
     }
 }

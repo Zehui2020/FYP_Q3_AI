@@ -2317,6 +2317,37 @@ CompositeCollider2D:
   m_OffsetDistance: 0.00005
   m_UseDelaunayMesh: 0
   m_CompositeGameObject: {fileID: 235142166908620489}
+--- !u!1 &2785064231323150460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 20879170341904455}
+  m_Layer: 0
+  m_Name: Door
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &20879170341904455
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2785064231323150460}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2.62, y: 5.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4139184107576939026}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6390232161496580250
 GameObject:
   m_ObjectHideFlags: 0
@@ -2675,6 +2706,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 20879170341904455}
   - {fileID: 1864306006291348619}
   - {fileID: 4821657328753080527}
   - {fileID: 3238741068570673574}
@@ -2710,7 +2742,6 @@ MonoBehaviour:
   - {fileID: 1460982275002135070, guid: 5386e21e35952f540a77313be28ab974, type: 3}
   - {fileID: 5969996894269893911, guid: c40a710bd265d5040a17dc4ba0c7992e, type: 3}
   - {fileID: 5826226428017990818, guid: c53140902d515fa43908650c81c6fb95, type: 3}
-  - {fileID: 4352191659983094025, guid: b1ed6dddaeef6a04c83f0aa50c3e4833, type: 3}
   - {fileID: 2201529232221878568, guid: da104cbf8751dc94a84d1abcd86de9f0, type: 3}
   - {fileID: 3745716116628187415, guid: de6024a7fa0848c41a0e310afca136f3, type: 3}
   - {fileID: 1495822614930500698, guid: ef4309f954e63fc44bf6a1b8cfe9a982, type: 3}
@@ -2780,6 +2811,11 @@ MonoBehaviour:
   - {fileID: 8727535129727871693, guid: b56c7e33e1e612c428d3a6550bb4f30a, type: 3}
   - {fileID: 5450722941086569708, guid: 20971a8d9f746e64c86375d7f1118692, type: 3}
   - {fileID: 8726915468765883158, guid: ba4224d8fab271b478c13a18fe89577e, type: 3}
+  - {fileID: 2357953806376254749, guid: 69f4e325a601a664b99418bdac70b02c, type: 3}
+  - {fileID: 2595277855235150990, guid: 66e1e6825419c4d41822dfb99976b89f, type: 3}
+  - {fileID: 1541584668766389942, guid: abef9211748776143bebd1ef72d10de4, type: 3}
+  - {fileID: 4293916910756694773, guid: 0b54f68f6375c2d42a136f2b8638251f, type: 3}
+  - {fileID: 4761372336937367604, guid: 54ff0b27c8e065449bae909fce20c12a, type: 3}
   - {fileID: 4102275637862436066, guid: 2580c5b1520a4fe49a0a00a4371942fa, type: 3}
   availableTilesLeft:
   - {fileID: 2220150228242585423, guid: 2405d7dbb9d557b41b55f46ded00dcbb, type: 3}
@@ -2822,7 +2858,6 @@ MonoBehaviour:
   - {fileID: 1460982275002135070, guid: 5386e21e35952f540a77313be28ab974, type: 3}
   - {fileID: 5969996894269893911, guid: c40a710bd265d5040a17dc4ba0c7992e, type: 3}
   - {fileID: 5826226428017990818, guid: c53140902d515fa43908650c81c6fb95, type: 3}
-  - {fileID: 4352191659983094025, guid: b1ed6dddaeef6a04c83f0aa50c3e4833, type: 3}
   - {fileID: 2220150228242585423, guid: 2405d7dbb9d557b41b55f46ded00dcbb, type: 3}
   - {fileID: 1642828008317539405, guid: ba5be040f81f4b44695f4961ae541737, type: 3}
   - {fileID: 1557111096895077035, guid: f5d58c354e7e4674e8840b70e13963e5, type: 3}
@@ -2855,6 +2890,11 @@ MonoBehaviour:
   - {fileID: 8727535129727871693, guid: b56c7e33e1e612c428d3a6550bb4f30a, type: 3}
   - {fileID: 5450722941086569708, guid: 20971a8d9f746e64c86375d7f1118692, type: 3}
   - {fileID: 8726915468765883158, guid: ba4224d8fab271b478c13a18fe89577e, type: 3}
+  - {fileID: 2357953806376254749, guid: 69f4e325a601a664b99418bdac70b02c, type: 3}
+  - {fileID: 2595277855235150990, guid: 66e1e6825419c4d41822dfb99976b89f, type: 3}
+  - {fileID: 1541584668766389942, guid: abef9211748776143bebd1ef72d10de4, type: 3}
+  - {fileID: 4293916910756694773, guid: 0b54f68f6375c2d42a136f2b8638251f, type: 3}
+  - {fileID: 4761372336937367604, guid: 54ff0b27c8e065449bae909fce20c12a, type: 3}
   - {fileID: 3203044740429275775, guid: 8c8c136228bff784b8813960b479950e, type: 3}
   chestTransform: {fileID: 0}
   doorTransform: {fileID: 0}

@@ -1,10 +1,6 @@
-using UnityEngine;
-
-public class Interactable : MonoBehaviour
+public interface IInteractable
 {
-    [SerializeField] private SimpleAnimation keycodeUI;
-
-    public virtual bool OnInteract() { return true; }
-    public virtual void OnEnterRange() { keycodeUI.Show(); }
-    public virtual void OnLeaveRange() { keycodeUI.Hide(); }
+    public bool OnInteract();
+    public void OnEnterRange();
+    public void OnLeaveRange();
 }

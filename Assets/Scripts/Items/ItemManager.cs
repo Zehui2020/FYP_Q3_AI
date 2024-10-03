@@ -21,7 +21,6 @@ public class ItemManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        itemStats.ResetStats();
     }
 
     public void InitItemManager()

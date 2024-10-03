@@ -16,10 +16,14 @@ public class QuestPointer : MonoBehaviour
     private void Start()
     {
         mainCam = Camera.main;
+        Hide();
     }
 
     private void Update()
     {
+        if (targetPosition == null)
+            return;
+
         Vector3 targetPositionScreenPoint = mainCam.WorldToScreenPoint(targetPosition.position);
         bool isOffScreen = targetPositionScreenPoint.x <= borderSize ||
                            targetPositionScreenPoint.x >= Screen.width - borderSize ||

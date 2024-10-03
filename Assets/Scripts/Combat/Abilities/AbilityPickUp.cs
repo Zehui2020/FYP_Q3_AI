@@ -1,27 +1,37 @@
 using DesignPatterns.ObjectPool;
 using UnityEngine;
 
-public class AbilityPickUp : Interactable
+public class AbilityPickUp : PooledObject, IInteractable
 {
+    [SerializeField] private SimpleAnimation keycodeUI;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private BaseAbility ability;
+    private int charges;
 
-    private void OnEnable()
-    {
-        InitPickup(ability);
-    }
-
-    public void InitPickup(BaseAbility newAbility)
+    public void InitPickup(BaseAbility newAbility, int charges)
     {
         ability = newAbility;
         spriteRenderer.sprite = ability.abilityIcon;
+        this.charges = charges;
     }
 
-    public override bool OnInteract()
+    public bool OnInteract()
     {
-        if (PlayerController.Instance.abilityController.HandleAbilityPickUp(ability))
+        if (PlayerController.Instance.abilityController.HandleAbilityPickUp(ability, charges))
             Destroy(gameObject);
 
+        keycodeUI.Hide();
+
         return true;
+    }
+
+    public void OnEnterRange()
+    {
+        keycodeUI.Show();
+    }
+
+    public void OnLeaveRange()
+    {
+        keycodeUI.Hide();
     }
 }

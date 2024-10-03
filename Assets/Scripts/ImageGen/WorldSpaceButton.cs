@@ -7,6 +7,7 @@ public class WorldSpaceButton : MonoBehaviour
     [SerializeField] private TextMeshPro promptText;
     [SerializeField] private Rigidbody2D buttonRB;
     [SerializeField] private SimpleAnimation keycodeUI;
+    [SerializeField] private FollowParent followParent;
 
     private ComfyUIManager uiManager;
 
@@ -22,7 +23,9 @@ public class WorldSpaceButton : MonoBehaviour
     {
         buttonRB.isKinematic = true;
 
-        buttonRB.transform.SetParent(parent, false);
+        followParent.enabled = true;
+        followParent.SetFollowTarget(parent);
+
         buttonRB.transform.localPosition = Vector3.zero;
         buttonRB.transform.localRotation = Quaternion.identity;
         keycodeUI.Hide();
@@ -32,6 +35,7 @@ public class WorldSpaceButton : MonoBehaviour
     {
         buttonRB.isKinematic = false;
         buttonRB.transform.parent = null;
+        followParent.enabled = false;
     }
 
     public void LaunchButton(Transform targetPoint)
@@ -39,6 +43,7 @@ public class WorldSpaceButton : MonoBehaviour
         if (isLaunched)
             return;
 
+        followParent.enabled = false;
         isLaunched = true;
         transform.parent = null;
         buttonRB.isKinematic = true;

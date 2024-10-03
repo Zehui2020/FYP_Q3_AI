@@ -8,6 +8,7 @@ public class ComfyBGManager : ComfyManager
     [SerializeField] private WorldSpaceButtonController buttonController;
     [SerializeField] protected ComfyTilesetGeneration tilesetGeneration;
     [SerializeField] private ComfyUIManager uiManager;
+    [SerializeField] private PlayerPrefs playerPrefs;
 
     [SerializeField] private PromptData promptData;
     private bool startGenerating;
@@ -24,7 +25,9 @@ public class ComfyBGManager : ComfyManager
         InitManager();
 
         buttonController.InitController(promptData);
-        buttonController.SpawnButtons(currentBGType);
+
+        if (playerPrefs.experiencedTutorial)
+            buttonController.SpawnButtons(currentBGType);
 
         tilesetGeneration.InitTilesetGeneration(promptData);
 
@@ -37,16 +40,16 @@ public class ComfyBGManager : ComfyManager
             uiManager.SetLoadingBar(comfyWebsocket.currentProgress, comfyWebsocket.maxProgress);
     }
 
-    public void StartBGGeneration()
+    public bool StartBGGeneration()
     {
         if (startGenerating)
-            return;
+            return false;
 
         if (uiManager.GetPrompt() == uiManager.setPrompts + ", " + currentBGType.ToString())
-            return;
+            return false;
 
         if (currentBGType > PromptData.BGPrompt.Type.TotalTypes)
-            return;
+            return false;
 
         bgPrompts.Add(uiManager.GetPrompt());
 
@@ -63,6 +66,8 @@ public class ComfyBGManager : ComfyManager
             uiManager.SetStartingPrompt(currentBGType);
             buttonController.SpawnButtons(currentBGType);
         }
+
+        return true;
     }
 
     public void QueueBGPrompt()

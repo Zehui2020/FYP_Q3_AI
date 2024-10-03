@@ -109,7 +109,7 @@ public class Undead : Enemy
                 if (Vector2.Distance(player.transform.position, transform.position) <= attackRange)
                     ChangeState(State.Attack);
 
-                if (Vector2.Distance(player.transform.position, transform.position) >= teleportThreshold && canTeleport)
+                if (Vector2.Distance(player.transform.position, transform.position) >= teleportThreshold && canTeleport && player.IsGrounded())
                     ChangeState(State.Teleport);
 
                 UpdateMovementDirection();
