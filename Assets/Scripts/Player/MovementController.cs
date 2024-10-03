@@ -190,6 +190,7 @@ public class MovementController : MonoBehaviour
             ChangeState(MovementState.Idle);
 
         if (playerRB.velocity.y < -0.1f && 
+            !isGrounded &&
             currentState != MovementState.Land &&
             currentState != MovementState.Plunge &&
             currentState != MovementState.Grapple &&
@@ -647,16 +648,18 @@ public class MovementController : MonoBehaviour
         RaycastHit2D groundHit = Physics2D.Raycast(groundCheckPosition.position, Vector3.down, 100, groundLayer);
         RaycastHit2D groundHit1 = Physics2D.Raycast(raycastPos, Vector2.down, 100, groundLayer);
 
+        Debug.DrawRay(raycastPos, Vector2.down * 100, Color.red);
+
         float dist = Vector3.Distance(groundCheckPosition.position, groundHit.point);
-        float dist1 = Vector3.Distance(groundCheckPosition.position, groundHit1.point);
+        float dist1 = Vector3.Distance(raycastPos, groundHit1.point);
 
         if (!isGrounded && 
             playerRB.velocity.y < 0 && 
             dist <= 1.5f &&
+            dist > 0.2f &&
             currentState != MovementState.Plunge &&
             currentState != MovementState.Grapple &&
-            currentState != MovementState.GrappleIdle &&
-            dist1 <= 1.5f)
+            currentState != MovementState.GrappleIdle)
         {
             ChangeState(MovementState.Land);
         }
@@ -665,13 +668,12 @@ public class MovementController : MonoBehaviour
             dist > 1.5f &&
             currentState != MovementState.Plunge &&
             currentState != MovementState.Grapple &&
-            currentState != MovementState.GrappleIdle &&
-            dist1 <= 1.5f)
+            currentState != MovementState.GrappleIdle)
         {
             ChangeState(MovementState.Falling);
         }
 
-        if (dist <= movementData.minGroundDist)
+        if (dist <= movementData.minGroundDist && dist1 <= movementData.minGroundDist)
         {
             if (!isGrounded &&
                 currentState != MovementState.LedgeGrab

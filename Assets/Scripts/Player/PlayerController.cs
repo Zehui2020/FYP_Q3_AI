@@ -325,9 +325,6 @@ public class PlayerController : PlayerStats
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (movementController.currentState == MovementState.GroundDash || movementController.currentState == MovementState.AirDash)
-            movementController.CancelDash();
-
         if (movementController.currentState == MovementState.Plunge)
             movementController.StopPlunge();
     }
