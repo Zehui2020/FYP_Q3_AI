@@ -1,8 +1,11 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ParallaxEffect : MonoBehaviour
 {
+    private Vector2 startPos;
+
     [SerializeField] private Transform followPos;
     [SerializeField] private Transform player;
     [SerializeField] private float parallaxEffect;
@@ -21,6 +24,7 @@ public class ParallaxEffect : MonoBehaviour
         this.mapSizeY = mapSizeY;
 
         mapOriginY = mapSizeY / 2f;
+        startPos = transform.position;
     }
 
     private void Awake()
@@ -33,6 +37,10 @@ public class ParallaxEffect : MonoBehaviour
 
     private void LateUpdate()
     {
+        // Parallax X
+        float dist = followPos.transform.position.x * parallaxEffect;
+        transform.position = new Vector3(startPos.x + dist, transform.position.y, transform.position.z);
+
         // Parallax Y
         if (mapSizeY == 0)
             return;
