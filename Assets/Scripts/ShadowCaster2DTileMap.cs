@@ -22,6 +22,12 @@ public class ShadowCaster2DTileMap : MonoBehaviour
                                     .Assembly
                                     .GetType("UnityEngine.Rendering.Universal.ShadowUtility")
                                     .GetMethod("GenerateShadowMesh", BindingFlags.Public | BindingFlags.Static);
+
+    private void OnEnable()
+    {
+        Generate();    
+    }
+
     public void Generate()
     {
         DestroyAllChildren();

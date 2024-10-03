@@ -5,9 +5,7 @@ using UnityEngine;
 public class PromptData : ScriptableObject
 {
     // For world space button
-    public List<string> foregroundPrompts = new();
-    public List<string> middlegroundPrompts = new();
-    public List<string> backgroundPrompts = new();
+    public List<string> themePrompts = new();
 
     // For BG generation
     public enum BGType
@@ -56,19 +54,9 @@ public class PromptData : ScriptableObject
     [TextArea(3, 100)]
     [SerializeField] private string staticBGJSON;
 
-    public List<string> GetButtonPromptList(BGPrompt.Type type)
+    public List<string> GetButtonPromptList()
     {
-        switch (type)
-        {
-            case BGPrompt.Type.Foreground:
-                return foregroundPrompts;
-            case BGPrompt.Type.Middleground:
-                return middlegroundPrompts;
-            case BGPrompt.Type.Background:
-                return backgroundPrompts;
-        }
-
-        return new();
+        return themePrompts;
     }
 
     public BGPrompt GetBGPrompt(BGPrompt.Type type, string keywords)

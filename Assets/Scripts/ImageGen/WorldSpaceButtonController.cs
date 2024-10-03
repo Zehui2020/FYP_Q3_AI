@@ -23,12 +23,12 @@ public class WorldSpaceButtonController : MonoBehaviour
 
     public void SpawnForegroundButtons()
     {
-        SpawnButtons(PromptData.BGPrompt.Type.Foreground);
+        SpawnButtons();
     }
 
-    public void SpawnButtons(PromptData.BGPrompt.Type currentBGType)
+    public void SpawnButtons()
     {
-        List<string> buttonPrompts = promptData.GetButtonPromptList(currentBGType);
+        List<string> buttonPrompts = promptData.GetButtonPromptList();
 
         foreach (string prompt in buttonPrompts)
         {
