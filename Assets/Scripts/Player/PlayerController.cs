@@ -5,7 +5,6 @@ using TMPro;
 using UnityEngine;
 using static BaseStats.Damage;
 using static MovementController;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerController : PlayerStats
 {
@@ -56,6 +55,9 @@ public class PlayerController : PlayerStats
     [SerializeField] private TextMeshProUGUI goldText;
     public int gold = 0;
 
+    private Timer timer;
+    [SerializeField] private TextMeshProUGUI timerText;
+
     private float horizontal;
     private float vertical;
 
@@ -103,6 +105,8 @@ public class PlayerController : PlayerStats
         healthBar.InitStatBar(health, maxHealth);
         shieldBar.InitStatBar(shield, maxShield);
 
+        timer = Timer.Instance;
+
         OnHealthChanged += (increase, isCrit) => 
         { 
             if (!increase) 
@@ -122,6 +126,18 @@ public class PlayerController : PlayerStats
 
     private void Update()
     {
+        // Timer
+        if (timer.timer <= 3600f)
+        {
+            var ts = System.TimeSpan.FromSeconds(timer.timer);
+            timerText.text = string.Format("{0:00}:{1:00}", ts.Minutes, ts.Seconds);
+        }
+        else
+        {
+            var ts = System.TimeSpan.FromSeconds(timer.timer);
+            timerText.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+        }
+
         // Console
         if (Input.GetKeyDown(KeyCode.P))
             ConsoleManager.Instance.SetConsole();

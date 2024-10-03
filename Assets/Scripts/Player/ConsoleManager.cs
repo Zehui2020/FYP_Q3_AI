@@ -58,7 +58,10 @@ public class ConsoleManager : MonoBehaviour
             }
             else if (words[1].Equals("gold"))
             {
-                PlayerController.Instance.gold += int.Parse(words[2]);
+                if (int.Parse(words[2]) > 500)
+                    PlayerController.Instance.gold += int.Parse(words[2]);
+                else
+                    PlayerController.Instance.SpawnGoldPickup(int.Parse(words[2]), PlayerController.Instance.transform);
             }
         }
         else if (command.Equals("/spawn"))
