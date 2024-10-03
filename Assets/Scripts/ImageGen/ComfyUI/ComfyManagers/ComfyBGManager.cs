@@ -35,7 +35,7 @@ public class ComfyBGManager : ComfyManager
 
     private void Update()
     {
-        if (promptID == comfyWebsocket.promptID)
+        if (comfyWebsocket.currentProgress != -1 && comfyWebsocket.maxProgress != -1)
             uiManager.SetLoadingBar(comfyWebsocket.currentProgress, comfyWebsocket.maxProgress, "Background");
         else
             uiManager.SetLoadingText("Waiting for queue...");
@@ -50,6 +50,7 @@ public class ComfyBGManager : ComfyManager
             return false;
 
         bgPrompts = uiManager.GetPrompt();
+        totalStringPrompt += bgPrompts;
 
         startGenerating = true;
         QueueBGPrompt();
@@ -59,9 +60,8 @@ public class ComfyBGManager : ComfyManager
 
     public void QueueBGPrompt()
     {
-        totalStringPrompt += bgPrompts[bgRecievedCounter];
-
         PromptData.BGPrompt bgPrompt = promptData.GetBGPrompt((PromptData.BGPrompt.Type)bgRecievedCounter, bgPrompts);
+        totalStringPrompt += bgPrompt.prompt;
         promptCtr.QueuePromptWithControlNet(promptData.GetPromptJSON(bgPrompt.bgType), bgPrompt.prompt, bgPrompt.referenceImage);
     }
 
@@ -71,10 +71,15 @@ public class ComfyBGManager : ComfyManager
 
         if (base.OnRecieveImage(promptID, texture))
         {
-            if ((PromptData.BGPrompt.Type)bgRecievedCounter >= PromptData.BGPrompt.Type.Background)
+            if (bgRecievedCounter >= (int)PromptData.BGPrompt.Type.Background)
             {
-                Debug.Log("QUEUED TIELSET");
-                tilesetGeneration.QueueTilesetPrompt(totalStringPrompt);
+                if (startGenerating)
+                {
+                    Debug.Log("QUEUED TIELSET");
+                    tilesetGeneration.QueueTilesetPrompt(totalStringPrompt);
+                    startGenerating = false;
+                }
+
                 return true;
             }
 

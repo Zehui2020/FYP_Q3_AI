@@ -13,8 +13,8 @@ public class ComfyWebsocket : MonoBehaviour
     public ComfyImageCtr comfyImageCtr;
     [HideInInspector] public string promptID;
 
-    [HideInInspector] public int currentProgress;
-    [HideInInspector] public int maxProgress;
+    [HideInInspector] public int currentProgress = -1;
+    [HideInInspector] public int maxProgress = -1;
 
     public async void InitWebsocket()
     {
@@ -46,14 +46,25 @@ public class ComfyWebsocket : MonoBehaviour
             while (!result.EndOfMessage);
 
             string response = stringBuilder.ToString();
-            //Debug.Log("Received: " + response);
+            Debug.Log("Received: " + response);
 
-            currentProgress = ParseJsonValue(response, "value");
-            maxProgress = ParseJsonValue(response, "max");
+            if (ParsePromptID(response).Equals(promptID))
+            {
+                currentProgress = ParseJsonValue(response, "value");
+                maxProgress = ParseJsonValue(response, "max");
+            }
+            else
+            {
+                currentProgress = -1;
+                maxProgress = -1;
+            }
 
             if (response.Contains("\"queue_remaining\": 0") && promptID != string.Empty && promptID != "0")
             {
                 comfyImageCtr.RequestFileName(promptID);
+
+                currentProgress = -1;
+                maxProgress = -1;
             }
         }
     }
@@ -90,6 +101,14 @@ public class ComfyWebsocket : MonoBehaviour
             Debug.LogError($"Failed to parse value for key \"{key}\".");
             return -1;
         }
+    }
+
+    private string ParsePromptID(string json)
+    {
+        string promptIdKey = "\"prompt_id\": \"";
+        int startIndex = json.IndexOf(promptIdKey) + promptIdKey.Length;
+        int endIndex = json.IndexOf("\"", startIndex);
+        return json.Substring(startIndex, endIndex - startIndex);
     }
 
     void OnDestroy()
