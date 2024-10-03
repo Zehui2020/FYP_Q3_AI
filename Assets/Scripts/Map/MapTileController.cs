@@ -1,10 +1,15 @@
 using System.Collections.Generic;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 public class MapTileController : MonoBehaviour
 {
-    [SerializeField] public List<GameObject> allTilePrefabs;
-    [SerializeField] public List<GameObject> constantTilePrefabs;
+    [SerializeField] private MapData mdata;
+
+    [HideInInspector] public List<GameObject> startTilePrefabs;
+    [HideInInspector] public List<GameObject> autoSetTilePrefabs;
+    [HideInInspector] public List<GameObject> deadEndTilePrefabs;
+    [HideInInspector] public List<GameObject> uniqueTilePrefabs;
 
     private List<GameObject> tile0U = new List<GameObject>();
     private List<GameObject> tile1U = new List<GameObject>();
@@ -17,63 +22,70 @@ public class MapTileController : MonoBehaviour
 
     public void InitMapTiles()
     {
+        startTilePrefabs = mdata.startTilePrefabs;
+        autoSetTilePrefabs = mdata.autoSetTilePrefabs;
+        deadEndTilePrefabs = mdata.deadEndTilePrefabs;
+        uniqueTilePrefabs = mdata.uniqueTilePrefabs;
         SortTiles();
         SetTileContraints();
     }
 
     private void SortTiles()
     {
-        for (int i = 0; i < allTilePrefabs.Count; i++)
+        // store auto set tiles
+        for (int i = 0; i < autoSetTilePrefabs.Count; i++)
         {
-            if (allTilePrefabs[i].name.Contains("0U"))
-                tile0U.Add(allTilePrefabs[i]);
-            else if (allTilePrefabs[i].name.Contains("1U"))
-                tile1U.Add(allTilePrefabs[i]);
+            if (autoSetTilePrefabs[i].name.Contains("0U"))
+                tile0U.Add(autoSetTilePrefabs[i]);
+            else if (autoSetTilePrefabs[i].name.Contains("1U"))
+                tile1U.Add(autoSetTilePrefabs[i]);
 
-            if (allTilePrefabs[i].name.Contains("0D"))
-                tile0D.Add(allTilePrefabs[i]);
-            else if (allTilePrefabs[i].name.Contains("1D"))
-                tile1D.Add(allTilePrefabs[i]);
+            if (autoSetTilePrefabs[i].name.Contains("0D"))
+                tile0D.Add(autoSetTilePrefabs[i]);
+            else if (autoSetTilePrefabs[i].name.Contains("1D"))
+                tile1D.Add(autoSetTilePrefabs[i]);
 
-            if (allTilePrefabs[i].name.Contains("0L"))
-                tile0L.Add(allTilePrefabs[i]);
-            else if (allTilePrefabs[i].name.Contains("1L"))
-                tile1L.Add(allTilePrefabs[i]);
+            if (autoSetTilePrefabs[i].name.Contains("0L"))
+                tile0L.Add(autoSetTilePrefabs[i]);
+            else if (autoSetTilePrefabs[i].name.Contains("1L"))
+                tile1L.Add(autoSetTilePrefabs[i]);
 
-            if (allTilePrefabs[i].name.Contains("0R"))
-                tile0R.Add(allTilePrefabs[i]);
-            else if (allTilePrefabs[i].name.Contains("1R"))
-                tile1R.Add(allTilePrefabs[i]);
+            if (autoSetTilePrefabs[i].name.Contains("0R"))
+                tile0R.Add(autoSetTilePrefabs[i]);
+            else if (autoSetTilePrefabs[i].name.Contains("1R"))
+                tile1R.Add(autoSetTilePrefabs[i]);
         }
-        for (int i = 0; i < constantTilePrefabs.Count; i++)
+        // store dead end tiles
+        for (int i = 0; i < deadEndTilePrefabs.Count; i++)
         {
-            if (constantTilePrefabs[i].name.Contains("0U"))
-                tile0U.Add(constantTilePrefabs[i]);
-            else if (constantTilePrefabs[i].name.Contains("1U"))
-                tile1U.Add(constantTilePrefabs[i]);
+            if (deadEndTilePrefabs[i].name.Contains("0U"))
+                tile0U.Add(deadEndTilePrefabs[i]);
+            else if (deadEndTilePrefabs[i].name.Contains("1U"))
+                tile1U.Add(deadEndTilePrefabs[i]);
 
-            if (constantTilePrefabs[i].name.Contains("0D"))
-                tile0D.Add(constantTilePrefabs[i]);
-            else if (constantTilePrefabs[i].name.Contains("1D"))
-                tile1D.Add(constantTilePrefabs[i]);
+            if (deadEndTilePrefabs[i].name.Contains("0D"))
+                tile0D.Add(deadEndTilePrefabs[i]);
+            else if (deadEndTilePrefabs[i].name.Contains("1D"))
+                tile1D.Add(deadEndTilePrefabs[i]);
 
-            if (constantTilePrefabs[i].name.Contains("0L"))
-                tile0L.Add(constantTilePrefabs[i]);
-            else if (constantTilePrefabs[i].name.Contains("1L"))
-                tile1L.Add(constantTilePrefabs[i]);
+            if (deadEndTilePrefabs[i].name.Contains("0L"))
+                tile0L.Add(deadEndTilePrefabs[i]);
+            else if (deadEndTilePrefabs[i].name.Contains("1L"))
+                tile1L.Add(deadEndTilePrefabs[i]);
 
-            if (constantTilePrefabs[i].name.Contains("0R"))
-                tile0R.Add(constantTilePrefabs[i]);
-            else if (constantTilePrefabs[i].name.Contains("1R"))
-                tile1R.Add(constantTilePrefabs[i]);
+            if (deadEndTilePrefabs[i].name.Contains("0R"))
+                tile0R.Add(deadEndTilePrefabs[i]);
+            else if (deadEndTilePrefabs[i].name.Contains("1R"))
+                tile1R.Add(deadEndTilePrefabs[i]);
         }
     }
 
     private void SetTileContraints()
     {
-        for (int i = 0; i < allTilePrefabs.Count; i++)
+        // set auto set tiles
+        for (int i = 0; i < autoSetTilePrefabs.Count; i++)
         {
-            MapTile tileToSet = allTilePrefabs[i].GetComponent<MapTile>();
+            MapTile tileToSet = autoSetTilePrefabs[i].GetComponent<MapTile>();
 
             if (tileToSet.name.Contains("0U"))
                 tileToSet.availableTilesUp = tile0D;
