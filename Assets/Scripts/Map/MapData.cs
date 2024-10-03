@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,4 +8,5 @@ public class MapData : ScriptableObject
     public List<GameObject> autoSetTilePrefabs;
     public List<GameObject> deadEndTilePrefabs;
     public List<GameObject> uniqueTilePrefabs;
+    public List<GameObject> solidTilePrefabs;
 }

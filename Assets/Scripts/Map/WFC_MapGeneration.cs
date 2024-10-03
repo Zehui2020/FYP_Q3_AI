@@ -10,30 +10,30 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private int borderThickness;
     [SerializeField] private int mapSeed;
     [SerializeField] private ChestSpawnChance chestSpawn;
-    [Header("Main Map Generation")]
     [SerializeField] private MapTileController tileController;
+    [Header("Main Prefabs")]
     [SerializeField] private List<GameObject> startingTilePrefabs;
     [SerializeField] private List<GameObject> allTilePrefabs;
-    [Header("Border Generation")]
-    [Header("Edges")]
-    [SerializeField] private List<GameObject> topBorderTiles;
-    [SerializeField] private List<GameObject> bottomBorderTiles;
-    [SerializeField] private List<GameObject> leftBorderTiles;
-    [SerializeField] private List<GameObject> rightBorderTiles;
-    [Header("Corners")]
-    [SerializeField] private List<GameObject> topLeftCornerTiles;
-    [SerializeField] private List<GameObject> topRightCornerTiles;
-    [SerializeField] private List<GameObject> bottomLeftCornerTiles;
-    [SerializeField] private List<GameObject> bottomRightCornerTiles;
-    [Header("Perimeter")]
+    [Header("Edge Prefabs")]
+    [SerializeField] private List<GameObject> topBorderTiles = new List<GameObject>();
+    [SerializeField] private List<GameObject> bottomBorderTiles = new List<GameObject>();
+    [SerializeField] private List<GameObject> leftBorderTiles = new List<GameObject>();
+    [SerializeField] private List<GameObject> rightBorderTiles = new List<GameObject>();
+    [Header("Corner Prefabs")]
+    [SerializeField] private List<GameObject> topLeftCornerTiles = new List<GameObject>();
+    [SerializeField] private List<GameObject> topRightCornerTiles = new List<GameObject>();
+    [SerializeField] private List<GameObject> bottomLeftCornerTiles = new List<GameObject>();
+    [SerializeField] private List<GameObject> bottomRightCornerTiles = new List<GameObject>();
+    [Header("Perimeter Prefabs")]
     [SerializeField] private List<GameObject> solidTile;
-    [Header("Other")]
+    [Header("Miscellanous Prefabs")]
     [SerializeField] private GameObject doorPrefab;
     [SerializeField] private GameObject portalPrefab;
-    [SerializeField] private List<Chest> chestsInMap;
+    [Header("Background")]
     [SerializeField] private TilemapManager tilemapManager;
     [SerializeField] private ItemStats itemStats;
     [SerializeField] private ParallaxEffect[] bgs;
+    [Header("Mini Map Fog Of War")]
     [SerializeField] private Transform cam;
     [SerializeField] private FogOfWar fow;
 
@@ -44,8 +44,9 @@ public class WFC_MapGeneration : MonoBehaviour
     private List<Vector2> collapsableTiles = new List<Vector2>();
     private List<Vector2> collapsedTiles = new List<Vector2>();
     private List<int> collapsableTileNum = new List<int>();
+    private List<Chest> chestsInMap;
 
-    public List<Portal> portalsInMap;
+    [HideInInspector] public List<Portal> portalsInMap;
 
     public void InitMapGenerator()
     {
@@ -70,10 +71,7 @@ public class WFC_MapGeneration : MonoBehaviour
 
     public void GenerateMap()
     {
-        startingTilePrefabs.AddRange(tileController.startTilePrefabs);
-        allTilePrefabs.AddRange(tileController.autoSetTilePrefabs);
-        allTilePrefabs.AddRange(tileController.deadEndTilePrefabs);
-        allTilePrefabs.AddRange(tileController.uniqueTilePrefabs);
+        AssignTiles();
         mapSize -= Vector2.one * 2;
         // init maptiles list
         for (int i = 0; i < mapSize.x * mapSize.y; i++)
@@ -104,6 +102,40 @@ public class WFC_MapGeneration : MonoBehaviour
         if (fow != null)
             fow.Initialize();
         Debug.Log("Generation Complete!");
+    }
+
+    private void AssignTiles()
+    {
+        startingTilePrefabs.AddRange(tileController.startTilePrefabs);
+        allTilePrefabs.AddRange(tileController.autoSetTilePrefabs);
+        allTilePrefabs.AddRange(tileController.deadEndTilePrefabs);
+        allTilePrefabs.AddRange(tileController.uniqueTilePrefabs);
+        for (int i = 0; i < allTilePrefabs.Count; i++)
+        {
+            if (allTilePrefabs[i].name.Contains("1U_1D"))
+            {
+                if (allTilePrefabs[i].name.Contains("0L"))
+                    leftBorderTiles.Add(allTilePrefabs[i]);
+                if (allTilePrefabs[i].name.Contains("0R"))
+                    rightBorderTiles.Add(allTilePrefabs[i]);
+            }
+            if (allTilePrefabs[i].name.Contains("1L_1R"))
+            {
+                if (allTilePrefabs[i].name.Contains("0U"))
+                    topBorderTiles.Add(allTilePrefabs[i]);
+                if (allTilePrefabs[i].name.Contains("0D"))
+                    bottomBorderTiles.Add(allTilePrefabs[i]);
+            }
+            if (allTilePrefabs[i].name.Contains("0U_1D_0L_1R"))
+                topLeftCornerTiles.Add(allTilePrefabs[i]);
+            if (allTilePrefabs[i].name.Contains("0U_1D_1L_0R"))
+                topRightCornerTiles.Add(allTilePrefabs[i]);
+            if (allTilePrefabs[i].name.Contains("1U_0D_0L_1R"))
+                bottomLeftCornerTiles.Add(allTilePrefabs[i]);
+            if (allTilePrefabs[i].name.Contains("1U_0D_1L_0R"))
+                bottomRightCornerTiles.Add(allTilePrefabs[i]);
+        }
+        solidTile.AddRange(tileController.solidTilePrefabs);
     }
 
     private void SetNextTile()

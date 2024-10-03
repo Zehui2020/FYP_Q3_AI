@@ -10,6 +10,7 @@ public class MapTileController : MonoBehaviour
     [HideInInspector] public List<GameObject> autoSetTilePrefabs;
     [HideInInspector] public List<GameObject> deadEndTilePrefabs;
     [HideInInspector] public List<GameObject> uniqueTilePrefabs;
+    [HideInInspector] public List<GameObject> solidTilePrefabs;
 
     private List<GameObject> tile0U = new List<GameObject>();
     private List<GameObject> tile1U = new List<GameObject>();
@@ -26,6 +27,7 @@ public class MapTileController : MonoBehaviour
         autoSetTilePrefabs = mdata.autoSetTilePrefabs;
         deadEndTilePrefabs = mdata.deadEndTilePrefabs;
         uniqueTilePrefabs = mdata.uniqueTilePrefabs;
+        solidTilePrefabs = mdata.solidTilePrefabs;
         SortTiles();
         SetTileContraints();
     }
@@ -107,5 +109,7 @@ public class MapTileController : MonoBehaviour
             else if (tileToSet.name.Contains("1R"))
                 tileToSet.availableTilesRight = tile1L;
         }
+
+
     }
 }
