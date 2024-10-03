@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 public class WFC_MapGeneration : MonoBehaviour
 {
     [Header("General Settings")]
+    [SerializeField] private MapData mData;
     [SerializeField] private Vector2 mapSize;
     [SerializeField] private float tileSize;
     [SerializeField] private int borderThickness;
@@ -12,8 +13,8 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private ChestSpawnChance chestSpawn;
     [SerializeField] private MapTileController tileController;
     [Header("Main Prefabs")]
-    [SerializeField] private List<GameObject> startingTilePrefabs;
-    [SerializeField] private List<GameObject> allTilePrefabs;
+    [SerializeField] private List<GameObject> startingTilePrefabs = new List<GameObject>();
+    [SerializeField] private List<GameObject> allTilePrefabs = new List<GameObject>();
     [Header("Edge Prefabs")]
     [SerializeField] private List<GameObject> topBorderTiles = new List<GameObject>();
     [SerializeField] private List<GameObject> bottomBorderTiles = new List<GameObject>();
@@ -25,7 +26,7 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private List<GameObject> bottomLeftCornerTiles = new List<GameObject>();
     [SerializeField] private List<GameObject> bottomRightCornerTiles = new List<GameObject>();
     [Header("Perimeter Prefabs")]
-    [SerializeField] private List<GameObject> solidTile;
+    [SerializeField] private List<GameObject> solidTile = new List<GameObject>();
     [Header("Miscellanous Prefabs")]
     [SerializeField] private GameObject doorPrefab;
     [SerializeField] private GameObject portalPrefab;
@@ -38,26 +39,29 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private FogOfWar fow;
 
     private List<MapTile> mapTiles = new List<MapTile>();
-    private List<Sprite> tileSprites = new();
-    private Vector2 currTile;
-    private Vector2 startingPos;
     private List<Vector2> collapsableTiles = new List<Vector2>();
     private List<Vector2> collapsedTiles = new List<Vector2>();
     private List<int> collapsableTileNum = new List<int>();
-    private List<Chest> chestsInMap;
+    private List<Chest> chestsInMap = new List<Chest>();
+    private List<Sprite> tileSprites = new();
+    private Vector2 currTile;
+    private Vector2 startingPos;
 
     [HideInInspector] public List<Portal> portalsInMap;
 
     public void InitMapGenerator()
     {
+        tileController.InitMapTiles();
+        AssignMapVariables();
+        SetSeed();
+
         tileSprites = tilemapManager.GetAllTileSprites();
 
-        SetSeed();
-        tileController.InitMapTiles();
         GenerateMap();
 
         foreach (ParallaxEffect parallaxEffect in bgs)
             parallaxEffect.InitParallaxEffect((mapSize.y + 1) * tileSize);
+
         SetAStarNavMesh();
     }
 
@@ -71,7 +75,6 @@ public class WFC_MapGeneration : MonoBehaviour
 
     public void GenerateMap()
     {
-        AssignTiles();
         mapSize -= Vector2.one * 2;
         // init maptiles list
         for (int i = 0; i < mapSize.x * mapSize.y; i++)
@@ -104,8 +107,13 @@ public class WFC_MapGeneration : MonoBehaviour
         Debug.Log("Generation Complete!");
     }
 
-    private void AssignTiles()
+    private void AssignMapVariables()
     {
+        mapSize = mData.mapSize;
+        tileSize = mData.tileSize;
+        borderThickness = mData.borderThickness;
+        mapSeed = mData.mapSeed;
+
         startingTilePrefabs.AddRange(tileController.startTilePrefabs);
         allTilePrefabs.AddRange(tileController.autoSetTilePrefabs);
         allTilePrefabs.AddRange(tileController.deadEndTilePrefabs);

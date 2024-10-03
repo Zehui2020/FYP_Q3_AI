@@ -6,11 +6,11 @@ public class MapTileController : MonoBehaviour
 {
     [SerializeField] private MapData mdata;
 
-    [HideInInspector] public List<GameObject> startTilePrefabs;
-    [HideInInspector] public List<GameObject> autoSetTilePrefabs;
-    [HideInInspector] public List<GameObject> deadEndTilePrefabs;
-    [HideInInspector] public List<GameObject> uniqueTilePrefabs;
-    [HideInInspector] public List<GameObject> solidTilePrefabs;
+    public List<GameObject> startTilePrefabs;
+    public List<GameObject> autoSetTilePrefabs;
+    public List<GameObject> deadEndTilePrefabs;
+    public List<GameObject> uniqueTilePrefabs;
+    public List<GameObject> solidTilePrefabs;
 
     private List<GameObject> tile0U = new List<GameObject>();
     private List<GameObject> tile1U = new List<GameObject>();
