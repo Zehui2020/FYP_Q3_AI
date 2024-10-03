@@ -5,7 +5,7 @@ using UnityEngine;
 public class Rope : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
-    [SerializeField] private PlatformEffector2D platform;
+    [SerializeField] private List<PlatformEffector2D> platforms;
     [SerializeField] private LayerMask playerLayer;
 
     private bool isGrappling = false;
@@ -31,8 +31,14 @@ public class Rope : MonoBehaviour
     {
         if (isGrappling)
             return;
-
-        platform.colliderMask -= playerLayer;
+        for (int i = 0; i < platforms.Count; i++)
+        {
+            if (platforms[i] != null)
+            {
+                platforms[i].colliderMask -= playerLayer;
+            }
+        }
+        //platform.colliderMask -= playerLayer;
         isGrappling = true;
     }
 
@@ -40,8 +46,14 @@ public class Rope : MonoBehaviour
     {
         if (!isGrappling)
             return;
-
-        platform.colliderMask += playerLayer;
+        for (int i = 0; i < platforms.Count; i++)
+        {
+            if (platforms[i] != null)
+            {
+                platforms[i].colliderMask += playerLayer;
+            }
+        }
+        //platform.colliderMask += playerLayer;
         isGrappling = false;
     }
 }
