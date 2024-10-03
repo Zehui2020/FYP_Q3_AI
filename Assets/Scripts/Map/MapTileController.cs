@@ -1,16 +1,13 @@
 using System.Collections.Generic;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 public class MapTileController : MonoBehaviour
 {
-    [SerializeField] private MapData mdata;
-
-    public List<GameObject> startTilePrefabs;
-    public List<GameObject> autoSetTilePrefabs;
-    public List<GameObject> deadEndTilePrefabs;
-    public List<GameObject> uniqueTilePrefabs;
-    public List<GameObject> solidTilePrefabs;
+    [HideInInspector] public List<GameObject> startTilePrefabs;
+    [HideInInspector] public List<GameObject> autoSetTilePrefabs;
+    [HideInInspector] public List<GameObject> deadEndTilePrefabs;
+    [HideInInspector] public List<GameObject> uniqueTilePrefabs;
+    [HideInInspector] public List<GameObject> solidTilePrefabs;
 
     private List<GameObject> tile0U = new List<GameObject>();
     private List<GameObject> tile1U = new List<GameObject>();
@@ -21,13 +18,13 @@ public class MapTileController : MonoBehaviour
     private List<GameObject> tile0R = new List<GameObject>();
     private List<GameObject> tile1R = new List<GameObject>();
 
-    public void InitMapTiles()
+    public void InitMapTiles(MapData mData)
     {
-        startTilePrefabs = mdata.startTilePrefabs;
-        autoSetTilePrefabs = mdata.autoSetTilePrefabs;
-        deadEndTilePrefabs = mdata.deadEndTilePrefabs;
-        uniqueTilePrefabs = mdata.uniqueTilePrefabs;
-        solidTilePrefabs = mdata.solidTilePrefabs;
+        startTilePrefabs = mData.startTilePrefabs;
+        autoSetTilePrefabs = mData.autoSetTilePrefabs;
+        deadEndTilePrefabs = mData.deadEndTilePrefabs;
+        uniqueTilePrefabs = mData.uniqueTilePrefabs;
+        solidTilePrefabs = mData.solidTilePrefabs;
         SortTiles();
         SetTileContraints();
     }
