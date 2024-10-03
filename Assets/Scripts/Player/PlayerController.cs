@@ -787,7 +787,7 @@ public class PlayerController : PlayerStats
         randNum = Random.Range(0, 100);
         if (randNum < itemStats.interestChance)
             goldToDrop *= 2;
-        gold += goldToDrop;
+        SpawnGoldPickup(goldToDrop, target.transform);
 
         // NRG Bar
         randNum = Random.Range(0, 100);
@@ -890,6 +890,21 @@ public class PlayerController : PlayerStats
         ChangeState(PlayerStates.Movement);
         ShowCanvas();
         dialogueManager.HideDialogue();
+    }
+
+    public void SpawnGoldPickup(int goldToDrop, Transform target)
+    {
+        //Spawn Gold pickup
+        int coinsToSpawn = Mathf.CeilToInt(goldToDrop / 2f);
+        int goldPerCoin = goldToDrop / coinsToSpawn;
+        int remainderGold = goldToDrop % coinsToSpawn;
+        for (int i = 0; i < coinsToSpawn; i++)
+        {
+            GoldPickup goldPickup = ObjectPool.Instance.GetPooledObject("Gold", true) as GoldPickup;
+            goldPickup.transform.position = target.transform.position;
+            int amountToGive = goldPerCoin + (i < remainderGold ? 1 : 0);
+            goldPickup.InitGoldPickup(amountToGive);
+        }
     }
 
     public void ShowDialoguePopup(int index)
