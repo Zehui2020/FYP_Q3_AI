@@ -6,27 +6,7 @@ public class WFC_MapGeneration : MonoBehaviour
 {
     [Header("General Settings")]
     [SerializeField] private MapData mData;
-    [SerializeField] private Vector2 mapSize;
-    [SerializeField] private float tileSize;
-    [SerializeField] private int borderThickness;
-    [SerializeField] private int mapSeed;
     [SerializeField] private ChestSpawnChance chestSpawn;
-    [SerializeField] private MapTileController tileController;
-    [Header("Main Prefabs")]
-    [SerializeField] private List<GameObject> startingTilePrefabs = new List<GameObject>();
-    [SerializeField] private List<GameObject> allTilePrefabs = new List<GameObject>();
-    [Header("Edge Prefabs")]
-    [SerializeField] private List<GameObject> topBorderTiles = new List<GameObject>();
-    [SerializeField] private List<GameObject> bottomBorderTiles = new List<GameObject>();
-    [SerializeField] private List<GameObject> leftBorderTiles = new List<GameObject>();
-    [SerializeField] private List<GameObject> rightBorderTiles = new List<GameObject>();
-    [Header("Corner Prefabs")]
-    [SerializeField] private List<GameObject> topLeftCornerTiles = new List<GameObject>();
-    [SerializeField] private List<GameObject> topRightCornerTiles = new List<GameObject>();
-    [SerializeField] private List<GameObject> bottomLeftCornerTiles = new List<GameObject>();
-    [SerializeField] private List<GameObject> bottomRightCornerTiles = new List<GameObject>();
-    [Header("Perimeter Prefabs")]
-    [SerializeField] private List<GameObject> solidTile = new List<GameObject>();
     [Header("Miscellanous Prefabs")]
     [SerializeField] private GameObject doorPrefab;
     [SerializeField] private GameObject portalPrefab;
@@ -38,6 +18,25 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private Transform cam;
     [SerializeField] private FogOfWar fow;
 
+    // tile settings
+    private MapTileController tileController;
+    private Vector2 mapSize;
+    private float tileSize;
+    private int borderThickness;
+    private int mapSeed;
+    // tile prefabs
+    private List<GameObject> startingTilePrefabs = new List<GameObject>();
+    private List<GameObject> allTilePrefabs = new List<GameObject>();
+    private List<GameObject> topBorderTiles = new List<GameObject>();
+    private List<GameObject> bottomBorderTiles = new List<GameObject>();
+    private List<GameObject> leftBorderTiles = new List<GameObject>();
+    private List<GameObject> rightBorderTiles = new List<GameObject>();
+    private List<GameObject> topLeftCornerTiles = new List<GameObject>();
+    private List<GameObject> topRightCornerTiles = new List<GameObject>();
+    private List<GameObject> bottomLeftCornerTiles = new List<GameObject>();
+    private List<GameObject> bottomRightCornerTiles = new List<GameObject>();
+    private List<GameObject> solidTile = new List<GameObject>();
+    // others
     private List<MapTile> mapTiles = new List<MapTile>();
     private List<Vector2> collapsableTiles = new List<Vector2>();
     private List<Vector2> collapsedTiles = new List<Vector2>();
@@ -51,12 +50,13 @@ public class WFC_MapGeneration : MonoBehaviour
 
     public void InitMapGenerator()
     {
-        tileController.InitMapTiles();
+        tileController = GetComponent<MapTileController>();
+        tileController.InitMapTiles(mData);
         AssignMapVariables();
-        SetSeed();
 
         tileSprites = tilemapManager.GetAllTileSprites();
 
+        SetSeed();
         GenerateMap();
 
         foreach (ParallaxEffect parallaxEffect in bgs)
