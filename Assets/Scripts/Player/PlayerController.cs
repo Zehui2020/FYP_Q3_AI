@@ -5,7 +5,6 @@ using TMPro;
 using UnityEngine;
 using static BaseStats.Damage;
 using static MovementController;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PlayerController : PlayerStats
 {
@@ -56,6 +55,9 @@ public class PlayerController : PlayerStats
     [SerializeField] private TextMeshProUGUI goldText;
     public int gold = 0;
 
+    private Timer timer;
+    [SerializeField] private TextMeshProUGUI timerText;
+
     private float horizontal;
     private float vertical;
 
@@ -103,6 +105,8 @@ public class PlayerController : PlayerStats
         healthBar.InitStatBar(health, maxHealth);
         shieldBar.InitStatBar(shield, maxShield);
 
+        timer = Timer.Instance;
+
         OnHealthChanged += (increase, isCrit) => 
         { 
             if (!increase) 
@@ -122,8 +126,20 @@ public class PlayerController : PlayerStats
 
     private void Update()
     {
+        // Timer
+        if (timer.timer <= 3600f)
+        {
+            var ts = System.TimeSpan.FromSeconds(timer.timer);
+            timerText.text = string.Format("{0:00}:{1:00}", ts.Minutes, ts.Seconds);
+        }
+        else
+        {
+            var ts = System.TimeSpan.FromSeconds(timer.timer);
+            timerText.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
+        }
+
         // Console
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.Backslash))
             ConsoleManager.Instance.SetConsole();
 
         if (Input.GetKeyDown(KeyCode.Return))
@@ -180,10 +196,15 @@ public class PlayerController : PlayerStats
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
 
-        if (ConsoleManager.Instance.gameObject.activeInHierarchy || 
-            movementController.currentState == MovementState.Knockback ||
+        if (ConsoleManager.Instance.gameObject.activeInHierarchy ||
             currentState == PlayerStates.Hurt)
             return;
+
+        if (movementController.currentState == MovementState.Knockback)
+        {
+            movementController.CheckGroundCollision();
+            return;
+        }
 
         // Combat Inputs
         if (Input.GetMouseButton(0))
@@ -301,7 +322,7 @@ public class PlayerController : PlayerStats
 
     private void FixedUpdate()
     {
-        if (health <= 0 || movementController.currentState == MovementState.Knockback)
+        if (health <= 0)
             return;
 
         movementController.MovePlayer(movementSpeedMultiplier.GetTotalModifier());
@@ -787,7 +808,7 @@ public class PlayerController : PlayerStats
         randNum = Random.Range(0, 100);
         if (randNum < itemStats.interestChance)
             goldToDrop *= 2;
-        gold += goldToDrop;
+        SpawnGoldPickup(goldToDrop, target.transform);
 
         // NRG Bar
         randNum = Random.Range(0, 100);
@@ -892,6 +913,21 @@ public class PlayerController : PlayerStats
         dialogueManager.HideDialogue();
     }
 
+    public void SpawnGoldPickup(int goldToDrop, Transform target)
+    {
+        //Spawn Gold pickup
+        int coinsToSpawn = Mathf.CeilToInt(goldToDrop / 2f);
+        int goldPerCoin = goldToDrop / coinsToSpawn;
+        int remainderGold = goldToDrop % coinsToSpawn;
+        for (int i = 0; i < coinsToSpawn; i++)
+        {
+            GoldPickup goldPickup = ObjectPool.Instance.GetPooledObject("Gold", true) as GoldPickup;
+            goldPickup.transform.position = target.transform.position;
+            int amountToGive = goldPerCoin + (i < remainderGold ? 1 : 0);
+            goldPickup.InitGoldPickup(amountToGive);
+        }
+    }
+
     public void ShowDialoguePopup(int index)
     {
         dialogueManager.ShowDialoguePopup(index);
@@ -911,6 +947,11 @@ public class PlayerController : PlayerStats
     public void GiveAllItems()
     {
         itemManager.GiveAllItems();
+    }
+
+    public void GiveAbility(string itemName, string amount)
+    {
+        itemManager.GiveAbility(itemName, amount);
     }
 
     private void OnApplicationQuit()

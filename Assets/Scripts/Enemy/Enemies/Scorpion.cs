@@ -26,6 +26,7 @@ public class Scorpion : Enemy
     [SerializeField] private float meleeRange;
     [SerializeField] private float throwCooldown;
     [SerializeField] private Transform bombSpawnPos;
+    [SerializeField] private float throwDistance;
     private bool canThrow = true;
 
     public override void InitializeEnemy()
@@ -84,7 +85,10 @@ public class Scorpion : Enemy
     {
         base.UpdateEnemy();
 
-        if (Vector2.Distance(player.transform.position, transform.position) <= meleeRange && 
+        if (currentState == State.Throw &&
+            Vector2.Distance(player.transform.position, transform.position) >= throwDistance)
+            ChangeState(State.Patrol);
+        else if (Vector2.Distance(player.transform.position, transform.position) <= meleeRange && 
             currentState != State.Melee && 
             currentState != State.Throw &&
             currentState != State.Hurt)
