@@ -78,6 +78,9 @@ public class ScorpionBomb : PooledObject
             if (!hit.TryGetComponent<BaseStats>(out BaseStats target))
                 continue;
 
+            if (isParried && hit.CompareTag("Player"))
+                continue;
+
             float damage = thrower.CalculateDamageDealt(target, BaseStats.Damage.DamageSource.Normal, out bool crit, out DamagePopup.DamageType damageType);
 
             if (isParried && target == thrower)

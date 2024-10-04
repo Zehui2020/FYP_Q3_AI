@@ -22,7 +22,9 @@ public class Item : ScriptableObject
     [TextArea(3, 10)]
     public string title;
     [TextArea(3, 10)]
-    public string description;  
+    public string description;
+    [TextArea(3, 10)]
+    public string simpleDescription;
     public int itemStack;
     public float alertDuration;
     public Material itemOutlineMaterial;

@@ -24,6 +24,7 @@ public class ParallaxEffect : MonoBehaviour
         this.mapSizeY = mapSizeY;
 
         mapOriginY = mapSizeY / 2f;
+        transform.position = player.transform.position;
         startPos = transform.position;
     }
 
@@ -39,7 +40,7 @@ public class ParallaxEffect : MonoBehaviour
     {
         // Parallax X
         float dist = followPos.transform.position.x * parallaxEffect;
-        transform.position = new Vector3(startPos.x + dist, transform.position.y, transform.position.z);
+        transform.position = new Vector3(startPos.x - dist, transform.position.y, transform.position.z);
 
         // Parallax Y
         if (mapSizeY == 0)
@@ -47,8 +48,8 @@ public class ParallaxEffect : MonoBehaviour
 
         float diff = transform.position.y - mapOriginY;
         float offsetY = Mathf.Abs(transform.position.y - mapSizeY) / mapSizeY * YDiff;
-        offsetY = diff < 0 ? offsetY : -offsetY;
+        offsetY = diff < 0 ? offsetY * parallaxEffect : -offsetY * parallaxEffect;
         offsetY = Mathf.Clamp(offsetY, -YDiff, YDiff);
-        transform.position = new Vector3(transform.position.x, followPos.transform.position.y + offsetY, 0);
+        transform.position = new Vector3(transform.position.x, followPos.transform.position.y + offsetY, transform.position.z);
     }
 }

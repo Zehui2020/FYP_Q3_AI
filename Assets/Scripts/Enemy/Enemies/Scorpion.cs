@@ -87,7 +87,10 @@ public class Scorpion : Enemy
 
         if (currentState == State.Throw &&
             Vector2.Distance(player.transform.position, transform.position) >= throwDistance)
+        {
             ChangeState(State.Patrol);
+            isInCombat = false;
+        }
         else if (Vector2.Distance(player.transform.position, transform.position) <= meleeRange && 
             currentState != State.Melee && 
             currentState != State.Throw &&
@@ -97,7 +100,8 @@ public class Scorpion : Enemy
             canThrow &&
             currentState != State.Throw &&
             currentState != State.Melee &&
-            currentState != State.Hurt)
+            currentState != State.Hurt &&
+            Vector2.Distance(player.transform.position, transform.position) < throwDistance)
             ChangeState(State.Throw);
         else if (canThrow &&
             CheckChasePlayer() &&

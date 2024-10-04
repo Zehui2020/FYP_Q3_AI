@@ -30459,7 +30459,7 @@ MonoBehaviour:
   particleVFXManager: {fileID: 2269671507873526722}
   statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
-  abilityStats: {fileID: 0}
+  abilityStats: {fileID: 11400000, guid: 637d944b389817a4e8d8bbb63c6c2cda, type: 2}
   health: 100000000
   maxHealth: 100000000
   shield: 100
@@ -30524,6 +30524,7 @@ MonoBehaviour:
   hurtValue: 0
   parryDazeDuration: 3
   parryShieldReduction: 20
+  knockbackOnParry: 1
 --- !u!114 &1478723252960053222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30540,6 +30541,7 @@ MonoBehaviour:
   healthBar: {fileID: 5437123551412033776}
   shieldBar: {fileID: 1752803553631888940}
   alertSignal: {fileID: 4188713818559678120}
+  canvasGroup: {fileID: 0}
 --- !u!114 &8058715310140854864
 MonoBehaviour:
   m_ObjectHideFlags: 0

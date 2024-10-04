@@ -46,7 +46,7 @@ public class ComfyWebsocket : MonoBehaviour
             while (!result.EndOfMessage);
 
             string response = stringBuilder.ToString();
-            Debug.Log("Received: " + response);
+            //Debug.Log("Received: " + response);
 
             if (ParsePromptID(response).Equals(promptID))
             {

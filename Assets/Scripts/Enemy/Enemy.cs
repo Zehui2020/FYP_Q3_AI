@@ -30,6 +30,7 @@ public class Enemy : EnemyStats
     [SerializeField] protected int hurtValue;
     [SerializeField] protected float parryDazeDuration;
     [SerializeField] protected float parryShieldReduction;
+    [SerializeField] protected bool knockbackOnParry = true;
 
     protected int currentWaypoint = 0;
 
@@ -74,7 +75,7 @@ public class Enemy : EnemyStats
         statusEffectManager.OnApplyStatusEffect += TriggerStatusEffect;
         statusEffectManager.OnCleanse += OnCleanse;
 
-        onPlayerInChaseRange += () => { isInCombat = true; uiController.SetCanvasActive(true); };
+        onPlayerInChaseRange += () => { isInCombat = true; uiController.SetCanvasActive(true); uiController.ShowSpottedSignal(); };
         OnHealthChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };
         OnShieldChanged += (increase, isCrit, duration) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnShieldChanged(shield, maxShield, increase, duration, isCrit); };
         OnBreached += (multiplier) => 
@@ -87,9 +88,9 @@ public class Enemy : EnemyStats
         onHitEvent += player.OnHitEnemyEvent;
         OnDieEvent += (target) => 
         {
+            animator.speed = 1;
             player.OnEnemyDie(target);
             uiController.SetCanvasActive(false);
-            animator.speed = 1;
         };
 
         player.OnParry += (target) => 
@@ -97,13 +98,18 @@ public class Enemy : EnemyStats
             if (target != this)
                 return;
 
-            Knockback(15f);
+            if (knockbackOnParry)
+                Knockback(15f);
+
             OnGetParried();
         };
     }
 
     private void Update()
     {
+        if (uiController != null && (!isInCombat || health <= 0))
+            uiController.SetCanvasActive(false);
+
         if (!isEnemy)
             return;
 
@@ -147,8 +153,6 @@ public class Enemy : EnemyStats
         statusEffectManager.UpdateStatusEffects();
 
         CheckPlayerOverlap();
-        if (!isInCombat || health <= 0)
-            uiController.SetCanvasActive(false);
     }
 
     public void OnDamageEventStart(int col)

@@ -11,6 +11,7 @@ public class ItemPickupAlert : MonoBehaviour
     [SerializeField] private Image itemIcon;
     [SerializeField] private TextMeshProUGUI title;
     [SerializeField] private TextMeshProUGUI description;
+    [SerializeField] private PlayerPrefs playerPrefs;
 
     [SerializeField] private List<Item> itemsToDisplay = new List<Item>();
     private Coroutine showItemRoutine;
@@ -35,7 +36,11 @@ public class ItemPickupAlert : MonoBehaviour
         outlineMaterial = new Material(itemsToDisplay[0].itemOutlineMaterial);
         itemIcon.material = outlineMaterial;
         title.text = itemsToDisplay[0].title;
-        description.text = itemsToDisplay[0].description;
+
+        if (playerPrefs.detailedDescription)
+            description.text = itemsToDisplay[0].description;
+        else
+            description.text = itemsToDisplay[0].simpleDescription;
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(itemPickupAlertCanvas);
 

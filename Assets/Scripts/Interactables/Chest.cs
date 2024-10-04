@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using DesignPatterns.ObjectPool;
+using UnityEngine.UI;
 
 public class Chest : MonoBehaviour, IInteractable
 {
@@ -24,6 +25,9 @@ public class Chest : MonoBehaviour, IInteractable
         public int legendaryItemRate;
     }
     public ChestType chestType;
+
+    [SerializeField] private LayerMask defaultLayer;
+    [SerializeField] private GameObject minimapIcon;
 
     [SerializeField] private SimpleAnimation keycodeUI;
 
@@ -123,6 +127,10 @@ public class Chest : MonoBehaviour, IInteractable
 
         costText.text = cost.ToString();
         canvas.gameObject.SetActive(true);
+
+        int layer = Mathf.RoundToInt(Mathf.Log(defaultLayer.value) / Mathf.Log(2));
+        gameObject.layer = layer;
+        minimapIcon.SetActive(true);
     }
 
     public void OnLeaveRange()

@@ -273,7 +273,7 @@ public class AbilityController : MonoBehaviour
     {
         for (int i = 0; i < abilityCooldownRoutines.Count; i++)
         {
-            if (abilityCooldownRoutines[i] != null)
+            if (abilityCooldownRoutines[i] == null)
                 continue;
 
             StopCoroutine(abilityCooldownRoutines[i]);

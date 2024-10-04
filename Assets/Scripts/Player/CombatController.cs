@@ -47,6 +47,8 @@ public class CombatController : MonoBehaviour
 
         player.critRate.RemoveModifier(wData.critRate);
         player.critDamage.RemoveModifier(wData.critDamage);
+        player.comboDamageMultipler.RemoveAllModifiers();
+        player.breachDamageMultiplier.RemoveAllModifiers();
 
         wData = newData;
         weaponEffectAnimator.runtimeAnimatorController = wData.effectController;
@@ -93,11 +95,6 @@ public class CombatController : MonoBehaviour
         canAttack = false;
 
         player.comboDamageMultipler.ReplaceAllModifiers(wData.attackMultipliers[attackComboCount]);
-        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.attackAnimations[attackComboCount].name), player.attackSpeedMultiplier.GetTotalModifier());
-        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, AnimationManager.AnimType.ResetIfSame);
-
-        weaponEffectAnimator.speed = player.attackSpeedMultiplier.GetTotalModifier();
-        weaponEffectAnimator.Play(Animator.StringToHash(wData.attackEffectAnimations[attackComboCount].name), -1, 0);
 
         if (attackComboCount - 1 >= 0)
             player.breachDamageMultiplier.RemoveModifier(wData.breachMultipliers[attackComboCount - 1]);
@@ -105,6 +102,11 @@ public class CombatController : MonoBehaviour
             player.breachDamageMultiplier.RemoveModifier(wData.breachMultipliers[wData.breachMultipliers.Count - 1]);
 
         player.breachDamageMultiplier.AddModifier(wData.breachMultipliers[attackComboCount]);
+
+        animationManager.SetAttackAnimationClip(Animator.StringToHash(wData.attackAnimations[attackComboCount].name), player.attackSpeedMultiplier.GetTotalModifier());
+        animationManager.ChangeAnimation(animationManager.GetAttackAnimation(), 0, 0, AnimationManager.AnimType.ResetIfSame);
+        weaponEffectAnimator.speed = player.attackSpeedMultiplier.GetTotalModifier();
+        weaponEffectAnimator.Play(Animator.StringToHash(wData.attackEffectAnimations[attackComboCount].name), -1, 0);
 
         attackComboCount++;
         if (attackComboCount >= wData.attackAnimations.Count)
@@ -122,8 +124,10 @@ public class CombatController : MonoBehaviour
 
     public void ResetComboInstantly()
     {
+        player.comboDamageMultipler.RemoveAllModifiers();
+        player.breachDamageMultiplier.RemoveAllModifiers();
+
         attackComboCount = 0;
-        canAttack = true;
     }
 
     public void ResetComboAttack()
@@ -137,6 +141,8 @@ public class CombatController : MonoBehaviour
     {
         yield return new WaitForSeconds(wData.comboCooldown);
 
+        player.comboDamageMultipler.RemoveAllModifiers();
+        player.breachDamageMultiplier.RemoveAllModifiers();
         attackComboCount = 0;
     }
 

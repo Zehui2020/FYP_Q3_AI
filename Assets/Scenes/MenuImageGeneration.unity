@@ -8752,6 +8752,7 @@ MonoBehaviour:
   hurtValue: 0
   parryDazeDuration: 0
   parryShieldReduction: 0
+  knockbackOnParry: 1
   bgManager: {fileID: 8045318398188915861}
   OnTakeDamage:
     m_PersistentCalls:
@@ -81408,7 +81409,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.48, y: 1.69}
+  m_Size: {x: 5, y: 1.69}
   m_EdgeRadius: 0
 --- !u!1 &1820867910
 GameObject:
@@ -81558,6 +81559,7 @@ GameObject:
   - component: {fileID: 1935641785}
   - component: {fileID: 1935641784}
   - component: {fileID: 1935641783}
+  - component: {fileID: 1935641786}
   m_Layer: 3
   m_Name: Level
   m_TagString: Untagged
@@ -83332,7 +83334,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1935641779}
-  m_BodyType: 1
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -83387,6 +83389,19 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
+--- !u!114 &1935641786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1935641779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a98fe1ccd6de1349a01abaa80b890eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selfShadows: 1
 --- !u!1 &1967824463
 GameObject:
   m_ObjectHideFlags: 0
@@ -84433,11 +84448,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4244297823773341852, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 375
+      value: 325
       objectReference: {fileID: 0}
     - target: {fileID: 4244297823773341852, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -70.91
+      value: -86.82
       objectReference: {fileID: 0}
     - target: {fileID: 4489551272009872373, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: m_AnchorMax.y
@@ -84498,6 +84513,10 @@ PrefabInstance:
     - target: {fileID: 5213768507335247669, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6158317673802252260, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6216011399420527096, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: timeBtwChars
@@ -84641,7 +84660,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8105865153957257918, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 550
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 8105865153957257918, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: m_AnchoredPosition.y

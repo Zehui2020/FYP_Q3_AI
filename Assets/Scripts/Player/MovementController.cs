@@ -242,10 +242,16 @@ public class MovementController : MonoBehaviour
             return;
         }
 
-        if (rope != null && vertical > 0 && rope.CheckCannotGrapple(transform))
+        if (rope != null && vertical > 0 && rope.CheckCannotGrappleUp(transform))
         {
             StopGrappling();
             ChangeState(MovementState.Idle);
+            return;
+        }
+        else if (rope != null && vertical < 0 && rope.CheckCannotGrappleDown(transform))
+        {
+            StopGrappling();
+            ChangeState(MovementState.Falling);
             return;
         }
 
@@ -448,7 +454,9 @@ public class MovementController : MonoBehaviour
             currentState != MovementState.LedgeGrab &&
             currentState != MovementState.Roll &&
             currentState != MovementState.LungeRoll &&
-            currentState != MovementState.Plunge)
+            currentState != MovementState.Plunge &&
+            currentState != MovementState.Grapple &&
+            currentState != MovementState.GrappleIdle)
         {
             dashRoutine = StartCoroutine(DashRoutine(direction));
             return true;
@@ -689,7 +697,9 @@ public class MovementController : MonoBehaviour
                 && currentState != MovementState.GroundDash &&
                 currentState != MovementState.Plunge &&
                 currentState != MovementState.Running &&
-                currentState != MovementState.Knockback)
+                currentState != MovementState.Knockback &&
+                currentState != MovementState.Grapple &&
+                currentState != MovementState.GrappleIdle)
                 ChangeState(MovementState.Idle);
 
             isGrounded = true;

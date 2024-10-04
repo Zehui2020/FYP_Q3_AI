@@ -136,11 +136,13 @@ public class Slime : Enemy
             return true;
         }
 
-        if (!Physics2D.OverlapCircle(transform.position, chaseRange, playerLayer))
+        if (!Physics2D.OverlapCircle(transform.position, chaseRange, playerLayer) && player.IsGrounded())
         {
             ChangeState(State.Teleport);
             return true;
         }
+
+        ChangeState(State.Idle);
 
         return false;
     }

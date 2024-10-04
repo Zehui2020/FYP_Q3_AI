@@ -19,12 +19,20 @@ public class Rope : MonoBehaviour
         minRopeHeight = transform.position.y - transform.localScale.y / 2f;
     }
 
-    public bool CheckCannotGrapple(Transform grappler)
+    public bool CheckCannotGrappleUp(Transform grappler)
     {
         if (grappler == null)
             return false;
 
-        return grappler.position.y >= maxRopeHeight || grappler.position.y < minRopeHeight;
+        return grappler.position.y - 0.5f >= maxRopeHeight;
+    }
+
+    public bool CheckCannotGrappleDown(Transform grappler)
+    {
+        if (grappler == null)
+            return false;
+
+        return grappler.position.y + 0.5f < minRopeHeight;
     }
     
     public void GrappleStart()
@@ -38,7 +46,6 @@ public class Rope : MonoBehaviour
                 platforms[i].colliderMask -= playerLayer;
             }
         }
-        //platform.colliderMask -= playerLayer;
         isGrappling = true;
     }
 
@@ -53,7 +60,6 @@ public class Rope : MonoBehaviour
                 platforms[i].colliderMask += playerLayer;
             }
         }
-        //platform.colliderMask += playerLayer;
         isGrappling = false;
     }
 }
