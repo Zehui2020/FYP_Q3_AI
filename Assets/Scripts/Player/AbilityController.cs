@@ -204,6 +204,8 @@ public class AbilityController : MonoBehaviour
                     }
                 }
             }
+            if (targetsInArea.Count == 0)
+                return;
             for (int i = 0; i < targetsInArea.Count; i++)
             {
                 abilities[abilityNo].OnAbilityUse(player, targetsInArea[i]);
