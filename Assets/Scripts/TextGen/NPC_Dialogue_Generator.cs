@@ -20,7 +20,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     public string AI_Example_Output_1;
     public string AI_Example_Output_2;
 
-    public string AI_Exit_Text;
+    //public string AI_Exit_Text;
 
     private PlayerController playerController;
     private Rigidbody2D playerRB;
@@ -81,7 +81,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             "This is the NPC's backstory:  " +
             "~" + AI_CharacterContext + "~ " +
             "In this environment, address the user as Lone One, " +
-            "keep your responses less than 100 words, " +
+            "keep your responses less than 50 words, " +
             "your responses should be purely dialogue, " +
             "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
             "and do not show XML tags other than these ones: <result></result>" +
@@ -126,7 +126,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                 "This is the NPC's backstory:  " +
                 "~" + AI_CharacterContext + "~ " +
                 "In this environment, address the user as Lone One, " +
-                "keep your responses less than 100 words, " +
+                "keep your responses less than 50 words, " +
                 "your responses should be purely dialogue, " +
                 "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
                 "and do not show XML tags other than these ones: <result></result>" +
@@ -180,7 +180,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                         "This is the NPC's backstory:  " +
                         "~" + AI_CharacterContext + "~ " +
                         "In this environment, address the user as Lone One, " +
-                        "keep your responses less than 100 words, " +
+                        "keep your responses less than 50 words, " +
                         "your responses should be purely dialogue, " +
                         "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
                         "and do not show XML tags other than these ones: <result></result>" +
@@ -202,7 +202,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                         "This is the NPC's backstory:  " +
                         "~" + AI_CharacterContext + "~ " +
                         "In this environment, address the user as Lone One, " +
-                        "keep your responses less than 100 words, " +
+                        "keep your responses less than 50 words, " +
                         "your responses should be purely dialogue, " +
                         "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
                         "and do not show XML tags other than these ones: <result></result>" +
@@ -228,7 +228,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                         "This is the NPC's backstory:  " +
                         "~" + AI_CharacterContext + "~ " +
                         "In this environment, address the user as Lone One, " +
-                        "keep your responses less than 100 words, " +
+                        "keep your responses less than 50 words, " +
                         "your responses should be purely dialogue, " +
                         "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
                         "and do not show XML tags other than these ones: <result></result>" +
@@ -250,7 +250,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                         "This is the NPC's backstory:  " +
                         "~" + AI_CharacterContext + "~ " +
                         "In this environment, address the user as Lone One, " +
-                        "keep your responses less than 100 words, " +
+                        "keep your responses less than 50 words, " +
                         "your responses should be purely dialogue, " +
                         "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
                         "and do not show XML tags other than these ones: <result></result>" +
@@ -290,7 +290,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             "This is the NPC's backstory:  " +
             "~" + AI_CharacterContext + "~ " +
             "In this environment, address the user as Lone One, " +
-            "keep your responses less than 100 words, " +
+            "keep your responses less than 50 words, " +
             "your responses should be purely dialogue, " +
             "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
             "and do not show XML tags other than these ones: <result></result>" +
@@ -310,7 +310,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             "This is the NPC's backstory:  " +
             "~" + AI_CharacterContext + "~ " +
             "In this environment, address the user as Lone One, " +
-            "keep your responses less than 100 words, " +
+            "keep your responses less than 50 words, " +
             "your responses should be purely dialogue, " +
             "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
             "and do not show XML tags other than these ones: <result></result>" +
@@ -425,7 +425,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             if (e.Data != null)
             {
                 //Note: These are actually errors. This is just to distinguish the Text Generation from the Statistics Output
-                UnityEngine.Debug.Log(e.Data);
+                //UnityEngine.Debug.Log(e.Data);
             }
         };
 
