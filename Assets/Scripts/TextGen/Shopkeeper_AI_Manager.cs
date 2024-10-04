@@ -89,7 +89,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
             "This is the NPC's backstory:  " +
             "~" + AI_CharacterContext + "~ " +
             "In this environment, address the user as Adventurer, " +
-            "keep your responses less than 100 words, " +
+            "keep your responses less than 50 words, " +
             "your responses should be purely dialogue, " +
             "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
             "and do not show XML tags other than these ones: <result></result>" +
@@ -118,7 +118,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
                 "This is the NPC's backstory:  " +
                 "~" + AI_CharacterContext + "~ " +
                 "In this environment, address the user as Adventurer, " +
-                "keep your responses less than 100 words, " +
+                "keep your responses less than 50 words, " +
                 "your responses should be purely dialogue, " +
                 "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
                 "and do not show XML tags other than these ones: <result></result>" +
@@ -153,7 +153,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
                         "This is the NPC's backstory:  " +
                         "~" + AI_CharacterContext + "~ " +
                         "In this environment, address the user as Adventurer, " +
-                        "keep your responses less than 100 words, " +
+                        "keep your responses less than 50 words, " +
                         "your responses should be purely dialogue, " +
                         "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
                         "and do not show XML tags other than these ones: <result></result>" +
@@ -175,7 +175,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
                         "This is the NPC's backstory:  " +
                         "~" + AI_CharacterContext + "~ " +
                         "In this environment, address the user as Adventurer, " +
-                        "keep your responses less than 100 words, " +
+                        "keep your responses less than 50 words, " +
                         "your responses should be purely dialogue, " +
                         "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
                         "and do not show XML tags other than these ones: <result></result>" +
@@ -201,7 +201,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
                         "This is the NPC's backstory:  " +
                         "~" + AI_CharacterContext + "~ " +
                         "In this environment, address the user as Adventurer, " +
-                        "keep your responses less than 100 words, " +
+                        "keep your responses less than 50 words, " +
                         "your responses should be purely dialogue, " +
                         "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
                         "and do not show XML tags other than these ones: <result></result>" +
@@ -223,7 +223,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
                         "This is the NPC's backstory:  " +
                         "~" + AI_CharacterContext + "~ " +
                         "In this environment, address the user as Adventurer, " +
-                        "keep your responses less than 100 words, " +
+                        "keep your responses less than 50 words, " +
                         "your responses should be purely dialogue, " +
                         "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
                         "and do not show XML tags other than these ones: <result></result>" +
@@ -263,7 +263,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
             "This is the NPC's backstory:  " +
             "~" + AI_CharacterContext + "~ " +
             "In this environment, address the user as Adventurer, " +
-            "keep your responses less than 100 words, " +
+            "keep your responses less than 50 words, " +
             "your responses should be purely dialogue, " +
             "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
             "and do not show XML tags other than these ones: <result></result>" +
@@ -283,7 +283,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
             "This is the NPC's backstory:  " +
             "~" + AI_CharacterContext + "~ " +
             "In this environment, address the user as Adventurer, " +
-            "keep your responses less than 100 words, " +
+            "keep your responses less than 50 words, " +
             "your responses should be purely dialogue, " +
             "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
             "and do not show XML tags other than these ones: <result></result>" +
