@@ -100,7 +100,7 @@ public class Chest : MonoBehaviour, IInteractable
             if (chestType.type == ChestType.Type.Ability)
             {
                 randNum = Random.Range(0, abilities.Count);
-                PlayerController.Instance.abilityController.SpawnAbilityPickUp(abilities[randNum]);
+                PlayerController.Instance.abilityController.SpawnAbilityPickUp(abilities[randNum], transform);
                 continue;
             }
             randNum = Random.Range(0, items.Count);
