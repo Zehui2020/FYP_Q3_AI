@@ -16,4 +16,5 @@ public class MapData : ScriptableObject
     public List<GameObject> deadEndTilePrefabs;
     public List<GameObject> uniqueTilePrefabs;
     public List<GameObject> solidTilePrefabs;
+    public List<GameObject> shopTilePrefabs;
 }
