@@ -16,8 +16,7 @@ public class TextAnalysis : MonoBehaviour
     private bool threadStarted = false;
     private Vector3 SentimentAnalysisResponse;
 
-    //Shimba's shop system
-    public AISystemManager Mood_ShopSystem;
+    public event System.Action<int> OnMoodChanged;
 
     void OnEnable()
     {
@@ -108,37 +107,37 @@ public class TextAnalysis : MonoBehaviour
 
         if (Mood_Meter < 60)
         {
-            Mood_ShopSystem.BargainItemPrice(0);
+            OnMoodChanged?.Invoke(0);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter >= 60 && Mood_Meter < 70)
         {
-            Mood_ShopSystem.BargainItemPrice(1);
+            OnMoodChanged?.Invoke(1);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter >= 70 && Mood_Meter < 80)
         {
-            Mood_ShopSystem.BargainItemPrice(2);
+            OnMoodChanged?.Invoke(2);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter >= 80 && Mood_Meter < 90)
         {
-            Mood_ShopSystem.BargainItemPrice(3);
+            OnMoodChanged?.Invoke(3);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter >= 90 && Mood_Meter < 100)
         {
-            Mood_ShopSystem.BargainItemPrice(4);
+            OnMoodChanged?.Invoke(4);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter == 100)
         {
-            Mood_ShopSystem.BargainItemPrice(5);
+            OnMoodChanged?.Invoke(5);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
@@ -148,6 +147,11 @@ public class TextAnalysis : MonoBehaviour
     private void Errors(int errorCode, string errorMessage)
     {
         Debug.Log(errorMessage + "\nCode: " + errorCode);
+    }
+
+    private void OnDisable()
+    {
+        OnMoodChanged = null;
     }
 }
 
