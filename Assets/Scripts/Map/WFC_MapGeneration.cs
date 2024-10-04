@@ -30,6 +30,7 @@ public class WFC_MapGeneration : MonoBehaviour
     // tile prefabs
     private List<GameObject> startingTilePrefabs = new();
     private List<GameObject> allTilePrefabs = new();
+    private List<GameObject> shopTilePrefabs = new();
     private List<GameObject> topEdgeTilePrefabs = new();
     private List<GameObject> bottomEdgeTilePrefabs = new();
     private List<GameObject> leftEdgeTilePrefabs = new();
@@ -51,6 +52,7 @@ public class WFC_MapGeneration : MonoBehaviour
     private Vector2 currTilePos;
     private Vector2 startingTilePos;
     private FogOfWar fogOfWar;
+    private bool isShopPlaced = false;
 
     public void InitMapGenerator()
     {
@@ -117,6 +119,8 @@ public class WFC_MapGeneration : MonoBehaviour
         allTilePrefabs.AddRange(mapTileController.autoInitTilePrefabs);
         allTilePrefabs.AddRange(mapTileController.deadEndTilePrefabs);
         allTilePrefabs.AddRange(mapTileController.uniqueTilePrefabs);
+        allTilePrefabs.AddRange(mapTileController.shopTilePrefabs);
+        shopTilePrefabs.AddRange(mapTileController.shopTilePrefabs);
         for (int i = 0; i < allTilePrefabs.Count; i++)
         {
             if (allTilePrefabs[i].name.Contains("1U_1D"))
@@ -189,7 +193,8 @@ public class WFC_MapGeneration : MonoBehaviour
         if (availableTiles.Count == 0)
             Debug.Log(currTilePos);
         // choose random tile
-        GameObject tileToSet = availableTiles[Random.Range(0, availableTiles.Count)];
+        int ranIndex = Random.Range(0, availableTiles.Count);
+        GameObject tileToSet = availableTiles[ranIndex];
         if (tileToSet == null)
             return;
         // set room tile
@@ -485,6 +490,37 @@ public class WFC_MapGeneration : MonoBehaviour
                 availableTiles.Remove(tilesToRemove[i]);
             }
         }
+        if (!isShopPlaced)
+        {
+            List<GameObject> availableShopTiles = new();
+            for (int i = 0; i < shopTilePrefabs.Count; i++)
+            {
+                if (availableTiles.Contains(shopTilePrefabs[i]))
+                {
+                    availableShopTiles.Add(shopTilePrefabs[i]);
+                }
+            }
+            if (availableShopTiles.Count > 0)
+            {
+                isShopPlaced = true;
+                return availableShopTiles;
+            }
+        }
+        else
+        {
+            tilesToRemove.Clear();
+            for (int i = 0; i < availableTiles.Count; i++)
+            {
+                if (shopTilePrefabs.Contains(availableTiles[i]))
+                {
+                    tilesToRemove.Add(availableTiles[i]);
+                }
+            }
+            for (int i = 0; i < tilesToRemove.Count; i++)
+            {
+                availableTiles.Remove(tilesToRemove[i]);
+            }
+        }
         return availableTiles;
     }
 
@@ -496,10 +532,10 @@ public class WFC_MapGeneration : MonoBehaviour
         List<GameObject> availableTilesFromLeft = GetAvailableTilesListFromNeighbour(Vector2.left);
         List<GameObject> availableTilesFromRight = GetAvailableTilesListFromNeighbour(Vector2.right);
 
-        List<string> NameUp = new List<string>();
-        List<string> NameDown = new List<string>();
-        List<string> NameLeft = new List<string>();
-        List<string> NameRight = new List<string>();
+        List<string> NameUp = new();
+        List<string> NameDown = new();
+        List<string> NameLeft = new();
+        List<string> NameRight = new();
         foreach (GameObject obj in availableTilesFromUp)
         {
             obj.name = obj.name.Replace("(Clone)", "").Trim();
@@ -522,8 +558,8 @@ public class WFC_MapGeneration : MonoBehaviour
         }
 
         // get list of tiles that are available in each list
-        List<GameObject> availableTiles = new List<GameObject>();
-        List<GameObject> tilesToRemove = new List<GameObject>();
+        List<GameObject> availableTiles = new();
+        List<GameObject> tilesToRemove = new();
         availableTiles.AddRange(allTilePrefabs);
         for (int i = 0; i < availableTiles.Count; i++)
         {
