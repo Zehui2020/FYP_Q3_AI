@@ -6,7 +6,6 @@ public class WFC_MapGeneration : MonoBehaviour
 {
     [Header("Map Settings")]
     [SerializeField] private MapData mData;
-    [SerializeField] private ChestSpawnChance chestSpawn;
     [Header("Map Object Prefabs")]
     [SerializeField] private GameObject fogPrefab;
     [SerializeField] private GameObject doorPrefab;
@@ -22,47 +21,48 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private bool noFog;
 
     // tile settings
-    private MapTileController tileController;
+    private ChestSpawnChance chestSpawn;
+    private MapTileController mapTileController;
     private Vector2 mapSize;
-    private float tileSize;
-    private int borderThickness;
+    private float mapTileSize;
+    private int solidTileBorderThickness;
     private int mapSeed;
     // tile prefabs
-    private List<GameObject> startingTilePrefabs = new List<GameObject>();
-    private List<GameObject> allTilePrefabs = new List<GameObject>();
-    private List<GameObject> topBorderTiles = new List<GameObject>();
-    private List<GameObject> bottomBorderTiles = new List<GameObject>();
-    private List<GameObject> leftBorderTiles = new List<GameObject>();
-    private List<GameObject> rightBorderTiles = new List<GameObject>();
-    private List<GameObject> topLeftCornerTiles = new List<GameObject>();
-    private List<GameObject> topRightCornerTiles = new List<GameObject>();
-    private List<GameObject> bottomLeftCornerTiles = new List<GameObject>();
-    private List<GameObject> bottomRightCornerTiles = new List<GameObject>();
-    private List<GameObject> solidTile = new List<GameObject>();
+    private List<GameObject> startingTilePrefabs = new();
+    private List<GameObject> allTilePrefabs = new();
+    private List<GameObject> topEdgeTilePrefabs = new();
+    private List<GameObject> bottomEdgeTilePrefabs = new();
+    private List<GameObject> leftEdgeTilePrefabs = new();
+    private List<GameObject> rightEdgeTilePrefabs = new();
+    private List<GameObject> TLCornerTilePrefabs = new();
+    private List<GameObject> TRCornerTilePrefabs = new();
+    private List<GameObject> BLCornerTilePrefabs = new();
+    private List<GameObject> BRCornerTilePrefabs = new();
+    private List<GameObject> solidTilePrefabs = new();
     // others
-    private List<MapTile> mapTiles = new List<MapTile>();
-    private List<Vector2> collapsableTiles = new List<Vector2>();
-    private List<Vector2> collapsedTiles = new List<Vector2>();
-    private List<int> collapsableTileNum = new List<int>();
-    private List<Chest> chestsInMap = new List<Chest>();
-    private List<Portal> portalsInMap = new List<Portal>();
+    private List<MapTile> mapTileList = new();
+    private List<Vector2> collapsableTilePosList = new();
+    private List<Vector2> collapsedTilePosList = new();
+    private List<int> collapsableTileAmtList = new();
+    private List<GameObject> mapFogList = new();
+    private List<Portal> mapPortalList = new();
+    private List<Chest> mapChestList = new();
     private List<Sprite> tileSprites = new();
-    private List<GameObject> fog = new List<GameObject>();
-    private Vector2 currTile;
-    private Vector2 startingPos;
-    private FogOfWar fow;
+    private Vector2 currTilePos;
+    private Vector2 startingTilePos;
+    private FogOfWar fogOfWar;
 
     public void InitMapGenerator()
     {
-        tileController = GetComponent<MapTileController>();
-        fow = Camera.main.GetComponent<FogOfWar>();
+        mapTileController = GetComponent<MapTileController>();
+        fogOfWar = Camera.main.GetComponent<FogOfWar>();
         tileSprites = tilemapManager.GetAllTileSprites();
 
         AssignMapVariables();
         GenerateMap();
 
         foreach (ParallaxEffect parallaxEffect in bgs)
-            parallaxEffect.InitParallaxEffect((mapSize.y + 1) * tileSize);
+            parallaxEffect.InitParallaxEffect((mapSize.y + 1) * mapTileSize);
     }
 
     public void SetSeed()
@@ -79,7 +79,7 @@ public class WFC_MapGeneration : MonoBehaviour
         mapSize -= Vector2.one * 2;
         // create map list
         for (int i = 0; i < mapSize.x * mapSize.y; i++)
-            mapTiles.Add(null);
+            mapTileList.Add(null);
         // set start tile
         SetStartTile();
         // set tiles
@@ -87,16 +87,16 @@ public class WFC_MapGeneration : MonoBehaviour
         // set border tiles
         SetBorderTiles();
         // set positions
-        transform.position -= new Vector3((mapSize.x - 1) * tileSize / 2, (mapSize.y - 1) * tileSize / 2, 0);
-        cam.localPosition = new Vector3(tileSize, tileSize, -10);
+        transform.position -= new Vector3((mapSize.x - 1) * mapTileSize / 2, (mapSize.y - 1) * mapTileSize / 2, 0);
+        cam.localPosition = new Vector3(mapTileSize, mapTileSize, -10);
         mapSize += Vector2.one * 2;
         // set chests
         InitChests();
         // set doors & portals
         InitDoor();
         // start fog of war
-        if (fow != null)
-            fow.Initialize(fog);
+        if (fogOfWar != null)
+            fogOfWar.Initialize(mapFogList);
         // set A* path
         SetAStarNavMesh();
         // debug
@@ -105,56 +105,57 @@ public class WFC_MapGeneration : MonoBehaviour
 
     private void AssignMapVariables()
     {
+        chestSpawn = mData.chestSpawn;
         mapSize = mData.mapSize;
-        tileSize = mData.tileSize;
-        borderThickness = mData.borderThickness;
+        mapTileSize = mData.mapTileSize;
+        solidTileBorderThickness = mData.solidTileBorderThickness;
         mapSeed = mData.mapSeed;
         SetSeed();
 
-        tileController.InitMapTiles(mData);
-        startingTilePrefabs.AddRange(tileController.startTilePrefabs);
-        allTilePrefabs.AddRange(tileController.autoSetTilePrefabs);
-        allTilePrefabs.AddRange(tileController.deadEndTilePrefabs);
-        allTilePrefabs.AddRange(tileController.uniqueTilePrefabs);
+        mapTileController.InitMapTiles(mData);
+        startingTilePrefabs.AddRange(mapTileController.startTilePrefabs);
+        allTilePrefabs.AddRange(mapTileController.autoInitTilePrefabs);
+        allTilePrefabs.AddRange(mapTileController.deadEndTilePrefabs);
+        allTilePrefabs.AddRange(mapTileController.uniqueTilePrefabs);
         for (int i = 0; i < allTilePrefabs.Count; i++)
         {
             if (allTilePrefabs[i].name.Contains("1U_1D"))
             {
                 if (allTilePrefabs[i].name.Contains("0L"))
-                    leftBorderTiles.Add(allTilePrefabs[i]);
+                    leftEdgeTilePrefabs.Add(allTilePrefabs[i]);
                 if (allTilePrefabs[i].name.Contains("0R"))
-                    rightBorderTiles.Add(allTilePrefabs[i]);
+                    rightEdgeTilePrefabs.Add(allTilePrefabs[i]);
             }
             if (allTilePrefabs[i].name.Contains("1L_1R"))
             {
                 if (allTilePrefabs[i].name.Contains("0U"))
-                    topBorderTiles.Add(allTilePrefabs[i]);
+                    topEdgeTilePrefabs.Add(allTilePrefabs[i]);
                 if (allTilePrefabs[i].name.Contains("0D"))
-                    bottomBorderTiles.Add(allTilePrefabs[i]);
+                    bottomEdgeTilePrefabs.Add(allTilePrefabs[i]);
             }
             if (allTilePrefabs[i].name.Contains("0U_1D_0L_1R"))
-                topLeftCornerTiles.Add(allTilePrefabs[i]);
+                TLCornerTilePrefabs.Add(allTilePrefabs[i]);
             if (allTilePrefabs[i].name.Contains("0U_1D_1L_0R"))
-                topRightCornerTiles.Add(allTilePrefabs[i]);
+                TRCornerTilePrefabs.Add(allTilePrefabs[i]);
             if (allTilePrefabs[i].name.Contains("1U_0D_0L_1R"))
-                bottomLeftCornerTiles.Add(allTilePrefabs[i]);
+                BLCornerTilePrefabs.Add(allTilePrefabs[i]);
             if (allTilePrefabs[i].name.Contains("1U_0D_1L_0R"))
-                bottomRightCornerTiles.Add(allTilePrefabs[i]);
+                BRCornerTilePrefabs.Add(allTilePrefabs[i]);
         }
-        solidTile.AddRange(tileController.solidTilePrefabs);
+        solidTilePrefabs.AddRange(mapTileController.solidTilePrefabs);
     }
 
     private void SetStartTile()
     {
         // randomize starting node
-        currTile = new Vector2(Random.Range(0, (int)mapSize.x), Random.Range(0, (int)mapSize.y));
-        startingPos = (currTile * tileSize) - new Vector2((mapSize.x - 1) * tileSize / 2, (mapSize.y - 1) * tileSize / 2);
+        currTilePos = new Vector2(Random.Range(0, (int)mapSize.x), Random.Range(0, (int)mapSize.y));
+        startingTilePos = (currTilePos * mapTileSize) - new Vector2((mapSize.x - 1) * mapTileSize / 2, (mapSize.y - 1) * mapTileSize / 2);
         // set random starting room tile
         int randomIndex = Random.Range(0, startingTilePrefabs.Count);
-        mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = InstantiateTile(startingTilePrefabs[randomIndex], currTile * tileSize, true).GetComponent<MapTile>();
-        portalsInMap.Add(mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)].doorTransform.GetComponent<Portal>());
+        mapTileList[(int)currTilePos.x + (int)(currTilePos.y * mapSize.x)] = InstantiateTile(startingTilePrefabs[randomIndex], currTilePos * mapTileSize, true).GetComponent<MapTile>();
+        mapPortalList.Add(mapTileList[(int)currTilePos.x + (int)(currTilePos.y * mapSize.x)].doorTransform.GetComponent<Portal>());
         // add new collapsable tiles
-        collapsedTiles.Add(currTile);
+        collapsedTilePosList.Add(currTilePos);
         AddCollapsableTiles();
     }
 
@@ -163,40 +164,40 @@ public class WFC_MapGeneration : MonoBehaviour
         // find tile with least amount of collapse options
         Vector2 tileToCollapse = Vector2.zero;
         int leastTilesToCollapse = -1;
-        for (int i = 0; i < collapsableTiles.Count; i++)
+        for (int i = 0; i < collapsableTilePosList.Count; i++)
         {
-            if (CheckTileInBounds(collapsableTiles[i]))
+            if (CheckTileInBounds(collapsableTilePosList[i]))
             {
                 if (tileToCollapse == Vector2.zero)
                 {
-                    tileToCollapse = collapsableTiles[i];
-                    leastTilesToCollapse = collapsableTileNum[i];
+                    tileToCollapse = collapsableTilePosList[i];
+                    leastTilesToCollapse = collapsableTileAmtList[i];
                 }
-                else if (collapsableTileNum[i] <= leastTilesToCollapse)
+                else if (collapsableTileAmtList[i] <= leastTilesToCollapse)
                 {
-                    tileToCollapse = collapsableTiles[i];
-                    leastTilesToCollapse = collapsableTileNum[i];
+                    tileToCollapse = collapsableTilePosList[i];
+                    leastTilesToCollapse = collapsableTileAmtList[i];
                 }
             }
         }
         if (tileToCollapse == null || leastTilesToCollapse < 0)
             return;
         // set curr tile to it
-        currTile = tileToCollapse;
+        currTilePos = tileToCollapse;
         // check neighbouring tiles for placeable tiles in current tile
         List<GameObject> availableTiles = GetAvailableTilesList();
         if (availableTiles.Count == 0)
-            Debug.Log(currTile);
+            Debug.Log(currTilePos);
         // choose random tile
         GameObject tileToSet = availableTiles[Random.Range(0, availableTiles.Count)];
         if (tileToSet == null)
             return;
         // set room tile
-        mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = InstantiateTile(tileToSet, currTile * tileSize, true).GetComponent<MapTile>();
+        mapTileList[(int)currTilePos.x + (int)(currTilePos.y * mapSize.x)] = InstantiateTile(tileToSet, currTilePos * mapTileSize, true).GetComponent<MapTile>();
         // remove tile from collapsable list
-        collapsableTiles.Remove(tileToCollapse);
-        collapsedTiles.Add(tileToCollapse);
-        collapsableTileNum.Remove(leastTilesToCollapse);
+        collapsableTilePosList.Remove(tileToCollapse);
+        collapsedTilePosList.Add(tileToCollapse);
+        collapsableTileAmtList.Remove(leastTilesToCollapse);
         // add new collapsable tiles
         AddCollapsableTiles();
         // set next tile
@@ -217,9 +218,9 @@ public class WFC_MapGeneration : MonoBehaviour
             if (tileToSet == null)
                 return;
             // set room
-            mapTiles.Add(tileToSet.GetComponent<MapTile>());
+            mapTileList.Add(tileToSet.GetComponent<MapTile>());
             // place room
-            InstantiateTile(tileToSet, tilePos * tileSize, true);
+            InstantiateTile(tileToSet, tilePos * mapTileSize, true);
         }
         // bottom
         for (int i = 0; i < mapSize.x; i++)
@@ -232,9 +233,9 @@ public class WFC_MapGeneration : MonoBehaviour
             if (tileToSet == null)
                 return;
             // set room
-            mapTiles.Add(tileToSet.GetComponent<MapTile>());
+            mapTileList.Add(tileToSet.GetComponent<MapTile>());
             // place room
-            InstantiateTile(tileToSet, tilePos * tileSize, true);
+            InstantiateTile(tileToSet, tilePos * mapTileSize, true);
         }
         // left
         for (int i = 0; i < mapSize.y; i++)
@@ -247,9 +248,9 @@ public class WFC_MapGeneration : MonoBehaviour
             if (tileToSet == null)
                 return;
             // set room
-            mapTiles.Add(tileToSet.GetComponent<MapTile>());
+            mapTileList.Add(tileToSet.GetComponent<MapTile>());
             // place room
-            InstantiateTile(tileToSet, tilePos * tileSize, true);
+            InstantiateTile(tileToSet, tilePos * mapTileSize, true);
         }
         // right
         for (int i = 0; i < mapSize.y; i++)
@@ -262,31 +263,31 @@ public class WFC_MapGeneration : MonoBehaviour
             if (tileToSet == null)
                 return;
             // set room
-            mapTiles.Add(tileToSet.GetComponent<MapTile>());
+            mapTileList.Add(tileToSet.GetComponent<MapTile>());
             // place room
-            InstantiateTile(tileToSet, tilePos * tileSize, true);
+            InstantiateTile(tileToSet, tilePos * mapTileSize, true);
         }
         // place corners
         GameObject corner;
         // top left corner
-        corner = InstantiateTile(topLeftCornerTiles[Random.Range(0, topLeftCornerTiles.Count)], new Vector2(-1, mapSize.y) * tileSize, true);
+        corner = InstantiateTile(TLCornerTilePrefabs[Random.Range(0, TLCornerTilePrefabs.Count)], new Vector2(-1, mapSize.y) * mapTileSize, true);
         // set room
-        mapTiles.Add(corner.GetComponent<MapTile>());
+        mapTileList.Add(corner.GetComponent<MapTile>());
 
         // top right corner
-        corner = InstantiateTile(topRightCornerTiles[Random.Range(0, topRightCornerTiles.Count)], new Vector2(mapSize.x, mapSize.y) * tileSize, true);
+        corner = InstantiateTile(TRCornerTilePrefabs[Random.Range(0, TRCornerTilePrefabs.Count)], new Vector2(mapSize.x, mapSize.y) * mapTileSize, true);
         // set room
-        mapTiles.Add(corner.GetComponent<MapTile>());
+        mapTileList.Add(corner.GetComponent<MapTile>());
 
         // bottom left corner
-        corner = InstantiateTile(bottomLeftCornerTiles[Random.Range(0, bottomLeftCornerTiles.Count)], new Vector2(-1, -1) * tileSize, true);
+        corner = InstantiateTile(BLCornerTilePrefabs[Random.Range(0, BLCornerTilePrefabs.Count)], new Vector2(-1, -1) * mapTileSize, true);
         // set room
-        mapTiles.Add(corner.GetComponent<MapTile>());
+        mapTileList.Add(corner.GetComponent<MapTile>());
 
         // bottom right corner
-        corner = InstantiateTile(bottomRightCornerTiles[Random.Range(0, bottomRightCornerTiles.Count)], new Vector2(mapSize.x, -1) * tileSize, true);
+        corner = InstantiateTile(BRCornerTilePrefabs[Random.Range(0, BRCornerTilePrefabs.Count)], new Vector2(mapSize.x, -1) * mapTileSize, true);
         // set room
-        mapTiles.Add(corner.GetComponent<MapTile>());
+        mapTileList.Add(corner.GetComponent<MapTile>());
 
         PlaceSolidBorderTiles();
     }
@@ -296,7 +297,7 @@ public class WFC_MapGeneration : MonoBehaviour
         MapTile newTile = Instantiate(target, transform).GetComponent<MapTile>();
         newTile.transform.localPosition = targetPos;
         if (placeFog && !noFog)
-            fog.Add(Instantiate(fogPrefab, newTile.transform, false));
+            mapFogList.Add(Instantiate(fogPrefab, newTile.transform, false));
 
         for (int i = 0; i < tileSprites.Count; i++)
         {
@@ -310,19 +311,19 @@ public class WFC_MapGeneration : MonoBehaviour
 
     private void PlaceSolidBorderTiles()
     {
-        for (int i = -borderThickness - 1; i < mapSize.x + borderThickness + 1; i++)
+        for (int i = -solidTileBorderThickness - 1; i < mapSize.x + solidTileBorderThickness + 1; i++)
         {
-            for (int j = -borderThickness - 1; j < mapSize.y + borderThickness + 1; j++)
+            for (int j = -solidTileBorderThickness - 1; j < mapSize.y + solidTileBorderThickness + 1; j++)
             {
                 if (i < -1 || i > mapSize.x || j < -1 || j > mapSize.y)
-                    InstantiateTile(solidTile[Random.Range(0, solidTile.Count)], new Vector2(i, j) * tileSize, false);
+                    InstantiateTile(solidTilePrefabs[Random.Range(0, solidTilePrefabs.Count)], new Vector2(i, j) * mapTileSize, false);
             }
         }
     }
 
     private void SetAStarNavMesh()
     {
-        AstarPath.active.data.gridGraph.RelocateNodes(center: ((mapSize - Vector2.one) * tileSize / 2) + new Vector2(0, 0.5f), rotation: Quaternion.Euler(-90, 0, 0), nodeSize: 1.0f);
+        AstarPath.active.data.gridGraph.RelocateNodes(center: ((mapSize - Vector2.one) * mapTileSize / 2) + new Vector2(0, 0.5f), rotation: Quaternion.Euler(-90, 0, 0), nodeSize: 1.0f);
         AstarPath.active.Scan();
     }
 
@@ -330,10 +331,10 @@ public class WFC_MapGeneration : MonoBehaviour
     {
         // get all possible chest transforms
         List<Transform> chests = new List<Transform>();
-        for (int i = 0; i < mapTiles.Count; i++)
+        for (int i = 0; i < mapTileList.Count; i++)
         {
-            if (mapTiles[i].chestTransform != null)
-                chests.Add(mapTiles[i].chestTransform);
+            if (mapTileList[i].chestTransform != null)
+                chests.Add(mapTileList[i].chestTransform);
         }
         // finalize chest amt
         for (int i = chests.Count; i > chestSpawn.maxChests; i--)
@@ -346,7 +347,7 @@ public class WFC_MapGeneration : MonoBehaviour
 
         // legendary
         int randomChestIndex = Random.Range(0, chests.Count);
-        chestsInMap.Add(Instantiate(chestSpawn.chestTypes[0], chests[randomChestIndex], false).GetComponent<Chest>());
+        mapChestList.Add(Instantiate(chestSpawn.chestTypes[0], chests[randomChestIndex], false).GetComponent<Chest>());
         chests.RemoveAt(randomChestIndex);
 
         // other chests
@@ -363,7 +364,7 @@ public class WFC_MapGeneration : MonoBehaviour
                         break;
                     randomChestIndex = Random.Range(0, chests.Count);
                     GameObject obj = Instantiate(chestSpawn.chestTypes[i]);
-                    chestsInMap.Add(obj.GetComponent<Chest>());
+                    mapChestList.Add(obj.GetComponent<Chest>());
                     obj.transform.SetParent(chests[randomChestIndex]);
                     obj.transform.localPosition = Vector3.zero;
                     chests.RemoveAt(randomChestIndex);
@@ -374,7 +375,7 @@ public class WFC_MapGeneration : MonoBehaviour
 
         //Black Card
         for (int i = 0; i < itemStats.blackCardChestAmount; i++)
-            chestsInMap[i].SetCost(0);
+            mapChestList[i].SetCost(0);
     }
 
     private void InitDoor()
@@ -384,10 +385,10 @@ public class WFC_MapGeneration : MonoBehaviour
         List<Transform> doors = new List<Transform>();
         Transform doorTransform = null;
         // get doors
-        for (int i = 0; i < mapTiles.Count; i++)
+        for (int i = 0; i < mapTileList.Count; i++)
         {
-            if (mapTiles[i].doorTransform != null)
-                doors.Add(mapTiles[i].doorTransform);
+            if (mapTileList[i].doorTransform != null)
+                doors.Add(mapTileList[i].doorTransform);
         }
         // choose furthest door
         for (int i = 0; i < doors.Count; i++)
@@ -401,10 +402,10 @@ public class WFC_MapGeneration : MonoBehaviour
         doors.Remove(doorTransform);
         for (int i = doors.Count - 1; i > doors.Count - 4; i--)
         {
-            portalsInMap.Add(Instantiate(portalPrefab, doors[i], false).GetComponent<Portal>());
+            mapPortalList.Add(Instantiate(portalPrefab, doors[i], false).GetComponent<Portal>());
         }
 
-        PlayerController.Instance.portalController.PositionPortals(portalsInMap);
+        PlayerController.Instance.portalController.PositionPortals(mapPortalList);
     }
 
     private List<GameObject> GetAvailableBorderTilesList(Vector2 checkTilePos, Vector2 direction)
@@ -414,13 +415,13 @@ public class WFC_MapGeneration : MonoBehaviour
         List<GameObject> placeableTiles;
         if (direction == Vector2.up)
         {
-            placeableTiles = mapTiles[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesUp;
+            placeableTiles = mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesUp;
             // get list of tiles that are available in each list
             availableTiles.AddRange(allTilePrefabs);
             for (int i = 0; i < availableTiles.Count; i++)
             {
                 if (!placeableTiles.Contains(availableTiles[i]) ||
-                    !topBorderTiles.Contains(availableTiles[i]))
+                    !topEdgeTilePrefabs.Contains(availableTiles[i]))
                 {
                     tilesToRemove.Add(availableTiles[i]);
                 }
@@ -432,13 +433,13 @@ public class WFC_MapGeneration : MonoBehaviour
         }
         else if (direction == Vector2.down)
         {
-            placeableTiles = mapTiles[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesDown;
+            placeableTiles = mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesDown;
             // get list of tiles that are available in each list
             availableTiles.AddRange(allTilePrefabs);
             for (int i = 0; i < availableTiles.Count; i++)
             {
                 if (!placeableTiles.Contains(availableTiles[i]) ||
-                    !bottomBorderTiles.Contains(availableTiles[i]))
+                    !bottomEdgeTilePrefabs.Contains(availableTiles[i]))
                 {
                     tilesToRemove.Add(availableTiles[i]);
                 }
@@ -450,13 +451,13 @@ public class WFC_MapGeneration : MonoBehaviour
         }
         else if (direction == Vector2.left)
         {
-            placeableTiles = mapTiles[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesLeft;
+            placeableTiles = mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesLeft;
             // get list of tiles that are available in each list
             availableTiles.AddRange(allTilePrefabs);
             for (int i = 0; i < availableTiles.Count; i++)
             {
                 if (!placeableTiles.Contains(availableTiles[i]) ||
-                    !leftBorderTiles.Contains(availableTiles[i]))
+                    !leftEdgeTilePrefabs.Contains(availableTiles[i]))
                 {
                     tilesToRemove.Add(availableTiles[i]);
                 }
@@ -468,13 +469,13 @@ public class WFC_MapGeneration : MonoBehaviour
         }
         else if (direction == Vector2.right)
         {
-            placeableTiles = mapTiles[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesRight;
+            placeableTiles = mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesRight;
             // get list of tiles that are available in each list
             availableTiles.AddRange(allTilePrefabs);
             for (int i = 0; i < availableTiles.Count; i++)
             {
                 if (!placeableTiles.Contains(availableTiles[i]) ||
-                    !rightBorderTiles.Contains(availableTiles[i]))
+                    !rightEdgeTilePrefabs.Contains(availableTiles[i]))
                 {
                     tilesToRemove.Add(availableTiles[i]);
                 }
@@ -543,27 +544,27 @@ public class WFC_MapGeneration : MonoBehaviour
 
     private List<GameObject> GetAvailableTilesListFromNeighbour(Vector2 direction)
     {
-        Vector2 checkTilePos = currTile + direction;
+        Vector2 checkTilePos = currTilePos + direction;
         // check if not out of the map and if the space has an existing tile
         if (CheckTileInBounds(checkTilePos))
         {
-            if (mapTiles[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)] != null)
+            if (mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)] != null)
             {
                 if (direction == Vector2.up)
                 {
-                    return mapTiles[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesDown;
+                    return mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesDown;
                 }
                 else if (direction == Vector2.down)
                 {
-                    return mapTiles[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesUp;
+                    return mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesUp;
                 }
                 else if (direction == Vector2.left)
                 {
-                    return mapTiles[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesRight;
+                    return mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesRight;
                 }
                 else if (direction == Vector2.right)
                 {
-                    return mapTiles[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesLeft;
+                    return mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesLeft;
                 }
             }
         }
@@ -573,36 +574,36 @@ public class WFC_MapGeneration : MonoBehaviour
     private void AddCollapsableTiles()
     {
         // add to list of placeable tiles in each direction and start from least amount of tiles
-        if (CheckTileInBounds(currTile + Vector2.up) && mapTiles[(int)currTile.x + (int)((currTile.y + 1) * mapSize.x)] == null)
+        if (CheckTileInBounds(currTilePos + Vector2.up) && mapTileList[(int)currTilePos.x + (int)((currTilePos.y + 1) * mapSize.x)] == null)
         {
-            if (!collapsedTiles.Contains(currTile + Vector2.up) && !collapsableTiles.Contains(currTile + Vector2.up))
+            if (!collapsedTilePosList.Contains(currTilePos + Vector2.up) && !collapsableTilePosList.Contains(currTilePos + Vector2.up))
             {
-                collapsableTiles.Add(currTile + Vector2.up);
-                collapsableTileNum.Add(GetCurrentRoomTile().availableTilesUp.Count);
+                collapsableTilePosList.Add(currTilePos + Vector2.up);
+                collapsableTileAmtList.Add(GetCurrentRoomTile().availableTilesUp.Count);
             }
         }
-        if (CheckTileInBounds(currTile + Vector2.down) && mapTiles[(int)currTile.x + (int)((currTile.y - 1) * mapSize.x)] == null)
+        if (CheckTileInBounds(currTilePos + Vector2.down) && mapTileList[(int)currTilePos.x + (int)((currTilePos.y - 1) * mapSize.x)] == null)
         {
-            if (!collapsedTiles.Contains(currTile + Vector2.down) && !collapsableTiles.Contains(currTile + Vector2.down))
+            if (!collapsedTilePosList.Contains(currTilePos + Vector2.down) && !collapsableTilePosList.Contains(currTilePos + Vector2.down))
             {
-                collapsableTiles.Add(currTile + Vector2.down);
-                collapsableTileNum.Add(GetCurrentRoomTile().availableTilesDown.Count);
+                collapsableTilePosList.Add(currTilePos + Vector2.down);
+                collapsableTileAmtList.Add(GetCurrentRoomTile().availableTilesDown.Count);
             }
         }
-        if (CheckTileInBounds(currTile + Vector2.left) && mapTiles[(int)(currTile.x - 1) + (int)(currTile.y * mapSize.x)] == null)
+        if (CheckTileInBounds(currTilePos + Vector2.left) && mapTileList[(int)(currTilePos.x - 1) + (int)(currTilePos.y * mapSize.x)] == null)
         {
-            if (!collapsedTiles.Contains(currTile + Vector2.left) && !collapsableTiles.Contains(currTile + Vector2.left))
+            if (!collapsedTilePosList.Contains(currTilePos + Vector2.left) && !collapsableTilePosList.Contains(currTilePos + Vector2.left))
             {
-                collapsableTiles.Add(currTile + Vector2.left);
-                collapsableTileNum.Add(GetCurrentRoomTile().availableTilesLeft.Count);
+                collapsableTilePosList.Add(currTilePos + Vector2.left);
+                collapsableTileAmtList.Add(GetCurrentRoomTile().availableTilesLeft.Count);
             }
         }
-        if (CheckTileInBounds(currTile + Vector2.right) && mapTiles[(int)(currTile.x + 1) + (int)(currTile.y * mapSize.x)] == null)
+        if (CheckTileInBounds(currTilePos + Vector2.right) && mapTileList[(int)(currTilePos.x + 1) + (int)(currTilePos.y * mapSize.x)] == null)
         {
-            if (!collapsedTiles.Contains(currTile + Vector2.right) && !collapsableTiles.Contains(currTile + Vector2.right))
+            if (!collapsedTilePosList.Contains(currTilePos + Vector2.right) && !collapsableTilePosList.Contains(currTilePos + Vector2.right))
             {
-                collapsableTiles.Add(currTile + Vector2.right);
-                collapsableTileNum.Add(GetCurrentRoomTile().availableTilesRight.Count);
+                collapsableTilePosList.Add(currTilePos + Vector2.right);
+                collapsableTileAmtList.Add(GetCurrentRoomTile().availableTilesRight.Count);
             }
         }
     }
@@ -614,13 +615,13 @@ public class WFC_MapGeneration : MonoBehaviour
 
     private MapTile GetCurrentRoomTile()
     {
-        if (CheckTileInBounds(currTile))
-            return mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)];
+        if (CheckTileInBounds(currTilePos))
+            return mapTileList[(int)currTilePos.x + (int)(currTilePos.y * mapSize.x)];
         return null;
     }
 
     public Vector2 GetStartingPos()
     {
-        return startingPos;
+        return startingTilePos;
     }
 }

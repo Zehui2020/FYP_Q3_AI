@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e635dbcc68945a24a8196daf35c88593, type: 3}
-  m_Name: Level 1 Data
+  m_Name: Level 1 Map Settings
   m_EditorClassIdentifier: 
+  chestSpawn: {fileID: 11400000, guid: d576ae2423fdfac4b961ecdb0fc557b3, type: 2}
   mapSize: {x: 5, y: 5}
-  tileSize: 20
-  borderThickness: 1
+  mapTileSize: 20
+  solidTileBorderThickness: 1
   mapSeed: 0
   startTilePrefabs:
   - {fileID: 4352191659983094025, guid: b1ed6dddaeef6a04c83f0aa50c3e4833, type: 3}
-  autoSetTilePrefabs:
+  autoInitTilePrefabs:
   - {fileID: 4352191659983094025, guid: 3a78eee6d6a0aaf4893557e4dd39d441, type: 3}
   - {fileID: 1460982275002135070, guid: 5386e21e35952f540a77313be28ab974, type: 3}
   - {fileID: 5969996894269893911, guid: c40a710bd265d5040a17dc4ba0c7992e, type: 3}

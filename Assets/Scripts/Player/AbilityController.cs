@@ -1,12 +1,10 @@
-using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.PlasticSCM.Editor.WebApi;
-using UnityEditor.Playables;
 using UnityEngine;
 
 public class AbilityController : MonoBehaviour
 {
+    [SerializeField] private ItemPickupAlert itemPickupAlert;
     [SerializeField] public List<BaseAbility> abilities;
     [SerializeField] private List<AbilityUIController> abilityUI;
     [SerializeField] private GameObject abilityUIPrefab;
@@ -52,6 +50,8 @@ public class AbilityController : MonoBehaviour
 
     public bool HandleAbilityPickUp(BaseAbility newAbility, int charges)
     {
+        itemPickupAlert.DisplayAlert(newAbility);
+
         if (abilities.Count >= currAbilitySlots)
         {
             swappingAbility = true;
@@ -147,10 +147,10 @@ public class AbilityController : MonoBehaviour
             AddAbilitySlot(1);
     }
 
-    public void SpawnAbilityPickUp(BaseAbility newAbility)
+    public void SpawnAbilityPickUp(BaseAbility newAbility, Transform chest)
     {
         AbilityPickUp ability = Instantiate(abilityPickUpPrefab);
-        ability.transform.position = transform.position;
+        ability.transform.position = chest.position;
         ability.InitPickup(newAbility, newAbility.abilityCharges);
     }
 
@@ -204,6 +204,8 @@ public class AbilityController : MonoBehaviour
                     }
                 }
             }
+            if (targetsInArea.Count == 0)
+                return;
             for (int i = 0; i < targetsInArea.Count; i++)
             {
                 abilities[abilityNo].OnAbilityUse(player, targetsInArea[i]);

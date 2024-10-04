@@ -19,6 +19,7 @@ public class AreaOfEffect : MonoBehaviour
             if (other.CompareTag(tag))
             {
                 stats.Add(other.GetComponent<BaseStats>());
+                StartCoroutine(StatusOverTime(other.GetComponent<BaseStats>()));
             }
         }
     }
@@ -30,6 +31,7 @@ public class AreaOfEffect : MonoBehaviour
             if (other.CompareTag(tag))
             {
                 stats.Remove(other.GetComponent<BaseStats>());
+                StopCoroutine(StatusOverTime(other.GetComponent<BaseStats>()));
             }
         }
     }
@@ -42,24 +44,22 @@ public class AreaOfEffect : MonoBehaviour
     public void HandleStatusOverTime()
     {
         StartCoroutine(DeathRoutine());
-        StartCoroutine(StatusOverTime());
     }
 
     private IEnumerator DeathRoutine()
     {
         yield return new WaitForSeconds(lifeTime);
         Destroy(gameObject);
+        StopAllCoroutines();
     }
 
-    private IEnumerator StatusOverTime()
+    private IEnumerator StatusOverTime(BaseStats stat)
     {
-        for (int i = 0; i < stats.Count; i++)
-        {
-            stats[i].ApplyStatusEffect(status, 1);
-        }
+        if (stats.Contains(stat))
+            stat.ApplyStatusEffect(status, stackPerInterval);
 
         yield return new WaitForSeconds(interval);
 
-        StartCoroutine(StatusOverTime());
+        StartCoroutine(StatusOverTime(stat));
     }
 }
