@@ -42,22 +42,26 @@ public class ItemPickupAlert : MonoBehaviour
 
     private IEnumerator ShowRoutine()
     {
-        if (playerPrefs.detailedDescription)
-            description.text = itemsToDisplay[0].description;
-        else
-            description.text = itemsToDisplay[0].simpleDescription;
-
         if (abilitiesToDisplay.Count > 0)
         {
+            if (playerPrefs.detailedDescription)
+                description.text = abilitiesToDisplay[0].description;
+            else
+                description.text = abilitiesToDisplay[0].simpleDescription;
+
             itemIcon.sprite = abilitiesToDisplay[0].abilityIcon;
             outlineMaterial = new Material(abilitiesToDisplay[0].itemOutlineMaterial);
             itemIcon.material = outlineMaterial;
             title.text = abilitiesToDisplay[0].abilityName.ToString();
-            description.text = abilitiesToDisplay[0].description;
             lastShowedAlert = 1;
         }
         else if (itemsToDisplay.Count > 0)
         {
+            if (playerPrefs.detailedDescription)
+                description.text = itemsToDisplay[0].description;
+            else
+                description.text = itemsToDisplay[0].simpleDescription;
+
             itemIcon.sprite = itemsToDisplay[0].spriteIcon;
             outlineMaterial = new Material(itemsToDisplay[0].itemOutlineMaterial);
             itemIcon.material = outlineMaterial;

@@ -31,6 +31,7 @@ public abstract class BaseAbility : ScriptableObject
     public AbilityName abilityName;
 
     [TextArea(3, 10)] public string description;
+    [TextArea(3, 10)] public string simpleDescription;
 
     public Sprite abilityIcon;
 
