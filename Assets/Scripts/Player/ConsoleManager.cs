@@ -56,9 +56,16 @@ public class ConsoleManager : MonoBehaviour
                 else
                     PlayerController.Instance.GiveItem(words[2], words[3]);
             }
+            else if (words[1].Equals("ability"))
+            {
+                PlayerController.Instance.GiveAbility(words[2], words[3]);
+            }
             else if (words[1].Equals("gold"))
             {
-                PlayerController.Instance.gold += int.Parse(words[2]);
+                if (int.Parse(words[2]) > 500)
+                    PlayerController.Instance.gold += int.Parse(words[2]);
+                else
+                    PlayerController.Instance.SpawnGoldPickup(int.Parse(words[2]), PlayerController.Instance.transform);
             }
         }
         else if (command.Equals("/spawn"))

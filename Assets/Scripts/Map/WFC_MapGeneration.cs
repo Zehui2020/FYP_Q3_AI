@@ -4,65 +4,65 @@ using UnityEngine.Tilemaps;
 
 public class WFC_MapGeneration : MonoBehaviour
 {
-    [Header("General Settings")]
+    [Header("Map Settings")]
     [SerializeField] private MapData mData;
-    [SerializeField] private Vector2 mapSize;
-    [SerializeField] private float tileSize;
-    [SerializeField] private int borderThickness;
-    [SerializeField] private int mapSeed;
     [SerializeField] private ChestSpawnChance chestSpawn;
-    [SerializeField] private MapTileController tileController;
-    [Header("Main Prefabs")]
-    [SerializeField] private List<GameObject> startingTilePrefabs = new List<GameObject>();
-    [SerializeField] private List<GameObject> allTilePrefabs = new List<GameObject>();
-    [Header("Edge Prefabs")]
-    [SerializeField] private List<GameObject> topBorderTiles = new List<GameObject>();
-    [SerializeField] private List<GameObject> bottomBorderTiles = new List<GameObject>();
-    [SerializeField] private List<GameObject> leftBorderTiles = new List<GameObject>();
-    [SerializeField] private List<GameObject> rightBorderTiles = new List<GameObject>();
-    [Header("Corner Prefabs")]
-    [SerializeField] private List<GameObject> topLeftCornerTiles = new List<GameObject>();
-    [SerializeField] private List<GameObject> topRightCornerTiles = new List<GameObject>();
-    [SerializeField] private List<GameObject> bottomLeftCornerTiles = new List<GameObject>();
-    [SerializeField] private List<GameObject> bottomRightCornerTiles = new List<GameObject>();
-    [Header("Perimeter Prefabs")]
-    [SerializeField] private List<GameObject> solidTile = new List<GameObject>();
-    [Header("Miscellanous Prefabs")]
+    [Header("Map Object Prefabs")]
+    [SerializeField] private GameObject fogPrefab;
     [SerializeField] private GameObject doorPrefab;
     [SerializeField] private GameObject portalPrefab;
-    [Header("Background")]
+    [Header("Background & Tilemap")]
     [SerializeField] private TilemapManager tilemapManager;
-    [SerializeField] private ItemStats itemStats;
     [SerializeField] private ParallaxEffect[] bgs;
-    [Header("Mini Map Fog Of War")]
+    [Header("Items")]
+    [SerializeField] private ItemStats itemStats;
+    [Header("Expanded Map Camera")]
     [SerializeField] private Transform cam;
-    [SerializeField] private FogOfWar fow;
+    [Header("Debug Settings")]
+    [SerializeField] private bool noFog;
 
+    // tile settings
+    private MapTileController tileController;
+    private Vector2 mapSize;
+    private float tileSize;
+    private int borderThickness;
+    private int mapSeed;
+    // tile prefabs
+    private List<GameObject> startingTilePrefabs = new List<GameObject>();
+    private List<GameObject> allTilePrefabs = new List<GameObject>();
+    private List<GameObject> topBorderTiles = new List<GameObject>();
+    private List<GameObject> bottomBorderTiles = new List<GameObject>();
+    private List<GameObject> leftBorderTiles = new List<GameObject>();
+    private List<GameObject> rightBorderTiles = new List<GameObject>();
+    private List<GameObject> topLeftCornerTiles = new List<GameObject>();
+    private List<GameObject> topRightCornerTiles = new List<GameObject>();
+    private List<GameObject> bottomLeftCornerTiles = new List<GameObject>();
+    private List<GameObject> bottomRightCornerTiles = new List<GameObject>();
+    private List<GameObject> solidTile = new List<GameObject>();
+    // others
     private List<MapTile> mapTiles = new List<MapTile>();
     private List<Vector2> collapsableTiles = new List<Vector2>();
     private List<Vector2> collapsedTiles = new List<Vector2>();
     private List<int> collapsableTileNum = new List<int>();
     private List<Chest> chestsInMap = new List<Chest>();
+    private List<Portal> portalsInMap = new List<Portal>();
     private List<Sprite> tileSprites = new();
+    private List<GameObject> fog = new List<GameObject>();
     private Vector2 currTile;
     private Vector2 startingPos;
-
-    [HideInInspector] public List<Portal> portalsInMap;
+    private FogOfWar fow;
 
     public void InitMapGenerator()
     {
-        tileController.InitMapTiles();
-        AssignMapVariables();
-        SetSeed();
-
+        tileController = GetComponent<MapTileController>();
+        fow = Camera.main.GetComponent<FogOfWar>();
         tileSprites = tilemapManager.GetAllTileSprites();
 
+        AssignMapVariables();
         GenerateMap();
 
         foreach (ParallaxEffect parallaxEffect in bgs)
             parallaxEffect.InitParallaxEffect((mapSize.y + 1) * tileSize);
-
-        SetAStarNavMesh();
     }
 
     public void SetSeed()
@@ -75,35 +75,31 @@ public class WFC_MapGeneration : MonoBehaviour
 
     public void GenerateMap()
     {
+        // compensate for border
         mapSize -= Vector2.one * 2;
-        // init maptiles list
+        // create map list
         for (int i = 0; i < mapSize.x * mapSize.y; i++)
-        {
             mapTiles.Add(null);
-        }
-        // randomize starting node
-        currTile = new Vector2(Random.Range(0, (int)mapSize.x), Random.Range(0, (int)mapSize.y));
-        startingPos = (currTile * tileSize) - new Vector2((mapSize.x - 1) * tileSize / 2, (mapSize.y - 1) * tileSize / 2);
-        // set random starting room tile
-        int randomIndex = Random.Range(0, startingTilePrefabs.Count);
-        mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = InstantiateTile(startingTilePrefabs[randomIndex], currTile * tileSize).GetComponent<MapTile>();
-        portalsInMap.Add(mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)].doorTransform.GetComponent<Portal>());
-        // add new collapsable tiles
-        collapsedTiles.Add(currTile);
-        AddCollapsableTiles();
-        // set rooms
+        // set start tile
+        SetStartTile();
+        // set tiles
         SetNextTile();
-        // set borders
+        // set border tiles
         SetBorderTiles();
+        // set positions
         transform.position -= new Vector3((mapSize.x - 1) * tileSize / 2, (mapSize.y - 1) * tileSize / 2, 0);
         cam.localPosition = new Vector3(tileSize, tileSize, -10);
-        // get list of chests
-        InitChests();
-        // set door
-        InitDoor();
         mapSize += Vector2.one * 2;
+        // set chests
+        InitChests();
+        // set doors & portals
+        InitDoor();
+        // start fog of war
         if (fow != null)
-            fow.Initialize();
+            fow.Initialize(fog);
+        // set A* path
+        SetAStarNavMesh();
+        // debug
         Debug.Log("Generation Complete!");
     }
 
@@ -113,7 +109,9 @@ public class WFC_MapGeneration : MonoBehaviour
         tileSize = mData.tileSize;
         borderThickness = mData.borderThickness;
         mapSeed = mData.mapSeed;
+        SetSeed();
 
+        tileController.InitMapTiles(mData);
         startingTilePrefabs.AddRange(tileController.startTilePrefabs);
         allTilePrefabs.AddRange(tileController.autoSetTilePrefabs);
         allTilePrefabs.AddRange(tileController.deadEndTilePrefabs);
@@ -144,6 +142,20 @@ public class WFC_MapGeneration : MonoBehaviour
                 bottomRightCornerTiles.Add(allTilePrefabs[i]);
         }
         solidTile.AddRange(tileController.solidTilePrefabs);
+    }
+
+    private void SetStartTile()
+    {
+        // randomize starting node
+        currTile = new Vector2(Random.Range(0, (int)mapSize.x), Random.Range(0, (int)mapSize.y));
+        startingPos = (currTile * tileSize) - new Vector2((mapSize.x - 1) * tileSize / 2, (mapSize.y - 1) * tileSize / 2);
+        // set random starting room tile
+        int randomIndex = Random.Range(0, startingTilePrefabs.Count);
+        mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = InstantiateTile(startingTilePrefabs[randomIndex], currTile * tileSize, true).GetComponent<MapTile>();
+        portalsInMap.Add(mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)].doorTransform.GetComponent<Portal>());
+        // add new collapsable tiles
+        collapsedTiles.Add(currTile);
+        AddCollapsableTiles();
     }
 
     private void SetNextTile()
@@ -180,14 +192,14 @@ public class WFC_MapGeneration : MonoBehaviour
         if (tileToSet == null)
             return;
         // set room tile
-        mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = InstantiateTile(tileToSet, currTile * tileSize).GetComponent<MapTile>();
+        mapTiles[(int)currTile.x + (int)(currTile.y * mapSize.x)] = InstantiateTile(tileToSet, currTile * tileSize, true).GetComponent<MapTile>();
         // remove tile from collapsable list
         collapsableTiles.Remove(tileToCollapse);
         collapsedTiles.Add(tileToCollapse);
         collapsableTileNum.Remove(leastTilesToCollapse);
         // add new collapsable tiles
         AddCollapsableTiles();
-        // set next room
+        // set next tile
         SetNextTile();
     }
 
@@ -207,7 +219,7 @@ public class WFC_MapGeneration : MonoBehaviour
             // set room
             mapTiles.Add(tileToSet.GetComponent<MapTile>());
             // place room
-            InstantiateTile(tileToSet, tilePos * tileSize);
+            InstantiateTile(tileToSet, tilePos * tileSize, true);
         }
         // bottom
         for (int i = 0; i < mapSize.x; i++)
@@ -222,7 +234,7 @@ public class WFC_MapGeneration : MonoBehaviour
             // set room
             mapTiles.Add(tileToSet.GetComponent<MapTile>());
             // place room
-            InstantiateTile(tileToSet, tilePos * tileSize);
+            InstantiateTile(tileToSet, tilePos * tileSize, true);
         }
         // left
         for (int i = 0; i < mapSize.y; i++)
@@ -237,7 +249,7 @@ public class WFC_MapGeneration : MonoBehaviour
             // set room
             mapTiles.Add(tileToSet.GetComponent<MapTile>());
             // place room
-            InstantiateTile(tileToSet, tilePos * tileSize);
+            InstantiateTile(tileToSet, tilePos * tileSize, true);
         }
         // right
         for (int i = 0; i < mapSize.y; i++)
@@ -252,37 +264,39 @@ public class WFC_MapGeneration : MonoBehaviour
             // set room
             mapTiles.Add(tileToSet.GetComponent<MapTile>());
             // place room
-            InstantiateTile(tileToSet, tilePos * tileSize);
+            InstantiateTile(tileToSet, tilePos * tileSize, true);
         }
         // place corners
         GameObject corner;
         // top left corner
-        corner = InstantiateTile(topLeftCornerTiles[Random.Range(0, topLeftCornerTiles.Count)], new Vector2(-1, mapSize.y) * tileSize);
+        corner = InstantiateTile(topLeftCornerTiles[Random.Range(0, topLeftCornerTiles.Count)], new Vector2(-1, mapSize.y) * tileSize, true);
         // set room
         mapTiles.Add(corner.GetComponent<MapTile>());
 
         // top right corner
-        corner = InstantiateTile(topRightCornerTiles[Random.Range(0, topRightCornerTiles.Count)], new Vector2(mapSize.x, mapSize.y) * tileSize);
+        corner = InstantiateTile(topRightCornerTiles[Random.Range(0, topRightCornerTiles.Count)], new Vector2(mapSize.x, mapSize.y) * tileSize, true);
         // set room
         mapTiles.Add(corner.GetComponent<MapTile>());
 
         // bottom left corner
-        corner = InstantiateTile(bottomLeftCornerTiles[Random.Range(0, bottomLeftCornerTiles.Count)], new Vector2(-1, -1) * tileSize);
+        corner = InstantiateTile(bottomLeftCornerTiles[Random.Range(0, bottomLeftCornerTiles.Count)], new Vector2(-1, -1) * tileSize, true);
         // set room
         mapTiles.Add(corner.GetComponent<MapTile>());
 
         // bottom right corner
-        corner = InstantiateTile(bottomRightCornerTiles[Random.Range(0, bottomRightCornerTiles.Count)], new Vector2(mapSize.x, -1) * tileSize);
+        corner = InstantiateTile(bottomRightCornerTiles[Random.Range(0, bottomRightCornerTiles.Count)], new Vector2(mapSize.x, -1) * tileSize, true);
         // set room
         mapTiles.Add(corner.GetComponent<MapTile>());
 
         PlaceSolidBorderTiles();
     }
 
-    private GameObject InstantiateTile(GameObject target, Vector3 targetPos)
+    private GameObject InstantiateTile(GameObject target, Vector3 targetPos, bool placeFog)
     {
         MapTile newTile = Instantiate(target, transform).GetComponent<MapTile>();
         newTile.transform.localPosition = targetPos;
+        if (placeFog && !noFog)
+            fog.Add(Instantiate(fogPrefab, newTile.transform, false));
 
         for (int i = 0; i < tileSprites.Count; i++)
         {
@@ -301,7 +315,7 @@ public class WFC_MapGeneration : MonoBehaviour
             for (int j = -borderThickness - 1; j < mapSize.y + borderThickness + 1; j++)
             {
                 if (i < -1 || i > mapSize.x || j < -1 || j > mapSize.y)
-                    InstantiateTile(solidTile[Random.Range(0, solidTile.Count)], new Vector2(i, j) * tileSize);
+                    InstantiateTile(solidTile[Random.Range(0, solidTile.Count)], new Vector2(i, j) * tileSize, false);
             }
         }
     }

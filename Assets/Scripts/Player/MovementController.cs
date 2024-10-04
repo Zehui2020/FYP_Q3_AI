@@ -108,6 +108,7 @@ public class MovementController : MonoBehaviour
                 break;
             case MovementState.Falling:
                 animationManager.ChangeAnimation(animationManager.Falling, 0f, 0f, AnimationManager.AnimType.None);
+                CancelKnockback();
                 break;
             case MovementState.Land:
                 animationManager.ChangeAnimation(animationManager.Land, 0f, 0f, AnimationManager.AnimType.None);
@@ -152,6 +153,17 @@ public class MovementController : MonoBehaviour
             yield return null;
         }
 
+        knockbackRoutine = null;
+        ChangeState(MovementState.Idle);
+        ChangePlayerState?.Invoke(PlayerController.PlayerStates.Movement);
+    }
+
+    public void CancelKnockback()
+    {
+        if (knockbackRoutine == null)
+            return;
+
+        StopCoroutine(knockbackRoutine);
         knockbackRoutine = null;
         ChangeState(MovementState.Idle);
         ChangePlayerState?.Invoke(PlayerController.PlayerStates.Movement);
@@ -638,9 +650,6 @@ public class MovementController : MonoBehaviour
 
     public void CheckGroundCollision()
     {
-        if (currentState == MovementState.Knockback)
-            return;
-
         Vector2 raycastPos = transform.localScale.x < 0 ? 
             new Vector2(groundCheckPosition.position.x - 0.3f, groundCheckPosition.position.y) : 
             new Vector2(groundCheckPosition.position.x + 0.3f, groundCheckPosition.position.y);
@@ -679,10 +688,15 @@ public class MovementController : MonoBehaviour
                 currentState != MovementState.LedgeGrab
                 && currentState != MovementState.GroundDash &&
                 currentState != MovementState.Plunge &&
-                currentState != MovementState.Running)
+                currentState != MovementState.Running &&
+                currentState != MovementState.Knockback)
                 ChangeState(MovementState.Idle);
 
             isGrounded = true;
+
+            if (currentState == MovementState.Knockback)
+                return;
+
             fallingDuration = 0;
 
             if (currentState != MovementState.Roll &&
