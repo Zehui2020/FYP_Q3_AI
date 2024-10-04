@@ -30,7 +30,11 @@ public abstract class BaseAbility : ScriptableObject
     }
     public AbilityName abilityName;
 
+    [TextArea(3, 10)] public string description;
+
     public Sprite abilityIcon;
+
+    public Material itemOutlineMaterial;
 
     public enum AbilityUseType
     {
