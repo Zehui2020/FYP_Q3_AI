@@ -72,7 +72,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1353
+    m_Bits: 1289
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: da776b491135dd8438b6226f588eb99a, type: 2}
   m_TargetDisplay: 0
@@ -198,10 +198,13 @@ MonoBehaviour:
   doorPrefab: {fileID: 4820102909102417710, guid: 86d530a28d4d99a439742af9f6956792, type: 3}
   portalPrefab: {fileID: 593515161954378261, guid: 1b03f6e46eff09745ac3e2467e852eac, type: 3}
   tilemapManager: {fileID: 2109268654121522328}
-  bgs: []
+  bgs:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
   cam: {fileID: 6662458671797201080}
-  noFog: 0
+  noFog: 1
 --- !u!114 &4252948386430941580
 MonoBehaviour:
   m_ObjectHideFlags: 0
