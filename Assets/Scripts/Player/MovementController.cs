@@ -639,7 +639,8 @@ public class MovementController : MonoBehaviour
             currentState != MovementState.Jump &&
             currentState != MovementState.DoubleJump &&
             currentState != MovementState.Falling &&
-            currentState != MovementState.Knockback)
+            currentState != MovementState.Knockback ||
+            !canMove)
             return;
 
         Vector3 force;
@@ -658,6 +659,9 @@ public class MovementController : MonoBehaviour
 
     public void CheckGroundCollision()
     {
+        if (!canMove)
+            return;
+
         Vector2 raycastPos = transform.localScale.x < 0 ? 
             new Vector2(groundCheckPosition.position.x - 0.3f, groundCheckPosition.position.y) : 
             new Vector2(groundCheckPosition.position.x + 0.3f, groundCheckPosition.position.y);

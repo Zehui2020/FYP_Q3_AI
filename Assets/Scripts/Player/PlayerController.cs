@@ -398,6 +398,20 @@ public class PlayerController : PlayerStats
 
         bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
 
+        if (health <= 0 && tookDamage)
+        {
+            Debug.Log("You hit the ground too hard");
+
+            if (hurtRoutine != null)
+                StopCoroutine(hurtRoutine);
+            movementController.StopPlayer();
+            animationManager.ChangeAnimation(animationManager.Die, 0f, 0f, AnimationManager.AnimType.None);
+
+            StartCoroutine(DieRoutine());
+
+            return tookDamage;
+        }
+
         if (tookDamage)
         {
             playerEffectsController.ShakeCamera(4f, 5f, 0.2f);
@@ -463,25 +477,26 @@ public class PlayerController : PlayerStats
             }
         }
 
-        if (health <= 0)
-        {
-            Debug.Log("You hit the ground too hard");
-
-            if (extraLives > 0)
-                StartCoroutine(DieRoutine());
-        }
-
         return tookDamage;
     }
     private IEnumerator DieRoutine()
     {
         yield return new WaitForSeconds(2f);
 
+        if (extraLives <= 0)
+        {
+            yield return new WaitForSeconds(2f);
+            SceneLoader.Instance.LoadScene("MainMenu");
+            yield break;
+        }
+
         extraLives--;
         health = maxHealth;
 
         Cleanse(StatusEffect.StatusType.Type.Debuff);
         Cleanse(StatusEffect.StatusType.Type.Buff);
+
+        movementController.ResumePlayer();
     }
 
     public override float CalculateDamageDealt(BaseStats target, DamageSource damageSource, out bool isCrit, out DamagePopup.DamageType damageType)
