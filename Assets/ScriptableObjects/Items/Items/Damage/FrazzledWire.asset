@@ -12,19 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35fc7761e01804a4e89bb03ccafe10a7, type: 3}
   m_Name: FrazzledWire
   m_EditorClassIdentifier: 
-  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
-  itemRarity: 1
-  itemType: 5
-  itemCatagory: 0
-  spriteIcon: {fileID: 0}
+  shopItemType: 0
+  shopCost: 50
+  spriteIcon: {fileID: 21300000, guid: 7b635530b147ffb4dbbd06af6bfe7219, type: 3}
+  itemOutlineMaterial: {fileID: 2100000, guid: bfa784bb779ec4640b45b1d4088e126c, type: 2}
   title: Frazzled Wire
   description: 25% chance to inflict 3(+2/stack) stacks of static on all enemies
     within 5m(+2m/stack) on hit, dealing 80% total damage
   simpleDescription: Chance to deal damage and inflict <color=yellow>Static</color>
     to nearby enemies on Hit
+  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  itemRarity: 1
+  itemType: 5
+  itemCatagory: 0
   itemStack: 0
   alertDuration: 8
-  itemOutlineMaterial: {fileID: 2100000, guid: bfa784bb779ec4640b45b1d4088e126c, type: 2}
   wireChance: 25
   staticStacks: 3
   wireRange: 5

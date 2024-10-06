@@ -17,6 +17,9 @@ public class TypewriterEffect : MonoBehaviour
 
     public void SetSpeakerName(string speaker)
     {
+        if (speakerName == null)
+            return;
+
         speakerName.text = speaker;
     }
 
@@ -26,7 +29,8 @@ public class TypewriterEffect : MonoBehaviour
             StopCoroutine(TypeRoutine);
 
         dialogueText.text = string.Empty;
-        speakerName.text = speaker;
+        if (speakerName != null)
+            speakerName.text = speaker;
         TypeRoutine = StartCoroutine(TypeWriterTMP(message));
     }
 

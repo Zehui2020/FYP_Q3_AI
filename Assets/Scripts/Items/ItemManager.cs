@@ -52,6 +52,11 @@ public class ItemManager : MonoBehaviour
         OnPickupItem(itemToAdd);
     }
 
+    public void AddAbility(BaseAbility ability)
+    {
+        PlayerController.Instance.abilityController.HandleAbilityPickUp(ability, ability.abilityCharges);
+    }
+
     public void OnPickupItem(Item item)
     {
         itemPickupAlert.DisplayAlert(item);
@@ -175,7 +180,7 @@ public class ItemManager : MonoBehaviour
                 continue;
 
             for (int i = 0; i < int.Parse(amount); i++)
-                PlayerController.Instance.abilityController.HandleAbilityPickUp(ability, ability.abilityCharges);
+                AddAbility(ability);
         }
     }
 }

@@ -2,11 +2,13 @@ using System.Collections;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Shopkeeper_AI_Manager : MonoBehaviour
 {
     [SerializeField] private ShopkeeperData shopkeeperData;
     [SerializeField] private ShopkeeperUIManager shopkeeperUIManager;
+    [SerializeField] private bool isDebugging;
 
     [Header("Sentiment Analysis")]
     //Sentiment Analysis
@@ -18,18 +20,23 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
 
     private bool analyseText;
 
-    // Start is called before the first frame update
-    void Start()
+    public UnityEvent OnFinishGenerating;
+
+    public void InitAIManager()
     {
         introFinished = false;
         analyseText = false;
         hasIntroduced = false;
+        AI_Sentiment_Analysis.OnAnalysisEnabled();
 
         AI_Chat_Introduction();
     }
 
     private string GetFinalPromptString(string promptTitle, string promptContent, string additionalPrompts)
     {
+        if (isDebugging)
+            return string.Empty;
+
         string AI_Gen_Prompt =
             '"' +
             "[INST] <<SYS>> You are the voice of a Shopkeeper in a video game. " +
@@ -53,7 +60,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
 
     public void AI_Chat_Introduction()
     {
-        if (hasIntroduced)
+        if (hasIntroduced || isDebugging)
             return;
 
         string prompt;
@@ -77,6 +84,9 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
 
     public void AI_Chat_Response()
     {
+        if (isDebugging)
+            return;
+
         string user_Input = shopkeeperUIManager.GetUserInput();
 
         string promptTitle;
@@ -106,6 +116,9 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
 
     public void AI_Chat_End()
     {
+        if (isDebugging)
+            return;
+
         string user_Input = shopkeeperUIManager.GetUserInput();
 
         string promptTitle = "Now this is your prompt:";
@@ -179,9 +192,13 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
                 previousContext = ExtractContent(AI_Output);
                 AI_ChatUpdated = true;
                 shopkeeperUIManager.SetShopkeeperOutput(previousContext);
+                OnFinishGenerating?.Invoke();
             }
         }
         while (!AI_ChatUpdated);
+        {
+            yield return null;
+        }
 
         if (analyseText)
         {

@@ -207,6 +207,7 @@
 
 				fixed4 c = SampleSpriteTexture (IN.texcoord) * IN.color;
 
+				c.a *= _Color.a;
 				c.rgb *= c.a;
 
 				fixed alpha;
@@ -391,6 +392,7 @@
 							}
 							else
 							{
+								outlineC.a *= _Color.a;
 								return outlineC;
 							}
 						}
@@ -412,6 +414,7 @@
 						)
 
 						{
+							outlineC.a *= _Color.a;
 							return outlineC;
 						}
 						else if((_OutlinePosition == 2 || _OutlineShape != 1) && c.a == 0 && // outside orcontour
@@ -420,6 +423,7 @@
 								)
 							)
 						{
+							outlineC.a *= _Color.a; 
 							return outlineC;
 						}
 						else

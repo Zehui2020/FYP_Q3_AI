@@ -27,7 +27,7 @@ public class AbilityUIController : MonoBehaviour
     public void InitAbilityUI(BaseAbility ability, string keybind)
     {
         abilityIcon.enabled = true;
-        abilityIcon.sprite = ability.abilityIcon;
+        abilityIcon.sprite = ability.spriteIcon;
         SetCooldown(0, ability.abilityCharges);
         keybindText.text = keybind;
     }

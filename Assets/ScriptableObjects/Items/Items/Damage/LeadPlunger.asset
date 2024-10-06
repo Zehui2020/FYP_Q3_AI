@@ -12,18 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afadf60f728f32749aaeefb575c295cf, type: 3}
   m_Name: LeadPlunger
   m_EditorClassIdentifier: 
-  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
-  itemRarity: 1
-  itemType: 14
-  itemCatagory: 0
-  spriteIcon: {fileID: 0}
+  shopItemType: 0
+  shopCost: 50
+  spriteIcon: {fileID: 21300000, guid: 7b635530b147ffb4dbbd06af6bfe7219, type: 3}
+  itemOutlineMaterial: {fileID: 2100000, guid: bfa784bb779ec4640b45b1d4088e126c, type: 2}
   title: Lead Plunger
   description: Plunge attack deals additional damage from 160% -  500%(+30%/stack)
     of original damage based on plunge height from 6m - 18m (-2m/stack).
   simpleDescription: Deal increased Plunge Damage based on Plunge Height
+  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  itemRarity: 1
+  itemType: 14
+  itemCatagory: 0
   itemStack: 0
   alertDuration: 8
-  itemOutlineMaterial: {fileID: 2100000, guid: bfa784bb779ec4640b45b1d4088e126c, type: 2}
   minPlungeDist: 7
   maxPlungeDist: 18
   minPlungeMultiplier: 0.6

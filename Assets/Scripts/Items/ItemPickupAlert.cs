@@ -49,10 +49,10 @@ public class ItemPickupAlert : MonoBehaviour
             else
                 description.text = abilitiesToDisplay[0].simpleDescription;
 
-            itemIcon.sprite = abilitiesToDisplay[0].abilityIcon;
+            itemIcon.sprite = abilitiesToDisplay[0].spriteIcon;
             outlineMaterial = new Material(abilitiesToDisplay[0].itemOutlineMaterial);
             itemIcon.material = outlineMaterial;
-            title.text = abilitiesToDisplay[0].abilityName.ToString();
+            title.text = abilitiesToDisplay[0].title;
             lastShowedAlert = 1;
         }
         else if (itemsToDisplay.Count > 0)

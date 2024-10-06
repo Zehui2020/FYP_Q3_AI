@@ -11,7 +11,7 @@ public class AbilityPickUp : PooledObject, IInteractable
     public void InitPickup(BaseAbility newAbility, int charges)
     {
         ability = newAbility;
-        spriteRenderer.sprite = ability.abilityIcon;
+        spriteRenderer.sprite = ability.spriteIcon;
         this.charges = charges;
     }
 

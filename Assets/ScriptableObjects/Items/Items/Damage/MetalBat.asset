@@ -12,19 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f792cf42198d041a4b1a8d29181451, type: 3}
   m_Name: MetalBat
   m_EditorClassIdentifier: 
-  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
-  itemRarity: 0
-  itemType: 10
-  itemCatagory: 0
-  spriteIcon: {fileID: 0}
+  shopItemType: 0
+  shopCost: 50
+  spriteIcon: {fileID: 21300000, guid: 7b635530b147ffb4dbbd06af6bfe7219, type: 3}
+  itemOutlineMaterial: {fileID: 2100000, guid: beaaf0a23b32bc74eb6b85b967db3d75, type: 2}
   title: Metal Bat
   description: +25%(+10%/stack) chance to apply 3(+2/stack) stacks of static upon
     parry.
   simpleDescription: Chance to inflict <color=yellow>Static</color> on the target
     on Parry
+  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  itemRarity: 0
+  itemType: 10
+  itemCatagory: 0
   itemStack: 0
   alertDuration: 5
-  itemOutlineMaterial: {fileID: 2100000, guid: beaaf0a23b32bc74eb6b85b967db3d75, type: 2}
   staticChance: 25
   staticStacks: 3
   stackStaticChance: 10

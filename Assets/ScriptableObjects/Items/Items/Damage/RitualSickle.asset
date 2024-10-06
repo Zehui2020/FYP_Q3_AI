@@ -12,18 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 819a8ab5e4f45ca45ba561b1be0517d8, type: 3}
   m_Name: RitualSickle
   m_EditorClassIdentifier: 
-  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
-  itemRarity: 0
-  itemType: 1
-  itemCatagory: 0
-  spriteIcon: {fileID: 0}
+  shopItemType: 0
+  shopCost: 50
+  spriteIcon: {fileID: 21300000, guid: 7b635530b147ffb4dbbd06af6bfe7219, type: 3}
+  itemOutlineMaterial: {fileID: 2100000, guid: beaaf0a23b32bc74eb6b85b967db3d75, type: 2}
   title: Ritualist Sickles
   description: Crit rate +5% on first pickup. Crit hits have a 10%(+5%/stack) chance
     to inflict 3(+1/stack) stacks of bleed.
   simpleDescription: Critical hits have a chance to inflict <color=red>Bleed</color>
-  itemStack: 16
+  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  itemRarity: 0
+  itemType: 1
+  itemCatagory: 0
+  itemStack: 0
   alertDuration: 5
-  itemOutlineMaterial: {fileID: 2100000, guid: beaaf0a23b32bc74eb6b85b967db3d75, type: 2}
   bleedChance: 10
   bleedStacks: 3
   critRateIncrease: 5

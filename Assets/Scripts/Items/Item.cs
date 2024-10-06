@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Item : ScriptableObject
+public class Item : ShopItemData
 {
     public ItemStats itemStats;
 
@@ -18,16 +18,8 @@ public class Item : ScriptableObject
     public enum ItemCatagory { Damage, Healing, Utility };
     public ItemCatagory itemCatagory;
 
-    public Sprite spriteIcon;
-    [TextArea(3, 10)]
-    public string title;
-    [TextArea(3, 10)]
-    public string description;
-    [TextArea(3, 10)]
-    public string simpleDescription;
     public int itemStack;
     public float alertDuration;
-    public Material itemOutlineMaterial;
 
     public virtual void Initialize() { }
 

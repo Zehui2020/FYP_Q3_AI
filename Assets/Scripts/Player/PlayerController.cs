@@ -15,7 +15,8 @@ public class PlayerController : PlayerStats
         Hurt,
         Dialogue,
         Ability,
-        Map
+        Map,
+        Shop
     }
     public PlayerStates currentState;
 
@@ -144,6 +145,9 @@ public class PlayerController : PlayerStats
 
         if (Input.GetKeyDown(KeyCode.Return))
             ConsoleManager.Instance.OnInputCommand();
+
+        if (currentState == PlayerStates.Shop)
+            return;
 
         if (currentState == PlayerStates.Dialogue)
         {
@@ -883,8 +887,20 @@ public class PlayerController : PlayerStats
     public void ChangeState(PlayerStates newState)
     {
         currentState = newState;
-        if (currentState == PlayerStates.Movement)
-            movementController.ChangeState(MovementState.Idle);
+        switch (currentState)
+        {
+            case PlayerStates.Movement:
+                movementController.ResumePlayer();
+                movementController.ChangeState(MovementState.Idle);
+                break;
+            case PlayerStates.Map:
+            case PlayerStates.Shop:
+            case PlayerStates.Dialogue:
+            case PlayerStates.Ability:
+                movementController.StopPlayer();
+                movementController.ChangeState(MovementState.Idle);
+                break;
+        }
     }
 
     public void AddJumpCount(int count)
@@ -953,17 +969,33 @@ public class PlayerController : PlayerStats
         return movementController.isGrounded;
     }
 
-    // For dev console
+    public void GiveItem(Item item)
+    {
+        itemManager.AddItem(item);
+    }
+    public void GiveAbility(BaseAbility ability)
+    {
+        itemManager.AddAbility(ability);
+    }
+    public void GiveShopItem(ShopItemData shopItemData)
+    {
+        if (shopItemData is Item item)
+            itemManager.AddItem(item);
+        else if (shopItemData is BaseAbility ability)
+            abilityController.HandleAbilityPickUp(ability, ability.abilityCharges);
+        else if (shopItemData is WeaponData weapon)
+            combatController.ChangeWeapon(weapon);
+    }
+
+    // For console
     public void GiveItem(string itemName, string amount)
     {
         itemManager.GiveItem(itemName, amount);
     }
-
     public void GiveAllItems()
     {
         itemManager.GiveAllItems();
     }
-
     public void GiveAbility(string itemName, string amount)
     {
         itemManager.GiveAbility(itemName, amount);

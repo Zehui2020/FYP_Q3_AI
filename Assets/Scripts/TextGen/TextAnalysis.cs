@@ -16,9 +16,9 @@ public class TextAnalysis : MonoBehaviour
     private bool threadStarted = false;
     private Vector3 SentimentAnalysisResponse;
 
-    public event System.Action<int> OnMoodChanged;
+    public event System.Action<float> OnMoodChanged;
 
-    void OnEnable()
+    public void OnAnalysisEnabled()
     {
         Application.runInBackground = true;
         // Initialize the local database
@@ -107,37 +107,37 @@ public class TextAnalysis : MonoBehaviour
 
         if (Mood_Meter < 60)
         {
-            OnMoodChanged?.Invoke(0);
+            OnMoodChanged?.Invoke(0.95f);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter >= 60 && Mood_Meter < 70)
         {
-            OnMoodChanged?.Invoke(1);
+            OnMoodChanged?.Invoke(0.9f);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter >= 70 && Mood_Meter < 80)
         {
-            OnMoodChanged?.Invoke(2);
+            OnMoodChanged?.Invoke(0.8f);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter >= 80 && Mood_Meter < 90)
         {
-            OnMoodChanged?.Invoke(3);
+            OnMoodChanged?.Invoke(0.7f);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter >= 90 && Mood_Meter < 100)
         {
-            OnMoodChanged?.Invoke(4);
+            OnMoodChanged?.Invoke(0.6f);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter == 100)
         {
-            OnMoodChanged?.Invoke(5);
+            OnMoodChanged?.Invoke(0.5f);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }

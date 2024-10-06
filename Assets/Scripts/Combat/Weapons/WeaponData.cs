@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu]
-public class WeaponData : ScriptableObject
+public class WeaponData : ShopItemData
 {
     public enum WeaponType
     {

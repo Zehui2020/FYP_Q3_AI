@@ -12,20 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da06f4cc3eb882d4c9d81c6dc9692581, type: 3}
   m_Name: AncientGavel
   m_EditorClassIdentifier: 
-  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
-  itemRarity: 2
-  itemType: 16
-  itemCatagory: 0
-  spriteIcon: {fileID: 0}
+  shopItemType: 0
+  shopCost: 50
+  spriteIcon: {fileID: 21300000, guid: 7b635530b147ffb4dbbd06af6bfe7219, type: 3}
+  itemOutlineMaterial: {fileID: 2100000, guid: cce12931cc4e7a4429c60d36ea01d500, type: 2}
   title: Ancient Gavel
   description: Attacks that deal over 400% of base attack will be struck by lightning,
     dealing 300%(+50%/stack) of base attack as damage and inflicting 7(+3/stack)
     stacks of static and burn.
   simpleDescription: High damage hits summons a lightning strike, dealing damage
     and inflicting <color=yellow>Static</color> and <color=orange>Burn</color>
+  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  itemRarity: 2
+  itemType: 16
+  itemCatagory: 0
   itemStack: 0
   alertDuration: 8
-  itemOutlineMaterial: {fileID: 2100000, guid: cce12931cc4e7a4429c60d36ea01d500, type: 2}
   gavelThreshold: 4
   gavelDamageMultiplier: 3
   gavelStacks: 7

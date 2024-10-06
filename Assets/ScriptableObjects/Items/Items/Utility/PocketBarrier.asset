@@ -12,17 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acdbfd269eecbd2499867248ab62cac4, type: 3}
   m_Name: PocketBarrier
   m_EditorClassIdentifier: 
-  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
-  itemRarity: 0
-  itemType: 26
-  itemCatagory: 2
-  spriteIcon: {fileID: 0}
+  shopItemType: 0
+  shopCost: 50
+  spriteIcon: {fileID: 21300000, guid: 7b635530b147ffb4dbbd06af6bfe7219, type: 3}
+  itemOutlineMaterial: {fileID: 2100000, guid: beaaf0a23b32bc74eb6b85b967db3d75, type: 2}
   title: Pocket Barrier
   description: Reduce all damage recieved by 5%(+5%/stack). Damage recieved cannot
     be less than 1%
   simpleDescription: Reduces incoming damage
+  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  itemRarity: 0
+  itemType: 26
+  itemCatagory: 2
   itemStack: 0
   alertDuration: 5
-  itemOutlineMaterial: {fileID: 2100000, guid: beaaf0a23b32bc74eb6b85b967db3d75, type: 2}
   baseDamageReduction: 0.05
   stackDamageReduction: 0.05

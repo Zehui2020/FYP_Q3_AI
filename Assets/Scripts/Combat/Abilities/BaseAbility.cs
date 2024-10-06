@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseAbility : ScriptableObject
+public abstract class BaseAbility : ShopItemData
 {
     public AbilityStats abilityStats;
 
@@ -29,13 +29,6 @@ public abstract class BaseAbility : ScriptableObject
         Shatter
     }
     public AbilityName abilityName;
-
-    [TextArea(3, 10)] public string description;
-    [TextArea(3, 10)] public string simpleDescription;
-
-    public Sprite abilityIcon;
-
-    public Material itemOutlineMaterial;
 
     public enum AbilityUseType
     {

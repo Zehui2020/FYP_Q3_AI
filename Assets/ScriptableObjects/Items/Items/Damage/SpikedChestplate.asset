@@ -12,19 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb07a5356cb207c4794704c8e4ca4e5e, type: 3}
   m_Name: SpikedChestplate
   m_EditorClassIdentifier: 
-  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
-  itemRarity: 1
-  itemType: 12
-  itemCatagory: 0
-  spriteIcon: {fileID: 0}
+  shopItemType: 0
+  shopCost: 50
+  spriteIcon: {fileID: 21300000, guid: 7b635530b147ffb4dbbd06af6bfe7219, type: 3}
+  itemOutlineMaterial: {fileID: 2100000, guid: bfa784bb779ec4640b45b1d4088e126c, type: 2}
   title: Spiked Chestplate
   description: Getting hit deals 160%(+50%/stack) current attack to the enemy, applying
     5(+3/stack) stacks of poison.
   simpleDescription: Upon taking damage, deals damage and applies <color=green>Poison</color>
     back to the attacker
+  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  itemRarity: 1
+  itemType: 12
+  itemCatagory: 0
   itemStack: 0
   alertDuration: 5
-  itemOutlineMaterial: {fileID: 2100000, guid: bfa784bb779ec4640b45b1d4088e126c, type: 2}
   baseDamageMultiplier: 1.6
   basePoisonStack: 5
   stackDamageMultiplier: 0.5
