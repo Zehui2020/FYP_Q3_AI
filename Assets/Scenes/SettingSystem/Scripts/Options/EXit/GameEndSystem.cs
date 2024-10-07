@@ -1,9 +1,9 @@
 //----------------------------------------------------------------------
 // GameEndSystem
 //
-// ゲーム終了を管理するクラス
+// A class to manage game termination
 //
-// Data: 2/10/2024
+// Date: 2/10/2024
 // Author: Shimba Sakai
 //----------------------------------------------------------------------
 
@@ -11,13 +11,13 @@ using UnityEngine;
 
 public class GameEndSystem : MonoBehaviour
 {
-    // ゲームを終了する
+    // Terminates the game
     public void GameEnd()
     {
-        // ゲームを終了する
+        // Terminates the game
         Application.Quit();
 
-        // デバッグで確認する用
+        // For debug confirmation
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
