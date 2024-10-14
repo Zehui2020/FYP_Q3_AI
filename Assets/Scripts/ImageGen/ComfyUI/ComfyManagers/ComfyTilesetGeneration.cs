@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class ComfyTilesetGeneration : ComfyManager
 {
-    private bool recievedTileset = false;
+    [SerializeField] private bool recievedTileset = false;
 
     [SerializeField] private string setPrompts;
     private PromptData promptData;

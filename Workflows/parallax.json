@@ -1,14 +1,14 @@
 {
   "3": {
     "inputs": {
-      "seed": 800867887099984,
-      "steps": 20,
-      "cfg": 10,
+      "seed": 737559942262367,
+      "steps": 15,
+      "cfg": 7,
       "sampler_name": "euler",
       "scheduler": "normal",
       "denoise": 1,
       "model": [
-        "46",
+        "62",
         0
       ],
       "positive": [
@@ -31,7 +31,7 @@
   },
   "4": {
     "inputs": {
-      "ckpt_name": "pixelstyleckpt_strength07.safetensors"
+      "ckpt_name": "anyloraCheckpoint_bakedvaeBlessedFp16.safetensors"
     },
     "class_type": "CheckpointLoaderSimple",
     "_meta": {
@@ -53,7 +53,7 @@
     "inputs": {
       "text": "Pprompt",
       "clip": [
-        "4",
+        "62",
         1
       ]
     },
@@ -66,7 +66,7 @@
     "inputs": {
       "text": "",
       "clip": [
-        "4",
+        "62",
         1
       ]
     },
@@ -312,6 +312,25 @@
     "class_type": "LineArtPreprocessor",
     "_meta": {
       "title": "Realistic Lineart"
+    }
+  },
+  "62": {
+    "inputs": {
+      "lora_name": "PixelScenery.safetensors",
+      "strength_model": 1,
+      "strength_clip": 1,
+      "model": [
+        "46",
+        0
+      ],
+      "clip": [
+        "4",
+        1
+      ]
+    },
+    "class_type": "Load Lora",
+    "_meta": {
+      "title": "Load Lora"
     }
   }
 }

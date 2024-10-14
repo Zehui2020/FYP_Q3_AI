@@ -60,6 +60,7 @@ public class ComfyBGManager : ComfyManager
 
     public void QueueBGPrompt()
     {
+        Debug.Log("QUEUED BG");
         PromptData.BGPrompt bgPrompt = promptData.GetBGPrompt((PromptData.BGPrompt.Type)bgRecievedCounter, bgPrompts);
         totalStringPrompt += bgPrompt.prompt;
         promptCtr.QueuePromptWithControlNet(promptData.GetPromptJSON(bgPrompt.bgType), bgPrompt.prompt, bgPrompt.referenceImage);
