@@ -12,11 +12,15 @@ public class BloodArts : BaseAbility
         abilityStats.bloodArtsBleedChance += 25;
         // 50% life steal from attacks
         abilityStats.bloodArtsLifestealMultiplier += 0.5f;
+
+        self.particleVFXManager.OnBleeding();
     }
 
     public override void OnAbilityEnd(BaseStats self, BaseStats target)
     {
         abilityStats.bloodArtsBleedChance -= 25;
         abilityStats.bloodArtsLifestealMultiplier -= 0.5f;
+
+        self.particleVFXManager.StopBleeding();
     }
 }
