@@ -5,28 +5,30 @@ using UnityEngine.Events;
 
 public class ComfyTilesetGeneration : ComfyManager
 {
-    [SerializeField] private bool recievedTileset = false;
-
     [SerializeField] private string setPrompts;
-    private PromptData promptData;
+    private List<PromptData> promptData;
+    [SerializeField] private int tilesetRecieved = 0;
 
-    public void InitTilesetGeneration(PromptData promptData)
+    private List<string> playerBGPrompts;
+
+    public void InitTilesetGeneration(List<PromptData> promptData, List<string> playerBGPrompts)
     {
         this.promptData = promptData;
+        this.playerBGPrompts = playerBGPrompts;
         InitManager();
     }
 
-    public void QueueTilesetPrompt(string playerPrompt)
+    public void QueueTilesetPrompt()
     {
-        if (recievedTileset)
+        if (tilesetRecieved >= promptData.Count)
             return;
 
         string finalPrompt = string.Empty;
         string controlnetImage = string.Empty;
 
-        foreach (PromptData.PromptChecker promptChecker in promptData.promptCheckers)
+        foreach (PromptData.PromptChecker promptChecker in promptData[tilesetRecieved].promptCheckers)
         {
-            if (playerPrompt.Contains(promptChecker.foundPrompts))
+            if (playerBGPrompts[tilesetRecieved].Contains(promptChecker.foundPrompts))
             {
                 finalPrompt = setPrompts + ", " + promptChecker.endPrompt;
                 controlnetImage = promptChecker.controlnetImage;
@@ -43,9 +45,9 @@ public class ComfyTilesetGeneration : ComfyManager
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
     {
-        if (base.OnRecieveImage(promptID, texture) && !recievedTileset)
+        if (base.OnRecieveImage(promptID, texture))
         {
-            recievedTileset = true;
+            QueueTilesetPrompt();
             return true;
         }
 

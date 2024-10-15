@@ -38,6 +38,11 @@ public class ComfyUIManager : MonoBehaviour
         }
     }
 
+    public bool CheckAdditionalPrompts()
+    {
+        return promptText.text == setPrompts;
+    }
+
     public string GetPrompt()
     {
         return promptText.text;

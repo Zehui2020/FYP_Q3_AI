@@ -90,7 +90,12 @@ public class CombatController : MonoBehaviour
     {
         if (!canAttack)
             return;
-            
+
+        if (resetComboRoutine != null)
+        {
+            StopCoroutine(resetComboRoutine);
+            resetComboRoutine = null;
+        }
         canAttack = false;
 
         player.comboDamageMultipler.ReplaceAllModifiers(wData.attackMultipliers[attackComboCount]);
@@ -132,7 +137,11 @@ public class CombatController : MonoBehaviour
     public void ResetComboAttack()
     {
         if (resetComboRoutine != null)
+        {
             StopCoroutine(resetComboRoutine);
+            resetComboRoutine = null;
+        }
+
         resetComboRoutine = StartCoroutine(ResetComboRoutine());
     }
 

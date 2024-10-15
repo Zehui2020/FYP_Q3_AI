@@ -40,16 +40,18 @@ public class WorldSpaceButtonController : MonoBehaviour
 
     public void ResetPrompts()
     {
-        foreach (WorldSpaceButton button in buttons)
+        if (uiManager.CheckAdditionalPrompts())
+            return;
+
+        for (int i = 0; i < buttons.Count; i++)
         {
-            if (button == null)
+            if (buttons[i] == null)
                 continue;
 
-            Destroy(button);
+            Destroy(buttons[i].gameObject);
         }
 
         buttons.Clear();
-
         uiManager.ResetPrompt();
         SpawnButtons();
     }

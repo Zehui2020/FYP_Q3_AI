@@ -14,8 +14,6 @@ public class ComfyBGManager : ComfyManager
 
     private bool startGenerating;
 
-    private string totalStringPrompt;
-
     private int bgRecievedCounter;
 
     [SerializeField] private List<PromptData> allPromptDatas = new();
@@ -31,8 +29,6 @@ public class ComfyBGManager : ComfyManager
 
         if (playerPrefs.experiencedTutorial)
             buttonController.SpawnButtons();
-
-        tilesetGeneration.InitTilesetGeneration(allPromptDatas[currentLevelPrompt]);
 
         uiManager.SetStartingPrompt(2);
     }
@@ -64,7 +60,6 @@ public class ComfyBGManager : ComfyManager
             return false;
         }
 
-        totalStringPrompt += bgPrompts;
         startGenerating = true;
         QueueBGPrompt();
 
@@ -74,13 +69,20 @@ public class ComfyBGManager : ComfyManager
     public void QueueBGPrompt()
     {
         PromptData.BGPrompt bgPrompt = allPromptDatas[currentLevelPrompt].GetBGPrompt((PromptData.BGPrompt.Type)bgRecievedCounter, bgPrompts[currentLevelPrompt]);
-        totalStringPrompt += bgPrompt.prompt;
         promptCtr.QueuePromptWithControlNet(allPromptDatas[currentLevelPrompt].GetPromptJSON(bgPrompt.bgType), bgPrompt.prompt, bgPrompt.referenceImage);
     }
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
     {
-        fileName = ((BGPrompt.Type)bgRecievedCounter).ToString() + "_Level" + currentLevelPrompt + 2;
+        if (currentLevelPrompt >= allPromptDatas.Count - 1 && bgRecievedCounter >= allPromptDatas.Count)
+        {
+            Debug.Log(currentLevelPrompt);
+            Debug.Log(bgRecievedCounter);
+
+            return false;
+        }
+
+        fileName = ((BGPrompt.Type)bgRecievedCounter).ToString() + "_Level" + (currentLevelPrompt + 2);
 
         if (base.OnRecieveImage(promptID, texture))
         {
@@ -91,16 +93,16 @@ public class ComfyBGManager : ComfyManager
                     startGenerating = false;
                     currentLevelPrompt++;
 
-                    // Go to generate the next prompt
-                    if (currentLevelPrompt >= allPromptDatas.Count)
+                    // If all level BGs done
+                    if (currentLevelPrompt >= allPromptDatas.Count - 1 && bgRecievedCounter >= allPromptDatas.Count)
                     {
-                        tilesetGeneration.QueueTilesetPrompt(totalStringPrompt);
+                        tilesetGeneration.InitTilesetGeneration(allPromptDatas, bgPrompts);
+                        tilesetGeneration.QueueTilesetPrompt();
                         return true;
                     }
 
                     startGenerating = true;
                     bgRecievedCounter = 0;
-                    totalStringPrompt = string.Empty;
                     QueueBGPrompt();
                 }
 
