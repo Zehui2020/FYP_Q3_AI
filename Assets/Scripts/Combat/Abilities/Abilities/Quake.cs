@@ -14,6 +14,8 @@ public class Quake : BaseAbility
             Vector3 force = (target.transform.position - PlayerController.Instance.transform.position).normalized;
             force = new Vector3(force.x, 10, 0);
             target.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
+
+            target.particleVFXManager.OnStunned();
         }
     }
 
