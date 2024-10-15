@@ -56,7 +56,7 @@ public class PlayerController : PlayerStats
     [SerializeField] private TextMeshProUGUI goldText;
     public int gold = 0;
 
-    private Timer timer;
+    private GameData gameData;
     [SerializeField] private TextMeshProUGUI timerText;
 
     private float horizontal;
@@ -71,7 +71,7 @@ public class PlayerController : PlayerStats
 
     private void Start()
     {
-        timer = Timer.Instance;
+        gameData = GameData.Instance;
         movementController = GetComponent<MovementController>();
         combatController = GetComponent<CombatController>();
         abilityController = GetComponent<AbilityController>();
@@ -127,14 +127,14 @@ public class PlayerController : PlayerStats
     private void Update()
     {
         // Timer
-        if (timer.timer <= 3600f)
+        if (gameData.timer <= 3600f)
         {
-            var ts = System.TimeSpan.FromSeconds(timer.timer);
+            var ts = System.TimeSpan.FromSeconds(gameData.timer);
             timerText.text = string.Format("{0:00}:{1:00}", ts.Minutes, ts.Seconds);
         }
         else
         {
-            var ts = System.TimeSpan.FromSeconds(timer.timer);
+            var ts = System.TimeSpan.FromSeconds(gameData.timer);
             timerText.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
         }
 
