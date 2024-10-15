@@ -74,13 +74,16 @@ public class MapTileController : MonoBehaviour
     {
         // set auto set tiles
         for (int i = 0; i < autoInitTilePrefabs.Count; i++)
-            SetTileNeighbours(autoInitTilePrefabs[i].GetComponent<MapTile>());
+            SetTileNeighbours(autoInitTilePrefabs[i].GetComponent<MapTile>(), true);
         // set shop tiles
         for (int i = 0; i < shopTilePrefabs.Count; i++)
-            SetTileNeighbours(shopTilePrefabs[i].GetComponent<MapTile>());
+            SetTileNeighbours(shopTilePrefabs[i].GetComponent<MapTile>(), true);
+        // set dead end tiles
+        for (int i = 0; i < deadEndTilePrefabs.Count; i++)
+            SetTileNeighbours(deadEndTilePrefabs[i].GetComponent<MapTile>(), false);
     }
 
-    private void SetTileNeighbours(MapTile tileToSet)
+    private void SetTileNeighbours(MapTile tileToSet, bool setToSelf)
     {
         if (tileToSet.name.Contains("0U"))
             tileToSet.availableTilesUp = tile0D;
@@ -101,5 +104,17 @@ public class MapTileController : MonoBehaviour
             tileToSet.availableTilesRight = tile0L;
         else if (tileToSet.name.Contains("1R"))
             tileToSet.availableTilesRight = tile1L;
+
+        if (!setToSelf)
+        {
+            if (tileToSet.availableTilesUp.Contains(tileToSet.gameObject))
+                tileToSet.availableTilesUp.Remove(tileToSet.gameObject);
+            if (tileToSet.availableTilesDown.Contains(tileToSet.gameObject))
+                tileToSet.availableTilesDown.Remove(tileToSet.gameObject);
+            if (tileToSet.availableTilesLeft.Contains(tileToSet.gameObject))
+                tileToSet.availableTilesLeft.Remove(tileToSet.gameObject);
+            if (tileToSet.availableTilesRight.Contains(tileToSet.gameObject))
+                tileToSet.availableTilesRight.Remove(tileToSet.gameObject);
+        }
     }
 }
