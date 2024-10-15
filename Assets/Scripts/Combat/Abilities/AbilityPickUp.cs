@@ -6,7 +6,14 @@ public class AbilityPickUp : PooledObject, IInteractable
     [SerializeField] private SimpleAnimation keycodeUI;
     [SerializeField] private SpriteRenderer spriteRenderer;
     [SerializeField] private BaseAbility ability;
+    [SerializeField] private bool initAbility;
     private int charges;
+
+    private void Start()
+    {
+        if (initAbility)
+            InitPickup(ability, ability.abilityCharges);
+    }
 
     public void InitPickup(BaseAbility newAbility, int charges)
     {
