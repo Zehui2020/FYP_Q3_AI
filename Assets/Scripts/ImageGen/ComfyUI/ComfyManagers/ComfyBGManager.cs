@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.Events;
+using static PromptData;
 
 public class ComfyBGManager : ComfyManager
 {
@@ -10,25 +12,27 @@ public class ComfyBGManager : ComfyManager
     [SerializeField] private ComfyUIManager uiManager;
     [SerializeField] private PlayerPrefs playerPrefs;
 
-    [SerializeField] private PromptData promptData;
     private bool startGenerating;
 
     private string totalStringPrompt;
 
     private int bgRecievedCounter;
 
-    [SerializeField] private string bgPrompts;
+    [SerializeField] private List<PromptData> allPromptDatas = new();
+    private int currentLevelPrompt = 0;
+    private int queueLevelData = 0;
+    [SerializeField] private List<string> bgPrompts = new();
 
     private void Start()
     {
         InitManager();
 
-        buttonController.InitController(promptData);
+        buttonController.InitController(allPromptDatas[currentLevelPrompt]);
 
         if (playerPrefs.experiencedTutorial)
             buttonController.SpawnButtons();
 
-        tilesetGeneration.InitTilesetGeneration(promptData);
+        tilesetGeneration.InitTilesetGeneration(allPromptDatas[currentLevelPrompt]);
 
         uiManager.SetStartingPrompt();
     }
@@ -49,9 +53,17 @@ public class ComfyBGManager : ComfyManager
         if (uiManager.GetPrompt() == uiManager.setPrompts)
             return false;
 
-        bgPrompts = uiManager.GetPrompt();
-        totalStringPrompt += bgPrompts;
+        bgPrompts.Add(uiManager.GetPrompt());
 
+        if (queueLevelData != allPromptDatas.Count - 1)
+        {
+            buttonController.InitController(allPromptDatas[queueLevelData]);
+            buttonController.SpawnButtons();
+            queueLevelData++;
+            return false;
+        }
+
+        totalStringPrompt += bgPrompts;
         startGenerating = true;
         QueueBGPrompt();
 
@@ -60,15 +72,14 @@ public class ComfyBGManager : ComfyManager
 
     public void QueueBGPrompt()
     {
-        Debug.Log("QUEUED BG");
-        PromptData.BGPrompt bgPrompt = promptData.GetBGPrompt((PromptData.BGPrompt.Type)bgRecievedCounter, bgPrompts);
+        PromptData.BGPrompt bgPrompt = allPromptDatas[currentLevelPrompt].GetBGPrompt((PromptData.BGPrompt.Type)bgRecievedCounter, bgPrompts[currentLevelPrompt]);
         totalStringPrompt += bgPrompt.prompt;
-        promptCtr.QueuePromptWithControlNet(promptData.GetPromptJSON(bgPrompt.bgType), bgPrompt.prompt, bgPrompt.referenceImage);
+        promptCtr.QueuePromptWithControlNet(allPromptDatas[currentLevelPrompt].GetPromptJSON(bgPrompt.bgType), bgPrompt.prompt, bgPrompt.referenceImage);
     }
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
     {
-        fileName = ((PromptData.BGPrompt.Type)bgRecievedCounter).ToString();
+        fileName = ((BGPrompt.Type)bgRecievedCounter).ToString();
 
         if (base.OnRecieveImage(promptID, texture))
         {
@@ -76,9 +87,20 @@ public class ComfyBGManager : ComfyManager
             {
                 if (startGenerating)
                 {
-                    Debug.Log("QUEUED TIELSET");
-                    tilesetGeneration.QueueTilesetPrompt(totalStringPrompt);
                     startGenerating = false;
+                    currentLevelPrompt++;
+
+                    // Go to generate the next prompt
+                    if (currentLevelPrompt >= allPromptDatas.Count)
+                    {
+                        tilesetGeneration.QueueTilesetPrompt(totalStringPrompt);
+                        return true;
+                    }
+
+                    startGenerating = true;
+                    bgRecievedCounter = 0;
+                    totalStringPrompt = string.Empty;
+                    QueueBGPrompt();
                 }
 
                 return true;
