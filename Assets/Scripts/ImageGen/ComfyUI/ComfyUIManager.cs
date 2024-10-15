@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -58,7 +56,7 @@ public class ComfyUIManager : MonoBehaviour
 
     public void SetStartingPrompt()
     {
-        title.text = "Pick A Universe!";
+        title.text = "Choose Your Adventure!";
         promptText.text = setPrompts;
     }
 }

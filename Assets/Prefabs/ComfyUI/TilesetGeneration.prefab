@@ -1,0 +1,211 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2956337805463427769
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2960942709254585107}
+  - component: {fileID: 4637686412530119896}
+  - component: {fileID: 7821521638919467164}
+  - component: {fileID: 2906048135171464967}
+  - component: {fileID: 8983844051210722825}
+  - component: {fileID: 7452929096094910603}
+  m_Layer: 0
+  m_Name: TilesetGeneration
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2960942709254585107
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2956337805463427769}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4637686412530119896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2956337805463427769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2892d6965dcb63e4093d2d9557b87ba5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  comfyWebsocket: {fileID: 7821521638919467164}
+  promptCtr: {fileID: 2906048135171464967}
+  imageCtr: {fileID: 8983844051210722825}
+  imageSaver: {fileID: 7452929096094910603}
+  fileName: tileset
+  recievedTileset: 0
+  setPrompts: pixel art, transparent background, border only, solid color, no characters,
+    empty background, no objects, consistent center, dark center
+--- !u!114 &7821521638919467164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2956337805463427769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ebcfd1775a21944b232b6724737c2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  comfyImageCtr: {fileID: 8983844051210722825}
+  promptID: 0
+  currentProgress: 0
+  maxProgress: 0
+--- !u!114 &2906048135171464967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2956337805463427769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f79945781b6eb3b469512ff72c92081f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptJson: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 368863600037899,\r\n     
+    \"steps\": 4,\r\n      \"cfg\": 1.9000000000000001,\r\n      \"sampler_name\":
+    \"lcm\",\r\n      \"scheduler\": \"sgm_uniform\",\r\n      \"denoise\": 1,\r\n     
+    \"model\": [\r\n        \"37\",\r\n        0\r\n      ],\r\n      \"positive\":
+    [\r\n        \"12\",\r\n        0\r\n      ],\r\n      \"negative\": [\r\n       
+    \"12\",\r\n        1\r\n      ],\r\n      \"latent_image\": [\r\n        \"5\",\r\n       
+    0\r\n      ]\r\n    },\r\n    \"class_type\": \"KSampler\",\r\n    \"_meta\":
+    {\r\n      \"title\": \"KSampler\"\r\n    }\r\n  },\r\n  \"4\": {\r\n    \"inputs\":
+    {\r\n      \"ckpt_name\": \"pixelArtDiffusionXL_spriteShaper.safetensors\"\r\n   
+    },\r\n    \"class_type\": \"CheckpointLoaderSimple\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"Load Checkpoint\"\r\n    }\r\n  },\r\n  \"5\": {\r\n    \"inputs\":
+    {\r\n      \"width\": 1024,\r\n      \"height\": 1024,\r\n      \"batch_size\":
+    1\r\n    },\r\n    \"class_type\": \"EmptyLatentImage\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"Empty Latent Image\"\r\n    }\r\n  },\r\n  \"6\": {\r\n    \"inputs\":
+    {\r\n      \"text\": \"Pprompt\",\r\n      \"clip\": [\r\n        \"4\",\r\n       
+    1\r\n      ]\r\n    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\":
+    {\r\n      \"title\": \"Prompt\"\r\n    }\r\n  },\r\n  \"7\": {\r\n    \"inputs\":
+    {\r\n      \"text\": \"Nprompt\",\r\n      \"clip\": [\r\n        \"4\",\r\n       
+    1\r\n      ]\r\n    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\":
+    {\r\n      \"title\": \"Negative Prompt\"\r\n    }\r\n  },\r\n  \"8\": {\r\n   
+    \"inputs\": {\r\n      \"samples\": [\r\n        \"3\",\r\n        0\r\n     
+    ],\r\n      \"vae\": [\r\n        \"4\",\r\n        2\r\n      ]\r\n    },\r\n   
+    \"class_type\": \"VAEDecode\",\r\n    \"_meta\": {\r\n      \"title\": \"VAE
+    Decode\"\r\n    }\r\n  },\r\n  \"11\": {\r\n    \"inputs\": {\r\n      \"control_net_name\":
+    \"controlnet-canny-sdxl-1.0\\\\diffusion_pytorch_model.fp16.safetensors\"\r\n   
+    },\r\n    \"class_type\": \"ControlNetLoader\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"Load ControlNet Model\"\r\n    }\r\n  },\r\n  \"12\": {\r\n    \"inputs\":
+    {\r\n      \"strength\": 1,\r\n      \"start_percent\": 0,\r\n      \"end_percent\":
+    1,\r\n      \"positive\": [\r\n        \"6\",\r\n        0\r\n      ],\r\n     
+    \"negative\": [\r\n        \"7\",\r\n        0\r\n      ],\r\n      \"control_net\":
+    [\r\n        \"11\",\r\n        0\r\n      ],\r\n      \"image\": [\r\n       
+    \"34\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"ControlNetApplyAdvanced\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Apply ControlNet (Advanced)\"\r\n    }\r\n 
+    },\r\n  \"13\": {\r\n    \"inputs\": {\r\n      \"image\": \"placeholder.png\",\r\n     
+    \"upload\": \"image\"\r\n    },\r\n    \"class_type\": \"LoadImage\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Input\"\r\n    }\r\n  },\r\n  \"16\": {\r\n   
+    \"inputs\": {\r\n      \"images\": [\r\n        \"34\",\r\n        0\r\n     
+    ]\r\n    },\r\n    \"class_type\": \"PreviewImage\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"Preview Image\"\r\n    }\r\n  },\r\n  \"24\": {\r\n    \"inputs\":
+    {\r\n      \"filename_prefix\": \"ComfyUI\",\r\n      \"images\": [\r\n       
+    \"35\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"SaveImage\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Save Image\"\r\n    }\r\n  },\r\n  \"34\":
+    {\r\n    \"inputs\": {\r\n      \"low_threshold\": 0,\r\n      \"high_threshold\":
+    88,\r\n      \"resolution\": 512,\r\n      \"image\": [\r\n        \"13\",\r\n       
+    0\r\n      ]\r\n    },\r\n    \"class_type\": \"CannyEdgePreprocessor\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Canny Edge\"\r\n    }\r\n  },\r\n  \"35\":
+    {\r\n    \"inputs\": {\r\n      \"pixel_size\": 4,\r\n      \"image\": [\r\n       
+    \"8\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"Pixelization\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Pixelization\"\r\n    }\r\n  },\r\n  \"36\":
+    {\r\n    \"inputs\": {\r\n      \"lora_name\": \"pytorch_lora_weights_sdxl.safetensors\",\r\n     
+    \"strength_model\": 1,\r\n      \"strength_clip\": 1,\r\n      \"model\": [\r\n       
+    \"4\",\r\n        0\r\n      ],\r\n      \"clip\": [\r\n        \"4\",\r\n       
+    1\r\n      ]\r\n    },\r\n    \"class_type\": \"LoraLoader\",\r\n    \"_meta\":
+    {\r\n      \"title\": \"Load LoRA\"\r\n    }\r\n  },\r\n  \"37\": {\r\n    \"inputs\":
+    {\r\n      \"sampling\": \"lcm\",\r\n      \"zsnr\": false,\r\n      \"model\":
+    [\r\n        \"36\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
+    \"ModelSamplingDiscrete\",\r\n    \"_meta\": {\r\n      \"title\": \"ModelSamplingDiscrete\"\r\n   
+    }\r\n  }\r\n}"
+  OnQueuePrompt:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &8983844051210722825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2956337805463427769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c8341c5dc26d3e4bbb6cc0c655ae5ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnRecieveImage:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: SetTrigger
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: activate
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: activate
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: ShowDialoguePopup
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 9
+          m_FloatArgument: 0
+          m_StringArgument: activate
+          m_BoolArgument: 1
+        m_CallState: 2
+  isControlNet: 1
+--- !u!114 &7452929096094910603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2956337805463427769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fb7b725e864671448e8c09318a3291e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
