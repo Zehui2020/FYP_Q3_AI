@@ -9,7 +9,9 @@ public class AreaOfEffect : MonoBehaviour
     [SerializeField] private float interval = 2;
     [SerializeField] private int stackPerInterval = 1;
     [SerializeField] private float lifeTime = 10;
-    [SerializeField] private List<BaseStats> stats = new List<BaseStats>();
+    [SerializeField] private GameObject particlePrefab;
+    public List<ParticleVFXManager> particleVFXManager;
+    private List<BaseStats> stats = new List<BaseStats>();
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -35,14 +37,33 @@ public class AreaOfEffect : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        Destroy(gameObject, lifeTime);
-    }
-
     public void HandleStatusOverTime()
     {
         StartCoroutine(DeathRoutine());
+    }
+
+    public void InitParticles(int amount, float interval, float verticalOffset)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            GameObject obj = Instantiate(particlePrefab);
+            obj.transform.localScale = Vector3.one;
+            obj.transform.SetParent(transform);
+            particleVFXManager.Add(obj.GetComponent<ParticleVFXManager>());
+            if (i > 0)
+                obj.transform.localPosition = new Vector3(i * interval, verticalOffset, 0);
+            else
+            {
+                obj.transform.localPosition = new Vector3(0, verticalOffset, 0);
+                continue;
+            }
+
+            obj = Instantiate(particlePrefab);
+            obj.transform.localScale = Vector3.one;
+            obj.transform.SetParent(transform);
+            particleVFXManager.Add(obj.GetComponent<ParticleVFXManager>());
+            obj.transform.localPosition = new Vector3(i * -interval, verticalOffset, 0);
+        }
     }
 
     private IEnumerator DeathRoutine()
