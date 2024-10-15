@@ -5,6 +5,9 @@ using UnityEngine;
 public class ContagiousHaze : BaseAbility
 {
     [SerializeField] LayerMask targetLayer;
+    public override void InitAbility()
+    {
+    }
 
     public override void OnAbilityUse(BaseStats self, BaseStats target)
     {

@@ -3,6 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Abilities/Quake")]
 public class Quake : BaseAbility
 {
+    public override void InitAbility()
+    {
+    }
+
     public override void OnAbilityUse(BaseStats self, BaseStats target)
     {
         if (target.GetComponent<Rigidbody2D>().velocity.y == 0)

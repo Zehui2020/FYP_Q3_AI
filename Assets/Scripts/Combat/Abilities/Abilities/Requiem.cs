@@ -1,11 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Abilities/Requiem")]
 public class Requiem : BaseAbility
 {
-    private bool isInState = false;
+    private bool isInState;
+
+    public override void InitAbility()
+    {
+        isInState = false;
+    }
 
     public override void OnAbilityUse(BaseStats self, BaseStats target)
     {
@@ -13,20 +16,16 @@ public class Requiem : BaseAbility
         {
             isInState = true;
             // increase atk spd
-            PlayerController.Instance.attackSpeedMultiplier.AddModifier(0.5f);
+            PlayerController.Instance.attackSpeedMultiplier.AddModifier(abilityRange / 100);
             // increase bleed chance
-            abilityStats.bloodArtsBleedChance += 25;
-
-            self.particleVFXManager.OnBleeding();
+            abilityStats.bloodArtsBleedChance += (int)abilityStrength;
         }
         else if (isInState)
         {
             isInState = false;
             // reset mods
-            PlayerController.Instance.attackSpeedMultiplier.RemoveModifier(0.5f);
-            abilityStats.bloodArtsBleedChance -= 25;
-
-            self.particleVFXManager.StopBleeding();
+            PlayerController.Instance.attackSpeedMultiplier.RemoveModifier(abilityRange / 100);
+            abilityStats.bloodArtsBleedChance -= (int)abilityStrength;
         }
     }
 
@@ -37,10 +36,14 @@ public class Requiem : BaseAbility
 
     public override void OnAbilityEnd(BaseStats self, BaseStats target)
     {
+        if (!isInState)
+            return;
+
         // -2% max health
         self.TakeTrueDamage(new BaseStats.Damage(BaseStats.Damage.DamageSource.BloodArts, self.maxHealth * 0.02f));
 
-        if (isInState)
-            OnAbilityLoop(self, target);
+        self.particleVFXManager.OnBloodLoss();
+
+        OnAbilityLoop(self, target);
     }
 }

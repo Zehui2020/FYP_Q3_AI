@@ -4,6 +4,9 @@ using UnityEngine;
 public class HeatWave : BaseAbility
 {
     [SerializeField] GameObject wavePrefab;
+    public override void InitAbility()
+    {
+    }
 
     public override void OnAbilityUse(BaseStats self, BaseStats target)
     {

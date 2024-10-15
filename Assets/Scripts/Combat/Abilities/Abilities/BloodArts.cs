@@ -4,6 +4,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Abilities/Blood Arts")]
 public class BloodArts : BaseAbility
 {
+    public override void InitAbility()
+    {
+    }
+
     public override void OnAbilityUse(BaseStats self, BaseStats target)
     {
         // -50% health
@@ -13,14 +17,12 @@ public class BloodArts : BaseAbility
         // 50% life steal from attacks
         abilityStats.bloodArtsLifestealMultiplier += 0.5f;
 
-        self.particleVFXManager.OnBleeding();
+        self.particleVFXManager.OnBloodLoss();
     }
 
     public override void OnAbilityEnd(BaseStats self, BaseStats target)
     {
         abilityStats.bloodArtsBleedChance -= 25;
         abilityStats.bloodArtsLifestealMultiplier -= 0.5f;
-
-        self.particleVFXManager.StopBleeding();
     }
 }

@@ -3,6 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Abilities/Protection Sphere")]
 public class ProtectionSphere : BaseAbility
 {
+    public override void InitAbility()
+    {
+    }
+
     public override void OnAbilityUse(BaseStats self, BaseStats target)
     {
         // push targets away

@@ -3,6 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Abilities/Haste")]
 public class Haste : BaseAbility
 {
+    public override void InitAbility()
+    {
+    }
+
     public override void OnAbilityUse(BaseStats self, BaseStats target)
     {
         self.movementSpeedMultiplier.AddModifier(abilityStrength / 100);
