@@ -33,7 +33,7 @@ public class ParallaxEffect : MonoBehaviour
         imageSaver = GetComponent<ImageSaver>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename);
+        spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_Level" + GameData.Instance.currentLevel);
     }
 
     private void LateUpdate()
