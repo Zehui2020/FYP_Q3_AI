@@ -34,7 +34,7 @@ public class ComfyBGManager : ComfyManager
 
         tilesetGeneration.InitTilesetGeneration(allPromptDatas[currentLevelPrompt]);
 
-        uiManager.SetStartingPrompt();
+        uiManager.SetStartingPrompt(2);
     }
 
     private void Update()
@@ -60,6 +60,7 @@ public class ComfyBGManager : ComfyManager
             buttonController.InitController(allPromptDatas[queueLevelData]);
             buttonController.SpawnButtons();
             queueLevelData++;
+            uiManager.SetStartingPrompt(queueLevelData + 2);
             return false;
         }
 
@@ -79,7 +80,7 @@ public class ComfyBGManager : ComfyManager
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
     {
-        fileName = ((BGPrompt.Type)bgRecievedCounter).ToString();
+        fileName = ((BGPrompt.Type)bgRecievedCounter).ToString() + "_Level" + currentLevelPrompt + 2;
 
         if (base.OnRecieveImage(promptID, texture))
         {

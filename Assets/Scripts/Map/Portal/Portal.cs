@@ -3,14 +3,14 @@ using UnityEngine.UI;
 
 public class Portal : MonoBehaviour, IInteractable
 {
-    [SerializeField] private Color activatedColor;
+    [SerializeField] private Animator animator;
     public bool isActivated = false;
     public GameObject button;
 
     public void OnEnterRange()
     {
+        animator.SetTrigger("activate");
         isActivated = true;
-        GetComponent<SpriteRenderer>().color = activatedColor;
         button.SetActive(true);
     }
 
@@ -22,7 +22,6 @@ public class Portal : MonoBehaviour, IInteractable
     public void OnLeaveRange()
     {
         isActivated = true;
-        GetComponent<SpriteRenderer>().color = activatedColor;
         button.SetActive(true);
     }
 }

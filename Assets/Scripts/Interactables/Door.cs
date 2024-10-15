@@ -3,10 +3,12 @@ using UnityEngine;
 public class Door : MonoBehaviour, IInteractable
 {
     [SerializeField] private SimpleAnimation keycodeUI;
+    [SerializeField] private Animator animator;
 
     public void OnEnterRange()
     {
         keycodeUI.Show();
+        animator.SetTrigger("activate");
     }
 
     public bool OnInteract()

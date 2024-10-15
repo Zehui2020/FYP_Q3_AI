@@ -54,9 +54,9 @@ public class ComfyUIManager : MonoBehaviour
         promptText.text = setPrompts;
     }
 
-    public void SetStartingPrompt()
+    public void SetStartingPrompt(int levelNumber)
     {
-        title.text = "Choose Your Adventure!";
+        title.text = "Choose Your Adventure!\n" + "Level: " + levelNumber;
         promptText.text = setPrompts;
     }
 }

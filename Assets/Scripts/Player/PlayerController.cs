@@ -71,6 +71,7 @@ public class PlayerController : PlayerStats
 
     private void Start()
     {
+        timer = Timer.Instance;
         movementController = GetComponent<MovementController>();
         combatController = GetComponent<CombatController>();
         abilityController = GetComponent<AbilityController>();
@@ -105,8 +106,6 @@ public class PlayerController : PlayerStats
 
         healthBar.InitStatBar(health, maxHealth);
         shieldBar.InitStatBar(shield, maxShield);
-
-        timer = Timer.Instance;
 
         OnHealthChanged += (increase, isCrit) => 
         { 
