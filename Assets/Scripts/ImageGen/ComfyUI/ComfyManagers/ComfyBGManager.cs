@@ -14,11 +14,11 @@ public class ComfyBGManager : ComfyManager
 
     private bool startGenerating;
 
-    private int bgRecievedCounter;
+    [SerializeField] private int bgRecievedCounter;
+    [SerializeField] private int currentLevelPrompt = 0;
+    [SerializeField] private int queueLevelData = 0;
 
     [SerializeField] private List<PromptData> allPromptDatas = new();
-    private int currentLevelPrompt = 0;
-    private int queueLevelData = 0;
     [SerializeField] private List<string> bgPrompts = new();
 
     private void Start()
@@ -75,12 +75,7 @@ public class ComfyBGManager : ComfyManager
     public override bool OnRecieveImage(string promptID, Texture2D texture)
     {
         if (currentLevelPrompt >= allPromptDatas.Count - 1 && bgRecievedCounter >= allPromptDatas.Count)
-        {
-            Debug.Log(currentLevelPrompt);
-            Debug.Log(bgRecievedCounter);
-
             return false;
-        }
 
         fileName = ((BGPrompt.Type)bgRecievedCounter).ToString() + "_Level" + (currentLevelPrompt + 2);
 
