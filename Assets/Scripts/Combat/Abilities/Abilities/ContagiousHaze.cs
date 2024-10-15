@@ -35,21 +35,19 @@ public class ContagiousHaze : BaseAbility
 
         // get all target objects in area
         Collider2D[] targetColliders = Physics2D.OverlapCircleAll(abilityStats.contagiousHazeTarget.transform.position, 10, targetLayer);
-        List<BaseStats> targetsInArea = new List<BaseStats>();
-        foreach (Collider2D col in targetColliders)
-        {
-            if (col.GetComponent<BaseStats>() != null)
-            {
-                targetsInArea.Add(col.GetComponent<BaseStats>());
-            }
-        }
-        Debug.Log(targetsInArea.Count);
         abilityStats.contagiousHazeTarget = null;
         int stacksToApply = abilityStats.contagiousHazeStacks;
-        for (int i = 0; i < targetsInArea.Count; i++)
+
+        foreach (Collider2D col in targetColliders)
         {
-            targetsInArea[i].ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), stacksToApply);
+            BaseStats targetInArea = col.GetComponent<BaseStats>();
+            if (target != null)
+            {
+                targetInArea.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), stacksToApply);
+                targetInArea.particleVFXManager.OnPoison();
+            }
         }
+
         abilityStats.contagiousHazeHit = false;
         abilityStats.contagiousHazeStacks = 0;
     }
