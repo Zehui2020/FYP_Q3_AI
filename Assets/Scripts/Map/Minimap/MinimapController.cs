@@ -6,6 +6,11 @@ public class MinimapController : MonoBehaviour
     [SerializeField] List<GameObject> maps;
     [SerializeField] List<GameObject> cam;
 
+    private void Start()
+    {
+        ChangeView(false);
+    }
+
     public void ChangeView(bool showMap)
     {
         if (showMap)
