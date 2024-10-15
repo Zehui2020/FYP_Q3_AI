@@ -14,7 +14,7 @@ public abstract class BaseAbility : ShopItemData
         ProtectionSphere,
         Quake,
         Haste,
-        PoisonKnifes,
+        PoisonKnives,
         MolotovCocktail,
         FreezingOrb,
         Ravage,

@@ -14,17 +14,22 @@ public class ContagiousHaze : BaseAbility
         // deal damage
         float damageDealt = (abilityStrength / 100) * target.CalculateDamageDealt(target, BaseStats.Damage.DamageSource.ContagiousHaze, out bool isCrit, out DamagePopup.DamageType damageType);
         target.TakeDamage(PlayerController.Instance, new BaseStats.Damage(BaseStats.Damage.DamageSource.ContagiousHaze, damageDealt), isCrit, target.transform.position, damageType);
+
+        self.particleVFXManager.OnPoison();
+        target.particleVFXManager.OnPoison();
     }
 
     public override void OnAbilityEnd(BaseStats self, BaseStats target)
     {
+        self.particleVFXManager.StopPoison();
+        target.particleVFXManager.StopPoison();
+
         if (!abilityStats.contagiousHazeHit)
         {
             abilityStats.contagiousHazeTarget = null;
             return;
         }
 
-        Debug.Log("Spreading Poison");
         // get all target objects in area
         Collider2D[] targetColliders = Physics2D.OverlapCircleAll(abilityStats.contagiousHazeTarget.transform.position, 10, targetLayer);
         List<BaseStats> targetsInArea = new List<BaseStats>();

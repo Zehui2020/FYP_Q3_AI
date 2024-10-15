@@ -16,6 +16,8 @@ public class Requiem : BaseAbility
             PlayerController.Instance.attackSpeedMultiplier.AddModifier(0.5f);
             // increase bleed chance
             abilityStats.bloodArtsBleedChance += 25;
+
+            self.particleVFXManager.OnBleeding();
         }
         else if (isInState)
         {
@@ -23,6 +25,8 @@ public class Requiem : BaseAbility
             // reset mods
             PlayerController.Instance.attackSpeedMultiplier.RemoveModifier(0.5f);
             abilityStats.bloodArtsBleedChance -= 25;
+
+            self.particleVFXManager.StopBleeding();
         }
     }
 
@@ -35,7 +39,7 @@ public class Requiem : BaseAbility
     {
         // -2% max health
         self.TakeTrueDamage(new BaseStats.Damage(BaseStats.Damage.DamageSource.BloodArts, self.maxHealth * 0.02f));
-        
+
         if (isInState)
             OnAbilityLoop(self, target);
     }
