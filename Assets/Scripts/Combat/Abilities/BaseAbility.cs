@@ -12,7 +12,7 @@ public abstract class BaseAbility : ShopItemData
         HealthPotion,
         DivineBlessing,
         ProtectionSphere,
-        Quake,
+        Shred,
         Haste,
         PoisonKnives,
         MolotovCocktail,
