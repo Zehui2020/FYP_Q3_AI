@@ -51,7 +51,7 @@ public class BaseStats : MonoBehaviour
         public int counter;
     }
 
-    [HideInInspector] protected StatusEffectManager statusEffectManager;
+    [HideInInspector] public StatusEffectManager statusEffectManager;
     [SerializeField] public ParticleVFXManager particleVFXManager;
     [SerializeField] protected StatusEffectStats statusEffectStats;
     [SerializeField] protected ItemStats itemStats;
