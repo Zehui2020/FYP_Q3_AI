@@ -48,7 +48,8 @@ public class AbilityProjectile : MonoBehaviour
     {
         GameObject obj = Instantiate(particlePrefab);
         obj.transform.localScale = Vector3.one;
-        particleVFXManager.Add(obj.GetComponent<ParticleVFXManager>());
+        if (obj.GetComponent<ParticleVFXManager>() != null)
+            particleVFXManager.Add(obj.GetComponent<ParticleVFXManager>());
         obj.transform.SetParent(transform);
         obj.transform.localPosition = new Vector3(0, verticalOffset, 0);
         obj.transform.SetParent(null);

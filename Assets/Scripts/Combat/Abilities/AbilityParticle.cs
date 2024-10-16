@@ -70,7 +70,8 @@ public class AbilityParticle : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         isActivated = true;
         yield return new WaitForSeconds(lifeTime);
-        GetComponent<ParticleVFXManager>().StopBurning();
+        if (GetComponent<ParticleVFXManager>() != null)
+            GetComponent<ParticleVFXManager>().StopEverything();
         Destroy(gameObject, 1);
         StopAllCoroutines();
     }
