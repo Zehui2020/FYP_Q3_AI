@@ -47,6 +47,19 @@ public class MapTileController : MonoBehaviour
             CheckTileNeighbours(shopTilePrefabs[i]);
     }
 
+    private void SetTileContraints()
+    {
+        // set auto set tiles
+        for (int i = 0; i < autoInitTilePrefabs.Count; i++)
+            SetTileNeighbours(autoInitTilePrefabs[i].GetComponent<MapTile>(), false);
+        // set shop tiles
+        for (int i = 0; i < shopTilePrefabs.Count; i++)
+            SetTileNeighbours(shopTilePrefabs[i].GetComponent<MapTile>(), false);
+        // set dead end tiles
+        for (int i = 0; i < deadEndTilePrefabs.Count; i++)
+            SetTileNeighbours(deadEndTilePrefabs[i].GetComponent<MapTile>(), false);
+    }
+
     private void CheckTileNeighbours(GameObject tile)
     {
         if (tile.name.Contains("0U"))
@@ -68,19 +81,6 @@ public class MapTileController : MonoBehaviour
             tile0R.Add(tile);
         else if (tile.name.Contains("1R"))
             tile1R.Add(tile);
-    }
-
-    private void SetTileContraints()
-    {
-        // set auto set tiles
-        for (int i = 0; i < autoInitTilePrefabs.Count; i++)
-            SetTileNeighbours(autoInitTilePrefabs[i].GetComponent<MapTile>(), true);
-        // set shop tiles
-        for (int i = 0; i < shopTilePrefabs.Count; i++)
-            SetTileNeighbours(shopTilePrefabs[i].GetComponent<MapTile>(), true);
-        // set dead end tiles
-        for (int i = 0; i < deadEndTilePrefabs.Count; i++)
-            SetTileNeighbours(deadEndTilePrefabs[i].GetComponent<MapTile>(), false);
     }
 
     private void SetTileNeighbours(MapTile tileToSet, bool setToSelf)
