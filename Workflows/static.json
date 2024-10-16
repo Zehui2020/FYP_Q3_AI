@@ -1,8 +1,8 @@
 {
   "3": {
     "inputs": {
-      "seed": 573753694529004,
-      "steps": 15,
+      "seed": 471013842958786,
+      "steps": 20,
       "cfg": 7,
       "sampler_name": "euler",
       "scheduler": "normal",
@@ -40,8 +40,8 @@
   },
   "5": {
     "inputs": {
-      "width": 1920,
-      "height": 1920,
+      "width": 1024,
+      "height": 1024,
       "batch_size": 1
     },
     "class_type": "EmptyLatentImage",
@@ -153,7 +153,7 @@
     "inputs": {
       "filename_prefix": "ComfyUI",
       "images": [
-        "35",
+        "61",
         0
       ]
     },
@@ -164,7 +164,7 @@
   },
   "35": {
     "inputs": {
-      "pixel_size": 4,
+      "pixel_size": 2,
       "image": [
         "8",
         0
@@ -193,7 +193,7 @@
     "inputs": {
       "low_threshold": 0,
       "high_threshold": 255,
-      "resolution": 1920,
+      "resolution": 1024,
       "image": [
         "13",
         0
@@ -221,6 +221,24 @@
     "class_type": "LoraLoader",
     "_meta": {
       "title": "Load LoRA"
+    }
+  },
+  "61": {
+    "inputs": {
+      "width": 1920,
+      "height": 1920,
+      "interpolation": "nearest",
+      "method": "stretch",
+      "condition": "always",
+      "multiple_of": 0,
+      "image": [
+        "35",
+        0
+      ]
+    },
+    "class_type": "ImageResize+",
+    "_meta": {
+      "title": "🔧 Image Resize"
     }
   }
 }
