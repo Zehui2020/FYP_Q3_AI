@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class MapTileController : MonoBehaviour
@@ -7,6 +8,7 @@ public class MapTileController : MonoBehaviour
     [HideInInspector] public List<GameObject> autoInitTilePrefabs;
     [HideInInspector] public List<GameObject> deadEndTilePrefabs;
     [HideInInspector] public List<GameObject> uniqueTilePrefabs;
+    [HideInInspector] public List<GameObject> borderTilePrefabs;
     [HideInInspector] public List<GameObject> solidTilePrefabs;
     [HideInInspector] public List<GameObject> shopTilePrefabs;
 
@@ -25,13 +27,14 @@ public class MapTileController : MonoBehaviour
         autoInitTilePrefabs = mData.autoInitTilePrefabs;
         deadEndTilePrefabs = mData.deadEndTilePrefabs;
         uniqueTilePrefabs = mData.uniqueTilePrefabs;
+        borderTilePrefabs = mData.borderTilePrefabs;
         solidTilePrefabs = mData.solidTilePrefabs;
         shopTilePrefabs = mData.shopTilePrefabs;
-        SortTiles();
+        AddSortTiles();
         SetTileContraints();
     }
 
-    private void SortTiles()
+    private void AddSortTiles()
     {
         // store auto set tiles
         for (int i = 0; i < autoInitTilePrefabs.Count; i++)
@@ -51,7 +54,10 @@ public class MapTileController : MonoBehaviour
     {
         // set auto set tiles
         for (int i = 0; i < autoInitTilePrefabs.Count; i++)
-            SetTileNeighbours(autoInitTilePrefabs[i].GetComponent<MapTile>(), false);
+            SetTileNeighbours(autoInitTilePrefabs[i].GetComponent<MapTile>(), true);
+        // set border tiles
+        for (int i = 0; i < borderTilePrefabs.Count; i++)
+            SetTileNeighbours(borderTilePrefabs[i].GetComponent<MapTile>(), true);
         // set shop tiles
         for (int i = 0; i < shopTilePrefabs.Count; i++)
             SetTileNeighbours(shopTilePrefabs[i].GetComponent<MapTile>(), false);

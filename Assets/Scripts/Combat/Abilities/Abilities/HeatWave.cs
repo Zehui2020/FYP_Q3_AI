@@ -12,6 +12,7 @@ public class HeatWave : BaseAbility
     {
         GameObject obj = Instantiate(wavePrefab);
         obj.transform.position = PlayerController.Instance.transform.position;
+        obj.transform.localScale = new Vector3(PlayerController.Instance.transform.localScale.x, 1, 1);
         Vector3 force = new Vector3(PlayerController.Instance.transform.localScale.x * abilityRange + PlayerController.Instance.GetComponent<Rigidbody2D>().velocity.x, 0, 0);
         obj.GetComponent<HeatWaveProjectile>().LaunchProjectile(force);
     }
