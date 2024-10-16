@@ -9,9 +9,13 @@ public class MolotovProjectile : AbilityProjectile
     protected override void OnHit(BaseStats target)
     {
         areaObj.SetActive(true);
-        areaObj.transform.localScale = new Vector3(range / transform.localScale.x, areaObj.transform.localScale.y / transform.localScale.y, areaObj.transform.localScale.z);
-        areaObj.transform.SetParent(transform.parent);
+        areaObj.transform.SetParent(null);
+        areaOfEffect.InitParticles(10, 0.05f, 4);
         areaOfEffect.HandleStatusOverTime();
+        for (int i = 0; i < areaOfEffect.particleVFXManager.Count; i++)
+        {
+            areaOfEffect.particleVFXManager[i].OnBurning(0);
+        }
 
         base.OnHit(target);
     }

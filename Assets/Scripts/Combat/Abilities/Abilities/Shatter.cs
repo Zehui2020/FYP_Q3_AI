@@ -3,6 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Abilities/Shatter")]
 public class Shatter : BaseAbility
 {
+    public override void InitAbility()
+    {
+    }
+
     public override void OnAbilityUse(BaseStats self, BaseStats target)
     {
         // deal damage

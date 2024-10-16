@@ -6,6 +6,9 @@ using UnityEngine;
 public class PoisonKnives : BaseAbility
 {
     [SerializeField] GameObject knifePrefab;
+    public override void InitAbility()
+    {
+    }
 
     public override void OnAbilityUse(BaseStats self, BaseStats target)
     {

@@ -12,7 +12,7 @@ public abstract class BaseAbility : ShopItemData
         HealthPotion,
         DivineBlessing,
         ProtectionSphere,
-        Quake,
+        Shred,
         Haste,
         PoisonKnives,
         MolotovCocktail,
@@ -42,6 +42,7 @@ public abstract class BaseAbility : ShopItemData
     public int abilityCharges;
     public int abilityMaxCharges;
 
+    public abstract void InitAbility();
     public abstract void OnAbilityUse(BaseStats self, BaseStats target);
     public abstract void OnAbilityEnd(BaseStats self, BaseStats target);
 }

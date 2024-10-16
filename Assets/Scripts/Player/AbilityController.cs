@@ -133,10 +133,8 @@ public class AbilityController : MonoBehaviour
             }
 
             if (count > 10)
-            {
-                Debug.Log("Shit Broke :)");
                 break;
-            }
+
             count++;
         }
     }
@@ -160,12 +158,14 @@ public class AbilityController : MonoBehaviour
         {
             for (int i = 0; i < abilities.Count; i++)
             {
+                abilities[i].InitAbility();
                 if (charges[i] < maxCharges[i])
                     abilityCooldownRoutines[i] = StartCoroutine(AbilityCooldownRoutine(i, abilities[i]));
             }
         }
         else
         {
+            abilities[abilityNo].InitAbility();
             if (charges[abilityNo] < maxCharges[abilityNo])
                 abilityCooldownRoutines[abilityNo] = StartCoroutine(AbilityCooldownRoutine(abilityNo, abilities[abilityNo]));
         }

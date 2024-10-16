@@ -4,6 +4,9 @@ using UnityEngine;
 public class FreezingOrb : BaseAbility
 {
     [SerializeField] GameObject nadePrefab;
+    public override void InitAbility()
+    {
+    }
 
     public override void OnAbilityUse(BaseStats self, BaseStats target)
     {
