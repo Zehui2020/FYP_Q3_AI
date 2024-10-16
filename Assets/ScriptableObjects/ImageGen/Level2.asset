@@ -13,29 +13,28 @@ MonoBehaviour:
   m_Name: Level2
   m_EditorClassIdentifier: 
   themePrompts:
-  - Cave
+  - Mountain
   foregroundBGPrompts:
   - type: 0
     bgType: 0
-    keywords: Cave
-    prompt: pixel art, cave, dark brown rock, side view
-    referenceImage: cave_fg
+    keywords: Mountain
+    prompt: pixel art, trees, snowy, white tips
+    referenceImage: mountain_fg
   middleGroundBGPrompts:
   - type: 1
     bgType: 0
-    keywords: Cave
-    prompt: pixel art, cave entrance, cave roof, cave bottom, stalactite, stalagmite,
-      foreground, brown rocks
-    referenceImage: cave_mg
+    keywords: Mountain
+    prompt: pixel art, mountain, snowy
+    referenceImage: mountain_mg
   backgroundBGPrompts:
   - type: 2
     bgType: 1
-    keywords: Cave
-    prompt: pixel art, cave, side view
-    referenceImage: cave_bg
+    keywords: Mountain
+    prompt: pixel art, sky, snowy. cloudy, grey
+    referenceImage: mountain_bg
   promptCheckers:
-  - foundPrompts: Cave
-    endPrompt: stone themed, dark brown stone
+  - foundPrompts: Mountain
+    endPrompt: stone themed, light grey stone
     controlnetImage: stone_tileset
   parallaxBGJSON: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 737559942262367,\r\n     
     \"steps\": 15,\r\n      \"cfg\": 7,\r\n      \"sampler_name\": \"euler\",\r\n     

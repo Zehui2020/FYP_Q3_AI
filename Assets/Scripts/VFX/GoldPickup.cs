@@ -40,7 +40,9 @@ public class GoldPickup : PooledObject
         float randLaunchY = Random.Range(launchForceY.x, launchForceY.y);
         goldRB.AddForce(new Vector2(randLaunchX, randLaunchY), ForceMode2D.Impulse);
 
-        yield return new WaitForSeconds(2f);
+        float randWait = Random.Range(0.5f, 2f);
+
+        yield return new WaitForSeconds(randWait);
 
         triggerCol.enabled = true;
         trail.enabled = true;

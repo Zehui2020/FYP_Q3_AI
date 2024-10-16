@@ -45,8 +45,15 @@ public class ComfyTilesetGeneration : ComfyManager
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
     {
+        if (tilesetRecieved >= playerBGPrompts.Count)
+            return false;
+
+        fileName = "Tileset_Level" + (tilesetRecieved + 2);
+        Debug.Log("RECIEVED " + fileName);
+
         if (base.OnRecieveImage(promptID, texture))
         {
+            tilesetRecieved++;
             QueueTilesetPrompt();
             return true;
         }

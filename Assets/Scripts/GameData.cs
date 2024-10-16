@@ -17,6 +17,7 @@ public class GameData : MonoBehaviour
         }
 
         Instance = this;
+        currentLevel = 1;
 
         DontDestroyOnLoad(gameObject);
     }

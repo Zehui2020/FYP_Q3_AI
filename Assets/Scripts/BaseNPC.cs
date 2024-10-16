@@ -41,6 +41,9 @@ public class BaseNPC : MonoBehaviour, IInteractable
 
     public Dialogue GetCurrentDialogue()
     {
+        if (dialogueIndex >= dialogues.Count)
+            return null;
+
         return dialogues[dialogueIndex];
     }
 

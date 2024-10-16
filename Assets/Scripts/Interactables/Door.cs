@@ -4,6 +4,7 @@ public class Door : MonoBehaviour, IInteractable
 {
     [SerializeField] private SimpleAnimation keycodeUI;
     [SerializeField] private Animator animator;
+    [SerializeField] private string nextLevel;
 
     public void OnEnterRange()
     {
@@ -13,7 +14,7 @@ public class Door : MonoBehaviour, IInteractable
 
     public bool OnInteract()
     {
-        SceneLoader.Instance.LoadScene("LevelImageGeneration");
+        SceneLoader.Instance.LoadScene(nextLevel);
         keycodeUI.Hide();
         GameData.Instance.currentLevel++;
         return true;

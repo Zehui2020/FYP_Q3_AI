@@ -30,7 +30,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     [System.Serializable]
-    public struct Dialogue
+    public class Dialogue
     {
         public enum SpeakerType
         {
@@ -163,6 +163,9 @@ public class DialogueManager : MonoBehaviour
 
     public void ShowDialogue(Dialogue dialogue)
     {
+        if (dialogue == null)
+            return;
+
         currentDialogue = dialogue;
 
         canShowNextDialogue = false;

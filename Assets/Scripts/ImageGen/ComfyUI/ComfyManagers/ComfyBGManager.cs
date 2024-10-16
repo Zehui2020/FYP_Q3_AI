@@ -25,10 +25,12 @@ public class ComfyBGManager : ComfyManager
     {
         InitManager();
 
-        buttonController.InitController(allPromptDatas[currentLevelPrompt]);
-
+        buttonController.InitController(allPromptDatas[queueLevelData]);
         if (playerPrefs.experiencedTutorial)
+        {
             buttonController.SpawnButtons();
+            queueLevelData++;
+        }
 
         uiManager.SetStartingPrompt(2);
     }
@@ -51,12 +53,12 @@ public class ComfyBGManager : ComfyManager
 
         bgPrompts.Add(uiManager.GetPrompt());
 
-        if (queueLevelData != allPromptDatas.Count - 1)
+        if (queueLevelData != allPromptDatas.Count)
         {
             buttonController.InitController(allPromptDatas[queueLevelData]);
             buttonController.SpawnButtons();
             queueLevelData++;
-            uiManager.SetStartingPrompt(queueLevelData + 2);
+            uiManager.SetStartingPrompt(queueLevelData + 1);
             return false;
         }
 
@@ -74,7 +76,7 @@ public class ComfyBGManager : ComfyManager
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
     {
-        if (currentLevelPrompt >= allPromptDatas.Count - 1 && bgRecievedCounter >= allPromptDatas.Count)
+        if (currentLevelPrompt >= allPromptDatas.Count)
             return false;
 
         fileName = ((BGPrompt.Type)bgRecievedCounter).ToString() + "_Level" + (currentLevelPrompt + 2);
@@ -89,7 +91,7 @@ public class ComfyBGManager : ComfyManager
                     currentLevelPrompt++;
 
                     // If all level BGs done
-                    if (currentLevelPrompt >= allPromptDatas.Count - 1 && bgRecievedCounter >= allPromptDatas.Count)
+                    if (currentLevelPrompt >= allPromptDatas.Count)
                     {
                         tilesetGeneration.InitTilesetGeneration(allPromptDatas, bgPrompts);
                         tilesetGeneration.QueueTilesetPrompt();

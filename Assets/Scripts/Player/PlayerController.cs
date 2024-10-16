@@ -488,7 +488,6 @@ public class PlayerController : PlayerStats
 
         if (extraLives <= 0)
         {
-            yield return new WaitForSeconds(2f);
             SceneLoader.Instance.LoadScene("MainMenu");
             yield break;
         }
@@ -956,11 +955,6 @@ public class PlayerController : PlayerStats
             int amountToGive = goldPerCoin + (i < remainderGold ? 1 : 0);
             goldPickup.InitGoldPickup(amountToGive);
         }
-    }
-
-    public void ShowDialoguePopup(int index)
-    {
-        dialogueManager.ShowDialoguePopup(index);
     }
 
     public bool IsGrounded()
