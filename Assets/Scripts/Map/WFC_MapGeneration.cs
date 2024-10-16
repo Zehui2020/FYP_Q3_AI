@@ -30,6 +30,7 @@ public class WFC_MapGeneration : MonoBehaviour
     // tile prefabs
     private List<GameObject> startingTilePrefabs = new();
     private List<GameObject> allTilePrefabs = new();
+    private List<GameObject> borderTilePrefabs = new();
     private List<GameObject> shopTilePrefabs = new();
     private List<GameObject> topEdgeTilePrefabs = new();
     private List<GameObject> bottomEdgeTilePrefabs = new();
@@ -120,32 +121,33 @@ public class WFC_MapGeneration : MonoBehaviour
         allTilePrefabs.AddRange(mapTileController.autoInitTilePrefabs);
         allTilePrefabs.AddRange(mapTileController.deadEndTilePrefabs);
         allTilePrefabs.AddRange(mapTileController.uniqueTilePrefabs);
+        borderTilePrefabs.AddRange(mapTileController.borderTilePrefabs);
         allTilePrefabs.AddRange(mapTileController.shopTilePrefabs);
         shopTilePrefabs.AddRange(mapTileController.shopTilePrefabs);
-        for (int i = 0; i < allTilePrefabs.Count; i++)
+        for (int i = 0; i < borderTilePrefabs.Count; i++)
         {
-            if (allTilePrefabs[i].name.Contains("1U_1D"))
+            if (borderTilePrefabs[i].name.Contains("1U_1D"))
             {
-                if (allTilePrefabs[i].name.Contains("0L"))
-                    leftEdgeTilePrefabs.Add(allTilePrefabs[i]);
-                if (allTilePrefabs[i].name.Contains("0R"))
-                    rightEdgeTilePrefabs.Add(allTilePrefabs[i]);
+                if (borderTilePrefabs[i].name.Contains("0L"))
+                    leftEdgeTilePrefabs.Add(borderTilePrefabs[i]);
+                if (borderTilePrefabs[i].name.Contains("0R"))
+                    rightEdgeTilePrefabs.Add(borderTilePrefabs[i]);
             }
-            if (allTilePrefabs[i].name.Contains("1L_1R"))
+            if (borderTilePrefabs[i].name.Contains("1L_1R"))
             {
-                if (allTilePrefabs[i].name.Contains("0U"))
-                    topEdgeTilePrefabs.Add(allTilePrefabs[i]);
-                if (allTilePrefabs[i].name.Contains("0D"))
-                    bottomEdgeTilePrefabs.Add(allTilePrefabs[i]);
+                if (borderTilePrefabs[i].name.Contains("0U"))
+                    topEdgeTilePrefabs.Add(borderTilePrefabs[i]);
+                if (borderTilePrefabs[i].name.Contains("0D"))
+                    bottomEdgeTilePrefabs.Add(borderTilePrefabs[i]);
             }
-            if (allTilePrefabs[i].name.Contains("0U_1D_0L_1R"))
-                TLCornerTilePrefabs.Add(allTilePrefabs[i]);
-            if (allTilePrefabs[i].name.Contains("0U_1D_1L_0R"))
-                TRCornerTilePrefabs.Add(allTilePrefabs[i]);
-            if (allTilePrefabs[i].name.Contains("1U_0D_0L_1R"))
-                BLCornerTilePrefabs.Add(allTilePrefabs[i]);
-            if (allTilePrefabs[i].name.Contains("1U_0D_1L_0R"))
-                BRCornerTilePrefabs.Add(allTilePrefabs[i]);
+            if (borderTilePrefabs[i].name.Contains("0U_1D_0L_1R"))
+                TLCornerTilePrefabs.Add(borderTilePrefabs[i]);
+            if (borderTilePrefabs[i].name.Contains("0U_1D_1L_0R"))
+                TRCornerTilePrefabs.Add(borderTilePrefabs[i]);
+            if (borderTilePrefabs[i].name.Contains("1U_0D_0L_1R"))
+                BLCornerTilePrefabs.Add(borderTilePrefabs[i]);
+            if (borderTilePrefabs[i].name.Contains("1U_0D_1L_0R"))
+                BRCornerTilePrefabs.Add(borderTilePrefabs[i]);
         }
         solidTilePrefabs.AddRange(mapTileController.solidTilePrefabs);
     }

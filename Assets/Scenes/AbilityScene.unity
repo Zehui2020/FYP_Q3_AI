@@ -858,7 +858,7 @@ PrefabInstance:
     - target: {fileID: 1836024123482278049, guid: 02841af1626213c498cb8fd906d84dcc, type: 3}
       propertyPath: fadeTransition
       value: 
-      objectReference: {fileID: 1164165750}
+      objectReference: {fileID: 0}
     - target: {fileID: 8382547229871416628, guid: 02841af1626213c498cb8fd906d84dcc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -997,7 +997,7 @@ PrefabInstance:
     - target: {fileID: 2067411944254113266, guid: 96e3e1549117f4d429c58ba4861640d1, type: 3}
       propertyPath: ability
       value: 
-      objectReference: {fileID: 11400000, guid: 8960f09a48a482c4a8849db02529be8d, type: 2}
+      objectReference: {fileID: 11400000, guid: cec83852d2bec184bb6b130b3dee4a10, type: 2}
     - target: {fileID: 2067411944254113266, guid: 96e3e1549117f4d429c58ba4861640d1, type: 3}
       propertyPath: initAbility
       value: 1
@@ -1941,11 +1941,6 @@ PrefabInstance:
       addedObject: {fileID: 540595576}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
---- !u!95 &1164165750 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 7978791830494387907, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
-  m_PrefabInstance: {fileID: 1164165749}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1164165751 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 821536947639854210, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
@@ -2147,7 +2142,7 @@ PrefabInstance:
     - target: {fileID: 2067411944254113266, guid: 96e3e1549117f4d429c58ba4861640d1, type: 3}
       propertyPath: ability
       value: 
-      objectReference: {fileID: 11400000, guid: 8960f09a48a482c4a8849db02529be8d, type: 2}
+      objectReference: {fileID: 11400000, guid: cec83852d2bec184bb6b130b3dee4a10, type: 2}
     - target: {fileID: 2067411944254113266, guid: 96e3e1549117f4d429c58ba4861640d1, type: 3}
       propertyPath: initAbility
       value: 1
@@ -2158,7 +2153,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7360364330277618064, guid: 96e3e1549117f4d429c58ba4861640d1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 27.73
+      value: 24.87
       objectReference: {fileID: 0}
     - target: {fileID: 7360364330277618064, guid: 96e3e1549117f4d429c58ba4861640d1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2633,6 +2628,7 @@ MonoBehaviour:
   - {fileID: 860709226}
   - {fileID: 101006180}
   imageSaver: {fileID: 1669846521}
+  fileName: 
 --- !u!114 &1669846521
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,19 +2,14 @@ using UnityEngine;
 
 public class MolotovProjectile : AbilityProjectile
 {
-    [SerializeField] private GameObject areaObj;
-    [SerializeField] private AreaOfEffect areaOfEffect;
-    [SerializeField] private int range;
+    [SerializeField] private float range;
 
     protected override void OnHit(BaseStats target)
     {
-        areaObj.SetActive(true);
-        areaObj.transform.SetParent(null);
-        areaOfEffect.InitParticles(10, 0.05f, 4);
-        areaOfEffect.HandleStatusOverTime();
-        for (int i = 0; i < areaOfEffect.particleVFXManager.Count; i++)
+        InitParticles(10, range, 1.5f);
+        for (int i = 0; i < particleVFXManager.Count; i++)
         {
-            areaOfEffect.particleVFXManager[i].OnBurning(0);
+            particleVFXManager[i].OnBurning(0);
         }
 
         base.OnHit(target);
