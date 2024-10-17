@@ -57,6 +57,9 @@ public class Chest : MonoBehaviour, IInteractable
                 item.transform.position = transform.position;
                 item.InitPickup(itemToGive);
             }
+
+            isOpened = true;
+            OnLeaveRange();
         }
         else
         {
@@ -125,6 +128,8 @@ public class Chest : MonoBehaviour, IInteractable
             {
                 randNum = Random.Range(0, abilities.Count);
                 PlayerController.Instance.abilityController.SpawnAbilityPickUp(abilities[randNum], transform);
+                isOpened = true;
+                OnLeaveRange();
                 continue;
             }
             randNum = Random.Range(0, items.Count);

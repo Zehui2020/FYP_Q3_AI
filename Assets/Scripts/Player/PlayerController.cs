@@ -63,6 +63,7 @@ public class PlayerController : PlayerStats
     private float vertical;
 
     private Coroutine transceiverBuffRoutine;
+    private Coroutine gavelCooldown;
 
     private void Awake()
     {
@@ -747,7 +748,7 @@ public class PlayerController : PlayerStats
         }
 
         // Ancient Gavel
-        if (!previousDamage.damageSource.Equals(DamageSource.Gavel) && itemStats.gavelThreshold != 0)
+        if (!previousDamage.damageSource.Equals(DamageSource.Gavel) && itemStats.gavelThreshold != 0 && gavelCooldown == null)
         {
             float gavelThreshold = attack * itemStats.gavelThreshold;
             if (damage.damage >= gavelThreshold)
@@ -757,6 +758,8 @@ public class PlayerController : PlayerStats
 
                 target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), itemStats.gavelStacks);
                 target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), itemStats.gavelStacks);
+
+                gavelCooldown = StartCoroutine(GavelCooldown());
             }
         }
 
@@ -885,6 +888,13 @@ public class PlayerController : PlayerStats
         Heal(Mathf.CeilToInt(itemStats.defibrillatorHealMultiplier * maxHealth));
     }
 
+    private IEnumerator GavelCooldown()
+    {
+        yield return new WaitForSeconds(itemStats.gavelCooldown);
+
+        gavelCooldown = null;
+    }
+
     public void ChangeState(PlayerStates newState)
     {
         currentState = newState;
@@ -949,6 +959,10 @@ public class PlayerController : PlayerStats
     {
         //Spawn Gold pickup
         int coinsToSpawn = Mathf.CeilToInt(goldToDrop / 2f);
+
+        if (coinsToSpawn == 0)
+            return;
+
         int goldPerCoin = goldToDrop / coinsToSpawn;
         int remainderGold = goldToDrop % coinsToSpawn;
         for (int i = 0; i < coinsToSpawn; i++)

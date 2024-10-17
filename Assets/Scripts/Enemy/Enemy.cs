@@ -7,7 +7,7 @@ public class Enemy : EnemyStats
 {
     [SerializeField] private bool isEnemy = true;
 
-    public enum EnemyClass { Undead, Slime, Dummy, Skeleton, Scorpion }
+    public enum EnemyClass { Undead, Slime, Dummy, Skeleton, Scorpion, FinalBoss }
     public EnemyClass enemyClass;
 
     public enum EnemyType { Normal, Elite, Boss }
@@ -442,6 +442,11 @@ public class Enemy : EnemyStats
         if (!isInCombat)
             aiNavigation.ResumeNavigationFromStop();
         knockbackRoutine = null;
+    }
+
+    public Vector3 GetDirectionToPlayer()
+    {
+        return transform.position.x < player.transform.position.x ? Vector3.right : Vector3.left;
     }
 
     private void OnDisable()

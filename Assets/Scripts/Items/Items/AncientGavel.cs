@@ -4,6 +4,7 @@ using UnityEngine;
 public class AncientGavel : Item
 {
     [SerializeField] private float gavelThreshold;
+    [SerializeField] private float gavelCooldown;
 
     [SerializeField] private float gavelDamageMultiplier;
     [SerializeField] private int gavelStacks;
@@ -17,6 +18,7 @@ public class AncientGavel : Item
         itemStats.gavelThreshold += gavelThreshold;
         itemStats.gavelDamageMultiplier += gavelDamageMultiplier;
         itemStats.gavelStacks += gavelStacks;
+        itemStats.gavelCooldown += gavelCooldown;
     }
 
     public override void IncrementStack()
@@ -24,5 +26,6 @@ public class AncientGavel : Item
         base.IncrementStack();
         itemStats.gavelDamageMultiplier += gavelStackDamageMultiplier;
         itemStats.gavelStacks += gavelStackStacks;
+        itemStats.gavelCooldown += gavelCooldown;
     }
 }
