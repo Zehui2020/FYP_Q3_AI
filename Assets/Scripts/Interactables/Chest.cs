@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using DesignPatterns.ObjectPool;
-using UnityEngine.UI;
 
 public class Chest : MonoBehaviour, IInteractable
 {
@@ -17,7 +16,8 @@ public class Chest : MonoBehaviour, IInteractable
             Damage,
             Healing,
             Utility,
-            Legendary
+            Legendary,
+            FixedItem
         }
         public Type type;
         public int commonItemRate;
@@ -25,6 +25,7 @@ public class Chest : MonoBehaviour, IInteractable
         public int legendaryItemRate;
     }
     public ChestType chestType;
+    [SerializeField] private ScriptableObject fixedItemToSpawn;
 
     [SerializeField] private LayerMask defaultLayer;
     [SerializeField] private GameObject minimapIcon;
@@ -32,6 +33,7 @@ public class Chest : MonoBehaviour, IInteractable
     [SerializeField] private SimpleAnimation keycodeUI;
 
     [SerializeField] private GameObject canvas;
+    [SerializeField] private RectTransform 
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private int cost;
     [SerializeField] private ItemStats itemStats;
@@ -42,14 +44,30 @@ public class Chest : MonoBehaviour, IInteractable
         if (isOpened || PlayerController.Instance.gold < cost)
             return false;
 
-        int randNum = Random.Range(0, 100);
-
-        if (randNum < chestType.legendaryItemRate)
-            SpawnItem(Item.Rarity.Legendary);
-        else if (randNum < chestType.legendaryItemRate + chestType.uncommonItemRate)
-            SpawnItem(Item.Rarity.Uncommon);
+        if (chestType.type == ChestType.Type.FixedItem)
+        {
+            if (fixedItemToSpawn is BaseAbility baseAbility)
+            {
+                PlayerController.Instance.abilityController.SpawnAbilityPickUp(baseAbility, transform);
+            }
+            else if (fixedItemToSpawn is Item itemToGive)
+            {
+                ItemPickup item = ObjectPool.Instance.GetPooledObject("ItemPickup", true) as ItemPickup;
+                item.transform.position = transform.position;
+                item.InitPickup(itemToGive);
+            }
+        }
         else
-            SpawnItem(Item.Rarity.Common);
+        {
+            int randNum = Random.Range(0, 100);
+
+            if (randNum < chestType.legendaryItemRate)
+                SpawnItem(Item.Rarity.Legendary);
+            else if (randNum < chestType.legendaryItemRate + chestType.uncommonItemRate)
+                SpawnItem(Item.Rarity.Uncommon);
+            else
+                SpawnItem(Item.Rarity.Common);
+        }
 
         PlayerController.Instance.chestUnlockCount++;
         PlayerController.Instance.gold -= cost;
