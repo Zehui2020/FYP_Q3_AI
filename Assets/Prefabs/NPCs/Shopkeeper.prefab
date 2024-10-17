@@ -607,8 +607,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6813833809720226671}
-        m_TargetAssemblyTypeName: Shopkeeper_AI_Manager, Assembly-CSharp
+      - m_Target: {fileID: 381999780257408631}
+        m_TargetAssemblyTypeName: ShopkeeperAIManager, Assembly-CSharp
         m_MethodName: AI_Chat_Response
         m_Mode: 1
         m_Arguments:
@@ -801,8 +801,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 80, y: -165}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 80, y: -190}
+  m_SizeDelta: {x: 125.630005, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8451555422487196476
 MonoBehaviour:
@@ -2531,7 +2531,7 @@ MonoBehaviour:
           m_StringArgument: startChat
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 6813833809720226671}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: Shopkeeper_AI_Manager, Assembly-CSharp
         m_MethodName: AI_Chat_Introduction
         m_Mode: 1
@@ -2705,8 +2705,8 @@ GameObject:
   - component: {fileID: 5977488877125851540}
   - component: {fileID: 2921663209749452138}
   - component: {fileID: 4054302532088705456}
+  - component: {fileID: 381999780257408631}
   - component: {fileID: 358516128548345534}
-  - component: {fileID: 6813833809720226671}
   - component: {fileID: 1646030345582742205}
   - component: {fileID: 3805504845650205693}
   m_Layer: 0
@@ -2920,31 +2920,7 @@ MonoBehaviour:
   rerollCost: 5
   incrementRerollCost: 3
   incrementModifier: 1.5
---- !u!114 &358516128548345534
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5785661512937599320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eeb7387b346bc2b4d92b7e933ecdd891, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shopUIAnimator: {fileID: 919477259124464345}
-  user_Input: {fileID: 6410958814614688102}
-  shopkeeperOutput: {fileID: 7161175986112008529}
-  coinCounterRectTransform: {fileID: 764599909934115641}
-  coinCounter: {fileID: 5522943381035611882}
-  shopItemParent: {fileID: 3694942740643613205}
-  shopItemParentRect: {fileID: 3694942740643613205}
-  rerollCost: {fileID: 2773000910618829101}
-  rerollRects:
-  - {fileID: 562885084048511592}
-  - {fileID: 4649398259440094478}
-  isInteracting: 0
---- !u!114 &6813833809720226671
+--- !u!114 &381999780257408631
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2975,6 +2951,30 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &358516128548345534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5785661512937599320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeb7387b346bc2b4d92b7e933ecdd891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shopUIAnimator: {fileID: 919477259124464345}
+  user_Input: {fileID: 6410958814614688102}
+  shopkeeperOutput: {fileID: 7161175986112008529}
+  coinCounterRectTransform: {fileID: 764599909934115641}
+  coinCounter: {fileID: 5522943381035611882}
+  shopItemParent: {fileID: 3694942740643613205}
+  shopItemParentRect: {fileID: 3694942740643613205}
+  rerollCost: {fileID: 2773000910618829101}
+  rerollRects:
+  - {fileID: 562885084048511592}
+  - {fileID: 4649398259440094478}
+  isInteracting: 0
 --- !u!114 &1646030345582742205
 MonoBehaviour:
   m_ObjectHideFlags: 0

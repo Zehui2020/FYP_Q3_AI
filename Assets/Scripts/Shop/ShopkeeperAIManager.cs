@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Shopkeeper_AI_Manager : MonoBehaviour
+public class ShopkeeperAIManager : MonoBehaviour
 {
     [SerializeField] private ShopkeeperData shopkeeperData;
     [SerializeField] private ShopkeeperUIManager shopkeeperUIManager;
@@ -43,15 +43,14 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
             "This is the NPC's backstory:  " +
             "~" + shopkeeperData.AI_CharacterContext + "~ " +
             "In this environment, address the user as Adventurer, " +
-            "keep your responses less than 50 words, " +
-            "your responses should be purely dialogue, " +
-            "do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
+            "keep your responses less than 30 words, " +
+            //"your responses should be purely dialogue, " +
+            //"do not depict actions, avoid writing content like *nods*, *walks over*, *leans in* " +
             "and do not show XML tags other than these ones: <result></result>" +
 
             "Here are a few examples of what your output should look like: " +
             "<result>" + shopkeeperData.AI_Example_Output_1 + "</result> " +
             "<result>" + shopkeeperData.AI_Example_Output_2 + "</result> " +
-
             //additionalPrompts+
             promptTitle + " <</SYS>> {" + promptContent + "} [/INST]" + '"';
 
@@ -79,7 +78,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
         }
 
         hasIntroduced = true;
-        analyseText = true;
+        //analyseText = true;
     }
 
     public void AI_Chat_Response()
@@ -112,6 +111,8 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
 
         string prompt = GetFinalPromptString(promptTitle, promptContent, additionalPrompts);
         StartCoroutine(OpenCommandPrompt(prompt));
+
+        analyseText = true;
     }
 
     public void AI_Chat_End()
@@ -170,7 +171,7 @@ public class Shopkeeper_AI_Manager : MonoBehaviour
             if (e.Data != null)
             {
                 //Note: These are actually errors. This is just to distinguish the Text Generation from the Statistics Output
-                //UnityEngine.Debug.Log(e.Data);
+                UnityEngine.Debug.Log(e.Data);
             }
         };
 
