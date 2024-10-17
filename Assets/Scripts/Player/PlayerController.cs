@@ -771,23 +771,26 @@ public class PlayerController : PlayerStats
         int randNum;
 
         // Gasoline
-        Collider2D[] enemies = Physics2D.OverlapCircleAll(target.transform.position, itemStats.gasolineRadius, enemyLayer);
         if (itemStats.gasolineRadius > 0)
-            target.particleVFXManager.GasolineBurst();
-        foreach (Collider2D enemy in enemies)
         {
-            Enemy targetEnemy = enemy.GetComponent<Enemy>();
+            Collider2D[] enemies = Physics2D.OverlapCircleAll(target.transform.position, itemStats.gasolineRadius, enemyLayer);
+            foreach (Collider2D enemy in enemies)
+            {
+                Enemy targetEnemy = enemy.GetComponent<Enemy>();
 
-            if (targetEnemy == null || targetEnemy.Equals(target))
-                continue;
+                if (targetEnemy == null || targetEnemy.Equals(target))
+                    continue;
 
-            Damage damage = CalculateProccDamageDealt(targetEnemy, 
-                new Damage((attack + attackIncrease.GetTotalModifier()) * itemStats.gasolineDamageModifier), 
-                out bool isCrit, 
-                out DamagePopup.DamageType damageType);
+                Damage damage = CalculateProccDamageDealt(targetEnemy,
+                    new Damage((attack + attackIncrease.GetTotalModifier()) * itemStats.gasolineDamageModifier),
+                    out bool isCrit,
+                    out DamagePopup.DamageType damageType);
 
-            targetEnemy.TakeDamage(this, damage, isCrit, enemy.transform.position, damageType);
-            targetEnemy.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), itemStats.gasolineBurnStacks);
+                targetEnemy.TakeDamage(this, damage, isCrit, enemy.transform.position, damageType);
+                targetEnemy.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), itemStats.gasolineBurnStacks);
+            }
+
+            target.particleVFXManager.GasolineBurst();
         }
 
         // Bottle Of Surprises
