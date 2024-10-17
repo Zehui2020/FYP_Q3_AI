@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using DesignPatterns.ObjectPool;
+using UnityEngine.UI;
 
 public class Chest : MonoBehaviour, IInteractable
 {
@@ -33,7 +34,7 @@ public class Chest : MonoBehaviour, IInteractable
     [SerializeField] private SimpleAnimation keycodeUI;
 
     [SerializeField] private GameObject canvas;
-    [SerializeField] private RectTransform 
+    [SerializeField] private RectTransform costRect;
     [SerializeField] private TextMeshProUGUI costText;
     [SerializeField] private int cost;
     [SerializeField] private ItemStats itemStats;
@@ -71,6 +72,7 @@ public class Chest : MonoBehaviour, IInteractable
 
         PlayerController.Instance.chestUnlockCount++;
         PlayerController.Instance.gold -= cost;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(costRect);
         keycodeUI.Hide();
 
         return true;
@@ -145,6 +147,7 @@ public class Chest : MonoBehaviour, IInteractable
 
         costText.text = cost.ToString();
         canvas.gameObject.SetActive(true);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(costRect);
 
         int layer = Mathf.RoundToInt(Mathf.Log(defaultLayer.value) / Mathf.Log(2));
         gameObject.layer = layer;
@@ -161,5 +164,6 @@ public class Chest : MonoBehaviour, IInteractable
     {
         cost = newCost;
         costText.text = newCost.ToString();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(costRect);
     }
 }
