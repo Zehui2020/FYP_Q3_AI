@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shopkeeper : MonoBehaviour, IInteractable
 {
     private ShopkeeperUIManager uiManager;
-    private Shopkeeper_AI_Manager aiManager;
+    private ShopkeeperAIManager aiManager;
     private TextAnalysis textAnalysis;
 
     [SerializeField] private List<ShopItemData> allShopItems;
@@ -23,7 +23,7 @@ public class Shopkeeper : MonoBehaviour, IInteractable
     private void Awake()
     {
         uiManager = GetComponent<ShopkeeperUIManager>();
-        aiManager = GetComponent<Shopkeeper_AI_Manager>();
+        aiManager = GetComponent<ShopkeeperAIManager>();
         textAnalysis = GetComponent<TextAnalysis>();
 
         textAnalysis.OnMoodChanged += OnMoodChanged;
