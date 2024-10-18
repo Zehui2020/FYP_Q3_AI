@@ -38,10 +38,13 @@ public class AbilityParticle : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (!other.CompareTag(gameObject.tag) && isActivated)
+        foreach (string tag in collisionTag)
         {
-            GetComponent<Rigidbody2D>().isKinematic = true;
-            GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+            if (other.CompareTag(tag) && isActivated)
+            {
+                GetComponent<Rigidbody2D>().isKinematic = true;
+                GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+            }
         }
 
         foreach (string tag in targetTag)
