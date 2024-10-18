@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6854666403828408741}
   m_Layer: 0
   m_Name: AbilityPickUp
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99,11 +99,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa966a130d9c3047bcddd081f822316, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keycodeUI: {fileID: 3109750688994796210}
   objectName: AbilityPickUp
   poolAmount: 3
+  keycodeUI: {fileID: 3109750688994796210}
   spriteRenderer: {fileID: 2606135319182661058}
   ability: {fileID: 11400000, guid: 1363737a3577e724a90c6c7c62de4a59, type: 2}
+  initAbility: 0
 --- !u!61 &6854666403828408741
 BoxCollider2D:
   m_ObjectHideFlags: 0

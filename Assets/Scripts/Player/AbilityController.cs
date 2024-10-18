@@ -5,8 +5,9 @@ using UnityEngine;
 public class AbilityController : MonoBehaviour
 {
     [SerializeField] private ItemPickupAlert itemPickupAlert;
-    [SerializeField] public List<BaseAbility> abilities;
-    [SerializeField] private List<AbilityUIController> abilityUI;
+    public List<BaseAbility> abilities = new();
+    private List<AbilitySlotUI> abilityUI = new();
+    private AbilitySelectUI selectUI;
     [SerializeField] private GameObject abilityUIPrefab;
     [SerializeField] private Transform abilityUIParent;
     [SerializeField] private AbilityPickUp abilityPickUpPrefab;
@@ -21,16 +22,17 @@ public class AbilityController : MonoBehaviour
     private int swapAbilityCharges;
     private PlayerController player;
     private List<Coroutine> abilityCooldownRoutines = new List<Coroutine> { null, null };
-    private List<int> charges = new List<int>();
-    private List<int> maxCharges = new List<int>();
+    private List<int> charges = new();
+    private List<int> maxCharges = new();
 
     public void InitializeAbilityController()
     {
         player = GetComponent<PlayerController>();
+        selectUI = abilityUIParent.GetComponent<AbilitySelectUI>();
         AddAbilitySlot(2);
     }
 
-    private void AddAbilitySlot(int count)
+    public void AddAbilitySlot(int count)
     {
         for (int i = 0; i < count; i++)
         {
@@ -39,7 +41,7 @@ public class AbilityController : MonoBehaviour
 
             // add ui
             GameObject obj = Instantiate(abilityUIPrefab, abilityUIParent);
-            abilityUI.Add(obj.GetComponent<AbilityUIController>());
+            abilityUI.Add(obj.GetComponent<AbilitySlotUI>());
             if (abilityUI.Count == 10)
                 abilityUI[abilityUI.Count - 1].InitAbilityUI("[ 0 ]");
             else
@@ -57,6 +59,7 @@ public class AbilityController : MonoBehaviour
             swappingAbility = true;
             swapAbility = newAbility;
             swapAbilityCharges = charges;
+            selectUI.ShowSelectAbility(true, swapAbility);
             return true;
         }
 
@@ -83,6 +86,7 @@ public class AbilityController : MonoBehaviour
 
         swappingAbility = false;
         swapAbility = null;
+        selectUI.ShowSelectAbility(false, swapAbility);
     }
 
     public void SwapAbility(int i)
@@ -108,6 +112,7 @@ public class AbilityController : MonoBehaviour
 
         swappingAbility = false;
         swapAbility = null;
+        selectUI.ShowSelectAbility(false, swapAbility);
     }
 
     private void RemoveAbility(int i)
