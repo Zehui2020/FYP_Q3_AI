@@ -6,7 +6,6 @@ public class AbilityParticle : MonoBehaviour
 {
     [SerializeField] private StatusEffect.StatusType status;
     [SerializeField] private List<string> targetTag = new List<string> { "Enemy" };
-    [SerializeField] private List<string> collisionTag = new List<string> { "Enemy", "Ground" };
     [SerializeField] private float interval = 2;
     [SerializeField] private int stackPerInterval = 1;
     [SerializeField] private float lifeTime = 10;
@@ -16,14 +15,11 @@ public class AbilityParticle : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        foreach (string tag in collisionTag)
+        if (!other.CompareTag(transform.tag) && isActivated)
         {
-            if (other.CompareTag(tag) && isActivated)
-            {
-                GetComponent<Rigidbody2D>().isKinematic = true;
-                GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-                count++;
-            }
+            GetComponent<Rigidbody2D>().isKinematic = true;
+            GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+            count++;
         }
 
         foreach (string tag in targetTag)
@@ -38,13 +34,10 @@ public class AbilityParticle : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        foreach (string tag in collisionTag)
+        if (!other.CompareTag(transform.tag) && isActivated)
         {
-            if (other.CompareTag(tag) && isActivated)
-            {
-                GetComponent<Rigidbody2D>().isKinematic = true;
-                GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-            }
+            GetComponent<Rigidbody2D>().isKinematic = true;
+            GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         }
 
         foreach (string tag in targetTag)
@@ -59,10 +52,11 @@ public class AbilityParticle : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (!other.CompareTag(gameObject.tag))
+        if (!other.CompareTag(transform.tag) && isActivated)
         {
             count--;
         }
+
         if (count <= 0)
             GetComponent<Rigidbody2D>().isKinematic = false;
     }
