@@ -1,6 +1,7 @@
+using DesignPatterns.ObjectPool;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Windows;
 
 public class FinalBossPhase1 : Enemy
 {
@@ -9,6 +10,7 @@ public class FinalBossPhase1 : Enemy
         Idle,
         Walk,
         SlamAttack,
+        Rush,
         PunchAttack,
         DaggerAttack
     }
@@ -33,7 +35,18 @@ public class FinalBossPhase1 : Enemy
     [SerializeField] private Transform jumpWaitPosition;
     [SerializeField] private float jumpWaitDuration;
 
-    private int punchCounter;
+    [SerializeField] private float movesTillSlam;
+
+    [Header("Damage Stats")]
+    [SerializeField] private float punchDamageModifier;
+    [SerializeField] private float slamDamageModifier;
+    [SerializeField] private float daggerDamageModifier;
+    [SerializeField] private List<Transform> daggerSpawnPos = new();
+    [SerializeField] private List<BossDagger> bossDaggers = new();
+
+    private int moveCounter;
+    private Coroutine SlamRoutine;
+    private Coroutine Deciding;
 
     // Debugging
     private State previousState;
@@ -41,6 +54,7 @@ public class FinalBossPhase1 : Enemy
     public void ChangeState(State newState)
     {
         currentState = newState;
+        damageMultipler.RemoveAllModifiers();
 
         switch (currentState)
         {
@@ -51,38 +65,102 @@ public class FinalBossPhase1 : Enemy
                 animator.Play(WalkAnim);
                 break;
             case State.SlamAttack:
-                StartCoroutine(SlamAttack());
+                SlamRoutine = StartCoroutine(SlamAttack());
+                break;
+            case State.Rush:
+                animator.Play(RushAnim);
                 break;
             case State.PunchAttack:
-                punchCounter++;
-                animator.Play(RushAnim);
+                damageMultipler.AddModifier(punchDamageModifier);
+                moveCounter++;
+                enemyRB.velocity = Vector2.zero;
+                animator.Play(PunchAnim);
+                break;
+            case State.DaggerAttack:
+                animator.Play(DaggerAnim);
+                for (int i = 0; i < daggerSpawnPos.Count; i++)
+                {
+                    BossDagger dagger = ObjectPool.Instance.GetPooledObject("BossDagger", true) as BossDagger;
+                    dagger.SetupDagger(CalculateDamageDealt(player, Damage.DamageSource.Normal, out bool crit, out DamagePopup.DamageType damageType), this);
+
+                    dagger.transform.SetParent(daggerSpawnPos[i]);
+                    dagger.transform.localPosition = Vector3.zero;
+                    dagger.transform.localRotation = Quaternion.identity;
+                    dagger.transform.localScale = Vector3.one;
+
+                    dagger.OnReleased += () => { bossDaggers.Remove(dagger); };
+                    bossDaggers.Add(dagger);
+                }
                 break;
         }
     }
 
-    private void Update()
+    public override bool AttackTarget(BaseStats target, Damage.DamageSource damageSource, Vector3 closestPoint)
     {
+        bool damagedTarget = base.AttackTarget(target, damageSource, closestPoint);
+        if (damagedTarget)
+            player.movementController.Knockback(30f);
+        
+        return damagedTarget;
+    }
+
+    public override void UpdateEnemy()
+    {
+        base.UpdateEnemy();
         switch (currentState)
         {
             case State.Walk:
-                enemyRB.MovePosition(transform.position + GetDirectionToPlayer() * Time.deltaTime * walkSpeed);
+                enemyRB.velocity = GetDirectionToPlayer() * walkSpeed;
                 break;
-            case State.PunchAttack:
-                enemyRB.MovePosition(transform.position + GetDirectionToPlayer() * Time.deltaTime * rushSpeed);
-                if (Vector2.Distance(transform.position, player.transform.position) <= 0.1f)
-                    ChangeState(State.SlamAttack);
+            case State.Rush:
+                enemyRB.velocity = GetDirectionToPlayer() * rushSpeed;
+                if (Vector2.Distance(transform.position, player.transform.position) <= 2f)
+                    ChangeState(State.PunchAttack);
                 break;
         }
+
+        if (Input.GetKeyDown(KeyCode.L))
+            ChangeState(State.Walk);
+
+        if (currentState != State.PunchAttack)
+            UpdateDirectionToPlayer();
     }
 
     public void Decide()
     {
+        if (Deciding != null)
+            StopCoroutine(Deciding);
 
+        Deciding = StartCoroutine(DecideRoutine());
+    }
+
+    private IEnumerator DecideRoutine()
+    {
+        animator.Play(IdleAnim);
+        enemyRB.velocity = Vector2.zero;
+
+        yield return new WaitForSeconds(2f);
+
+        if (moveCounter >= movesTillSlam)
+        {
+            ChangeState(State.SlamAttack);
+            moveCounter = 0;
+            Deciding = null;
+            yield break;
+        }
+
+        if (bossDaggers.Count == 0)
+            ChangeState(State.DaggerAttack);
+        else
+            ChangeState(State.Rush);
+
+        Deciding = null;
     }
 
     private IEnumerator SlamAttack()
     {
         animator.Play(JumpAnim);
+        damageMultipler.AddModifier(slamDamageModifier);
 
         yield return new WaitForSeconds(jumpWaitDuration);
 
@@ -95,13 +173,6 @@ public class FinalBossPhase1 : Enemy
 
             enemyRB.MovePosition(newPos);
 
-            RaycastHit2D groundHit = Physics2D.Raycast(transform.position, Vector2.down, 1f, groundLayer);
-            if (groundHit)
-            {
-                ChangeState(State.Idle);
-                yield break;
-            }
-
             yield return null;
         }
     }
@@ -112,7 +183,8 @@ public class FinalBossPhase1 : Enemy
     }
     private IEnumerator JumpRoutine()
     {
-        float timer = 1.5f;
+        player.playerEffectsController.ShakeCamera(4f, 3f, 0.3f);
+        float timer = 1f;
         while (timer > 0)
         {
             timer -= Time.deltaTime;
@@ -127,6 +199,19 @@ public class FinalBossPhase1 : Enemy
         {
             previousState = currentState;
             ChangeState(previousState);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (Utility.Instance.CheckLayer(collision.gameObject, groundLayer) && currentState == State.SlamAttack)
+        {
+            if (SlamRoutine != null)
+                StopCoroutine(SlamRoutine);
+
+            animator.Play(SlamAnim);
+            SlamRoutine = null;
+            player.playerEffectsController.ShakeCamera(8f, 5f, 0.6f);
         }
     }
 }

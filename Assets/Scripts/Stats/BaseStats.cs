@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static BaseStats.Damage;
 using static DamagePopup;
 
 public class BaseStats : MonoBehaviour
@@ -101,6 +102,12 @@ public class BaseStats : MonoBehaviour
     public event System.Action<float> OnBreached;
     public event System.Action<BaseStats> OnParry;
     public event System.Action<BaseStats> OnDieEvent;
+
+    public virtual bool AttackTarget(BaseStats target, DamageSource damageSource, Vector3 closestPoint)
+    {
+        float damageDealt = CalculateDamageDealt(target, damageSource, out bool isCrit, out DamagePopup.DamageType damageType);
+        return target.TakeDamage(this, new BaseStats.Damage(damageSource, damageDealt), isCrit, closestPoint, damageType);
+    }
 
     public virtual void TakeTrueDamage(Damage damage)
     {

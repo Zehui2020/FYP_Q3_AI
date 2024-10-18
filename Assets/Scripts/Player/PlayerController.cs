@@ -23,12 +23,12 @@ public class PlayerController : PlayerStats
     public static PlayerController Instance;
 
     private AnimationManager animationManager;
-    private MovementController movementController;
+    public MovementController movementController;
     private CombatController combatController;
     [HideInInspector] public AbilityController abilityController;
     private FadeTransition fadeTransition;
     private ItemManager itemManager;
-    private PlayerEffectsController playerEffectsController;
+    public PlayerEffectsController playerEffectsController;
     private Rigidbody2D playerRB;
 
     private Coroutine hurtRoutine;
@@ -848,11 +848,9 @@ public class PlayerController : PlayerStats
         playerEffectsController.HitStop(0.5f);
         playerEffectsController.ShakeCamera(5, 20, 0.5f);
         playerEffectsController.SetCameraTrigger("parry");
-        movementController.Knockback(20f);
 
         // Metal Bat
         int randNum = Random.Range(0, 100);
-
         if (randNum < itemStats.metalBatChance)
             target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), itemStats.metalBatStacks);
     }
