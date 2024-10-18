@@ -176,6 +176,8 @@ public class PlayerController : PlayerStats
 
         if (abilityController != null && abilityController.swappingAbility)
         {
+            movementController.currentState = MovementState.Idle;
+            movementController.StopPlayer();
             for (int i = 0; i < abilityController.abilities.Count; i++)
             {
                 if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
