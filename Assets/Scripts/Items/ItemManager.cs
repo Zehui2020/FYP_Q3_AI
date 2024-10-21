@@ -33,6 +33,12 @@ public class ItemManager : MonoBehaviour
             item.itemStack = 0;
             item.spriteIcon = imageSaver.GetSpriteFromLocalDisk(item.itemType.ToString());
         }
+
+        foreach (BaseAbility ability in allAbilities)
+        {
+            ability.spriteIcon = imageSaver.GetSpriteFromLocalDisk(ability.abilityName.ToString());
+        }
+
         LayoutRebuilder.ForceRebuildLayoutImmediate(itemInventory);
     }
 
