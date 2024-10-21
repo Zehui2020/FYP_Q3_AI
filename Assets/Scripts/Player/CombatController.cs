@@ -15,7 +15,7 @@ public class CombatController : MonoBehaviour
 
     private int attackComboCount;
     private bool isInParry = false;
-    private bool canAttack = true;
+    public bool canAttack = true;
     public bool isAttacking = false;
 
     private Coroutine parryCooldownRoutine;

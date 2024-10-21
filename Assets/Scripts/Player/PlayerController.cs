@@ -202,11 +202,11 @@ public class PlayerController : PlayerStats
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
 
-        if (ConsoleManager.Instance.gameObject.activeInHierarchy ||
-            currentState == PlayerStates.Hurt)
+        if (ConsoleManager.Instance.gameObject.activeInHierarchy)
             return;
 
-        if (movementController.currentState == MovementState.Knockback)
+        if (movementController.currentState == MovementState.Knockback ||
+            currentState == PlayerStates.Hurt)
         {
             movementController.CheckGroundCollision();
             return;
@@ -218,7 +218,7 @@ public class PlayerController : PlayerStats
             if (movementController.CheckCannotCombat())
                 return;
 
-            currentState = PlayerStates.Combat;
+            ChangeState(PlayerStates.Combat);
             combatController.HandleAttack();
         }
         else if (Input.GetMouseButtonUp(0))
@@ -226,13 +226,13 @@ public class PlayerController : PlayerStats
             combatController.ResetComboAttack();
         }
 
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButtonDown(1))
         {
             if (movementController.CheckCannotCombat())
                 return;
 
             if (combatController.HandleParry())
-                currentState = PlayerStates.Combat;
+                ChangeState(PlayerStates.Combat);
         }
 
         // Movment Inputs
@@ -241,7 +241,7 @@ public class PlayerController : PlayerStats
             if (movementController.HandlePlunge())
             {
                 plungeStartPos = transform.position;
-                currentState = PlayerStates.Movement;
+                ChangeState(PlayerStates.Movement);
                 combatController.OnPlungeStart();
             }
         }
@@ -310,20 +310,15 @@ public class PlayerController : PlayerStats
     {
         movementController.canMove = false;
         playerRB.velocity = Vector2.zero;
-        playerRB.isKinematic = true;
-
-        if (movementController.currentState == MovementState.GroundDash || 
-            movementController.currentState == MovementState.AirDash)
-            movementController.CancelDash();
 
         yield return new WaitForSeconds(0.5f);
 
+        combatController.canAttack = true;
         movementController.canMove = true;
         playerRB.isKinematic = false;
-        hurtRoutine = null;
-
-        movementController.ChangeState(MovementState.Idle);
         ChangeState(PlayerStates.Movement);
+
+        hurtRoutine = null;
     }
 
     private void FixedUpdate()
@@ -428,11 +423,6 @@ public class PlayerController : PlayerStats
                 movementController.isGrounded)
             {
                 ChangeState(PlayerStates.Hurt);
-                animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);
-
-                if (hurtRoutine != null)
-                    StopCoroutine(hurtRoutine);
-                hurtRoutine = StartCoroutine(HurtRoutine());
             }
 
             combatController.ResetComboInstantly();
@@ -897,12 +887,21 @@ public class PlayerController : PlayerStats
 
     public void ChangeState(PlayerStates newState)
     {
+        if (currentState == newState)
+            return;
+
         currentState = newState;
         switch (currentState)
         {
             case PlayerStates.Movement:
                 movementController.ResumePlayer();
                 movementController.ChangeState(MovementState.Idle);
+                break;
+            case PlayerStates.Hurt:
+                if (hurtRoutine != null)
+                    StopCoroutine(hurtRoutine);
+                hurtRoutine = StartCoroutine(HurtRoutine());
+                animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);
                 break;
             case PlayerStates.Map:
             case PlayerStates.Shop:
