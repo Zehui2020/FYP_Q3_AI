@@ -10,7 +10,7 @@ public class PoisonKnives : BaseAbility
     {
     }
 
-    public override void OnAbilityUse(BaseStats self, BaseStats target)
+    public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
         GameObject obj = Instantiate(knifePrefab);
         obj.transform.position = PlayerController.Instance.transform.position;
@@ -19,7 +19,7 @@ public class PoisonKnives : BaseAbility
         obj.GetComponent<PoisonKnifeProjectile>().LaunchProjectile(force);
     }
 
-    public override void OnAbilityEnd(BaseStats self, BaseStats target)
+    public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
     }
 }

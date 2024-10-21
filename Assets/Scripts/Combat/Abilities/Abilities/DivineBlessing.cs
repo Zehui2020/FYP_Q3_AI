@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Abilities/Divine Blessing")]
@@ -7,13 +8,13 @@ public class DivineBlessing : BaseAbility
     {
     }
 
-    public override void OnAbilityUse(BaseStats self, BaseStats target)
+    public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
         // remove status effects
-        self.Cleanse(StatusEffect.StatusType.Type.Debuff);
+        singleTarget.Cleanse(StatusEffect.StatusType.Type.Debuff);
     }
 
-    public override void OnAbilityEnd(BaseStats self, BaseStats target)
+    public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
     }
 }

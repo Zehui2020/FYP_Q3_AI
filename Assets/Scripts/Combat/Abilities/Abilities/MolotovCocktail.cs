@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Abilities/Molotov Cocktail")]
@@ -8,7 +9,7 @@ public class MolotovCocktail : BaseAbility
     {
     }
 
-    public override void OnAbilityUse(BaseStats self, BaseStats target)
+    public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
         GameObject obj = Instantiate(nadePrefab);
         obj.transform.position = PlayerController.Instance.transform.position;
@@ -16,7 +17,7 @@ public class MolotovCocktail : BaseAbility
         obj.GetComponent<MolotovProjectile>().LaunchProjectile(force);
     }
 
-    public override void OnAbilityEnd(BaseStats self, BaseStats target)
+    public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
     }
 }

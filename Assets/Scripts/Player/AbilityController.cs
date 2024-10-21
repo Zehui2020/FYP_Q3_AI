@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class AbilityController : MonoBehaviour
@@ -145,11 +146,11 @@ public class AbilityController : MonoBehaviour
         }
     }
 
-    public void TriggerOverlayAnim(Vector3 scale, string trigger)
+    public void TriggerOverlayAnim(float alpha, string trigger)
     {
-        abilityOverlayAnimator.transform.localScale = scale;
-        abilityOverlayAnimator.gameObject.SetActive(true);
         abilityOverlayAnimator.SetTrigger(trigger);
+        abilityOverlayAnimator.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, alpha);
+        abilityOverlayAnimator.gameObject.SetActive(true);
     }
 
     public void SpawnAbilityPickUp(BaseAbility newAbility, Transform chest)
@@ -213,17 +214,15 @@ public class AbilityController : MonoBehaviour
             }
             if (targetsInArea.Count == 0)
                 return;
-            for (int i = 0; i < targetsInArea.Count; i++)
-            {
-                abilities[abilityNo].OnAbilityUse(player, targetsInArea[i]);
-                StartCoroutine(AbilityDurationRoutine(ability, player, targetsInArea[i]));
-            }
+
+            abilities[abilityNo].OnAbilityUse(null, targetsInArea);
+            StartCoroutine(AbilityDurationRoutine(ability, null, targetsInArea));
         }
         // if ability for self or projectile
         else
         {
-            abilities[abilityNo].OnAbilityUse(player, player);
-            StartCoroutine(AbilityDurationRoutine(ability, player, player));
+            abilities[abilityNo].OnAbilityUse(player, null);
+            StartCoroutine(AbilityDurationRoutine(ability, player, null));
         }
 
         charges[abilityNo]--;
@@ -238,16 +237,16 @@ public class AbilityController : MonoBehaviour
             abilityCooldownRoutines[abilityNo] = StartCoroutine(AbilityCooldownRoutine(abilityNo, ability));
     }
 
-    private IEnumerator AbilityDurationRoutine(BaseAbility ability, BaseStats self, BaseStats target)
+    private IEnumerator AbilityDurationRoutine(BaseAbility ability, BaseStats self, List<BaseStats> targetList)
     {
         yield return new WaitForSeconds(ability.abilityDuration);
 
-        ability.OnAbilityEnd(self, target);
+        ability.OnAbilityEnd(self, targetList);
     }
 
-    public void HandleAbilityDuration(BaseAbility ability, BaseStats self, BaseStats target)
+    public void HandleAbilityDuration(BaseAbility ability, BaseStats self, List<BaseStats> targetList)
     {
-        StartCoroutine(AbilityDurationRoutine(ability, self, target));
+        StartCoroutine(AbilityDurationRoutine(ability, self, targetList));
     }
 
     private IEnumerator AbilityCooldownRoutine(int abilityNo, BaseAbility ability)

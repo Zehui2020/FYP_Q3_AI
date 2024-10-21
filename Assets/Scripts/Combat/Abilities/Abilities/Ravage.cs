@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Abilities/Ravage")]
@@ -7,12 +8,22 @@ public class Ravage : BaseAbility
     {
     }
 
-    public override void OnAbilityUse(BaseStats self, BaseStats target)
+    public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
-        target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), (int)abilityStrength);
+        for (int i = 0; i < targetList.Count; i++)
+        {
+            BaseStats target = targetList[i];
+            target.ApplyStatusEffect(
+                new StatusEffect.StatusType(
+                    StatusEffect.StatusType.Type.Debuff, 
+                    StatusEffect.StatusType.Status.Static
+                    ), 
+                (int)abilityStrength
+                );
+        }
     }
 
-    public override void OnAbilityEnd(BaseStats self, BaseStats target)
+    public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
     }
 }

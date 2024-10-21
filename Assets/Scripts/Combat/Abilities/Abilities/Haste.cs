@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Abilities/Haste")]
@@ -7,13 +8,13 @@ public class Haste : BaseAbility
     {
     }
 
-    public override void OnAbilityUse(BaseStats self, BaseStats target)
+    public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
-        self.movementSpeedMultiplier.AddModifier(abilityStrength / 100);
+        singleTarget.movementSpeedMultiplier.AddModifier(abilityStrength / 100);
     }
 
-    public override void OnAbilityEnd(BaseStats self, BaseStats target)
+    public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
-        self.movementSpeedMultiplier.RemoveModifier(abilityStrength / 100);
+        singleTarget.movementSpeedMultiplier.RemoveModifier(abilityStrength / 100);
     }
 }
