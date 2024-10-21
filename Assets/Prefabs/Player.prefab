@@ -6353,7 +6353,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1814783801703092572
 Transform:
   m_ObjectHideFlags: 0
@@ -28025,8 +28025,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e476a59b97c6944dafce066a1e165aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  abilityOverlayAnimator: {fileID: 0}
   itemPickupAlert: {fileID: 4820532980785076369}
-  abilities: []
   abilityUIPrefab: {fileID: 3594276192509900526, guid: 01666675cdd56e5489d954a41ff3afe2, type: 3}
   abilityUIParent: {fileID: 7621115747701063390}
   abilityPickUpPrefab: {fileID: 2067411944254113266, guid: 96e3e1549117f4d429c58ba4861640d1, type: 3}
@@ -28037,6 +28037,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   maxAbilitySlots: 5
+  abilities: []
   currAbilitySlots: 0
   swappingAbility: 0
 --- !u!114 &2556495245541027178

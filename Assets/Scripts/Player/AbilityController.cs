@@ -4,20 +4,21 @@ using UnityEngine;
 
 public class AbilityController : MonoBehaviour
 {
+    [SerializeField] public Animator abilityOverlayAnimator;
     [SerializeField] private ItemPickupAlert itemPickupAlert;
-    public List<BaseAbility> abilities = new();
-    private List<AbilitySlotUI> abilityUI = new();
-    private AbilitySelectUI selectUI;
     [SerializeField] private GameObject abilityUIPrefab;
     [SerializeField] private Transform abilityUIParent;
     [SerializeField] private AbilityPickUp abilityPickUpPrefab;
-    [SerializeField] LayerMask targetLayer;
-    [SerializeField] LayerMask groundLayer;
+    [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private int maxAbilitySlots;
 
-    public int currAbilitySlots = 0;
-    public bool swappingAbility = false;
+    [HideInInspector] public List<BaseAbility> abilities = new();
+    [HideInInspector] public int currAbilitySlots = 0;
+    [HideInInspector] public bool swappingAbility = false;
 
+    private List<AbilitySlotUI> abilityUI = new();
+    private AbilitySelectUI selectUI;
     private BaseAbility swapAbility;
     private int swapAbilityCharges;
     private PlayerController player;
@@ -144,10 +145,11 @@ public class AbilityController : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void TriggerOverlayAnim(Vector3 scale, string trigger)
     {
-        if (Input.GetKeyDown(KeyCode.J))
-            AddAbilitySlot(1);
+        abilityOverlayAnimator.transform.localScale = scale;
+        abilityOverlayAnimator.gameObject.SetActive(true);
+        abilityOverlayAnimator.SetTrigger(trigger);
     }
 
     public void SpawnAbilityPickUp(BaseAbility newAbility, Transform chest)
