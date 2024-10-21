@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class BossDagger : PooledObject
 {
-    [SerializeField] private Vector2 randLifetime;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float speed;
+
+    [SerializeField] private LineRenderer lineRenderer;
+    [SerializeField] private Transform lineStatPos;
 
     private BaseStats target;
     private BaseStats thrower;
@@ -24,6 +26,7 @@ public class BossDagger : PooledObject
     {
         base.Init();
         daggerRB = GetComponent<Rigidbody2D>();
+        lineRenderer.enabled = false;
     }
 
     public void SetupDagger(float damage, BaseStats thrower)
@@ -31,15 +34,16 @@ public class BossDagger : PooledObject
         this.damage = damage;
         this.thrower = thrower;
         target = PlayerController.Instance;
-        float lifetime = Random.Range(randLifetime.x, randLifetime.y);
-        StartCoroutine(ShootRoutine(lifetime));
+    }
+
+    public void ShootDagger()
+    {
+        StartCoroutine(ShootRoutine());
         StartCoroutine(ReleaseRoutine());
     }
 
-    private IEnumerator ShootRoutine(float lifetime)
+    private IEnumerator ShootRoutine()
     {
-        yield return new WaitForSeconds(lifetime);
-
         float rotateDuration = 1f;
         Vector3 dirToTarget = Vector2.zero;
 
@@ -48,6 +52,16 @@ public class BossDagger : PooledObject
             rotateDuration -= Time.deltaTime;
             dirToTarget = Vector3.Normalize(transform.position - target.transform.position);
             transform.up = Vector3.Lerp(transform.up, dirToTarget, Time.deltaTime * 5f);
+            yield return null;
+        }
+
+        float timer = 1f;
+        while (timer > 0)
+        {
+            lineRenderer.enabled = true;
+            lineRenderer.SetPosition(0, lineStatPos.position);
+            lineRenderer.SetPosition(1, target.transform.position);
+            timer -= Time.deltaTime;
             yield return null;
         }
 
@@ -80,6 +94,7 @@ public class BossDagger : PooledObject
                 player.OnParryEnemy(thrower);
                 target = thrower;
                 isParried = true;
+                lineRenderer.enabled = false;
 
                 if (moveRoutine != null)
                     StopCoroutine(moveRoutine);
@@ -121,5 +136,6 @@ public class BossDagger : PooledObject
         isParried = false;
         Release();
         gameObject.SetActive(false);
+        lineRenderer.enabled = false;
     }
 }

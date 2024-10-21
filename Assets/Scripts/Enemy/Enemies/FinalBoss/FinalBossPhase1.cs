@@ -12,6 +12,7 @@ public class FinalBossPhase1 : Enemy
         SlamAttack,
         Rush,
         PunchAttack,
+        SummonDagger,
         DaggerAttack
     }
 
@@ -24,7 +25,8 @@ public class FinalBossPhase1 : Enemy
     private readonly int RushAnim = Animator.StringToHash("BossP1Rush");
     private readonly int PunchAnim = Animator.StringToHash("BossP1Punch");
 
-    private readonly int DaggerAnim = Animator.StringToHash("BossP1Dagger");
+    private readonly int DaggerSummonAnim = Animator.StringToHash("BossP1SummonDagger");
+    private readonly int DaggerAttackAnim = Animator.StringToHash("BossP1DaggerAttack");
 
     [Header("Final Boss Stats")]
     public State currentState;
@@ -76,23 +78,37 @@ public class FinalBossPhase1 : Enemy
                 enemyRB.velocity = Vector2.zero;
                 animator.Play(PunchAnim);
                 break;
+            case State.SummonDagger:
+                StartCoroutine(SummonDaggerRoutine());
+                break;
             case State.DaggerAttack:
-                animator.Play(DaggerAnim);
-                for (int i = 0; i < daggerSpawnPos.Count; i++)
-                {
-                    BossDagger dagger = ObjectPool.Instance.GetPooledObject("BossDagger", true) as BossDagger;
-                    dagger.SetupDagger(CalculateDamageDealt(player, Damage.DamageSource.Normal, out bool crit, out DamagePopup.DamageType damageType), this);
-
-                    dagger.transform.SetParent(daggerSpawnPos[i]);
-                    dagger.transform.localPosition = Vector3.zero;
-                    dagger.transform.localRotation = Quaternion.identity;
-                    dagger.transform.localScale = Vector3.one;
-
-                    dagger.OnReleased += () => { bossDaggers.Remove(dagger); };
-                    bossDaggers.Add(dagger);
-                }
+                animator.Play(DaggerAttackAnim);
+                bossDaggers[0].ShootDagger();
                 break;
         }
+    }
+
+    private IEnumerator SummonDaggerRoutine()
+    {
+        animator.Play(DaggerSummonAnim);
+        enemyRB.velocity = Vector2.zero;
+
+        for (int i = 0; i < daggerSpawnPos.Count; i++)
+        {
+            BossDagger dagger = ObjectPool.Instance.GetPooledObject("BossDagger", true) as BossDagger;
+            dagger.SetupDagger(CalculateDamageDealt(player, Damage.DamageSource.Normal, out bool crit, out DamagePopup.DamageType damageType), this);
+
+            dagger.transform.SetParent(daggerSpawnPos[i]);
+            dagger.transform.localPosition = Vector3.zero;
+            dagger.transform.localRotation = Quaternion.identity;
+            dagger.transform.localScale = Vector3.one;
+
+            dagger.OnReleased += () => { bossDaggers.Remove(dagger); };
+            bossDaggers.Add(dagger);
+
+            yield return new WaitForSeconds(0.5f);
+        }
+        ChangeState(State.DaggerAttack);
     }
 
     public override bool AttackTarget(BaseStats target, Damage.DamageSource damageSource, Vector3 closestPoint)
@@ -150,9 +166,15 @@ public class FinalBossPhase1 : Enemy
         }
 
         if (bossDaggers.Count == 0)
-            ChangeState(State.DaggerAttack);
+            ChangeState(State.SummonDagger);
         else
-            ChangeState(State.Rush);
+        {
+            int randNum = Random.Range(0, 2);
+            if (randNum == 0)
+                ChangeState(State.Rush);
+            else
+                ChangeState(State.DaggerAttack);
+        }
 
         Deciding = null;
     }
@@ -209,6 +231,11 @@ public class FinalBossPhase1 : Enemy
         {
             if (SlamRoutine != null)
                 StopCoroutine(SlamRoutine);
+
+            Shockwave shockwave = ObjectPool.Instance.GetPooledObject("Shockwave", true) as Shockwave;
+            shockwave.InitShockwave(this, 
+                CalculateDamageDealt(player, Damage.DamageSource.Normal, out bool crit, out DamagePopup.DamageType damageType),
+                collision.contacts[0].point);
 
             QuestPointer.Instance.Hide();
             animator.Play(SlamAnim);
