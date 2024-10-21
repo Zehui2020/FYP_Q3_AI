@@ -159,7 +159,6 @@ public class FinalBossPhase1 : Enemy
 
     private IEnumerator SlamAttack()
     {
-        QuestPointer.Instance.Show(transform);
         animator.Play(JumpAnim);
         damageMultipler.AddModifier(slamDamageModifier);
 
@@ -180,6 +179,7 @@ public class FinalBossPhase1 : Enemy
 
     public void OnJump()
     {
+        QuestPointer.Instance.Show(transform);
         StartCoroutine(JumpRoutine());
     }
     private IEnumerator JumpRoutine()
