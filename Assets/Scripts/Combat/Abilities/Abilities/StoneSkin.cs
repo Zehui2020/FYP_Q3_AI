@@ -10,18 +10,15 @@ public class StoneSkin : BaseAbility
 
     public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
+        PlayerController.Instance.abilityController.abilityOverlayAnimator.TriggerOverlayAnim(1, "StoneSkin");
         // stop player movement
         PlayerController.Instance.ChangeState(PlayerController.PlayerStates.Ability);
-        PlayerController.Instance.abilityController.TriggerOverlayAnim(1, "StoneSkin");
         // immune
         singleTarget.ApplyImmune(abilityDuration, BaseStats.ImmuneType.StoneSkin);
-        PlayerController.Instance.GetComponent<SpriteRenderer>().enabled = false;
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
-        PlayerController.Instance.ChangeState(PlayerController.PlayerStates.Movement);
-        PlayerController.Instance.GetComponent<SpriteRenderer>().enabled = true;
-        PlayerController.Instance.abilityController.abilityOverlayAnimator.gameObject.SetActive(false);
+        PlayerController.Instance.abilityController.abilityOverlayAnimator.TriggerOverlayAnim(1, "StoneSkinOff");
     }
 }

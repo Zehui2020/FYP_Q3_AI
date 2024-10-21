@@ -14,15 +14,14 @@ public class ProtectionSphere : BaseAbility
     public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
         count = (int)(10 / abilityDuration);
-        PlayerController.Instance.abilityController.TriggerOverlayAnim(0.4f, "ProtectionSphere");
+        PlayerController.Instance.abilityController.abilityOverlayAnimator.TriggerOverlayAnim(0.4f, "ProtectionSphere");
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
         if (count <= 0)
         {
-            PlayerController.Instance.abilityController.TriggerOverlayAnim(0.4f, "ProtectionSphereOff");
-            PlayerController.Instance.abilityController.abilityOverlayAnimator.gameObject.SetActive(false);
+            PlayerController.Instance.abilityController.abilityOverlayAnimator.TriggerOverlayAnim(0.4f, "ProtectionSphereOff");
             return;
         }
 
@@ -40,6 +39,8 @@ public class ProtectionSphere : BaseAbility
             if (target != null)
             {
                 // push targets away
+                if (!target.canAbilityKnockback)
+                    continue;
                 float dir = target.transform.position.x < PlayerController.Instance.transform.position.x ? -1 : 1;
                 target.GetComponent<Rigidbody2D>().velocity = new Vector3(dir * abilityStrength, abilityStrength, 0);
                 target.particleVFXManager.OnStunned();

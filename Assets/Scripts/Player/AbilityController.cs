@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AbilityController : MonoBehaviour
 {
-    [SerializeField] public Animator abilityOverlayAnimator;
+    [SerializeField] public AbilityAnimationController abilityOverlayAnimator;
     [SerializeField] private ItemPickupAlert itemPickupAlert;
     [SerializeField] private GameObject abilityUIPrefab;
     [SerializeField] private Transform abilityUIParent;
@@ -144,13 +144,6 @@ public class AbilityController : MonoBehaviour
 
             count++;
         }
-    }
-
-    public void TriggerOverlayAnim(float alpha, string trigger)
-    {
-        abilityOverlayAnimator.SetTrigger(trigger);
-        abilityOverlayAnimator.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, alpha);
-        abilityOverlayAnimator.gameObject.SetActive(true);
     }
 
     public void SpawnAbilityPickUp(BaseAbility newAbility, Transform chest)
