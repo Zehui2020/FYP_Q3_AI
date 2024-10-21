@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 public class QuestPointer : MonoBehaviour
 {
+    public static QuestPointer Instance;
+
     private Camera mainCam;
     [SerializeField] private Sprite arrowSprite;
     [SerializeField] private Sprite crossSprite;
@@ -12,6 +14,11 @@ public class QuestPointer : MonoBehaviour
     [SerializeField] private Image pointerImage;
 
     [SerializeField] private float borderSize = 100f;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {

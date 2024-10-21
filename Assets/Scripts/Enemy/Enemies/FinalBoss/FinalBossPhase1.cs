@@ -159,6 +159,7 @@ public class FinalBossPhase1 : Enemy
 
     private IEnumerator SlamAttack()
     {
+        QuestPointer.Instance.Show(transform);
         animator.Play(JumpAnim);
         damageMultipler.AddModifier(slamDamageModifier);
 
@@ -209,6 +210,7 @@ public class FinalBossPhase1 : Enemy
             if (SlamRoutine != null)
                 StopCoroutine(SlamRoutine);
 
+            QuestPointer.Instance.Hide();
             animator.Play(SlamAnim);
             SlamRoutine = null;
             player.playerEffectsController.ShakeCamera(8f, 5f, 0.6f);
