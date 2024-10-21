@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class AbilityController : MonoBehaviour
@@ -145,11 +146,11 @@ public class AbilityController : MonoBehaviour
         }
     }
 
-    public void TriggerOverlayAnim(Vector3 scale, string trigger)
+    public void TriggerOverlayAnim(float alpha, string trigger)
     {
-        abilityOverlayAnimator.transform.localScale = scale;
-        abilityOverlayAnimator.gameObject.SetActive(true);
         abilityOverlayAnimator.SetTrigger(trigger);
+        abilityOverlayAnimator.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255, alpha);
+        abilityOverlayAnimator.gameObject.SetActive(true);
     }
 
     public void SpawnAbilityPickUp(BaseAbility newAbility, Transform chest)
