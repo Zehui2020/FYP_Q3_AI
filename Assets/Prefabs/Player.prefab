@@ -6347,13 +6347,14 @@ GameObject:
   - component: {fileID: 1814783801703092572}
   - component: {fileID: 5865161878764294986}
   - component: {fileID: 4604822728087045326}
+  - component: {fileID: 5133373307315123527}
   m_Layer: 6
   m_Name: AbilityOverlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1814783801703092572
 Transform:
   m_ObjectHideFlags: 0
@@ -6376,7 +6377,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1719351560450737636}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -6442,6 +6443,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5133373307315123527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1719351560450737636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb230f4a04fb90f4682133876bc4b306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityOverlayAnimator: {fileID: 4604822728087045326}
 --- !u!1 &1730120053452581832
 GameObject:
   m_ObjectHideFlags: 0
@@ -27775,6 +27789,7 @@ MonoBehaviour:
   movementSpeedMultiplier:
     baseAmount: 1
     modifiers: []
+  canAbilityKnockback: 1
   currentState: 0
   movementController: {fileID: 0}
   abilityController: {fileID: 0}
@@ -28025,7 +28040,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e476a59b97c6944dafce066a1e165aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityOverlayAnimator: {fileID: 4604822728087045326}
+  abilityOverlayAnimator: {fileID: 5133373307315123527}
   itemPickupAlert: {fileID: 4820532980785076369}
   abilityUIPrefab: {fileID: 3594276192509900526, guid: 01666675cdd56e5489d954a41ff3afe2, type: 3}
   abilityUIParent: {fileID: 7621115747701063390}
