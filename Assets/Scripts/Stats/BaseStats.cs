@@ -104,7 +104,7 @@ public class BaseStats : MonoBehaviour
     public event System.Action<BaseStats> OnDieEvent;
 
     // for ability kb
-    public bool canKB = true;
+    public bool canAbilityKnockback = true;
 
     public virtual bool AttackTarget(BaseStats target, DamageSource damageSource, Vector3 closestPoint)
     {
