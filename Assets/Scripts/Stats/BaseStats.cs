@@ -103,6 +103,9 @@ public class BaseStats : MonoBehaviour
     public event System.Action<BaseStats> OnParry;
     public event System.Action<BaseStats> OnDieEvent;
 
+    // for ability kb
+    public bool canKB = true;
+
     public virtual bool AttackTarget(BaseStats target, DamageSource damageSource, Vector3 closestPoint)
     {
         float damageDealt = CalculateDamageDealt(target, damageSource, out bool isCrit, out DamagePopup.DamageType damageType);

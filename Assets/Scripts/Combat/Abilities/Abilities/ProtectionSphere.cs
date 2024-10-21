@@ -40,6 +40,8 @@ public class ProtectionSphere : BaseAbility
             if (target != null)
             {
                 // push targets away
+                if (!target.canKB)
+                    continue;
                 float dir = target.transform.position.x < PlayerController.Instance.transform.position.x ? -1 : 1;
                 target.GetComponent<Rigidbody2D>().velocity = new Vector3(dir * abilityStrength, abilityStrength, 0);
                 target.particleVFXManager.OnStunned();
