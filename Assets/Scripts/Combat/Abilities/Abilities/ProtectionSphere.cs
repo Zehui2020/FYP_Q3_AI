@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Abilities/Protection Sphere")]
@@ -10,19 +11,13 @@ public class ProtectionSphere : BaseAbility
     {
     }
 
-    public override void OnAbilityUse(BaseStats self, BaseStats target)
+    public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
         count = (int)(10 / abilityDuration);
         PlayerController.Instance.abilityController.TriggerOverlayAnim(0.4f, "ProtectionSphere");
     }
 
-    private void OnAbilityLoop(BaseStats self, BaseStats target)
-    {
-        PushTargets();
-        PlayerController.Instance.abilityController.HandleAbilityDuration(this, self, target);
-    }
-
-    public override void OnAbilityEnd(BaseStats self, BaseStats target)
+    public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
         if (count <= 0)
         {
@@ -31,7 +26,8 @@ public class ProtectionSphere : BaseAbility
             return;
         }
 
-        OnAbilityLoop(self, target);
+        PushTargets();
+        OnAbilityLoop(singleTarget, targetList);
     }
 
     private void PushTargets()

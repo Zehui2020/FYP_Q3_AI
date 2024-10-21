@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Abilities/Heat Wave")]
@@ -8,7 +9,7 @@ public class HeatWave : BaseAbility
     {
     }
 
-    public override void OnAbilityUse(BaseStats self, BaseStats target)
+    public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
         GameObject obj = Instantiate(wavePrefab);
         obj.transform.position = PlayerController.Instance.transform.position;
@@ -17,7 +18,7 @@ public class HeatWave : BaseAbility
         obj.GetComponent<HeatWaveProjectile>().LaunchProjectile(force);
     }
 
-    public override void OnAbilityEnd(BaseStats self, BaseStats target)
+    public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
     }
 }

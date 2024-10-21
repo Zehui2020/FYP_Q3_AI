@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class BaseAbility : ShopItemData
 {
@@ -42,7 +44,26 @@ public abstract class BaseAbility : ShopItemData
     public int abilityCharges;
     public int abilityMaxCharges;
 
-    public abstract void InitAbility();
-    public abstract void OnAbilityUse(BaseStats self, BaseStats target);
-    public abstract void OnAbilityEnd(BaseStats self, BaseStats target);
+    public virtual void InitAbility()
+    {
+    }
+    public virtual void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
+    {
+    }
+    public void OnAbilityLoop(BaseStats singleTarget, List<BaseStats> targetList)
+    {
+        PlayerController.Instance.abilityController.HandleAbilityDuration(this, singleTarget, targetList);
+    }
+    public virtual void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
+    {
+    }
+
+    protected bool isCrit;
+    protected DamagePopup.DamageType damageType;
+    public float GetDamage()
+    {
+        float damage = (abilityStrength / 100) * PlayerController.Instance.attack;
+
+        return damage;
+    }
 }
