@@ -146,6 +146,20 @@ public class PlayerController : PlayerStats
         if (Input.GetKeyDown(KeyCode.Return))
             ConsoleManager.Instance.OnInputCommand();
 
+        if (abilityController != null && abilityController.swappingAbility)
+        {
+            movementController.currentState = MovementState.Idle;
+            movementController.StopPlayer();
+            for (int i = 0; i < abilityController.abilities.Count; i++)
+            {
+                if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
+                    abilityController.SwapAbility(i);
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+                abilityController.SwapAbility();
+            return;
+        }
+
         if (currentState == PlayerStates.Shop)
             return;
 
@@ -173,20 +187,6 @@ public class PlayerController : PlayerStats
         if (health <= 0 || 
             currentState == PlayerStates.Ability)
             return;
-
-        if (abilityController != null && abilityController.swappingAbility)
-        {
-            movementController.currentState = MovementState.Idle;
-            movementController.StopPlayer();
-            for (int i = 0; i < abilityController.abilities.Count; i++)
-            {
-                if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
-                    abilityController.SwapAbility(i);
-            }
-            if (Input.GetKeyDown(KeyCode.Escape))
-                abilityController.SwapAbility();
-            return;
-        }
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {

@@ -17,6 +17,7 @@ public class AbilitySelectUI : MonoBehaviour
     [HideInInspector] public List<AbilitySlotUI> abilitySlots = new();
     private float borderStartPos;
     private float arrowStartPos;
+    [SerializeField] private Canvas canvas;
 
     private void Start()
     {
@@ -42,6 +43,8 @@ public class AbilitySelectUI : MonoBehaviour
                 slot.chargeText.color = new Color(slot.chargeText.color.r, slot.chargeText.color.g, slot.chargeText.color.b, 0);
                 slot.cooldownSlider.color = new Color(slot.cooldownSlider.color.r, slot.cooldownSlider.color.g, slot.cooldownSlider.color.b, 0);
             }
+
+            canvas.sortingOrder = 201;
         }
         else
         {
@@ -61,6 +64,8 @@ public class AbilitySelectUI : MonoBehaviour
                 slot.cooldownSlider.color = new Color(slot.cooldownSlider.color.r, slot.cooldownSlider.color.g, slot.cooldownSlider.color.b, 0.8f);
             }
             transform.localPosition = Vector3.zero;
+
+            canvas.sortingOrder = 0;
         }
     }
 
