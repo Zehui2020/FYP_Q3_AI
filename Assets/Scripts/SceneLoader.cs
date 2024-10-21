@@ -39,6 +39,8 @@ public class SceneLoader : MonoBehaviour
     private IEnumerator LoadNewScene(string sceneName)
     {
         FadeOut();
+        if (GameData.Instance != null)
+            GameData.Instance.SavePlayerData();
 
         yield return new WaitForSecondsRealtime(0.5f);
 

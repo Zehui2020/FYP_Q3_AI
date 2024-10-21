@@ -494,6 +494,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 1825828266}
+        m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+        m_MethodName: ShowDialoguePopup
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 5
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!212 &154515164
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1854,6 +1866,37 @@ Transform:
   - {fileID: 118140869}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &753257551
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 753257552}
+  m_Layer: 0
+  m_Name: Guide
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &753257552
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 753257551}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.16, y: 0.79, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214355952}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &765315959
 GameObject:
   m_ObjectHideFlags: 0
@@ -2033,7 +2076,19 @@ MonoBehaviour:
   setPrompts: Pixel art
   OnRecievePrompt:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1825828266}
+        m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+        m_MethodName: ShowDialoguePopup
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &817895843
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2077,6 +2132,38 @@ PrefabInstance:
     - target: {fileID: 3349870427767057508, guid: b6460767a5de0c14597ce9a738c64942, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5120518894125569549, guid: b6460767a5de0c14597ce9a738c64942, type: 3}
+      propertyPath: OnChestOpen.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5120518894125569549, guid: b6460767a5de0c14597ce9a738c64942, type: 3}
+      propertyPath: OnChestOpen.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5120518894125569549, guid: b6460767a5de0c14597ce9a738c64942, type: 3}
+      propertyPath: OnChestOpen.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1825828266}
+    - target: {fileID: 5120518894125569549, guid: b6460767a5de0c14597ce9a738c64942, type: 3}
+      propertyPath: OnChestOpen.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5120518894125569549, guid: b6460767a5de0c14597ce9a738c64942, type: 3}
+      propertyPath: OnChestOpen.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowDialoguePopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 5120518894125569549, guid: b6460767a5de0c14597ce9a738c64942, type: 3}
+      propertyPath: OnChestOpen.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: DialogueManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5120518894125569549, guid: b6460767a5de0c14597ce9a738c64942, type: 3}
+      propertyPath: OnChestOpen.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5120518894125569549, guid: b6460767a5de0c14597ce9a738c64942, type: 3}
+      propertyPath: OnChestOpen.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 7654303788421025298, guid: b6460767a5de0c14597ce9a738c64942, type: 3}
       propertyPath: m_Name
@@ -2444,37 +2531,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.26189137, y: 2.8568947}
   m_EdgeRadius: 0
---- !u!1 &1057177613
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1057177614}
-  m_Layer: 0
-  m_Name: TutorialController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1057177614
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1057177613}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1090325287
 GameObject:
   m_ObjectHideFlags: 0
@@ -2870,10 +2926,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 753257552}
   - {fileID: 147308862}
   - {fileID: 1117349297}
   - {fileID: 1753019067}
   - {fileID: 2001385487}
+  - {fileID: 1588787996}
   m_Father: {fileID: 1239606512}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1230503534
@@ -2992,6 +3050,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1825828266}
+        m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+        m_MethodName: ShowDialoguePopup
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 6
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
@@ -8759,6 +8829,7 @@ MonoBehaviour:
   movementSpeedMultiplier:
     baseAmount: 0
     modifiers: []
+  canAbilityKnockback: 1
   patrolThreshold: 0
   chaseRange: 0
   attackRange: 0
@@ -8766,6 +8837,21 @@ MonoBehaviour:
   patrolMovementSpeed: 0
   chaseMovementSpeed: 0
   isEnemy: 0
+  OnTakeDamage:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1825828266}
+        m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+        m_MethodName: ShowDialoguePopup
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   enemyClass: 0
   enemyType: 0
   canUpdate: 1
@@ -8785,9 +8871,6 @@ MonoBehaviour:
   bgManager: {fileID: 8045318398188915861}
   buttonController: {fileID: 14822880}
   buttonAnimator: {fileID: 1470322265}
-  OnTakeDamage:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!95 &1470322265
 Animator:
   serializedVersion: 5
@@ -8828,6 +8911,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1585725316}
     m_Modifications:
+    - target: {fileID: 1281113676820431998, guid: 7d68eecc5e1c9ae4daf761e07574de9d, type: 3}
+      propertyPath: OnTakeDamage.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281113676820431998, guid: 7d68eecc5e1c9ae4daf761e07574de9d, type: 3}
+      propertyPath: OnTakeDamage.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281113676820431998, guid: 7d68eecc5e1c9ae4daf761e07574de9d, type: 3}
+      propertyPath: OnTakeDamage.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1825828266}
+    - target: {fileID: 1281113676820431998, guid: 7d68eecc5e1c9ae4daf761e07574de9d, type: 3}
+      propertyPath: OnTakeDamage.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281113676820431998, guid: 7d68eecc5e1c9ae4daf761e07574de9d, type: 3}
+      propertyPath: OnTakeDamage.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowDialoguePopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281113676820431998, guid: 7d68eecc5e1c9ae4daf761e07574de9d, type: 3}
+      propertyPath: OnTakeDamage.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: DialogueManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281113676820431998, guid: 7d68eecc5e1c9ae4daf761e07574de9d, type: 3}
+      propertyPath: OnTakeDamage.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1281113676820431998, guid: 7d68eecc5e1c9ae4daf761e07574de9d, type: 3}
+      propertyPath: OnTakeDamage.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 3118758486233172414, guid: 7d68eecc5e1c9ae4daf761e07574de9d, type: 3}
       propertyPath: m_Name
       value: Dummy
@@ -9091,6 +9206,37 @@ Transform:
   - {fileID: 1209754064}
   - {fileID: 1699835449}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1588787995
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1588787996}
+  m_Layer: 0
+  m_Name: Chest
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1588787996
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588787995}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.96, y: 6.88, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214355952}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1620043108
 GameObject:
@@ -80974,7 +81120,7 @@ Transform:
   m_GameObject: {fileID: 1753019066}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.39, y: 3, z: 0}
+  m_LocalPosition: {x: 5.39, y: 2.143, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -81081,8 +81227,351 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keycodeUI: {fileID: 731783700}
-  dialogues: []
-  popupDialogues: []
+  dialogues:
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Welcome to my humble abode. This is a safe space, untouched by the
+      Dimension Horrors, and where future heroes come to make a name for themselves.
+    playerChoices:
+    - choice: Who are you?
+      nextDialogueIndex: 1
+    - choice: Dimension Horrors?
+      nextDialogueIndex: 2
+    - choice: Where do we start?
+      nextDialogueIndex: 3
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Me? Oh, I\u2019m just your guide in this journey. I have the ability
+      to transport individuals to any dimension that needs saving, no matter the
+      place. I\u2019ve sent countless individuals into the unknown to fight against
+      our common foe."
+    playerChoices:
+    - choice: Who are you?
+      nextDialogueIndex: 1
+    - choice: Dimension Horrors?
+      nextDialogueIndex: 2
+    - choice: Where do we start?
+      nextDialogueIndex: 3
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "The Dimension Horrors, ruthless beings capable of tearing through
+      the fabric of space. They traverse these dimensions, devastating any and all
+      that come in their way. Our battle has gone on for millenia, and there\u2019s
+      still a long road ahead for all of us."
+    playerChoices:
+    - choice: Who are you?
+      nextDialogueIndex: 1
+    - choice: Dimension Horrors?
+      nextDialogueIndex: 2
+    - choice: Where do we start?
+      nextDialogueIndex: 3
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 1
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "First, we\u2019ll need to see what worlds are in need of our assistance.
+      These Blocks behind me show Prompts for potential dimensions that need our
+      help. Go ahead, take your pick!"
+    playerChoices: []
+    questDestination: {fileID: 147308862}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "I\u2019ve curated a few weapons for you to use on your journey. A
+      Longsword, an Axe, and a pair of Daggers. Each with their own strengths and
+      weaknesses. "
+    playerChoices: []
+    questDestination: {fileID: 2001385487}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Your current weapon, the Longsword, has the most well-rounded capabilities.
+      It has moderate stats across the board, making it an easy weapon to pick up!
+    playerChoices: []
+    questDestination: {fileID: 2001385487}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 1
+    onDialogueDone:
+      playOnce: 1
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 1209754063}
+            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_MethodName: SetActive
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+    dialogue: Go try out the other weapons on the training dummy over there!
+    playerChoices: []
+    questDestination: {fileID: 2001385487}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 1
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Along your journey, you will find Chests scattered across the terrain.
+      There are different types of chests to discover, each with their own item drops
+      and cost to open. Try opening the chest on the platform above us.\r"
+    playerChoices: []
+    questDestination: {fileID: 1588787996}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: So, are you ready to embark on your journey to save dimensions?
+    playerChoices:
+    - choice: "Yes, I\u2019m ready!"
+      nextDialogueIndex: 9
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 1
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Alright, head to the Portal at the end of the room, it will take you
+      to the first world that needs saving, it\u2019s located in a cavern deep underground
+      so visibility may be low, thread with caution.\r"
+    playerChoices: []
+    questDestination: {fileID: 209863982}
+  popupDialogues:
+  - showOnce: 0
+    playOnAwake: 1
+    isShown: 0
+    speakerName: ???
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Hey you! The guy whose head\u2019s on fire. Come over here!"
+    questDestination: {fileID: 753257552}
+  - showOnce: 0
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Great! Now walk close to the Pipe on the right and it\u2019ll suck
+      it right up!\r"
+    questDestination: {fileID: 1117349297}
+  - showOnce: 0
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "You can use any combination of blocks to your liking. Whenever you\u2019re
+      ready, hit the <color=red>Red</color> Button by Pressing [LMB] to attack. If
+      you want to reset the prompts, hit the <color=blue>Blue</color> Button."
+    questDestination: {fileID: 1753019067}
+  - showOnce: 1
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Excellent choice! Now repeat that process a few more times to form
+      a set of dimensions that you\u2019ll be traversing through."
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Done with your selection? Come back here and I\u2019ll run you through
+      the Basic Mehcnanics.\r"
+    questDestination: {fileID: 753257552}
+  - showOnce: 1
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Ah, the Daggers, a swift killer. Where it lacks in range, it makes
+      up for with quick stabs and slashes, enabling it to apply Status Effects onto
+      enemies with ease.
+    questDestination: {fileID: 0}
+  - showOnce: 1
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: The Axe, truly an intimidating weapon! It rewards its user for their
+      positioning and timing as its slow and methodical attacks boasts an increase
+      in Shield Damage as well as overall damage.
+    questDestination: {fileID: 0}
+  - showOnce: 1
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Enemies have a <color=blue>Shield Bar</color> and a <color=red>Health
+      Bar</color>, apart from a few. Depleting an enemy\u2019s shield bar fully puts
+      them in a Breached State where they receive more damage.\r"
+    questDestination: {fileID: 753257552}
+  - showOnce: 1
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 1699835451}
+            m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+            m_MethodName: SetTrigger
+            m_Mode: 5
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: activate
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 1699835452}
+            m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+            m_MethodName: set_enabled
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+    dialogue: "Perfect, some health potions! These are consumable, so use them wisely!
+      Passive Items will be automatically picked up while Abilities and Consumables
+      have to be interacted with to pick up.\r"
+    questDestination: {fileID: 753257552}
   InteractEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -81267,6 +81756,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1820867910}
   m_CullTransparentMesh: 1
+--- !u!114 &1825828266 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6715204237730440103, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+  m_PrefabInstance: {fileID: 5289916881907596508}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9494a0da6bb65b14599ec2c4d48d24c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1826829331
 GameObject:
   m_ObjectHideFlags: 0
@@ -83347,6 +83847,7 @@ MonoBehaviour:
   movementSpeedMultiplier:
     baseAmount: 0
     modifiers: []
+  canAbilityKnockback: 1
   patrolThreshold: 0
   chaseRange: 0
   attackRange: 0
@@ -83354,6 +83855,9 @@ MonoBehaviour:
   patrolMovementSpeed: 0
   chaseMovementSpeed: 0
   isEnemy: 0
+  OnTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
   enemyClass: 0
   enemyType: 0
   canUpdate: 1
@@ -83373,9 +83877,6 @@ MonoBehaviour:
   bgManager: {fileID: 8045318398188915861}
   buttonController: {fileID: 14822880}
   buttonAnimator: {fileID: 1973036417}
-  OnTakeDamage:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!61 &1973036416
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -84739,6 +85240,34 @@ PrefabInstance:
       propertyPath: launchButtonPos
       value: 
       objectReference: {fileID: 354557850}
+    - target: {fileID: 6264522055416713539, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: OnDropButton.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264522055416713539, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: OnPickupButton.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264522055416713539, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: OnPickupButton.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1825828266}
+    - target: {fileID: 6264522055416713539, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: OnPickupButton.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowDialoguePopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264522055416713539, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: OnPickupButton.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: DialogueManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264522055416713539, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: OnPickupButton.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6264522055416713539, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
+      propertyPath: OnPickupButton.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6526267790307158126, guid: cbca6588d8a3ba740bedb55b6d46f82c, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -84969,27 +85498,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 6
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2084962591}
+      objectReference: {fileID: 1825828266}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 2084962591}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetActive
+      value: ShowDialoguePopup
       objectReference: {fileID: 0}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UnityEngine.GameObject, UnityEngine
+      value: DialogueManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
@@ -85046,7 +85575,6 @@ SceneRoots:
   - {fileID: 1771445945577872899}
   - {fileID: 1793565151543986307}
   - {fileID: 1975914100097205550}
-  - {fileID: 1057177614}
   - {fileID: 1381176121}
   - {fileID: 632114453}
   - {fileID: 1413364029}

@@ -25,7 +25,7 @@ public class FinalBossPhase1 : Enemy
     private readonly int RushAnim = Animator.StringToHash("BossP1Rush");
     private readonly int PunchAnim = Animator.StringToHash("BossP1Punch");
 
-    private readonly int DaggerSummonAnim = Animator.StringToHash("BossP1SummonDagger");
+    private readonly int DaggerSummonAnim = Animator.StringToHash("BossP1StartSummonDagger");
     private readonly int DaggerAttackAnim = Animator.StringToHash("BossP1DaggerAttack");
 
     [Header("Final Boss Stats")]
@@ -82,6 +82,7 @@ public class FinalBossPhase1 : Enemy
                 StartCoroutine(SummonDaggerRoutine());
                 break;
             case State.DaggerAttack:
+                moveCounter++;
                 animator.Play(DaggerAttackAnim);
                 bossDaggers[0].ShootDagger();
                 break;
@@ -92,6 +93,8 @@ public class FinalBossPhase1 : Enemy
     {
         animator.Play(DaggerSummonAnim);
         enemyRB.velocity = Vector2.zero;
+
+        yield return new WaitForSeconds(0.7f);
 
         for (int i = 0; i < daggerSpawnPos.Count; i++)
         {
@@ -152,7 +155,7 @@ public class FinalBossPhase1 : Enemy
 
     private IEnumerator DecideRoutine()
     {
-        animator.Play(IdleAnim);
+        ChangeState(State.Idle);
         enemyRB.velocity = Vector2.zero;
 
         yield return new WaitForSeconds(2f);

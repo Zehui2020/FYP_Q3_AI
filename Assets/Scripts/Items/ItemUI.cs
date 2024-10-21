@@ -13,7 +13,7 @@ public class ItemUI : MonoBehaviour
     {
         this.item = item;
 
-        itemCount++;
+        itemCount = item.itemStack;
         itemIcon.sprite = item.spriteIcon;
         itemIcon.material = item.itemOutlineMaterial;
         itemCountText.gameObject.SetActive(false);

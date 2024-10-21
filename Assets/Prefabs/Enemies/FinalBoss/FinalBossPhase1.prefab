@@ -1352,7 +1352,7 @@ GameObject:
   - component: {fileID: 4900867215830640161}
   - component: {fileID: 3022327548048810499}
   - component: {fileID: 5404982304785464193}
-  - component: {fileID: 8046919750122322098}
+  - component: {fileID: 1458382477647792356}
   - component: {fileID: 8981191242498749207}
   - component: {fileID: 6575481429560311556}
   - component: {fileID: 4254695898782168221}
@@ -1425,12 +1425,12 @@ SpriteRenderer:
   m_SortingLayerID: -983140795
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 3ebdb6ee12381df479da21e257b67c89, type: 3}
+  m_Sprite: {fileID: -2095750726, guid: 7b03eac8998cc0a499a473ca393c9c8d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.2, y: 0.3}
+  m_Size: {x: 7.5, y: 7.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1472,7 +1472,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -1484,8 +1484,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!70 &8046919750122322098
-CapsuleCollider2D:
+--- !u!61 &1458382477647792356
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1499,7 +1499,7 @@ CapsuleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -1516,9 +1516,19 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.08328092, y: -0.00990659}
-  m_Size: {x: 1.0024312, y: 1.8706187}
-  m_Direction: 0
+  m_Offset: {x: 0, y: -0.025208056}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 7.5, y: 7.5}
+    newSize: {x: 7.5, y: 7.5}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.25, y: 1.9254161}
+  m_EdgeRadius: 0
 --- !u!114 &8981191242498749207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1616,6 +1626,7 @@ MonoBehaviour:
   movementSpeedMultiplier:
     baseAmount: 0
     modifiers: []
+  canAbilityKnockback: 1
   patrolThreshold: 0
   chaseRange: 0
   attackRange: 0
@@ -1644,7 +1655,7 @@ MonoBehaviour:
   jumpSpeed: 400
   jumpWaitPosition: {fileID: 7458289566332066347}
   jumpWaitDuration: 3
-  movesTillSlam: 3
+  movesTillSlam: 5
   punchDamageModifier: 0
   slamDamageModifier: 0.5
   daggerDamageModifier: -0.5

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
 
 public class ItemManager : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class ItemManager : MonoBehaviour
     private List<ItemUI> itemUIs = new List<ItemUI>();
 
     private ImageSaver imageSaver;
+    private GameData gameData;
 
     private void Awake()
     {
@@ -25,6 +27,7 @@ public class ItemManager : MonoBehaviour
 
     public void InitItemManager()
     {
+        gameData = GameData.Instance;
         itemList = new();
         imageSaver = GetComponent<ImageSaver>();
 
@@ -37,6 +40,20 @@ public class ItemManager : MonoBehaviour
         foreach (BaseAbility ability in allAbilities)
         {
             ability.spriteIcon = imageSaver.GetSpriteFromLocalDisk(ability.abilityName.ToString());
+        }
+
+        // Setup items & abilties from previous level
+        foreach (Item item in gameData.items)
+        {
+            ItemUI newItemUI = Instantiate(itemUIPrefab, itemUIParent);
+            newItemUI.SetupItemUI(item);
+            itemUIs.Add(newItemUI);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(itemInventory);
+        }
+
+        foreach (BaseAbility ability in gameData.abilities)
+        {
+
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(itemInventory);

@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using DesignPatterns.ObjectPool;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class Chest : MonoBehaviour, IInteractable
 {
@@ -26,6 +27,8 @@ public class Chest : MonoBehaviour, IInteractable
         public int legendaryItemRate;
     }
     public ChestType chestType;
+    public UnityEvent OnChestOpen;
+
     [SerializeField] private ScriptableObject fixedItemToSpawn;
 
     [SerializeField] private LayerMask defaultLayer;
@@ -44,6 +47,8 @@ public class Chest : MonoBehaviour, IInteractable
     {
         if (isOpened || PlayerController.Instance.gold < cost)
             return false;
+
+        OnChestOpen?.Invoke();
 
         if (chestType.type == ChestType.Type.FixedItem)
         {

@@ -24,10 +24,10 @@ public class PlayerController : PlayerStats
 
     private AnimationManager animationManager;
     public MovementController movementController;
-    private CombatController combatController;
+    [HideInInspector] public CombatController combatController;
     [HideInInspector] public AbilityController abilityController;
     private FadeTransition fadeTransition;
-    private ItemManager itemManager;
+    [HideInInspector] public ItemManager itemManager;
     public PlayerEffectsController playerEffectsController;
     private Rigidbody2D playerRB;
 
@@ -530,7 +530,7 @@ public class PlayerController : PlayerStats
 
         //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), 1);
         //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), 1);
-        target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), 1);
+        //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), 1);
         //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Freeze), 10);
         //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Bleed), 1);
 
@@ -887,7 +887,7 @@ public class PlayerController : PlayerStats
 
     public void ChangeState(PlayerStates newState)
     {
-        if (currentState == newState)
+        if (currentState == newState || health <= 0)
             return;
 
         currentState = newState;

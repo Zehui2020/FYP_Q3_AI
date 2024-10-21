@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CombatController : MonoBehaviour
 {
-    [SerializeField] private WeaponData wData;
+    public WeaponData wData;
     [SerializeField] private ItemStats itemStats;
     [SerializeField] private Animator weaponEffectAnimator;
     [SerializeField] private float perfectParryCooldown;
@@ -38,6 +38,9 @@ public class CombatController : MonoBehaviour
         weaponEffectAnimator.runtimeAnimatorController = wData.effectController;
         player.critRate.AddModifier(wData.critRate);
         player.critDamage.AddModifier(wData.critDamage);
+
+        if (GameData.Instance.currentWeapon != null)
+            ChangeWeapon(GameData.Instance.currentWeapon);
     }
 
     public void ChangeWeapon(WeaponData newData)

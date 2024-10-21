@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameData : MonoBehaviour
@@ -7,6 +8,10 @@ public class GameData : MonoBehaviour
     public float currentLevel = 1;
     public float timer;
     public bool pauseTimer = false;
+
+    public WeaponData currentWeapon;
+    public List<Item> items = new();
+    public List<BaseAbility> abilities = new();
 
     private void Awake()
     {
@@ -33,5 +38,14 @@ public class GameData : MonoBehaviour
     public void ResetTimer()
     {
         timer = 0;
+    }
+
+    public void SavePlayerData()
+    {
+        PlayerController player = PlayerController.Instance;
+
+        abilities = player.abilityController.abilities;
+        items = player.itemManager.itemList;
+        currentWeapon = player.combatController.wData;
     }
 }

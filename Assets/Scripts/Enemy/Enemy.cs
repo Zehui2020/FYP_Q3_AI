@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static MovementController;
+using UnityEngine.Events;
 
 public class Enemy : EnemyStats
 {
     [SerializeField] private bool isEnemy = true;
+    public UnityEvent OnTakeDamage;
 
     public enum EnemyClass { Undead, Slime, Dummy, Skeleton, Scorpion, FinalBoss }
     public EnemyClass enemyClass;
@@ -142,6 +143,8 @@ public class Enemy : EnemyStats
 
         if (tookDamage)
         {
+            Debug.Log("CALED");
+            OnTakeDamage?.Invoke();
             onHitEvent?.Invoke(this, damage, isCrit, closestPoint);
         }
 

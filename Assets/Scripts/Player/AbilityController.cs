@@ -32,6 +32,7 @@ public class AbilityController : MonoBehaviour
         player = GetComponent<PlayerController>();
         selectUI = abilityUIParent.GetComponent<AbilitySelectUI>();
         AddAbilitySlot(2);
+        SetupAbilities();
     }
 
     public void AddAbilitySlot(int count)
@@ -49,6 +50,24 @@ public class AbilityController : MonoBehaviour
             else
                 abilityUI[abilityUI.Count - 1].InitAbilityUI("[ " + abilityUI.Count.ToString() + " ]");
             currAbilitySlots++;
+        }
+    }
+
+    public void SetupAbilities()
+    {
+        foreach (BaseAbility ability in GameData.Instance.abilities)
+        {
+            // add ability
+            abilities.Add(ability);
+            abilityCooldownRoutines.Add(null);
+            this.charges.Add(ability.abilityCharges);
+            maxCharges.Add(ability.abilityMaxCharges);
+            if (abilityUI.Count == 10)
+                abilityUI[abilities.Count - 1].InitAbilityUI(ability, "[ 0 ]");
+            else
+                abilityUI[abilities.Count - 1].InitAbilityUI(ability, "[ " + abilities.Count.ToString() + " ]");
+            // init ability
+            InitializeAbility(abilities.Count - 1);
         }
     }
 
