@@ -237,10 +237,7 @@ public class BaseStats : MonoBehaviour
         if (health <= 0)
         {
             if (damage.damageSource == Damage.DamageSource.ContagiousHaze)
-            {
-                attacker.abilityStats.contagiousHazeHit = true;
                 attacker.abilityStats.contagiousHazeStacks = statusEffectManager.poisonStacks.stackCount;
-            }
 
             OnDieEvent?.Invoke(this);
             statusEffectManager.OnDie();

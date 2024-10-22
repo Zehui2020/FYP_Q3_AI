@@ -17,19 +17,20 @@ MonoBehaviour:
   spriteIcon: {fileID: 0}
   itemOutlineMaterial: {fileID: 2100000, guid: 21fe65a90f7cb164a9e6b65a37cbc0f6, type: 2}
   title: Shred
-  description: Pushes enemies on the ground away from you, dealing 100% of base attack
-    as damage.
-  simpleDescription: Pushes enemies on the ground away from you, dealing damage to
-    them.
+  description: Launch enemies on the ground into the air, dealing 200% of base attack
+    as true damage. Then, deals 8 instances of damage, equal to 20% of base attack,
+    in quick succession.
+  simpleDescription: Launch enemies on the ground into the air and deals a set of
+    consecutive slashes to enemies in the air.
   abilityStats: {fileID: 11400000, guid: 637d944b389817a4e8d8bbb63c6c2cda, type: 2}
   abilityRarity: 0
   isConsumable: 0
   abilityName: 3
   abilityUseType: 2
-  abilityRange: 10
-  abilityStrength: 150
-  abilityDuration: 0.1
+  abilityRange: 5
+  abilityStrength: 200
+  abilityDuration: 0.15
   abilityCooldown: 10
   abilityCharges: 1
   abilityMaxCharges: 1
-  damageCount: 10
+  damageCount: 8
