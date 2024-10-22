@@ -25,8 +25,7 @@ public class Shred : BaseAbility
                 // push targets away
                 if (!target.canAbilityKnockback)
                     continue;
-                float dir = target.transform.position.x < PlayerController.Instance.transform.position.x ? -1 : 1;
-                target.GetComponent<Rigidbody2D>().velocity = new Vector3(dir * abilityRange, abilityRange, 0);
+                target.GetComponent<Rigidbody2D>().velocity = new Vector3(0, abilityRange * 2, 0);
                 target.particleVFXManager.OnStunned();
             }
         }
@@ -46,8 +45,8 @@ public class Shred : BaseAbility
             if (!target.canAbilityKnockback)
                 continue;
             float dir = Random.Range(0, 2) == 0 ? -1 : 1;
-            target.GetComponent<Rigidbody2D>().velocity = new Vector3(dir * abilityRange / 2, abilityRange / 2, 0);
-            target.particleVFXManager.OnStunned();
+            target.GetComponent<Rigidbody2D>().velocity = new Vector3(dir * abilityRange, abilityRange, 0);
+            target.particleVFXManager.OnBloodLoss();
         }
         count--;
 
