@@ -8,6 +8,7 @@ public class SceneLoader : MonoBehaviour
     public static SceneLoader Instance;
     [SerializeField] private Animator fadeTransition;
     private Coroutine changeSceneRoutine;
+    [SerializeField] protected PlayerPrefs playerPrefs;
 
     void Awake()
     {
@@ -34,6 +35,14 @@ public class SceneLoader : MonoBehaviour
     {
         if (changeSceneRoutine == null)
             changeSceneRoutine = StartCoroutine(LoadNewScene(sceneName));
+    }
+
+    public void LoadFirstScene()
+    {
+        if (playerPrefs.experiencedTutorial)
+            LoadScene("LobbyLevel");
+        else
+            LoadScene("TutorialLevel");
     }
 
     private IEnumerator LoadNewScene(string sceneName)
