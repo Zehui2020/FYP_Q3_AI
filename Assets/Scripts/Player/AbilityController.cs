@@ -27,7 +27,7 @@ public class AbilityController : MonoBehaviour
     private List<Coroutine> abilityCooldownRoutines = new List<Coroutine> { null, null };
     private List<int> charges = new();
     private List<int> maxCharges = new();
-    public List<float> abilityCooldowns = new();
+    private List<float> abilityCooldowns = new();
 
     public void InitializeAbilityController()
     {
@@ -379,7 +379,7 @@ public class AbilityController : MonoBehaviour
                 randomIndex = Random.Range(0, abilities.Count);
 
             if (abilities[randomIndex] == null)
-                return;
+                continue;
 
             maxCharges[randomIndex] += amt;
             if (charges[randomIndex] < maxCharges[randomIndex])
