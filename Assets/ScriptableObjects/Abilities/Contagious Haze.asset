@@ -17,8 +17,8 @@ MonoBehaviour:
   spriteIcon: {fileID: 0}
   itemOutlineMaterial: {fileID: 2100000, guid: 21fe65a90f7cb164a9e6b65a37cbc0f6, type: 2}
   title: Contagious Haze
-  description: An enemy in range gets engulfed by a poisonous cloud, dealing 500%
-    of base attack as damage. When an enemy is killed by this ability, it applies
+  description: An enemy in melee range gets engulfed by a poisonous cloud, dealing
+    500% of base attack as damage. When an enemy is killed by this ability, it applies
     all poison stacks it has to other nearby enemies.
   simpleDescription: Deals damage to a nearby enemy, lethal damage spreads <color=green>Poison</color>
     to other nearby enemies.
@@ -27,9 +27,9 @@ MonoBehaviour:
   isConsumable: 0
   abilityName: 13
   abilityUseType: 2
-  abilityRange: 5
+  abilityRange: 1
   abilityStrength: 500
-  abilityDuration: 0.5
+  abilityDuration: 1
   abilityCooldown: 25
   abilityCharges: 1
   abilityMaxCharges: 1

@@ -184,8 +184,16 @@ public class PlayerController : PlayerStats
             return;
         }
 
-        if (health <= 0 || 
-            currentState == PlayerStates.Ability)
+        if (health <= 0)
+            return;
+
+        // abilities
+        if (abilityController != null && !abilityController.swappingAbility)
+            for (int i = 0; i < abilityController.abilities.Count; i++)
+                if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
+                    abilityController.HandleAbility(i);
+
+        if (currentState == PlayerStates.Ability)
             return;
 
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -298,12 +306,6 @@ public class PlayerController : PlayerStats
                 }
             }
         }
-
-        // abilities
-        if (abilityController != null && !abilityController.swappingAbility)
-            for (int i = 0; i < abilityController.abilities.Count; i++)
-                if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
-                        abilityController.HandleAbility(i);
     }
 
     private IEnumerator HurtRoutine()
