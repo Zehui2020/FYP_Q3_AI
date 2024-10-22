@@ -13,13 +13,11 @@ public class ContagiousHaze : BaseAbility
     public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
         BaseStats target = null;
-        for (int i = 0; i < targetList.Count; i++)
+        target = targetList[0];
+        for (int i = 1; i < targetList.Count; i++)
         {
-            if (target == null)
-            {
-                target = targetList[i];
+            if (targetList[i].health <= 0)
                 continue;
-            }
 
             if (Vector3.Distance(targetList[i].transform.position, PlayerController.Instance.transform.position) <
                 Vector3.Distance(target.transform.position, PlayerController.Instance.transform.position))
