@@ -38,7 +38,8 @@ public class Scorpion : Enemy
         onReachWaypoint += () => { ChangeState(State.Idle); };
         onFinishIdle += () => { ChangeState(State.Patrol); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
-        OnBreached += (multiplier) => { ChangeState(State.Hurt); };
+        OnBreached += (multiplier) => { animator.Play(IdleAnim); };
+        OnParry += (stat) => { animator.Play(IdleAnim); };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
     }
 

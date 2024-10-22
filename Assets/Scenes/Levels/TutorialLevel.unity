@@ -343,6 +343,37 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &147308861
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 147308862}
+  m_Layer: 0
+  m_Name: Keywords
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &147308862
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147308861}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.21, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214355952}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &154515160
 GameObject:
   m_ObjectHideFlags: 0
@@ -1647,6 +1678,100 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &731783698
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 731783699}
+  - component: {fileID: 731783702}
+  - component: {fileID: 731783701}
+  - component: {fileID: 731783700}
+  m_Layer: 5
+  m_Name: E
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &731783699
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731783698}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.005, y: 0.005, z: 0.005}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2075414775}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &731783700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731783698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2397971fae9a7b741acd7f2886d9d576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -296267544, guid: 2187bd2b65ec5df4d9818eed93d4493a, type: 3}
+  - {fileID: 1721091202, guid: 2187bd2b65ec5df4d9818eed93d4493a, type: 3}
+  interval: 0.2
+  loop: 1
+  showOnStart: 0
+--- !u!114 &731783701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731783698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &731783702
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731783698}
+  m_CullTransparentMesh: 1
 --- !u!1 &734428151
 GameObject:
   m_ObjectHideFlags: 0
@@ -1740,6 +1865,37 @@ Transform:
   m_Children:
   - {fileID: 118140869}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &753257551
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 753257552}
+  m_Layer: 0
+  m_Name: Guide
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &753257552
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 753257551}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.16, y: 0.79, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214355952}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &765315959
 GameObject:
@@ -2587,6 +2743,37 @@ Canvas:
   m_SortingLayerID: -983140795
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1117349296
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1117349297}
+  m_Layer: 0
+  m_Name: Pipe
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1117349297
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1117349296}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.42, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214355952}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1177433805
 GameObject:
   m_ObjectHideFlags: 0
@@ -2691,7 +2878,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1209754064
 Transform:
   m_ObjectHideFlags: 0
@@ -2709,6 +2896,43 @@ Transform:
   - {fileID: 154515165}
   - {fileID: 1230503539}
   m_Father: {fileID: 1585725316}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1214355951
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1214355952}
+  m_Layer: 0
+  m_Name: QuestPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1214355952
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1214355951}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 753257552}
+  - {fileID: 147308862}
+  - {fileID: 1117349297}
+  - {fileID: 1753019067}
+  - {fileID: 2001385487}
+  - {fileID: 1588787996}
+  m_Father: {fileID: 1239606512}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1230503534
 GameObject:
@@ -2909,6 +3133,39 @@ Transform:
   m_Children:
   - {fileID: 1430339867}
   m_Father: {fileID: 1209754064}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1239606511
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1239606512}
+  m_Layer: 0
+  m_Name: Guide
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1239606512
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239606511}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1804130303}
+  - {fileID: 1214355952}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1354654714
 GameObject:
@@ -8949,6 +9206,37 @@ Transform:
   - {fileID: 1209754064}
   - {fileID: 1699835449}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1588787995
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1588787996}
+  m_Layer: 0
+  m_Name: Chest
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1588787996
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588787995}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.96, y: 6.88, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214355952}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1620043108
 GameObject:
@@ -80807,6 +81095,531 @@ MonoBehaviour:
   triggerTag: Player
   baseSceneName: Level
   activeOnStart: 0
+--- !u!1 &1753019066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1753019067}
+  m_Layer: 0
+  m_Name: Button
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1753019067
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753019066}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.39, y: 2.143, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214355952}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1804130301
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1804130303}
+  - component: {fileID: 1804130302}
+  - component: {fileID: 1804130304}
+  - component: {fileID: 1804130305}
+  m_Layer: 0
+  m_Name: Guide
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!212 &1804130302
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1804130301}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -983140795
+  m_SortingLayer: 2
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 36f9bf16f7fdf0b47bb3a07a5dedf5ca, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!4 &1804130303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1804130301}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -6.169, y: -1.172, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2075414775}
+  - {fileID: 2051246384}
+  m_Father: {fileID: 1239606512}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1804130304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1804130301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b0b5197cde0d124883a0124bd145b9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keycodeUI: {fileID: 731783700}
+  dialogues:
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Welcome to my humble abode. This is a safe space, untouched by the
+      Dimension Horrors, and where future heroes come to make a name for themselves.
+    playerChoices:
+    - choice: Who are you?
+      nextDialogueIndex: 1
+    - choice: Dimension Horrors?
+      nextDialogueIndex: 2
+    - choice: Where do we start?
+      nextDialogueIndex: 3
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Me? Oh, I\u2019m just your guide in this journey. I have the ability
+      to transport individuals to any dimension that needs saving, no matter the
+      place. I\u2019ve sent countless individuals into the unknown to fight against
+      our common foe."
+    playerChoices:
+    - choice: Who are you?
+      nextDialogueIndex: 1
+    - choice: Dimension Horrors?
+      nextDialogueIndex: 2
+    - choice: Where do we start?
+      nextDialogueIndex: 3
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "The Dimension Horrors, ruthless beings capable of tearing through
+      the fabric of space. They traverse these dimensions, devastating any and all
+      that come in their way. Our battle has gone on for millenia, and there\u2019s
+      still a long road ahead for all of us."
+    playerChoices:
+    - choice: Who are you?
+      nextDialogueIndex: 1
+    - choice: Dimension Horrors?
+      nextDialogueIndex: 2
+    - choice: Where do we start?
+      nextDialogueIndex: 3
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 1
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "First, we\u2019ll need to see what worlds are in need of our assistance.
+      These Blocks behind me show Prompts for potential dimensions that need our
+      help. Go ahead, take your pick!"
+    playerChoices: []
+    questDestination: {fileID: 147308862}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "I\u2019ve curated a few weapons for you to use on your journey. A
+      Longsword, an Axe, and a pair of Daggers. Each with their own strengths and
+      weaknesses. "
+    playerChoices: []
+    questDestination: {fileID: 2001385487}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Your current weapon, the Longsword, has the most well-rounded capabilities.
+      It has moderate stats across the board, making it an easy weapon to pick up!
+    playerChoices: []
+    questDestination: {fileID: 2001385487}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 1
+    onDialogueDone:
+      playOnce: 1
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 1209754063}
+            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_MethodName: SetActive
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+    dialogue: Go try out the other weapons on the training dummy over there!
+    playerChoices: []
+    questDestination: {fileID: 2001385487}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 1
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Along your journey, you will find Chests scattered across the terrain.
+      There are different types of chests to discover, each with their own item drops
+      and cost to open. Try opening the chest on the platform above us.\r"
+    playerChoices: []
+    questDestination: {fileID: 1588787996}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: So, are you ready to embark on your journey to save dimensions?
+    playerChoices:
+    - choice: "Yes, I\u2019m ready!"
+      nextDialogueIndex: 9
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    breakAfterDialogue: 1
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Alright, head to the Portal at the end of the room, it will take you
+      to the first world that needs saving, it\u2019s located in a cavern deep underground
+      so visibility may be low, thread with caution.\r"
+    playerChoices: []
+    questDestination: {fileID: 209863982}
+  popupDialogues:
+  - showOnce: 0
+    playOnAwake: 1
+    isShown: 0
+    speakerName: ???
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Hey you! The guy whose head\u2019s on fire. Come over here!"
+    questDestination: {fileID: 753257552}
+  - showOnce: 0
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Great! Now walk close to the Pipe on the right and it\u2019ll suck
+      it right up!\r"
+    questDestination: {fileID: 1117349297}
+  - showOnce: 0
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "You can use any combination of blocks to your liking. Whenever you\u2019re
+      ready, hit the <color=red>Red</color> Button by Pressing [LMB] to attack. If
+      you want to reset the prompts, hit the <color=blue>Blue</color> Button."
+    questDestination: {fileID: 1753019067}
+  - showOnce: 1
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Excellent choice! Now repeat that process a few more times to form
+      a set of dimensions that you\u2019ll be traversing through."
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Done with your selection? Come back here and I\u2019ll run you through
+      the Basic Mehcnanics.\r"
+    questDestination: {fileID: 753257552}
+  - showOnce: 1
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Ah, the Daggers, a swift killer. Where it lacks in range, it makes
+      up for with quick stabs and slashes, enabling it to apply Status Effects onto
+      enemies with ease.
+    questDestination: {fileID: 0}
+  - showOnce: 1
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: The Axe, truly an intimidating weapon! It rewards its user for their
+      positioning and timing as its slow and methodical attacks boasts an increase
+      in Shield Damage as well as overall damage.
+    questDestination: {fileID: 0}
+  - showOnce: 1
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Enemies have a <color=blue>Shield Bar</color> and a <color=red>Health
+      Bar</color>, apart from a few. Depleting an enemy\u2019s shield bar fully puts
+      them in a Breached State where they receive more damage.\r"
+    questDestination: {fileID: 753257552}
+  - showOnce: 1
+    playOnAwake: 0
+    isShown: 0
+    speakerName: Guide
+    speakerIcon: {fileID: 0}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 1699835451}
+            m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+            m_MethodName: SetTrigger
+            m_Mode: 5
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: activate
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 1699835452}
+            m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+            m_MethodName: set_enabled
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+    dialogue: "Perfect, some health potions! These are consumable, so use them wisely!
+      Passive Items will be automatically picked up while Abilities and Consumables
+      have to be interacted with to pick up.\r"
+    questDestination: {fileID: 753257552}
+  InteractEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!61 &1804130305
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1804130301}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.48, y: 1.69}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 5, y: 1.69}
+  m_EdgeRadius: 0
 --- !u!1 &1820867910
 GameObject:
   m_ObjectHideFlags: 0
@@ -83250,6 +84063,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2001385486
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2001385487}
+  m_Layer: 0
+  m_Name: Weapons
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2001385487
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2001385486}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -18.211, y: 0.446, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1214355952}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2003260888
 GameObject:
   m_ObjectHideFlags: 0
@@ -83522,6 +84366,121 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2051246383
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2051246384}
+  m_Layer: 0
+  m_Name: Guide
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2051246384
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2051246383}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1804130303}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2075414772
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2075414775}
+  - component: {fileID: 2075414774}
+  - component: {fileID: 2075414773}
+  m_Layer: 0
+  m_Name: NPCCanvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2075414773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2075414772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 1
+--- !u!223 &2075414774
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2075414772}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: -983140795
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!224 &2075414775
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2075414772}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 731783699}
+  m_Father: {fileID: 1804130303}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 1.33}
+  m_SizeDelta: {x: 8, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2084962591
 GameObject:
   m_ObjectHideFlags: 0
@@ -84539,19 +85498,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.size
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
-      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -84562,80 +85513,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2084962591}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
-      objectReference: {fileID: 1699835451}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[3].m_Target
-      value: 
-      objectReference: {fileID: 1699835452}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[3].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ShowDialoguePopup
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: SetTrigger
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[3].m_MethodName
-      value: set_enabled
       objectReference: {fileID: 0}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: DialogueManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: UnityEngine.Animator, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[3].m_TargetAssemblyTypeName
-      value: UnityEngine.Behaviour, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_IntArgument
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_IntArgument
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_BoolArgument
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_BoolArgument
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_StringArgument
-      value: activate
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_StringArgument
-      value: activate
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
-      propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 4141570620904400709, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: m_Name
@@ -84692,6 +85579,7 @@ SceneRoots:
   - {fileID: 632114453}
   - {fileID: 1413364029}
   - {fileID: 1987089982}
+  - {fileID: 1239606512}
   - {fileID: 1578122079}
   - {fileID: 262644507}
   - {fileID: 817895843}

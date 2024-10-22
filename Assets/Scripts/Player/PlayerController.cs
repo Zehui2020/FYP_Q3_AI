@@ -394,7 +394,7 @@ public class PlayerController : PlayerStats
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
-        if (health <= 0)
+        if (health <= 0 || hurtRoutine != null)
             return false;
 
         bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);

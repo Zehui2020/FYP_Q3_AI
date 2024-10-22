@@ -154,6 +154,10 @@ public class MovementController : MonoBehaviour
         }
 
         knockbackRoutine = null;
+
+        if (PlayerController.Instance.health <= 0)
+            yield break;
+
         ChangeState(MovementState.Idle);
         ChangePlayerState?.Invoke(PlayerController.PlayerStates.Movement);
     }

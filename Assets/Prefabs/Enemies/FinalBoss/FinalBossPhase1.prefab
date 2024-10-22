@@ -1587,7 +1587,7 @@ MonoBehaviour:
   maxHealth: 10000
   shield: 5000
   maxShield: 5000
-  attack: 10
+  attack: 20
   attackSpeed: 1
   shieldRegenDelay: 20
   isImmune: 0
@@ -1634,6 +1634,9 @@ MonoBehaviour:
   patrolMovementSpeed: 0
   chaseMovementSpeed: 0
   isEnemy: 1
+  OnTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
   enemyClass: 5
   enemyType: 2
   canUpdate: 1
@@ -1651,7 +1654,7 @@ MonoBehaviour:
   knockbackOnParry: 0
   currentState: 0
   walkSpeed: 3
-  rushSpeed: 20
+  rushSpeed: 35
   jumpSpeed: 400
   jumpWaitPosition: {fileID: 7458289566332066347}
   jumpWaitDuration: 3
@@ -1664,6 +1667,7 @@ MonoBehaviour:
   - {fileID: 1242163046692659732}
   - {fileID: 40448769117293303}
   bossDaggers: []
+  cutscene: {fileID: 0}
 --- !u!114 &4254695898782168221
 MonoBehaviour:
   m_ObjectHideFlags: 0

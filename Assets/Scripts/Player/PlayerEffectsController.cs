@@ -43,7 +43,7 @@ public class PlayerEffectsController : MonoBehaviour
     public void ShakeCamera(float intensity, float frequency, float timer)
     {
         if (shakeRoutine != null)
-            StopCoroutine(shakeRoutine);
+            return;
 
         shakeRoutine = StartCoroutine(StartShakeCamera(intensity, frequency, timer));
     }
