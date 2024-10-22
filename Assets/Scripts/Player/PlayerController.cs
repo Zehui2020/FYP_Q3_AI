@@ -23,12 +23,12 @@ public class PlayerController : PlayerStats
     public static PlayerController Instance;
 
     private AnimationManager animationManager;
-    private MovementController movementController;
-    private CombatController combatController;
+    public MovementController movementController;
+    [HideInInspector] public CombatController combatController;
     [HideInInspector] public AbilityController abilityController;
     private FadeTransition fadeTransition;
-    private ItemManager itemManager;
-    private PlayerEffectsController playerEffectsController;
+    [HideInInspector] public ItemManager itemManager;
+    public PlayerEffectsController playerEffectsController;
     private Rigidbody2D playerRB;
 
     private Coroutine hurtRoutine;
@@ -63,6 +63,7 @@ public class PlayerController : PlayerStats
     private float vertical;
 
     private Coroutine transceiverBuffRoutine;
+    private Coroutine gavelCooldown;
 
     private void Awake()
     {
@@ -145,6 +146,20 @@ public class PlayerController : PlayerStats
         if (Input.GetKeyDown(KeyCode.Return))
             ConsoleManager.Instance.OnInputCommand();
 
+        if (abilityController != null && abilityController.swappingAbility)
+        {
+            movementController.currentState = MovementState.Idle;
+            movementController.StopPlayer();
+            for (int i = 0; i < abilityController.abilities.Count; i++)
+            {
+                if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
+                    abilityController.SwapAbility(i);
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+                abilityController.SwapAbility();
+            return;
+        }
+
         if (currentState == PlayerStates.Shop)
             return;
 
@@ -173,18 +188,6 @@ public class PlayerController : PlayerStats
             currentState == PlayerStates.Ability)
             return;
 
-        if (abilityController != null && abilityController.swappingAbility)
-        {
-            for (int i = 0; i < abilityController.abilities.Count; i++)
-            {
-                if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
-                    abilityController.SwapAbility(i);
-            }
-            if (Input.GetKeyDown(KeyCode.Escape))
-                abilityController.SwapAbility();
-            return;
-        }
-
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             minimapController.ChangeView(true);
@@ -199,11 +202,11 @@ public class PlayerController : PlayerStats
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
 
-        if (ConsoleManager.Instance.gameObject.activeInHierarchy ||
-            currentState == PlayerStates.Hurt)
+        if (ConsoleManager.Instance.gameObject.activeInHierarchy)
             return;
 
-        if (movementController.currentState == MovementState.Knockback)
+        if (movementController.currentState == MovementState.Knockback ||
+            currentState == PlayerStates.Hurt)
         {
             movementController.CheckGroundCollision();
             return;
@@ -215,7 +218,7 @@ public class PlayerController : PlayerStats
             if (movementController.CheckCannotCombat())
                 return;
 
-            currentState = PlayerStates.Combat;
+            ChangeState(PlayerStates.Combat);
             combatController.HandleAttack();
         }
         else if (Input.GetMouseButtonUp(0))
@@ -223,13 +226,13 @@ public class PlayerController : PlayerStats
             combatController.ResetComboAttack();
         }
 
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButtonDown(1))
         {
             if (movementController.CheckCannotCombat())
                 return;
 
             if (combatController.HandleParry())
-                currentState = PlayerStates.Combat;
+                ChangeState(PlayerStates.Combat);
         }
 
         // Movment Inputs
@@ -238,7 +241,7 @@ public class PlayerController : PlayerStats
             if (movementController.HandlePlunge())
             {
                 plungeStartPos = transform.position;
-                currentState = PlayerStates.Movement;
+                ChangeState(PlayerStates.Movement);
                 combatController.OnPlungeStart();
             }
         }
@@ -307,20 +310,15 @@ public class PlayerController : PlayerStats
     {
         movementController.canMove = false;
         playerRB.velocity = Vector2.zero;
-        playerRB.isKinematic = true;
-
-        if (movementController.currentState == MovementState.GroundDash || 
-            movementController.currentState == MovementState.AirDash)
-            movementController.CancelDash();
 
         yield return new WaitForSeconds(0.5f);
 
+        combatController.canAttack = true;
         movementController.canMove = true;
         playerRB.isKinematic = false;
-        hurtRoutine = null;
-
-        movementController.ChangeState(MovementState.Idle);
         ChangeState(PlayerStates.Movement);
+
+        hurtRoutine = null;
     }
 
     private void FixedUpdate()
@@ -425,11 +423,6 @@ public class PlayerController : PlayerStats
                 movementController.isGrounded)
             {
                 ChangeState(PlayerStates.Hurt);
-                animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);
-
-                if (hurtRoutine != null)
-                    StopCoroutine(hurtRoutine);
-                hurtRoutine = StartCoroutine(HurtRoutine());
             }
 
             combatController.ResetComboInstantly();
@@ -538,7 +531,7 @@ public class PlayerController : PlayerStats
         //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), 1);
         //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), 1);
         //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), 1);
-        //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Freeze), 1);
+        //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Freeze), 10);
         //target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Bleed), 1);
 
         return damage;
@@ -747,7 +740,7 @@ public class PlayerController : PlayerStats
         }
 
         // Ancient Gavel
-        if (!previousDamage.damageSource.Equals(DamageSource.Gavel) && itemStats.gavelThreshold != 0)
+        if (!previousDamage.damageSource.Equals(DamageSource.Gavel) && itemStats.gavelThreshold != 0 && gavelCooldown == null)
         {
             float gavelThreshold = attack * itemStats.gavelThreshold;
             if (damage.damage >= gavelThreshold)
@@ -757,6 +750,8 @@ public class PlayerController : PlayerStats
 
                 target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), itemStats.gavelStacks);
                 target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), itemStats.gavelStacks);
+
+                gavelCooldown = StartCoroutine(GavelCooldown());
             }
         }
 
@@ -771,23 +766,26 @@ public class PlayerController : PlayerStats
         int randNum;
 
         // Gasoline
-        Collider2D[] enemies = Physics2D.OverlapCircleAll(target.transform.position, itemStats.gasolineRadius, enemyLayer);
         if (itemStats.gasolineRadius > 0)
-            target.particleVFXManager.GasolineBurst();
-        foreach (Collider2D enemy in enemies)
         {
-            Enemy targetEnemy = enemy.GetComponent<Enemy>();
+            Collider2D[] enemies = Physics2D.OverlapCircleAll(target.transform.position, itemStats.gasolineRadius, enemyLayer);
+            foreach (Collider2D enemy in enemies)
+            {
+                Enemy targetEnemy = enemy.GetComponent<Enemy>();
 
-            if (targetEnemy == null || targetEnemy.Equals(target))
-                continue;
+                if (targetEnemy == null || targetEnemy.Equals(target))
+                    continue;
 
-            Damage damage = CalculateProccDamageDealt(targetEnemy, 
-                new Damage((attack + attackIncrease.GetTotalModifier()) * itemStats.gasolineDamageModifier), 
-                out bool isCrit, 
-                out DamagePopup.DamageType damageType);
+                Damage damage = CalculateProccDamageDealt(targetEnemy,
+                    new Damage((attack + attackIncrease.GetTotalModifier()) * itemStats.gasolineDamageModifier),
+                    out bool isCrit,
+                    out DamagePopup.DamageType damageType);
 
-            targetEnemy.TakeDamage(this, damage, isCrit, enemy.transform.position, damageType);
-            targetEnemy.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), itemStats.gasolineBurnStacks);
+                targetEnemy.TakeDamage(this, damage, isCrit, enemy.transform.position, damageType);
+                targetEnemy.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), itemStats.gasolineBurnStacks);
+            }
+
+            target.particleVFXManager.GasolineBurst();
         }
 
         // Bottle Of Surprises
@@ -842,11 +840,9 @@ public class PlayerController : PlayerStats
         playerEffectsController.HitStop(0.5f);
         playerEffectsController.ShakeCamera(5, 20, 0.5f);
         playerEffectsController.SetCameraTrigger("parry");
-        movementController.Knockback(20f);
 
         // Metal Bat
         int randNum = Random.Range(0, 100);
-
         if (randNum < itemStats.metalBatChance)
             target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), itemStats.metalBatStacks);
     }
@@ -882,14 +878,30 @@ public class PlayerController : PlayerStats
         Heal(Mathf.CeilToInt(itemStats.defibrillatorHealMultiplier * maxHealth));
     }
 
+    private IEnumerator GavelCooldown()
+    {
+        yield return new WaitForSeconds(itemStats.gavelCooldown);
+
+        gavelCooldown = null;
+    }
+
     public void ChangeState(PlayerStates newState)
     {
+        if (currentState == newState || health <= 0)
+            return;
+
         currentState = newState;
         switch (currentState)
         {
             case PlayerStates.Movement:
                 movementController.ResumePlayer();
                 movementController.ChangeState(MovementState.Idle);
+                break;
+            case PlayerStates.Hurt:
+                if (hurtRoutine != null)
+                    StopCoroutine(hurtRoutine);
+                hurtRoutine = StartCoroutine(HurtRoutine());
+                animationManager.ChangeAnimation(animationManager.Hurt, 0f, 0f, AnimationManager.AnimType.CannotOverride);
                 break;
             case PlayerStates.Map:
             case PlayerStates.Shop:
@@ -946,6 +958,10 @@ public class PlayerController : PlayerStats
     {
         //Spawn Gold pickup
         int coinsToSpawn = Mathf.CeilToInt(goldToDrop / 2f);
+
+        if (coinsToSpawn == 0)
+            return;
+
         int goldPerCoin = goldToDrop / coinsToSpawn;
         int remainderGold = goldToDrop % coinsToSpawn;
         for (int i = 0; i < coinsToSpawn; i++)

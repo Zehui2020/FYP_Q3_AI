@@ -44,8 +44,7 @@ public class CombatCollisionController : MonoBehaviour
 
         if (target != null)
         {
-            float damageDealt = attacker.CalculateDamageDealt(target, damageSource, out bool isCrit, out DamagePopup.DamageType damageType);
-            target.TakeDamage(attacker, new BaseStats.Damage(damageSource, damageDealt), isCrit, closestPoint, damageType);
+            attacker.AttackTarget(target, damageSource, closestPoint);
             DisableAllCollider();
         }
     }

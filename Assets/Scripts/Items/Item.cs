@@ -21,7 +21,7 @@ public class Item : ShopItemData
     public int itemStack;
     public float alertDuration;
 
-    public virtual void Initialize() { }
+    public virtual void Initialize() { itemStack++; }
 
     public virtual void IncrementStack() { itemStack++; }
 

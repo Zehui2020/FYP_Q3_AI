@@ -5,50 +5,78 @@ using UnityEngine;
 public class ContagiousHaze : BaseAbility
 {
     [SerializeField] LayerMask targetLayer;
+
     public override void InitAbility()
     {
     }
 
-    public override void OnAbilityUse(BaseStats self, BaseStats target)
+    public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
-        if (abilityStats.contagiousHazeTarget != null)
-            return;
-        abilityStats.contagiousHazeTarget = target;
-        // deal damage
-        float damageDealt = (abilityStrength / 100) * target.CalculateDamageDealt(target, BaseStats.Damage.DamageSource.ContagiousHaze, out bool isCrit, out DamagePopup.DamageType damageType);
-        target.TakeDamage(PlayerController.Instance, new BaseStats.Damage(BaseStats.Damage.DamageSource.ContagiousHaze, damageDealt), isCrit, target.transform.position, damageType);
-
-        self.particleVFXManager.OnPoison();
-        target.particleVFXManager.OnPoison();
-    }
-
-    public override void OnAbilityEnd(BaseStats self, BaseStats target)
-    {
-        self.particleVFXManager.StopPoison();
-        target.particleVFXManager.StopPoison();
-
-        if (!abilityStats.contagiousHazeHit)
+        BaseStats target = null;
+        for (int i = 0; i < targetList.Count; i++)
         {
-            abilityStats.contagiousHazeTarget = null;
-            return;
-        }
-
-        // get all target objects in area
-        Collider2D[] targetColliders = Physics2D.OverlapCircleAll(abilityStats.contagiousHazeTarget.transform.position, 10, targetLayer);
-        abilityStats.contagiousHazeTarget = null;
-        int stacksToApply = abilityStats.contagiousHazeStacks;
-
-        foreach (Collider2D col in targetColliders)
-        {
-            BaseStats targetInArea = col.GetComponent<BaseStats>();
-            if (target != null)
+            if (target == null)
             {
-                targetInArea.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), stacksToApply);
-                targetInArea.particleVFXManager.OnPoison();
+                target = targetList[i];
+                continue;
+            }
+
+            if (Vector3.Distance(targetList[i].transform.position, PlayerController.Instance.transform.position) <
+                Vector3.Distance(target.transform.position, PlayerController.Instance.transform.position))
+            {
+                target = targetList[i];
             }
         }
 
-        abilityStats.contagiousHazeHit = false;
-        abilityStats.contagiousHazeStacks = 0;
+        abilityStats.contagiousHazeTarget = target;
+        PlayerController.Instance.transform.position = target.transform.position;
+
+        // deal damage
+        float damageDealt = GetDamage();
+        target.TakeDamage(
+            PlayerController.Instance,
+            new BaseStats.Damage(BaseStats.Damage.DamageSource.Shatter, damageDealt),
+            isCrit,
+            target.transform.position,
+            damageType
+            );
+
+        PlayerController.Instance.particleVFXManager.OnPoison();
+        target.particleVFXManager.OnPoison();
+
+        // spread poison
+        if (target.health <= 0)
+        {
+            target.particleVFXManager.StopPoison();
+
+            if (!abilityStats.contagiousHazeHit)
+            {
+                abilityStats.contagiousHazeTarget = null;
+                return;
+            }
+
+            // get all target objects in area
+            Collider2D[] targetColliders = Physics2D.OverlapCircleAll(abilityStats.contagiousHazeTarget.transform.position, 10, targetLayer);
+            abilityStats.contagiousHazeTarget = null;
+            int stacksToApply = abilityStats.contagiousHazeStacks;
+
+            foreach (Collider2D col in targetColliders)
+            {
+                BaseStats targetInArea = col.GetComponent<BaseStats>();
+                if (target != null)
+                {
+                    targetInArea.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), stacksToApply);
+                    targetInArea.particleVFXManager.OnPoison();
+                }
+            }
+
+            abilityStats.contagiousHazeHit = false;
+            abilityStats.contagiousHazeStacks = 0;
+        }
+    }
+
+    public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
+    {
+        PlayerController.Instance.particleVFXManager.StopPoison();
     }
 }

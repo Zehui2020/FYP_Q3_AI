@@ -19,6 +19,11 @@ public class BaseNPC : MonoBehaviour, IInteractable
     private void Start()
     {
         player = PlayerController.Instance;
+        foreach (PopupDialogue dialogue in popupDialogues)
+        {
+            if (dialogue.playOnAwake)
+                PlayerController.Instance.dialogueManager.ShowDialoguePopup(dialogue);
+        }
     }
 
     public void OnEnterRange()

@@ -1,13 +1,17 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AbilityUIController : MonoBehaviour
+public class AbilitySlotUI : MonoBehaviour
 {
-    [SerializeField] private Image cooldownSlider;
+    [SerializeField] public Image cooldownSlider;
     [SerializeField] private Image abilityIcon;
-    [SerializeField] private TMP_Text chargeText;
+    [SerializeField] public TMP_Text chargeText;
     [SerializeField] private TMP_Text keybindText;
+    [SerializeField] private List<Image> icons;
+    [SerializeField] private List<TMP_Text> texts;
+    private AbilitySelectUI abilitySelect;
 
     private void Start()
     {
@@ -16,6 +20,10 @@ public class AbilityUIController : MonoBehaviour
 
     public void InitAbilityUI(string keybind)
     {
+        abilitySelect = GetComponentInParent<AbilitySelectUI>();
+        abilitySelect.fadeIcons.AddRange(icons);
+        abilitySelect.fadeTexts.AddRange(texts);
+        abilitySelect.abilitySlots.Add(this);
         abilityIcon.enabled = false;
         SetCooldown(0, 0);
         keybindText.text = keybind;

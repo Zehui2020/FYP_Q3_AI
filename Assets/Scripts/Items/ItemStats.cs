@@ -54,6 +54,7 @@ public class ItemStats : ScriptableObject
     public float gavelThreshold;
     public float gavelDamageMultiplier;
     public int gavelStacks;
+    public float gavelCooldown;
 
     public float bottleRadius;
     public int bottleStacks;
@@ -130,6 +131,7 @@ public class ItemStats : ScriptableObject
         gavelThreshold = 0;
         gavelDamageMultiplier = 0;
         gavelStacks = 0;
+        gavelCooldown = 0;
 
         bottleRadius = 0;
         bottleStacks = 0;

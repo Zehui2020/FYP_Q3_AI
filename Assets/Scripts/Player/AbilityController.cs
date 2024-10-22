@@ -1,36 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class AbilityController : MonoBehaviour
 {
+    [SerializeField] public AbilityAnimationController abilityOverlayAnimator;
     [SerializeField] private ItemPickupAlert itemPickupAlert;
-    [SerializeField] public List<BaseAbility> abilities;
-    [SerializeField] private List<AbilityUIController> abilityUI;
     [SerializeField] private GameObject abilityUIPrefab;
     [SerializeField] private Transform abilityUIParent;
     [SerializeField] private AbilityPickUp abilityPickUpPrefab;
-    [SerializeField] LayerMask targetLayer;
-    [SerializeField] LayerMask groundLayer;
+    [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private int maxAbilitySlots;
 
-    public int currAbilitySlots = 0;
-    public bool swappingAbility = false;
+    [HideInInspector] public List<BaseAbility> abilities = new();
+    [HideInInspector] public int currAbilitySlots = 0;
+    [HideInInspector] public bool swappingAbility = false;
 
+    private List<AbilitySlotUI> abilityUI = new();
+    private AbilitySelectUI selectUI;
     private BaseAbility swapAbility;
     private int swapAbilityCharges;
     private PlayerController player;
     private List<Coroutine> abilityCooldownRoutines = new List<Coroutine> { null, null };
-    private List<int> charges = new List<int>();
-    private List<int> maxCharges = new List<int>();
+    private List<int> charges = new();
+    private List<int> maxCharges = new();
 
     public void InitializeAbilityController()
     {
         player = GetComponent<PlayerController>();
+        selectUI = abilityUIParent.GetComponent<AbilitySelectUI>();
         AddAbilitySlot(2);
+        SetupAbilities();
     }
 
-    private void AddAbilitySlot(int count)
+    public void AddAbilitySlot(int count)
     {
         for (int i = 0; i < count; i++)
         {
@@ -39,12 +44,30 @@ public class AbilityController : MonoBehaviour
 
             // add ui
             GameObject obj = Instantiate(abilityUIPrefab, abilityUIParent);
-            abilityUI.Add(obj.GetComponent<AbilityUIController>());
+            abilityUI.Add(obj.GetComponent<AbilitySlotUI>());
             if (abilityUI.Count == 10)
                 abilityUI[abilityUI.Count - 1].InitAbilityUI("[ 0 ]");
             else
                 abilityUI[abilityUI.Count - 1].InitAbilityUI("[ " + abilityUI.Count.ToString() + " ]");
             currAbilitySlots++;
+        }
+    }
+
+    public void SetupAbilities()
+    {
+        foreach (BaseAbility ability in GameData.Instance.abilities)
+        {
+            // add ability
+            abilities.Add(ability);
+            abilityCooldownRoutines.Add(null);
+            this.charges.Add(ability.abilityCharges);
+            maxCharges.Add(ability.abilityMaxCharges);
+            if (abilityUI.Count == 10)
+                abilityUI[abilities.Count - 1].InitAbilityUI(ability, "[ 0 ]");
+            else
+                abilityUI[abilities.Count - 1].InitAbilityUI(ability, "[ " + abilities.Count.ToString() + " ]");
+            // init ability
+            InitializeAbility(abilities.Count - 1);
         }
     }
 
@@ -57,6 +80,7 @@ public class AbilityController : MonoBehaviour
             swappingAbility = true;
             swapAbility = newAbility;
             swapAbilityCharges = charges;
+            selectUI.ShowSelectAbility(true, swapAbility);
             return true;
         }
 
@@ -83,6 +107,7 @@ public class AbilityController : MonoBehaviour
 
         swappingAbility = false;
         swapAbility = null;
+        selectUI.ShowSelectAbility(false, swapAbility);
     }
 
     public void SwapAbility(int i)
@@ -108,6 +133,7 @@ public class AbilityController : MonoBehaviour
 
         swappingAbility = false;
         swapAbility = null;
+        selectUI.ShowSelectAbility(false, swapAbility);
     }
 
     private void RemoveAbility(int i)
@@ -137,12 +163,6 @@ public class AbilityController : MonoBehaviour
 
             count++;
         }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.J))
-            AddAbilitySlot(1);
     }
 
     public void SpawnAbilityPickUp(BaseAbility newAbility, Transform chest)
@@ -206,17 +226,15 @@ public class AbilityController : MonoBehaviour
             }
             if (targetsInArea.Count == 0)
                 return;
-            for (int i = 0; i < targetsInArea.Count; i++)
-            {
-                abilities[abilityNo].OnAbilityUse(player, targetsInArea[i]);
-                StartCoroutine(AbilityDurationRoutine(ability, player, targetsInArea[i]));
-            }
+
+            abilities[abilityNo].OnAbilityUse(null, targetsInArea);
+            StartCoroutine(AbilityDurationRoutine(ability, null, targetsInArea));
         }
         // if ability for self or projectile
         else
         {
-            abilities[abilityNo].OnAbilityUse(player, player);
-            StartCoroutine(AbilityDurationRoutine(ability, player, player));
+            abilities[abilityNo].OnAbilityUse(player, null);
+            StartCoroutine(AbilityDurationRoutine(ability, player, null));
         }
 
         charges[abilityNo]--;
@@ -231,16 +249,16 @@ public class AbilityController : MonoBehaviour
             abilityCooldownRoutines[abilityNo] = StartCoroutine(AbilityCooldownRoutine(abilityNo, ability));
     }
 
-    private IEnumerator AbilityDurationRoutine(BaseAbility ability, BaseStats self, BaseStats target)
+    private IEnumerator AbilityDurationRoutine(BaseAbility ability, BaseStats self, List<BaseStats> targetList)
     {
         yield return new WaitForSeconds(ability.abilityDuration);
 
-        ability.OnAbilityEnd(self, target);
+        ability.OnAbilityEnd(self, targetList);
     }
 
-    public void HandleAbilityDuration(BaseAbility ability, BaseStats self, BaseStats target)
+    public void HandleAbilityDuration(BaseAbility ability, BaseStats self, List<BaseStats> targetList)
     {
-        StartCoroutine(AbilityDurationRoutine(ability, self, target));
+        StartCoroutine(AbilityDurationRoutine(ability, self, targetList));
     }
 
     private IEnumerator AbilityCooldownRoutine(int abilityNo, BaseAbility ability)

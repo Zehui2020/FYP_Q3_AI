@@ -15,7 +15,7 @@ public class AbilityParticle : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag(gameObject.tag) && isActivated)
+        if (!other.CompareTag(transform.tag) && isActivated)
         {
             GetComponent<Rigidbody2D>().isKinematic = true;
             GetComponent<Rigidbody2D>().velocity = Vector3.zero;
@@ -34,7 +34,7 @@ public class AbilityParticle : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (!other.CompareTag(gameObject.tag) && isActivated)
+        if (!other.CompareTag(transform.tag) && isActivated)
         {
             GetComponent<Rigidbody2D>().isKinematic = true;
             GetComponent<Rigidbody2D>().velocity = Vector3.zero;
@@ -52,10 +52,11 @@ public class AbilityParticle : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (!other.CompareTag(gameObject.tag))
+        if (!other.CompareTag(transform.tag) && isActivated)
         {
             count--;
         }
+
         if (count <= 0)
             GetComponent<Rigidbody2D>().isKinematic = false;
     }
@@ -67,7 +68,7 @@ public class AbilityParticle : MonoBehaviour
 
     private IEnumerator DeathRoutine()
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.25f);
         isActivated = true;
         yield return new WaitForSeconds(lifeTime);
         if (GetComponent<ParticleVFXManager>() != null)

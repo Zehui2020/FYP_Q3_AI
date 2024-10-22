@@ -9,7 +9,7 @@ public class Shopkeeper : MonoBehaviour, IInteractable
     private TextAnalysis textAnalysis;
 
     [SerializeField] private List<ShopItemData> allShopItems;
-    [SerializeField] private float shopItemAmount;
+    [SerializeField] private int shopItemAmount;
 
     [SerializeField] private SimpleAnimation keycodeE;
     [SerializeField] private bool isDebugging;
@@ -84,20 +84,16 @@ public class Shopkeeper : MonoBehaviour, IInteractable
     {
         int items = Mathf.FloorToInt(shopItemAmount / 2f);
 
-        for (int i = 0; i < items; i++)
-        {
-            ShopItemData shopItem = GetRandomShopItemOfType(ShopItemData.ShopItemType.Item);
-            uiManager.SpawnShopItem(shopItem);
-        }
+        List<ShopItemData> itemItems = GetRandomShopItemOfType(ShopItemData.ShopItemType.Item, items);
+        foreach (ShopItemData item in itemItems)
+            uiManager.SpawnShopItem(item);
 
-        for (int i = 0; i < shopItemAmount - items; i++)
-        {
-            ShopItemData shopItem = GetRandomShopItemOfType(ShopItemData.ShopItemType.Ability);
-            uiManager.SpawnShopItem(shopItem);
-        }
+        List<ShopItemData> abilityItems = GetRandomShopItemOfType(ShopItemData.ShopItemType.Ability, shopItemAmount - items);
+        foreach (ShopItemData ability in abilityItems)
+            uiManager.SpawnShopItem(ability);
     }
 
-    public ShopItemData GetRandomShopItemOfType(ShopItemData.ShopItemType type)
+    public List<ShopItemData> GetRandomShopItemOfType(ShopItemData.ShopItemType type, int amount)
     {
         List<ShopItemData> shopItems = new();
 
@@ -107,8 +103,20 @@ public class Shopkeeper : MonoBehaviour, IInteractable
                 shopItems.Add(item);
         }
 
-        int randNum = Random.Range(0, shopItems.Count);
-        return shopItems[randNum];
+        List<ShopItemData> itemsToSpawn = new();
+
+        for (int i = 0; i < amount; i++)
+        {
+            int randNum = Random.Range(0, shopItems.Count);
+            ShopItemData shopItem = shopItems[randNum];
+
+            if (itemsToSpawn.Contains(shopItem))
+                continue;
+
+            itemsToSpawn.Add(shopItem);
+        }
+
+        return itemsToSpawn;
     }
 
     public void OnMoodChanged(float modifier)

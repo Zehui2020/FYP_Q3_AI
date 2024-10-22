@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6854666403828408741}
   m_Layer: 0
   m_Name: AbilityPickUp
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5005741371619315737}
@@ -73,8 +73,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -983140795
-  m_SortingLayer: 2
+  m_SortingLayerID: 1748337483
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -99,11 +99,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1aa966a130d9c3047bcddd081f822316, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  keycodeUI: {fileID: 3109750688994796210}
   objectName: AbilityPickUp
   poolAmount: 3
+  keycodeUI: {fileID: 3109750688994796210}
   spriteRenderer: {fileID: 2606135319182661058}
   ability: {fileID: 11400000, guid: 1363737a3577e724a90c6c7c62de4a59, type: 2}
+  initAbility: 0
 --- !u!61 &6854666403828408741
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -176,7 +177,7 @@ RectTransform:
   m_GameObject: {fileID: 6053790641904416331}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7363424262672083281}
@@ -268,7 +269,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 1.3}
+  m_AnchoredPosition: {x: 0, y: 1}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4481706847884293042

@@ -15,7 +15,6 @@ public class TargetButton : Enemy
     [SerializeField] private ComfyBGManager bgManager;
     [SerializeField] private WorldSpaceButtonController buttonController;
     [SerializeField] private Animator buttonAnimator;
-    public UnityEvent OnTakeDamage;
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
@@ -24,8 +23,8 @@ public class TargetButton : Enemy
         switch (buttonType)
         { 
             case ButtonType.StartButton:
-                if (bgManager.StartBGGeneration())
-                    OnTakeDamage?.Invoke();
+                bgManager.StartBGGeneration();
+                OnTakeDamage?.Invoke();
                 break;
             case ButtonType.ResetButton:
                 buttonController.ResetPrompts();

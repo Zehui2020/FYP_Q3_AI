@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using static DialogueManager;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -74,6 +73,7 @@ public class DialogueManager : MonoBehaviour
     public struct PopupDialogue
     {
         public bool showOnce;
+        public bool playOnAwake;
         [HideInInspector] public bool isShown;
 
         public string speakerName;
@@ -94,6 +94,8 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    public static DialogueManager Instance;
+
     [SerializeField] private DialoguePopup dialoguePopup;
 
     [SerializeField] private TypewriterEffect npcDialogue;
@@ -113,6 +115,11 @@ public class DialogueManager : MonoBehaviour
 
     private Dialogue currentDialogue;
     private bool canShowNextDialogue;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public void SetTalkingNPC(BaseNPC npc)
     {
@@ -199,7 +206,14 @@ public class DialogueManager : MonoBehaviour
 
     public void ShowDialoguePopup(int index)
     {
+        if (currentNPC == null)
+            return;
+
         dialoguePopup.ShowDialoguePopup(currentNPC.GetDialoguePopupFromIndex(index));
+    }
+    public void ShowDialoguePopup(PopupDialogue dialogue)
+    {
+        dialoguePopup.ShowDialoguePopup(dialogue);
     }
 
     public void ShowDialogueChoices(Dialogue dialogue)

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -8,19 +9,19 @@ public class BloodArts : BaseAbility
     {
     }
 
-    public override void OnAbilityUse(BaseStats self, BaseStats target)
+    public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
         // -50% health
-        self.TakeTrueDamage(new BaseStats.Damage(BaseStats.Damage.DamageSource.BloodArts, self.health * 0.5f));
+        singleTarget.TakeTrueDamage(new BaseStats.Damage(BaseStats.Damage.DamageSource.BloodArts, singleTarget.health * 0.5f));
         // 25% bleed chance
         abilityStats.bloodArtsBleedChance += 25;
         // 50% life steal from attacks
         abilityStats.bloodArtsLifestealMultiplier += 0.5f;
 
-        self.particleVFXManager.OnBloodLoss();
+        singleTarget.particleVFXManager.OnBloodLoss();
     }
 
-    public override void OnAbilityEnd(BaseStats self, BaseStats target)
+    public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
         abilityStats.bloodArtsBleedChance -= 25;
         abilityStats.bloodArtsLifestealMultiplier -= 0.5f;
