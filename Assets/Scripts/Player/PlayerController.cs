@@ -85,7 +85,7 @@ public class PlayerController : PlayerStats
 
         animationManager.InitAnimationController();
         itemManager.InitItemManager();
-        movementController.InitializeMovementController(animationManager);
+        movementController.InitializeMovementController(animationManager, playerRB);
         combatController.InitializeCombatController(this);
 
         if (abilityController != null)
