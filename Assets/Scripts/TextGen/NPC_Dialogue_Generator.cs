@@ -20,6 +20,9 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     [Header("NPC Dialogue UI")]
     [SerializeField] private NPC_UI_Manager npc_UI_Manager;
 
+    [Header("NPC Manager")]
+    [SerializeField] private NPC npc_Manager;
+
     [Header("NPC Scriptable Object")]
     [SerializeField] private NPCData NPC_Data;
 
@@ -47,6 +50,9 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     private bool hasIntroduced;
     private bool analyseText;
 
+    private bool EndTextFinished;
+
+    public UnityEvent OnStartGeneratingResponse;
     public UnityEvent OnFinishGeneratingResponse;
 
     //private bool convoStartedAgain;
@@ -85,15 +91,18 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         introFinished = false;
         analyseText = false;
         hasIntroduced = false;
+        EndTextFinished = false;
         //AI_Sentiment_Analysis.OnAnalysisEnabled();
 
         AI_Chat_Introduction();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void EnterNPCDialogue()
     {
-
+        if (introFinished && !hasIntroduced)
+        {
+            AI_Chat_Introduction();
+        }
     }
 
     /*
@@ -115,8 +124,8 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
         string AI_Gen_Prompt =
             '"' +
-            "[INST] <<SYS>> You are the voice of a Shopkeeper in a video game. " +
-            "This is the NPC's backstory:  " +
+            "[INST] <<SYS>> You are the voice of a character. " +
+            "This is your character's backstory:  " +
             "~" + NPC_Data.AI_CharacterContext + "~ " +
             "In this environment, address the user as Adventurer, " +
             "keep your responses less than 30 words, " +
@@ -141,14 +150,14 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         if (!introFinished)
         {
             prompt = GetFinalPromptString("Here is your first prompt:", NPC_Data.introductionPrompt, string.Empty);
-            StartCoroutine(OpenCommandPrompt(prompt));
+            StartCoroutine(OpenCommandPrompt(prompt, false));
             introFinished = true;
         }
         else
         {
             prompt = GetFinalPromptString("Here is the input:",
             "The same adventurer/player came back for another conversation. You've already met them before, address them with familiarity.", string.Empty);
-            StartCoroutine(OpenCommandPrompt(prompt));
+            StartCoroutine(OpenCommandPrompt(prompt, false));
         }
 
         hasIntroduced = true;
@@ -363,6 +372,29 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     }
     */
 
+    public void AI_Dialogue_Tree_Response(string AdditionalContext, string premadePrompt)
+    {
+        string AI_Gen_Prompt =
+            '"' +
+            "[INST] <<SYS>> You are the voice of a character. " +
+            "This is your character's backstory:  " +
+            "~" + NPC_Data.AI_CharacterContext + "~ " +
+            "This is additional world lore:  " +
+            "~" + AdditionalContext + "~ " +
+            "In this environment, address the user as Adventurer, " +
+            "keep your responses less than 30 words, " +
+            "and do not show XML tags other than these ones: <result></result>" +
+
+            "Here are a few examples of what your output should look like: " +
+            "<result>" + NPC_Data.AI_Example_Output_1 + "</result> " +
+            "<result>" + NPC_Data.AI_Example_Output_2 + "</result> " +
+            "Here is the player's input" + " <</SYS>> {" + premadePrompt + "} [/INST]" + '"';
+
+        string finalprompt = $"cd {NPC_Data.llamaDirectory} && llama-cli -m {NPC_Data.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
+
+        StartCoroutine(OpenCommandPrompt(finalprompt, false));
+    }
+
     public void AI_Chat_Response()
     {
         string user_Input = npc_UI_Manager.GetUserInput();
@@ -389,7 +421,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         }
 
         string prompt = GetFinalPromptString(promptTitle, promptContent, additionalPrompts);
-        StartCoroutine(OpenCommandPrompt(prompt));
+        StartCoroutine(OpenCommandPrompt(prompt, false));
 
         //analyseText = true;
     }
@@ -408,7 +440,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             promptContent = "Bid the player farewell.";
 
         string prompt = GetFinalPromptString(promptTitle, promptContent, additionalPrompts);
-        StartCoroutine(OpenCommandPrompt(prompt));
+        StartCoroutine(OpenCommandPrompt(prompt, true));
     }
 
     /*
@@ -499,14 +531,16 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         introFinished = true;
         hasIntroduced = false;
         analyseText = false;
+        EndTextFinished = false;
     }
 
-    IEnumerator OpenCommandPrompt(string command)
+    IEnumerator OpenCommandPrompt(string command, bool EndConvo)
     {
 
         string AI_Output = "";
         bool AI_ChatUpdated = false;
-
+        EndTextFinished = false;
+        OnStartGeneratingResponse?.Invoke();
 
         ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/c {command}")
         {
@@ -566,7 +600,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             if (e.Data != null)
             {
                 //Note: These are actually errors. This is just to distinguish the Text Generation from the Statistics Output
-                UnityEngine.Debug.Log(e.Data);
+                //UnityEngine.Debug.Log(e.Data);
             }
         };
 
@@ -591,7 +625,10 @@ public class NPC_Dialogue_Generator : MonoBehaviour
                 previousContext = ExtractContent(AI_Output);
                 AI_ChatUpdated = true;
                 npc_UI_Manager.SetNPCOutput(previousContext);
-                OnFinishGeneratingResponse?.Invoke();
+                if (!EndConvo)
+                {
+                    OnFinishGeneratingResponse?.Invoke();
+                }
             }
         }
         while (!AI_ChatUpdated);
@@ -603,6 +640,14 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         {
             AI_Sentiment_Analysis.SendPredictionText(ExtractContent(AI_Output));
             analyseText = false;
+        }
+
+        if (EndConvo)
+        {
+            yield return new WaitUntil(() => EndTextFinished);
+            yield return new WaitForSeconds(5);
+            npc_Manager.OnLeaveConvo();
+            OnFinishGeneratingResponse?.Invoke();
         }
 
     }
@@ -649,6 +694,12 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             return text;
         }
     }
+
+    public void EndTextFinish()
+    {
+        EndTextFinished = true;
+    }
+
     /*
     private void OnTriggerEnter2D(Collider2D collision)
     {

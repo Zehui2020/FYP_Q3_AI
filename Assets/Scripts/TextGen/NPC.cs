@@ -50,6 +50,7 @@ public class NPC : MonoBehaviour, IInteractable
     {
         uiManager.ShowUI();
         uiManager.isInteracting = true;
+        aiManager.EnterNPCDialogue();
         //player.ChangeState(PlayerController.PlayerStates.State);
         return true;
     }
@@ -59,10 +60,11 @@ public class NPC : MonoBehaviour, IInteractable
         keycodeE.Hide();
     }
 
-    public void OnLeaveShopkeeper()
+    public void OnLeaveConvo()
     {
         //aiManager.OnLeaveConvo();
         uiManager.OnLeaveNPCConvo();
+        aiManager.AI_Chat_Exit();
         player.ChangeState(PlayerController.PlayerStates.Movement);
     }
 }
