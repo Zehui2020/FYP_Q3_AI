@@ -41,7 +41,6 @@ public class PlayerController : PlayerStats
     [SerializeField] private LayerMask enemyLayer;
 
     [SerializeField] private EnemyStatBar healthBar;
-    [SerializeField] private EnemyStatBar shieldBar;
 
     private IInteractable currentInteractable;
     private float ropeX;
@@ -106,7 +105,6 @@ public class PlayerController : PlayerStats
         OnParry += OnParryEnemy;
 
         healthBar.InitStatBar(health, maxHealth);
-        shieldBar.InitStatBar(shield, maxShield);
 
         OnHealthChanged += (increase, isCrit) => 
         { 
@@ -114,14 +112,6 @@ public class PlayerController : PlayerStats
                 healthBar.OnDecrease(health, maxHealth, isCrit, false); 
             else
                 healthBar.OnIncreased(health, maxHealth, isCrit);
-        };
-
-        OnShieldChanged += (increase, isCrit, duration) => 
-        {
-            if (!increase)
-                shieldBar.OnDecrease(shield, maxShield, isCrit, false);
-            else
-                shieldBar.OnIncreased(shield, maxShield, isCrit);
         };
     }
 
