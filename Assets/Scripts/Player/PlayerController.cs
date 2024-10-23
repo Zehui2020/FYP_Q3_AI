@@ -1015,5 +1015,6 @@ public class PlayerController : PlayerStats
     private void OnApplicationQuit()
     {
         itemStats.ResetStats();
+        itemManager.ResetItemStacks();
     }
 }

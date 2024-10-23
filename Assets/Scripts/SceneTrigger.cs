@@ -15,6 +15,11 @@ public class SceneTrigger : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.CompareTag(triggerTag))
-            SceneLoader.Instance.LoadScene(baseSceneName + GameData.Instance.currentLevel);
+        {
+            if (GameData.Instance.currentLevel >= GameData.Instance.maxLevels)
+                SceneLoader.Instance.LoadScene("BossLevel");
+            else
+                SceneLoader.Instance.LoadScene(baseSceneName + GameData.Instance.currentLevel);
+        }
     }
 }

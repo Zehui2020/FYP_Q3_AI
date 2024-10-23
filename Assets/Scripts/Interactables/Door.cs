@@ -14,10 +14,7 @@ public class Door : MonoBehaviour, IInteractable
 
     public bool OnInteract()
     {
-        if (GameData.Instance.currentLevel >= GameData.Instance.maxLevels)
-            SceneLoader.Instance.LoadScene("BossLevel");
-        else
-            SceneLoader.Instance.LoadScene(nextLevel);
+        SceneLoader.Instance.LoadScene(nextLevel);
 
         keycodeUI.Hide();
         GameData.Instance.currentLevel++;

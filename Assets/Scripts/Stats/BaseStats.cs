@@ -201,6 +201,7 @@ public class BaseStats : MonoBehaviour
         if (shield > 0)
         {
             shield -= finalDamage;
+            TakeTrueDamage(new Damage(finalDamage * 0.3f));
             damageType = DamagePopup.DamageType.Shield;
             damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(0, 2));
             OnShieldChanged?.Invoke(false, isCrit, 0);

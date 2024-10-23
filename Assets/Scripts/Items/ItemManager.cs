@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.Progress;
@@ -23,6 +24,23 @@ public class ItemManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        #if UNITY_EDITOR
+        EditorApplication.playModeStateChanged += (mode) => 
+        {
+            if (mode == PlayModeStateChange.ExitingPlayMode)
+            {
+                itemStats.ResetStats();
+                ResetItemStacks();
+            };
+        };
+        #endif
+    }
+
+    public void ResetItemStacks()
+    {
+        foreach (Item item in allItems)
+            item.SetCount(0);
     }
 
     public void InitItemManager()
@@ -32,15 +50,10 @@ public class ItemManager : MonoBehaviour
         imageSaver = GetComponent<ImageSaver>();
 
         foreach (Item item in allItems)
-        {
-            item.itemStack = 0;
             item.spriteIcon = imageSaver.GetSpriteFromLocalDisk(item.itemType.ToString());
-        }
 
         foreach (BaseAbility ability in allAbilities)
-        {
             ability.spriteIcon = imageSaver.GetSpriteFromLocalDisk(ability.abilityName.ToString());
-        }
 
         // Setup items & abilties from previous level
         foreach (Item item in gameData.items)
@@ -50,11 +63,7 @@ public class ItemManager : MonoBehaviour
             itemUIs.Add(newItemUI);
             LayoutRebuilder.ForceRebuildLayoutImmediate(itemInventory);
         }
-
-        foreach (BaseAbility ability in gameData.abilities)
-        {
-
-        }
+        itemList = gameData.items;
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(itemInventory);
     }

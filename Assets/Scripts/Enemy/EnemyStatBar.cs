@@ -103,12 +103,12 @@ public class EnemyStatBar : MonoBehaviour
             while (progress < 1f)
             {
                 progress += Time.deltaTime * delayBarSpeed;
-                statBar.value = Mathf.Lerp(initialValue, maxAmount, progress);
+                statBar.value = Mathf.Lerp(initialValue, amount, progress);
                 delayBar.sizeDelta = new Vector2(statBar.value / statBar.maxValue * delayBarWidth, delayBar.sizeDelta.y);
                 yield return null;
             }
 
-            statBar.value = maxAmount;
+            statBar.value = amount;
             DelayBarRoutine = null;
         }
     }
