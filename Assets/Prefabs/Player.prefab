@@ -111,7 +111,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &370829916061710775
@@ -27793,7 +27793,9 @@ MonoBehaviour:
   canAbilityKnockback: 1
   currentState: 0
   movementController: {fileID: 0}
+  combatController: {fileID: 0}
   abilityController: {fileID: 0}
+  itemManager: {fileID: 0}
   playerEffectsController: {fileID: 0}
   playerCanvas: {fileID: 8430749502062861929}
   dialogueManager: {fileID: 5945044573668150765}
@@ -41121,6 +41123,7 @@ MonoBehaviour:
   - {fileID: 7838414738115261351}
   cam:
   - {fileID: 370829916061710775}
+  - {fileID: 0}
 --- !u!223 &1531805578872256343
 Canvas:
   m_ObjectHideFlags: 0
@@ -41259,7 +41262,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3999867560739577594}
   m_Father: {fileID: 2565061272690990220}
@@ -57476,7 +57479,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2211128948451816401
 RectTransform:
   m_ObjectHideFlags: 0
