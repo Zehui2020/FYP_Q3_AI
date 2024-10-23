@@ -81,6 +81,7 @@ public class ConsoleManager : MonoBehaviour
                 }
             }
         }
+
         //else if (command.Equals("/win"))
         //{
         //    LevelManager.Instance.LoadScene("WinScreen");

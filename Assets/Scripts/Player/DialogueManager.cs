@@ -136,7 +136,7 @@ public class DialogueManager : MonoBehaviour
 
     public void CheckShowChoices()
     {
-        if (currentDialogue.playerChoices.Count == 0)
+        if (currentDialogue.playerChoices.Count == 0 || dialogueChoiceParent.childCount > 0)
             return;
 
         // Show player choices
@@ -149,7 +149,12 @@ public class DialogueManager : MonoBehaviour
     public void ShowNextDialogue()
     {
         if (!canShowNextDialogue)
+        {
+            if (dalogueChoices.Count == 0)
+                npcDialogue.Skip();
+
             return;
+        }
 
         if (currentDialogue.showOnce && currentDialogue.isShown)
             return;
@@ -232,6 +237,8 @@ public class DialogueManager : MonoBehaviour
                 ShowDialogue(currentNPC.GetDialogueFromIndex(currentChoice.nextDialogueIndex)); 
                 foreach (DialogueChoice dialogue in dalogueChoices)
                     dialogue.ReturnToPool();
+
+                dalogueChoices.Clear();
             };
         }
 
