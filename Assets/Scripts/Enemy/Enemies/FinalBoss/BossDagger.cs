@@ -16,6 +16,7 @@ public class BossDagger : PooledObject
 
     private Rigidbody2D daggerRB;
     private Coroutine moveRoutine;
+    private Coroutine rotateRoutine;
 
     public event System.Action OnReleased;
 
@@ -42,18 +43,23 @@ public class BossDagger : PooledObject
         StartCoroutine(ReleaseRoutine());
     }
 
-    private IEnumerator ShootRoutine()
+    private IEnumerator RotateRoutine()
     {
         float rotateDuration = 1f;
         Vector3 dirToTarget = Vector2.zero;
 
-        while (Vector2.Distance(transform.up, dirToTarget) > 0.1f)
+        while (true)
         {
             rotateDuration -= Time.deltaTime;
             dirToTarget = Vector3.Normalize(transform.position - target.transform.position);
             transform.up = Vector3.Lerp(transform.up, dirToTarget, Time.deltaTime * 5f);
             yield return null;
         }
+    }
+
+    private IEnumerator ShootRoutine()
+    {
+        rotateRoutine = StartCoroutine(RotateRoutine());
 
         float timer = 1f;
         while (timer > 0)
@@ -137,5 +143,14 @@ public class BossDagger : PooledObject
         Release();
         gameObject.SetActive(false);
         lineRenderer.enabled = false;
+
+        if (moveRoutine != null)
+            StopCoroutine(moveRoutine);
+
+        if (rotateRoutine != null)
+            StopCoroutine(rotateRoutine);
+
+        rotateRoutine = null;
+        moveRoutine = null;
     }
 }

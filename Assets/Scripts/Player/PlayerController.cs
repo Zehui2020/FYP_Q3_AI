@@ -479,6 +479,9 @@ public class PlayerController : PlayerStats
     }
     private IEnumerator DieRoutine()
     {
+        itemStats.ResetStats();
+        itemManager.ResetItemStacks();
+
         yield return new WaitForSeconds(2f);
 
         if (extraLives <= 0)

@@ -12,6 +12,11 @@ public class Shockwave : PooledObject
     private BaseStats thrower;
     private float damage;
 
+    public override void Init()
+    {
+        base.Init();
+    }
+
     public void InitShockwave(BaseStats thrower, float damage, Vector3 spawnPos)
     {
         transform.position = new Vector3(spawnPos.x, spawnPos.y + sr.size.y / 2f, spawnPos.z);
@@ -33,6 +38,10 @@ public class Shockwave : PooledObject
             return;
 
         player.TakeDamage(thrower, new BaseStats.Damage(damage), false, player.transform.position, DamagePopup.DamageType.Health);
+    }
+
+    public void ReleaseShockwave()
+    {
         Release();
         gameObject.SetActive(false);
     }
