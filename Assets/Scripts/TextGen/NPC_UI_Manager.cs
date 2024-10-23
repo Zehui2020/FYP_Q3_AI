@@ -20,6 +20,7 @@ public class NPC_UI_Manager : MonoBehaviour
     [SerializeField] private string NPCName;
 
     [Header("Dialogue Options")]
+    [SerializeField] private GameObject DialogueOptionsList;
     [SerializeField] private List<Button> DialogueOptions;
 
     public bool isInteracting = false;
@@ -28,7 +29,7 @@ public class NPC_UI_Manager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        //Debug.Log(DialogueOptionsList.transform.childCount);
     }
 
     // Update is called once per frame
@@ -40,6 +41,7 @@ public class NPC_UI_Manager : MonoBehaviour
     public void InitUIManager()
     {
         player = PlayerController.Instance;
+        SetOptionsListSize();
     }
 
     public void ShowUI()
@@ -80,6 +82,13 @@ public class NPC_UI_Manager : MonoBehaviour
     public string GetUserInput()
     {
         return user_Input.text;
+    }
+
+    private void SetOptionsListSize()
+    {
+        RectTransform rectTransform = DialogueOptionsList.GetComponent<RectTransform>();
+        float newHeight = 100 + ((DialogueOptionsList.transform.childCount - 1) * (100 + 12.5f));
+        rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, newHeight);
     }
 
     public void TurnOffDialogueTree()
