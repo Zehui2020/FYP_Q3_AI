@@ -148,33 +148,29 @@ public class AbilityController : MonoBehaviour
         charges.RemoveAt(i);
         maxCharges.RemoveAt(i);
         abilityCooldowns.RemoveAt(i);
+
         if (abilityCooldownRoutines[i] != null)
         {
             StopCoroutine(abilityCooldownRoutines[i]);
             abilityCooldownRoutines[i] = null;
         }
-        int count = 0;
+
         // re-initialize all abilities
         for (int j = 0; j < abilityUI.Count; j++)
         {
             if (abilityCooldownRoutines[j] != null)
+            {
                 StopCoroutine(abilityCooldownRoutines[j]);
-
-            if (j < abilities.Count)
-            {
-                abilityUI[j].InitAbilityUI(abilities[j], "[ " + (j + 1).ToString() + " ]");
-                abilityCooldownRoutines[j] = StartCoroutine(AbilityCooldownRoutine(j, abilities[j], abilityCooldowns[j]));
-            }
-            else
-            {
-                abilityUI[j].InitAbilityUI("[ " + (j + 1).ToString() + " ]");
                 abilityCooldownRoutines[j] = null;
             }
 
-            if (count > 10)
-                break;
+            if (j < abilities.Count)
+                abilityUI[j].InitAbilityUI(abilities[j], "[ " + (j + 1).ToString() + " ]");
+            else
+                abilityUI[j].InitAbilityUI("[ " + (j + 1).ToString() + " ]");
 
-            count++;
+            if (abilityCooldowns[j] > 0)
+                abilityCooldownRoutines[j] = StartCoroutine(AbilityCooldownRoutine(j, abilities[j], abilityCooldowns[j]));
         }
     }
 
