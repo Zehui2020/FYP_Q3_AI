@@ -69,6 +69,7 @@ public class ShadowCaster2DTileMap : MonoBehaviour
 
     }
 
+    #if UNITY_EDITOR
     [CustomEditor(typeof(ShadowCaster2DTileMap))]
     public class ShadowCaster2DTilemapEditor : Editor
     {
@@ -93,4 +94,5 @@ public class ShadowCaster2DTileMap : MonoBehaviour
             EditorGUILayout.EndHorizontal();
         }
     }
+    #endif
 }

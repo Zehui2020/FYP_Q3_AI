@@ -45,6 +45,8 @@ public class Slime : Enemy
         onPlayerInChaseRange += () => { isPatroling = false; aiNavigation.SetTarget(player.transform); };
         OnDieEvent += (target) => { ChangeState(State.Die); };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
+        OnBreached += (multiplier) => { animator.Play(SlimeIdleAnim); };
+        OnParry += (stat) => { animator.Play(SlimeIdleAnim); };
     }
 
     private void ChangeState(State newState)

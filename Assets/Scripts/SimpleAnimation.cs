@@ -62,7 +62,7 @@ public class SimpleAnimation : MonoBehaviour
     public void ResumeAnimation()
     {
         StopAnimation();
-        if (loop)
+        if (loop && isActiveAndEnabled)
             loopRoutine = StartCoroutine(LoopRoutine());
     }
 

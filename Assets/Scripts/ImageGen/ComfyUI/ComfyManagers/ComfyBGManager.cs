@@ -37,6 +37,9 @@ public class ComfyBGManager : ComfyManager
 
     private void Update()
     {
+        if (uiManager == null)
+            return;
+
         if (comfyWebsocket.currentProgress != -1 && comfyWebsocket.maxProgress != -1)
             uiManager.SetLoadingBar(comfyWebsocket.currentProgress, comfyWebsocket.maxProgress, "Background");
         else

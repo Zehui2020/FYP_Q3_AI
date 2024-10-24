@@ -7,7 +7,7 @@ public class PortalController : MonoBehaviour
     [SerializeField] public List<Portal> portals = new List<Portal>();
     [SerializeField] private float multiplier = 5;
 
-    public void PositionPortals(List<Portal> mapPortals)
+    public void PositionPortals(List<Portal> mapPortals, Camera cam)
     {
         portals.AddRange(mapPortals);
 

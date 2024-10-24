@@ -1,10 +1,8 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static BaseStats.Damage;
-using static DamagePopup;
 
 public class BaseStats : MonoBehaviour
 {
@@ -201,6 +199,7 @@ public class BaseStats : MonoBehaviour
         if (shield > 0)
         {
             shield -= finalDamage;
+            TakeTrueDamage(new Damage(finalDamage * 0.3f));
             damageType = DamagePopup.DamageType.Shield;
             damagePopup.SetupPopup(finalDamage, closestPoint, damageType, new Vector2(0, 2));
             OnShieldChanged?.Invoke(false, isCrit, 0);
@@ -237,10 +236,7 @@ public class BaseStats : MonoBehaviour
         if (health <= 0)
         {
             if (damage.damageSource == Damage.DamageSource.ContagiousHaze)
-            {
-                attacker.abilityStats.contagiousHazeHit = true;
                 attacker.abilityStats.contagiousHazeStacks = statusEffectManager.poisonStacks.stackCount;
-            }
 
             OnDieEvent?.Invoke(this);
             statusEffectManager.OnDie();

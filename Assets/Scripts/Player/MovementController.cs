@@ -70,10 +70,10 @@ public class MovementController : MonoBehaviour
 
     private Rope rope;
 
-    public void InitializeMovementController(AnimationManager animationManager)
+    public void InitializeMovementController(AnimationManager animationManager, Rigidbody2D playerRB)
     {
         playerCol = GetComponent<CapsuleCollider2D>();
-        playerRB = GetComponent<Rigidbody2D>();
+        this.playerRB = playerRB;
 
         this.animationManager = animationManager;
         moveSpeed = movementData.walkSpeed;
@@ -154,6 +154,10 @@ public class MovementController : MonoBehaviour
         }
 
         knockbackRoutine = null;
+
+        if (PlayerController.Instance.health <= 0)
+            yield break;
+
         ChangeState(MovementState.Idle);
         ChangePlayerState?.Invoke(PlayerController.PlayerStates.Movement);
     }
@@ -171,7 +175,7 @@ public class MovementController : MonoBehaviour
 
     public void HandleMovment(float horizontal)
     {
-        if (!canMove || currentState == MovementState.Knockback)
+        if (!canMove || currentState == MovementState.Knockback || playerRB == null)
             return;
 
         // Calculate move dir
@@ -659,7 +663,7 @@ public class MovementController : MonoBehaviour
 
     public void CheckGroundCollision()
     {
-        if (!canMove)
+        if (!canMove || playerRB == null)
             return;
 
         Vector2 raycastPos = transform.localScale.x < 0 ? 
@@ -730,6 +734,9 @@ public class MovementController : MonoBehaviour
 
     public void StopPlayer()
     {
+        if (playerRB == null)
+            return;
+
         canMove = false;
         playerRB.velocity = Vector3.zero;
         playerRB.gravityScale = 0;

@@ -6,6 +6,8 @@ public class GameData : MonoBehaviour
     public static GameData Instance;
 
     public float currentLevel = 1;
+    public float maxLevels = 1;
+
     public float timer;
     public bool pauseTimer = false;
 

@@ -188,7 +188,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: e4ad18ed27a607d4a92271d46f1751ba, type: 2}
     - target: {fileID: 6937396380385949449, guid: c8842a37c658c92418f2fb50c37bdb16, type: 3}
       propertyPath: noFog
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6937396380385949449, guid: c8842a37c658c92418f2fb50c37bdb16, type: 3}
       propertyPath: tileSize
@@ -1014,7 +1014,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0
+  m_Intensity: 0.8
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 000000003b03e41e457666c5299b9b234b8335680f5604e4
@@ -1356,6 +1356,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -86.82
       objectReference: {fileID: 0}
+    - target: {fileID: 3896285502206619780, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
+      propertyPath: multiplier
+      value: 0.55
+      objectReference: {fileID: 0}
     - target: {fileID: 4128840632989652008, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -1585,7 +1589,8 @@ PrefabInstance:
       value: -85
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 9203548315995188479, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}

@@ -47,7 +47,6 @@ public class Enemy : EnemyStats
     private Coroutine knockbackRoutine;
 
     protected bool isInCombat = false;
-    private float previousAnimSpeed;
     private int currentShield;
 
     private void Start()
@@ -89,7 +88,6 @@ public class Enemy : EnemyStats
         onHitEvent += player.OnHitEnemyEvent;
         OnDieEvent += (target) => 
         {
-            animator.speed = 1;
             player.OnEnemyDie(target);
             uiController.SetCanvasActive(false);
         };
@@ -143,7 +141,6 @@ public class Enemy : EnemyStats
 
         if (tookDamage)
         {
-            Debug.Log("CALED");
             OnTakeDamage?.Invoke();
             onHitEvent?.Invoke(this, damage, isCrit, closestPoint);
         }
@@ -286,20 +283,19 @@ public class Enemy : EnemyStats
 
         isFrozen = true;
         canUpdate = false;
-
-        previousAnimSpeed = animator.speed;
+        float previousAnimSpeed = animator.speed;
         animator.speed = 0;
 
         ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Frozen), 0);
 
         yield return new WaitForSeconds(duration);
 
+        animator.speed = previousAnimSpeed;
         OnFrozenEnd();
     }
     private void OnFrozenEnd()
     {
         statusEffectManager.RemoveEffectUI(StatusEffect.StatusType.Status.Frozen);
-        animator.speed = previousAnimSpeed;
         frozenRoutine = null;
 
         if (health <= 0)
@@ -323,9 +319,6 @@ public class Enemy : EnemyStats
         aiNavigation.StopNavigationUntilResume();
         canUpdate = false;
 
-        previousAnimSpeed = animator.speed;
-        animator.speed = 0;
-
         ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Stunned), 0);
 
         float timer = duration;
@@ -347,7 +340,6 @@ public class Enemy : EnemyStats
     {
         statusEffectManager.RemoveEffectUI(StatusEffect.StatusType.Status.Stunned);
 
-        animator.speed = previousAnimSpeed;
         shield = currentShield;
         stunnedRoutine = null;
 
@@ -363,8 +355,6 @@ public class Enemy : EnemyStats
     public override IEnumerator DazedRoutine(float duration)
     {
         aiNavigation.StopNavigationUntilResume();
-        previousAnimSpeed = animator.speed;
-        animator.speed = 0;
         canUpdate = false;
         ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Dazed), 0);
         InvokeOnShieldChanged(true, duration, false);
@@ -376,8 +366,6 @@ public class Enemy : EnemyStats
     private void OnDazeEnd()
     {
         statusEffectManager.RemoveEffectUI(StatusEffect.StatusType.Status.Dazed);
-
-        animator.speed = previousAnimSpeed;
 
         if (shield <= 0)
             shield = maxShield;

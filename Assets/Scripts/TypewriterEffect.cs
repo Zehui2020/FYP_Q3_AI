@@ -12,8 +12,8 @@ public class TypewriterEffect : MonoBehaviour
     [SerializeField] private TextMeshProUGUI speakerName;
 
     public UnityEvent OnFinishTyping;
-
     private Coroutine TypeRoutine;
+    private string messageToDisplay;
 
     public void SetSpeakerName(string speaker)
     {
@@ -34,8 +34,20 @@ public class TypewriterEffect : MonoBehaviour
         TypeRoutine = StartCoroutine(TypeWriterTMP(message));
     }
 
+    public void Skip()
+    {
+        if (TypeRoutine != null)
+            StopCoroutine(TypeRoutine);
+
+        TypeRoutine = null;
+        OnFinishTyping?.Invoke();
+        dialogueText.text = messageToDisplay;
+    }
+
     private IEnumerator TypeWriterTMP(string message)
     {
+        messageToDisplay = message;
+
         for (int i = 0; i < message.Length; i++)
         {
             if (message[i] == '<')
@@ -60,6 +72,7 @@ public class TypewriterEffect : MonoBehaviour
             }
         }
 
+        messageToDisplay = string.Empty;
         OnFinishTyping?.Invoke();
     }
 

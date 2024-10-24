@@ -1,4 +1,5 @@
 using DesignPatterns.ObjectPool;
+using System.Collections;
 using UnityEngine;
 
 public class AbilityPickUp : PooledObject, IInteractable
@@ -12,7 +13,7 @@ public class AbilityPickUp : PooledObject, IInteractable
     private void Start()
     {
         if (initAbility)
-            InitPickup(ability, ability.abilityCharges);
+            StartCoroutine(InitRoutine());
     }
 
     public void InitPickup(BaseAbility newAbility, int charges)
@@ -20,6 +21,13 @@ public class AbilityPickUp : PooledObject, IInteractable
         ability = newAbility;
         spriteRenderer.sprite = ability.spriteIcon;
         this.charges = charges;
+    }
+
+    private IEnumerator InitRoutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        InitPickup(ability, ability.abilityCharges);
     }
 
     public bool OnInteract()

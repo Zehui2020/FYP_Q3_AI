@@ -1,6 +1,7 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FinalBossPhase1 : Enemy
@@ -30,6 +31,7 @@ public class FinalBossPhase1 : Enemy
 
     [Header("Final Boss Stats")]
     public State currentState;
+    private State prevState;
     [SerializeField] private float walkSpeed;
     [SerializeField] private float rushSpeed;
 
@@ -46,15 +48,38 @@ public class FinalBossPhase1 : Enemy
     [SerializeField] private List<Transform> daggerSpawnPos = new();
     [SerializeField] private List<BossDagger> bossDaggers = new();
 
+    [Header("Others")]
+    [SerializeField] private CutsceneGroup cutscene;
+
     private int moveCounter;
+    private bool canCharge = false;
     private Coroutine SlamRoutine;
     private Coroutine Deciding;
 
     // Debugging
     private State previousState;
 
+    public override void InitializeEnemy()
+    {
+        base.InitializeEnemy();
+        OnBreached += (amount) => {
+            animator.Play(IdleAnim);
+        };
+        OnParry += (baseStats) => {
+            animator.Play(IdleAnim);
+        };
+        cutscene.CutsceneEnd.AddListener(() => { ChangeState(State.Walk); });
+    }
+
     public void ChangeState(State newState)
     {
+        if (newState != State.Idle)
+        {
+            isInCombat = true;
+            uiController.SetCanvasActive(true);
+        }
+
+        prevState = currentState;
         currentState = newState;
         damageMultipler.RemoveAllModifiers();
 
@@ -132,14 +157,19 @@ public class FinalBossPhase1 : Enemy
                 enemyRB.velocity = GetDirectionToPlayer() * walkSpeed;
                 break;
             case State.Rush:
+                if (!canCharge)
+                    return;
                 enemyRB.velocity = GetDirectionToPlayer() * rushSpeed;
                 if (Vector2.Distance(transform.position, player.transform.position) <= 2f)
+                {
+                    canCharge = false;
                     ChangeState(State.PunchAttack);
+                }
                 break;
         }
 
         if (Input.GetKeyDown(KeyCode.L))
-            ChangeState(State.Walk);
+            ChangeState(State.SlamAttack);
 
         if (currentState != State.PunchAttack)
             UpdateDirectionToPlayer();
@@ -151,6 +181,11 @@ public class FinalBossPhase1 : Enemy
             StopCoroutine(Deciding);
 
         Deciding = StartCoroutine(DecideRoutine());
+    }
+
+    public void SetCanCharge()
+    {
+        canCharge = true;
     }
 
     private IEnumerator DecideRoutine()
@@ -172,8 +207,7 @@ public class FinalBossPhase1 : Enemy
             ChangeState(State.SummonDagger);
         else
         {
-            int randNum = Random.Range(0, 2);
-            if (randNum == 0)
+            if (prevState == State.DaggerAttack)
                 ChangeState(State.Rush);
             else
                 ChangeState(State.DaggerAttack);
@@ -189,7 +223,8 @@ public class FinalBossPhase1 : Enemy
 
         yield return new WaitForSeconds(jumpWaitDuration);
 
-        Vector3 targetPos = player.transform.position;
+        Vector3 targetPos = Physics2D.Raycast(transform.position, Vector2.down, 1000f, groundLayer).point;
+        enemyRB.isKinematic = false;
 
         while (true)
         {
@@ -205,18 +240,8 @@ public class FinalBossPhase1 : Enemy
     public void OnJump()
     {
         QuestPointer.Instance.Show(transform);
-        StartCoroutine(JumpRoutine());
-    }
-    private IEnumerator JumpRoutine()
-    {
-        player.playerEffectsController.ShakeCamera(4f, 3f, 0.3f);
-        float timer = 1f;
-        while (timer > 0)
-        {
-            timer -= Time.deltaTime;
-            enemyRB.MovePosition(transform.position + Vector3.up * Time.deltaTime * jumpSpeed);
-            yield return null;
-        }
+        transform.position = jumpWaitPosition.position;
+        enemyRB.isKinematic = true;
     }
 
     private void OnValidate()
@@ -232,6 +257,8 @@ public class FinalBossPhase1 : Enemy
     {
         if (Utility.Instance.CheckLayer(collision.gameObject, groundLayer) && currentState == State.SlamAttack)
         {
+            player.playerEffectsController.ShakeCamera(10f, 4f, 0.6f);
+
             if (SlamRoutine != null)
                 StopCoroutine(SlamRoutine);
 
@@ -243,7 +270,6 @@ public class FinalBossPhase1 : Enemy
             QuestPointer.Instance.Hide();
             animator.Play(SlamAnim);
             SlamRoutine = null;
-            player.playerEffectsController.ShakeCamera(8f, 5f, 0.6f);
         }
     }
 }

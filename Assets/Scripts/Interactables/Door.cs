@@ -15,6 +15,7 @@ public class Door : MonoBehaviour, IInteractable
     public bool OnInteract()
     {
         SceneLoader.Instance.LoadScene(nextLevel);
+
         keycodeUI.Hide();
         GameData.Instance.currentLevel++;
         return true;

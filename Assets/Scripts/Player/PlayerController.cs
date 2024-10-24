@@ -41,7 +41,6 @@ public class PlayerController : PlayerStats
     [SerializeField] private LayerMask enemyLayer;
 
     [SerializeField] private EnemyStatBar healthBar;
-    [SerializeField] private EnemyStatBar shieldBar;
 
     private IInteractable currentInteractable;
     private float ropeX;
@@ -85,7 +84,7 @@ public class PlayerController : PlayerStats
 
         animationManager.InitAnimationController();
         itemManager.InitItemManager();
-        movementController.InitializeMovementController(animationManager);
+        movementController.InitializeMovementController(animationManager, playerRB);
         combatController.InitializeCombatController(this);
 
         if (abilityController != null)
@@ -106,7 +105,6 @@ public class PlayerController : PlayerStats
         OnParry += OnParryEnemy;
 
         healthBar.InitStatBar(health, maxHealth);
-        shieldBar.InitStatBar(shield, maxShield);
 
         OnHealthChanged += (increase, isCrit) => 
         { 
@@ -114,14 +112,6 @@ public class PlayerController : PlayerStats
                 healthBar.OnDecrease(health, maxHealth, isCrit, false); 
             else
                 healthBar.OnIncreased(health, maxHealth, isCrit);
-        };
-
-        OnShieldChanged += (increase, isCrit, duration) => 
-        {
-            if (!increase)
-                shieldBar.OnDecrease(shield, maxShield, isCrit, false);
-            else
-                shieldBar.OnIncreased(shield, maxShield, isCrit);
         };
     }
 
@@ -184,8 +174,16 @@ public class PlayerController : PlayerStats
             return;
         }
 
-        if (health <= 0 || 
-            currentState == PlayerStates.Ability)
+        if (health <= 0)
+            return;
+
+        // abilities
+        if (abilityController != null && !abilityController.swappingAbility)
+            for (int i = 0; i < abilityController.abilities.Count; i++)
+                if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
+                    abilityController.HandleAbility(i);
+
+        if (currentState == PlayerStates.Ability)
             return;
 
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -298,12 +296,6 @@ public class PlayerController : PlayerStats
                 }
             }
         }
-
-        // abilities
-        if (abilityController != null && !abilityController.swappingAbility)
-            for (int i = 0; i < abilityController.abilities.Count; i++)
-                if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
-                        abilityController.HandleAbility(i);
     }
 
     private IEnumerator HurtRoutine()
@@ -394,7 +386,7 @@ public class PlayerController : PlayerStats
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
-        if (health <= 0)
+        if (health <= 0 || hurtRoutine != null)
             return false;
 
         bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
@@ -477,6 +469,9 @@ public class PlayerController : PlayerStats
     }
     private IEnumerator DieRoutine()
     {
+        itemStats.ResetStats();
+        itemManager.ResetItemStacks();
+
         yield return new WaitForSeconds(2f);
 
         if (extraLives <= 0)
@@ -1013,5 +1008,6 @@ public class PlayerController : PlayerStats
     private void OnApplicationQuit()
     {
         itemStats.ResetStats();
+        itemManager.ResetItemStacks();
     }
 }
