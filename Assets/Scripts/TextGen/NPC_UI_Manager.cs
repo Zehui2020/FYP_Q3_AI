@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class NPC_UI_Manager : MonoBehaviour
 {
-
     [Header("Dialogue Canvas")]
     [SerializeField] private GameObject NPC_Dialogue_Canvas;
 
@@ -21,7 +20,8 @@ public class NPC_UI_Manager : MonoBehaviour
 
     [Header("Dialogue Options")]
     [SerializeField] private GameObject DialogueOptionsList;
-    [SerializeField] private List<Button> DialogueOptions;
+    [SerializeField] private GameObject OptionPrefab;
+    [SerializeField] private List<DialogueOptionData> DO_DataList;
 
     public bool isInteracting = false;
     private PlayerController player;
@@ -41,7 +41,7 @@ public class NPC_UI_Manager : MonoBehaviour
     public void InitUIManager()
     {
         player = PlayerController.Instance;
-        SetOptionsListSize();
+        SetupOptions();
     }
 
     public void ShowUI()
@@ -74,7 +74,7 @@ public class NPC_UI_Manager : MonoBehaviour
 
     public void OnLeaveNPCConvo()
     {
-        NPCOutput.gameObject.SetActive(false);
+        NPC_Dialogue_Canvas.gameObject.SetActive(false);
         user_Input.text = string.Empty;
         isInteracting = false;
     }
@@ -82,6 +82,24 @@ public class NPC_UI_Manager : MonoBehaviour
     public string GetUserInput()
     {
         return user_Input.text;
+    }
+
+    private void SetupOptions()
+    {
+        for (int i = 0; i < DO_DataList.Count; i++)
+        {
+            string HeaderText = (i+1).ToString() + ".) ";
+
+            GameObject newOption = Instantiate(OptionPrefab);
+            NPC_Dialogue_Tree newDT_Script = newOption.GetComponent<NPC_Dialogue_Tree>();
+
+            newDT_Script.OptionData = DO_DataList[i];
+            newDT_Script.SetTitle(HeaderText);
+
+            newDT_Script.ai_TextGen = GetComponent<NPC_Dialogue_Generator>();
+            newOption.transform.SetParent(DialogueOptionsList.transform);
+        }
+        SetOptionsListSize();
     }
 
     private void SetOptionsListSize()
@@ -93,11 +111,19 @@ public class NPC_UI_Manager : MonoBehaviour
 
     public void TurnOffDialogueTree()
     {
-
+        for (int i = 0; i < DialogueOptionsList.transform.childCount; i++)
+        {
+            Button buttonComponent = DialogueOptionsList.transform.GetChild(i).GetComponent<Button>();
+            buttonComponent.interactable = false;
+        }
     }
 
     public void TurnOnDialogueTree()
     {
-
+        for (int i = 0; i < DialogueOptionsList.transform.childCount; i++)
+        {
+            Button buttonComponent = DialogueOptionsList.transform.GetChild(i).GetComponent<Button>();
+            buttonComponent.interactable = true;
+        }
     }
 }

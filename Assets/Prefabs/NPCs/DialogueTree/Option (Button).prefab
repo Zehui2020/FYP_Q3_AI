@@ -72,7 +72,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 1, g: 0.94992745, b: 0.57547164, a: 1}
     m_PressedColor: {r: 1, g: 0.58878833, b: 0.2352941, a: 1}
     m_SelectedColor: {r: 1, g: 0.9098039, b: 0.23529412, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 1, g: 0.9098039, b: 0.23529412, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -90,7 +90,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 397677449432800720}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7559180641187915199}
+        m_TargetAssemblyTypeName: NPC_Dialogue_Tree, Assembly-CSharp
+        m_MethodName: PromptResponse
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7559180641187915199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105,6 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OptionData: {fileID: 0}
   OptionText: {fileID: 397677449432800720}
+  ai_TextGen: {fileID: 0}
 --- !u!1 &4310617498353476735
 GameObject:
   m_ObjectHideFlags: 0
