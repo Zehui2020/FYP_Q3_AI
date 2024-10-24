@@ -25,6 +25,6 @@ public class MinimapZoom : MonoBehaviour
         float percentage = 100 - (map.localScale.x - 1) / maxZoom * 100;
         for (int i = 0; i < buttons.Count; i++)
             buttons[i].localScale = new Vector3(Mathf.Clamp(percentage / 100, minbuttonZoom, 1), Mathf.Clamp(percentage / 100, minbuttonZoom, 1), 0);
-        //buttonParent.localPosition = new Vector3(-buttons[0].localScale.x * halfButtonSize.x, -buttons[0].localScale.x * halfButtonSize.y, 0);
+        buttonParent.localPosition = new Vector3(-buttons[0].localScale.x * halfButtonSize.x, -buttons[0].localScale.x * halfButtonSize.y, 0);
     }
 }

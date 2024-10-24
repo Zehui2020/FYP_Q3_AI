@@ -79,7 +79,6 @@ public class WFC_MapGeneration : MonoBehaviour
     public void GenerateMap()
     {
         // compensate for border
-        cam.orthographicSize = mapSize.x > mapSize.y ? mapSize.x * 12 : mapSize.y * 12;
         mapSize -= Vector2.one * 2;
         // create map list
         for (int i = 0; i < mapSize.x * mapSize.y; i++)
@@ -93,6 +92,8 @@ public class WFC_MapGeneration : MonoBehaviour
         // set positions
         transform.position -= new Vector3((mapSize.x - 1) * mapTileSize / 2, (mapSize.y - 1) * mapTileSize / 2, 0);
         cam.transform.localPosition -= transform.position - new Vector3(0, 0, -10);
+        cam.orthographicSize = cam.transform.localPosition.x > cam.transform.localPosition.y ? 
+            cam.transform.localPosition.x + 50 : cam.transform.localPosition.y + 50;
         mapSize += Vector2.one * 2;
         // set chests
         InitChests();
