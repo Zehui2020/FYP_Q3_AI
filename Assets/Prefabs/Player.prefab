@@ -27768,7 +27768,7 @@ MonoBehaviour:
   jumpCount: 2
   maxJumpCount: 2
   wallJumpCount: 1
-  maxWallJumps: 2
+  maxWallJumps: 1
 --- !u!114 &1290495343563932061
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40777,7 +40777,7 @@ GameObject:
   - component: {fileID: 7621115747701063390}
   - component: {fileID: 5368334621048150309}
   - component: {fileID: 6355892479833442981}
-  - component: {fileID: 4973719014333068503}
+  - component: {fileID: 7762437248409282258}
   m_Layer: 6
   m_Name: Abilities
   m_TagString: Untagged
@@ -40854,8 +40854,9 @@ MonoBehaviour:
   - {fileID: 3056762066538443108}
   fadeTexts: []
   abilitySlots: []
-  canvas: {fileID: 4973719014333068503}
---- !u!223 &4973719014333068503
+  canvas: {fileID: 7762437248409282258}
+  parentCanvas: {fileID: 8430749502062861929}
+--- !u!223 &7762437248409282258
 Canvas:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40872,7 +40873,7 @@ Canvas:
   m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
