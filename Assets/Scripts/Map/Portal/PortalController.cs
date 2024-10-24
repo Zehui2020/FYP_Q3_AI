@@ -30,7 +30,7 @@ public class PortalController : MonoBehaviour
         {
             buttons[i].transform.localPosition = portals[i].transform.position * multiplier;
             portals[i].button = buttons[i];
-            //buttons[i].SetActive(false);
+            buttons[i].SetActive(false);
         }
         gameObject.SetActive(false);
     }
