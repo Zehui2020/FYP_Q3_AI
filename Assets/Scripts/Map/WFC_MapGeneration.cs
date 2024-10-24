@@ -16,7 +16,7 @@ public class WFC_MapGeneration : MonoBehaviour
     [Header("Items")]
     [SerializeField] private ItemStats itemStats;
     [Header("Expanded Map Camera")]
-    [SerializeField] private Transform cam;
+    [SerializeField] private Camera cam;
     [Header("Debug Settings")]
     [SerializeField] private bool noFog;
 
@@ -79,7 +79,7 @@ public class WFC_MapGeneration : MonoBehaviour
     public void GenerateMap()
     {
         // compensate for border
-        cam.GetComponent<Camera>().orthographicSize = mapSize.x > mapSize.y ? mapSize.x * 12 : mapSize.y * 12;
+        cam.orthographicSize = mapSize.x > mapSize.y ? mapSize.x * 12 : mapSize.y * 12;
         mapSize -= Vector2.one * 2;
         // create map list
         for (int i = 0; i < mapSize.x * mapSize.y; i++)
@@ -92,7 +92,7 @@ public class WFC_MapGeneration : MonoBehaviour
         SetBorderTiles();
         // set positions
         transform.position -= new Vector3((mapSize.x - 1) * mapTileSize / 2, (mapSize.y - 1) * mapTileSize / 2, 0);
-        cam.localPosition -= transform.position - new Vector3(0, 0, -10);
+        cam.transform.localPosition -= transform.position - new Vector3(0, 0, -10);
         mapSize += Vector2.one * 2;
         // set chests
         InitChests();
@@ -413,7 +413,7 @@ public class WFC_MapGeneration : MonoBehaviour
             mapPortalList.Add(Instantiate(portalPrefab, doors[i], false).GetComponent<Portal>());
         }
 
-        PlayerController.Instance.portalController.PositionPortals(mapPortalList);
+        PlayerController.Instance.portalController.PositionPortals(mapPortalList, cam);
     }
 
     private List<GameObject> GetAvailableBorderTilesList(Vector2 checkTilePos, Vector2 direction)
