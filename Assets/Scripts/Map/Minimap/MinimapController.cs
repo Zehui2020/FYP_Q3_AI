@@ -8,6 +8,11 @@ public class MinimapController : MonoBehaviour
 
     private void Start()
     {
+        if (cam.Count == 1)
+            cam.Add(cam[0]);
+        if (cam[1] == null)
+            cam[1] = cam[0];
+
         ChangeView(false);
     }
 
@@ -15,21 +20,17 @@ public class MinimapController : MonoBehaviour
     {
         if (showMap)
         {
-            if (cam.Count > 1)
-            {
-                cam[0].SetActive(false);
-                cam[1].SetActive(true);
-            }
+            cam[0].SetActive(false);
+            cam[1].SetActive(true);
+
             maps[0].SetActive(false);
             maps[1].SetActive(true);
         }
         else
         {
-            if (cam.Count > 1)
-            {
-                cam[1].SetActive(false);
-                cam[0].SetActive(true);
-            }
+            cam[1].SetActive(false);
+            cam[0].SetActive(true);
+
             maps[1].SetActive(false);
             maps[0].SetActive(true);
         }
