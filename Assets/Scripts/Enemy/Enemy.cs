@@ -75,7 +75,7 @@ public class Enemy : EnemyStats
         statusEffectManager.OnApplyStatusEffect += TriggerStatusEffect;
         statusEffectManager.OnCleanse += OnCleanse;
 
-        onPlayerInChaseRange += () => { isInCombat = true; uiController.SetCanvasActive(true); uiController.ShowSpottedSignal(); };
+        onPlayerInChaseRange += () => { isInCombat = true; uiController.SetCanvasActive(true); };
         OnHealthChanged += (increase, isCrit) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnHealthChanged(health, maxHealth, increase, isCrit); };
         OnShieldChanged += (increase, isCrit, duration) => { if (!increase) { isInCombat = true; uiController.SetCanvasActive(true); } uiController.OnShieldChanged(shield, maxShield, increase, duration, isCrit); };
         OnBreached += (multiplier) => 

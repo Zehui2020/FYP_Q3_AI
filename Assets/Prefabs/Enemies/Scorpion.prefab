@@ -218,13 +218,13 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_Sprite: {fileID: 267056645, guid: 8517dee514b53494db8c5658dad71235, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 7.5, y: 7.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &6800498920677304553
@@ -311,7 +311,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
+    oldSize: {x: 7.5, y: 7.5}
     newSize: {x: 7.5, y: 7.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -381,6 +381,7 @@ MonoBehaviour:
   movementSpeedMultiplier:
     baseAmount: 1
     modifiers: []
+  canAbilityKnockback: 1
   patrolThreshold: 1
   chaseRange: 10
   attackRange: 2
@@ -388,6 +389,9 @@ MonoBehaviour:
   patrolMovementSpeed: 1
   chaseMovementSpeed: 10
   isEnemy: 1
+  OnTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
   enemyClass: 4
   enemyType: 0
   canUpdate: 1

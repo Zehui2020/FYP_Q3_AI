@@ -1,19 +1,14 @@
 using UnityEngine.Audio;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static Unity.VisualScripting.Member;
-using Unity.VisualScripting;
 
 public class AudioManager : MonoBehaviour
 {
     public AudioMixer audioMixer;
 
     public Sound[] sounds;
+    public Sound[] walkingSounds;
 
-    public Sound[] zombieGrowl;
-    public Sound[] zombieAttack;
-    public Sound[] zombieDie;
+    private int walkIndex;
 
     public static AudioManager Instance;
 
@@ -21,10 +16,7 @@ public class AudioManager : MonoBehaviour
     {
         Instance = this;
         InitSoundList(sounds);
-
-        InitSoundList(zombieGrowl);
-        InitSoundList(zombieAttack);
-        InitSoundList(zombieDie);
+        InitSoundList(walkingSounds);
     }
 
     private void InitSoundList(Sound[] sounds)
@@ -49,6 +41,15 @@ public class AudioManager : MonoBehaviour
         source.pitch = sound.pitch;
         source.volume = sound.volume;
         source.loop = sound.loop;
+    }
+
+    public void PlayRandomWalkingSound()
+    {
+        walkingSounds[walkIndex].source.pitch = Random.Range(0.7f, 1.3f);
+        walkingSounds[walkIndex].source.PlayOneShot(walkingSounds[walkIndex].clip);
+        walkIndex++;
+        if (walkIndex >= walkingSounds.Length)
+            walkIndex = 0;
     }
 
     public Sound FindSound(Sound.SoundName name)

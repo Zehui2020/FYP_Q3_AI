@@ -832,6 +832,7 @@ public class PlayerController : PlayerStats
 
     public void OnParryEnemy(BaseStats target)
     {
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.ParryHit);
         playerEffectsController.HitStop(0.5f);
         playerEffectsController.ShakeCamera(5, 20, 0.5f);
         playerEffectsController.SetCameraTrigger("parry");
