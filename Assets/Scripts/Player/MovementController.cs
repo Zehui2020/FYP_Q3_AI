@@ -365,6 +365,7 @@ public class MovementController : MonoBehaviour
 
     public void HandleWallJump(Collider2D col, float horizontal)
     {
+        jumpCount++;
         ChangeState(MovementState.WallJump);
         jumpRoutine = StartCoroutine(WallJumpRoutine(col, horizontal));
     }

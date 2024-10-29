@@ -182,6 +182,7 @@ public class DialogueManager : MonoBehaviour
 
         canShowNextDialogue = false;
         npcDialogue.SetSpeakerName(dialogue.speakerName);
+        npcPortrait.sprite = dialogue.speakerIcon;
 
         // Show message
         if (dialogue.speakerType != Dialogue.SpeakerType.Player)
