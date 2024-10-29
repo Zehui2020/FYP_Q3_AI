@@ -24,6 +24,7 @@ public class Undead : Enemy
     private readonly int DieAnim = Animator.StringToHash("UndeadDie");
 
     [Header("Undead stats")]
+    [SerializeField] private AudioProxy audioProxy;
     [SerializeField] private float teleportThreshold;
     [SerializeField] private float teleportCooldown;
 
@@ -47,6 +48,8 @@ public class Undead : Enemy
         OnBreached += (multiplier) => { animator.Play(RestAnim); };
         OnParry += (stat) => { animator.Play(RestAnim); };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
+
+        audioProxy.PlayAudioOneShot(Sound.SoundName.UndeadLoop);
     }
 
     private void ChangeState(State newState)

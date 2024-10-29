@@ -42,7 +42,31 @@ public class Sound
         PlungeLand,
 
         Hurt,
-        Die
+        Die,
+
+        SlimeAttackStart,
+        SlimeAttackEnd,
+        SlimeDie,
+        SlimeHurt,
+        SlimeJump,
+        SlimeLand,
+        SlimeTeleport,
+
+        SkeletonWalk,
+        SkeletonHurt,
+        SkeletonDie,
+        SkeletonLungeStart,
+        SkeletonLungeEnd,
+        SkeletonAttack1,
+        SkeletonAttack2,
+
+        ScorpionAttack,
+        ScorpionDie,
+        ScorpionHurt,
+        ScorpionWalk,
+
+        UndeadLoop,
+        UndeadAttack
     }
     public SoundName name;
 

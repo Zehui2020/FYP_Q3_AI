@@ -27451,6 +27451,7 @@ GameObject:
   - component: {fileID: 2556495245541027178}
   - component: {fileID: 5252103697821120779}
   - component: {fileID: 7688991385249336094}
+  - component: {fileID: 2614775477113507719}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -27989,6 +27990,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35de9a07a4a183b41a2f353c56fc2ff7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 0}
+--- !u!114 &2614775477113507719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3495960336827959054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3290dbea05c480499d68c21f5d924ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imageSaver: {fileID: 5252103697821120779}
+  tiles:
+  - {fileID: 11400000, guid: 59b3b59ed4bd8c1479f04ff93fe87961, type: 2}
+  - {fileID: 11400000, guid: 9896fd2f679bf894eb845ac2d346ae1f, type: 2}
+  - {fileID: 11400000, guid: 9f6aab1289b8edb41a76dcec019532e0, type: 2}
+  - {fileID: 11400000, guid: d310ea0d632c6d04783a89e481bfecfa, type: 2}
+  - {fileID: 11400000, guid: 7d39a15c2d363f746bedac1b380049a9, type: 2}
+  - {fileID: 11400000, guid: 1f5a29bd5bc8f404ba2f4436b96d1ae2, type: 2}
+  - {fileID: 11400000, guid: be90fd0b9096e9c4dbb46410c755b9d5, type: 2}
+  - {fileID: 11400000, guid: 53a47668205ab9a4b9b349d5c4b69e4e, type: 2}
+  - {fileID: 11400000, guid: fe9c7275421890e449a021bed8299d15, type: 2}
+  tileNames:
+  - grass1
+  - grass2
+  - mushroom1
+  - mushroom2
+  - rock1
+  - rock2
+  - rock3
+  - vine1
+  - vine2
 --- !u!1 &3507462888382954062
 GameObject:
   m_ObjectHideFlags: 0
