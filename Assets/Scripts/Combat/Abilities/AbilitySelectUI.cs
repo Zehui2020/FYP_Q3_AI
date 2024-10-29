@@ -18,7 +18,6 @@ public class AbilitySelectUI : MonoBehaviour
     private float borderStartPos;
     private float arrowStartPos;
     [SerializeField] private Canvas canvas;
-    [SerializeField] private Canvas parentCanvas;
 
     private void Start()
     {
@@ -147,10 +146,5 @@ public class AbilitySelectUI : MonoBehaviour
 
         foreach (TMP_Text text in fadeTexts)
             text.color = new Color(text.color.r, text.color.g, text.color.b, 0);
-    }
-
-    private void Update()
-    {
-        canvas.enabled = parentCanvas.enabled;
     }
 }
