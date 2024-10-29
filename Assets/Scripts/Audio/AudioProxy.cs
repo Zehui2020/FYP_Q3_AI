@@ -7,6 +7,11 @@ public class AudioProxy : MonoBehaviour
         AudioManager.Instance.PlayOneShot(name);
     }
 
+    public void StopAudio(Sound.SoundName name)
+    {
+        AudioManager.Instance.Stop(name);
+    }
+
     public void PlayRandomWalkingSound()
     {
         AudioManager.Instance.PlayRandomWalkingSound();

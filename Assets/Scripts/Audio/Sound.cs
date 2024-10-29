@@ -33,7 +33,16 @@ public class Sound
         DoubleJump,
 
         ParryHit,
-        Parry
+        Parry,
+
+        Roll,
+        LedgeGrab,
+
+        PlungeAir,
+        PlungeLand,
+
+        Hurt,
+        Die
     }
     public SoundName name;
 
