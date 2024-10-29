@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 [CreateAssetMenu]
 public class MapData : ScriptableObject
@@ -18,4 +19,13 @@ public class MapData : ScriptableObject
     public List<GameObject> borderTilePrefabs;
     public List<GameObject> solidTilePrefabs;
     public List<GameObject> shopTilePrefabs;
+
+    [System.Serializable]
+    public struct PropTileData
+    {
+        public Tile tile;
+        public string tileName;
+        public ImageSaver.TileSize tileSize;
+    }
+    public List<PropTileData> propTiles = new();
 }

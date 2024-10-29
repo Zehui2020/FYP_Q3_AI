@@ -58,4 +58,17 @@ public class ImageSaver : MonoBehaviour
 
         return loadTexture;
     }
+
+    public enum TileSize
+    {
+        Small = 500,
+        Medium = 400,
+        Large = 200
+    }
+
+    public Sprite GetTileSprite(string fileName, TileSize tileSize)
+    {
+        Texture2D texture = GetTextureFromLocalDisk(fileName);
+        return Sprite.Create(texture, new Rect(0f, 0f, texture.width, texture.height), new Vector2(0.5f, 0f), (int)tileSize);
+    }
 }

@@ -1,16 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static MapData;
 
 public class TilesetLoader : MonoBehaviour
 {
     [SerializeField] private ImageSaver imageSaver;
-    [SerializeField] private List<Tile> tiles = new();
-    [SerializeField] private List<string> tileNames = new();
+    [SerializeField] private Tilemap tilemap;
 
-    private void Start()
+    public void SetEnvironmentProps(List<PropTileData> tiles)
     {
+        Tilemap[] tilemaps = FindObjectsOfType<Tilemap>();
+
         for (int i = 0; i < tiles.Count; i++)
-            tiles[i].sprite = imageSaver.GetSpriteFromLocalDisk(tileNames[i]);
+        {
+            Tile tile = ScriptableObject.CreateInstance<Tile>();
+            tile.sprite = imageSaver.GetTileSprite(tiles[i].tileName, tiles[i].tileSize);
+
+            foreach (Tilemap tilemap in tilemaps)
+                tilemap.SwapTile(tiles[i].tile, tile);
+        }
     }
 }
