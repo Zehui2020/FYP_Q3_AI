@@ -14,6 +14,9 @@ public class MoneyPopupCounter : MonoBehaviour
 
     public void AddMoney(int amount)
     {
+        if (amount <= 0)
+            return;
+
         if (canPlay)
             aniamtor.Play("PopupEnter", -1, 0);
 
