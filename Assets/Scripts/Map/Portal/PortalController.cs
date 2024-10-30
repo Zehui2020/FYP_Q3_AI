@@ -21,7 +21,7 @@ public class PortalController : MonoBehaviour
             multiplier -= d;
         for (int i = 0; i < x - 1; i++)
         {
-            float y = Mathf.Clamp(decreaseDiff - (i * decreaseMultiplier), 0, 1);
+            float y = Mathf.Clamp(decreaseDiff - (i * decreaseMultiplier), decreaseMultiplier, 1);
             d -= y;
             multiplier -= d;
         }
