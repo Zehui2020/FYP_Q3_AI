@@ -16,7 +16,8 @@ public class PlayerController : PlayerStats
         Dialogue,
         Ability,
         Map,
-        Shop
+        Shop,
+        Transition
     }
     public PlayerStates currentState;
 
@@ -135,6 +136,9 @@ public class PlayerController : PlayerStats
 
         if (Input.GetKeyDown(KeyCode.Return))
             ConsoleManager.Instance.OnInputCommand();
+
+        if (currentState == PlayerStates.Transition)
+            return;
 
         if (abilityController != null && abilityController.swappingAbility)
         {

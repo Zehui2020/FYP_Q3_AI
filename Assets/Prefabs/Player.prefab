@@ -27691,7 +27691,7 @@ MonoBehaviour:
   dialogueManager: {fileID: 5945044573668150765}
   proceduralMapGenerator: {fileID: 0}
   minimapController: {fileID: 7438444404127039696}
-  portalController: {fileID: 3896285502206619780}
+  portalController: {fileID: 3170239483276375785}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -34263,7 +34263,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3896285502206619780}
+      - m_Target: {fileID: 3170239483276375785}
         m_TargetAssemblyTypeName: PortalController, Assembly-CSharp
         m_MethodName: OnTeleport
         m_Mode: 3
@@ -40497,7 +40497,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3896285502206619780}
+      - m_Target: {fileID: 3170239483276375785}
         m_TargetAssemblyTypeName: PortalController, Assembly-CSharp
         m_MethodName: OnTeleport
         m_Mode: 3
@@ -40902,6 +40902,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7527028598346225830}
   - component: {fileID: 7438444404127039696}
+  - component: {fileID: 3170239483276375785}
   - component: {fileID: 1531805578872256343}
   - component: {fileID: 9007797084904772853}
   m_Layer: 6
@@ -40950,6 +40951,24 @@ MonoBehaviour:
   cam:
   - {fileID: 370829916061710775}
   - {fileID: 0}
+--- !u!114 &3170239483276375785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5267139034516844734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac393bcd3bed5dc4996abc89cfc94bca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttons:
+  - {fileID: 4369413606857486985}
+  - {fileID: 6679452905742410534}
+  - {fileID: 8420116228175396252}
+  - {fileID: 5079458573221886299}
+  portals: []
 --- !u!223 &1531805578872256343
 Canvas:
   m_ObjectHideFlags: 0
@@ -51818,7 +51837,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3896285502206619780}
+      - m_Target: {fileID: 3170239483276375785}
         m_TargetAssemblyTypeName: PortalController, Assembly-CSharp
         m_MethodName: OnTeleport
         m_Mode: 3
@@ -57298,7 +57317,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2211128948451816401}
-  - component: {fileID: 3896285502206619780}
   m_Layer: 6
   m_Name: MapTransform
   m_TagString: Untagged
@@ -57326,24 +57344,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3896285502206619780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7838414738115261351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac393bcd3bed5dc4996abc89cfc94bca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttons:
-  - {fileID: 4369413606857486985}
-  - {fileID: 6679452905742410534}
-  - {fileID: 8420116228175396252}
-  - {fileID: 5079458573221886299}
-  portals: []
 --- !u!1 &7922069656290191560
 GameObject:
   m_ObjectHideFlags: 0
@@ -62955,7 +62955,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3896285502206619780}
+      - m_Target: {fileID: 3170239483276375785}
         m_TargetAssemblyTypeName: PortalController, Assembly-CSharp
         m_MethodName: OnTeleport
         m_Mode: 3
