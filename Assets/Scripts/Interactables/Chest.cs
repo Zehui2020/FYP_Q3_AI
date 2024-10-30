@@ -79,7 +79,7 @@ public class Chest : MonoBehaviour, IInteractable
         }
 
         PlayerController.Instance.chestUnlockCount++;
-        PlayerController.Instance.gold -= cost;
+        PlayerController.Instance.RemoveGold(cost);
         LayoutRebuilder.ForceRebuildLayoutImmediate(costRect);
         keycodeUI.Hide();
 

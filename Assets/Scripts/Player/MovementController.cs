@@ -814,6 +814,12 @@ public class MovementController : MonoBehaviour
         return false;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (Utility.Instance.CheckLayer(collision.gameObject, groundLayer) && (currentState == MovementState.Falling || currentState == MovementState.Land))
+            playerEffectsController.BurstLandPS();
+    }
+
     private void OnDisable()
     {
         OnPlungeEnd = null;

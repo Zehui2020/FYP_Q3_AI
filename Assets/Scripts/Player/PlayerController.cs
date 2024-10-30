@@ -303,6 +303,10 @@ public class PlayerController : PlayerStats
         movementController.canMove = false;
         playerRB.velocity = Vector2.zero;
 
+        playerEffectsController.HitStop(0.1f);
+        playerEffectsController.ShakeCamera(6f, 8f, 0.2f);
+        playerEffectsController.Pulse(0.5f, 3f, 0f, 0.3f, true);
+
         yield return new WaitForSeconds(0.5f);
 
         combatController.canAttack = true;
@@ -407,9 +411,6 @@ public class PlayerController : PlayerStats
 
         if (tookDamage)
         {
-            playerEffectsController.ShakeCamera(4f, 5f, 0.2f);
-            playerEffectsController.Pulse(0.5f, 3f, 0f, 0.3f, true);
-
             if (movementController.currentState != MovementState.Plunge &&
                 movementController.currentState != MovementState.LedgeGrab &&
                 movementController.isGrounded)
@@ -433,7 +434,7 @@ public class PlayerController : PlayerStats
             }
 
             // Rebate Token
-            gold += itemStats.rebateGold;
+            AddGold(itemStats.rebateGold);
 
             // Charged Defibrillators
             if (itemStats.defibrillatorHealMultiplier != 0)
@@ -967,6 +968,16 @@ public class PlayerController : PlayerStats
             int amountToGive = goldPerCoin + (i < remainderGold ? 1 : 0);
             goldPickup.InitGoldPickup(amountToGive);
         }
+    }
+
+    public void AddGold(int amount)
+    {
+        gold += amount;
+        playerEffectsController.AddMoney(amount);
+    }
+    public void RemoveGold(int amount)
+    {
+        gold -= amount;
     }
 
     public bool IsGrounded()

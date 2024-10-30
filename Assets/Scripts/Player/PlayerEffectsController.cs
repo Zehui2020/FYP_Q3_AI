@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -21,6 +22,11 @@ public class PlayerEffectsController : MonoBehaviour
     [SerializeField] private ParticleSystem airDashPS;
     [SerializeField] private ParticleSystem groundDashPS;
     [SerializeField] private ParticleSystem doubleJumpPS;
+    [SerializeField] private ParticleSystem dustPS;
+    [SerializeField] private ParticleSystem landPS;
+
+    [Header("Others")]
+    [SerializeField] private MoneyPopupCounter moneyPopup;
 
     private Vignette vignette;
     private ChromaticAberration chromaticAberration;
@@ -38,6 +44,11 @@ public class PlayerEffectsController : MonoBehaviour
 
         volume.profile.TryGet(out vignette);
         volume.profile.TryGet(out chromaticAberration);
+    }
+
+    public void AddMoney(int amount)
+    {
+        moneyPopup.AddMoney(amount);
     }
 
     public void ShakeCamera(float intensity, float frequency, float timer)
@@ -84,6 +95,16 @@ public class PlayerEffectsController : MonoBehaviour
     public void SetCameraTrigger(string trigger)
     {
         camAnimator.SetTrigger(trigger);
+    }
+
+    public void BurstDustPS()
+    {
+        dustPS.Play();
+    }
+
+    public void BurstLandPS()
+    {
+        landPS.Play();
     }
 
     public void PlayDashPS(bool isGroundDash)
