@@ -6,13 +6,13 @@ public class AbilityStats : ScriptableObject
     public int bloodArtsBleedChance;
     public float bloodArtsLifestealMultiplier;
 
-    public int contagiousHazeStacks;
+    public int rabidExecutionStacks;
 
     public void ResetAbilityStats()
     {
         bloodArtsBleedChance = 0;
         bloodArtsLifestealMultiplier = 0;
 
-        contagiousHazeStacks = 0;
+        rabidExecutionStacks = 0;
     }
 }
