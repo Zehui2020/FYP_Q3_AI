@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Abilities/Rabid Execution")]
-public class RabidExecution : BaseAbility
+public class ContagiousHaze : BaseAbility
 {
     [SerializeField] private LayerMask targetLayer;
     private BaseStats target;
