@@ -17,6 +17,7 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private ItemStats itemStats;
     [Header("Expanded Map Camera")]
     [SerializeField] private Camera cam;
+    [SerializeField] private TilesetLoader tilesetLoader;
     [Header("Debug Settings")]
     [SerializeField] private bool noFog;
 
@@ -66,6 +67,8 @@ public class WFC_MapGeneration : MonoBehaviour
 
         foreach (ParallaxEffect parallaxEffect in bgs)
             parallaxEffect.InitParallaxEffect((mapSize.y + 1) * mapTileSize);
+
+        tilesetLoader.SetEnvironmentProps(mData.propTiles);
     }
 
     public void SetSeed()

@@ -314,7 +314,11 @@ public class MovementController : MonoBehaviour
     {
         if (currentState == MovementState.Grapple ||
             currentState == MovementState.GrappleIdle)
+        {
             StopGrappling();
+            ChangeState(MovementState.Falling);
+            return;
+        }
 
         if (fallingDuration > movementData.cyoteTime && jumpCount == maxJumpCount)
             return;
