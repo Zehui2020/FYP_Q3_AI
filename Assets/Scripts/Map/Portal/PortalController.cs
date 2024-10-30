@@ -8,7 +8,7 @@ public class PortalController : MonoBehaviour
     private int baseSize = 70;
     private float multiplier = 1.425f;
     private float decrease = 0.175f;
-    private float decreaseDiff = 0.175f;
+    private float decreaseDiff = 0.035f;
     private float decreaseMultiplier = 0.005f;
 
     public void PositionPortals(List<Portal> mapPortals, Camera cam)
@@ -21,9 +21,9 @@ public class PortalController : MonoBehaviour
             multiplier -= d;
         for (int i = 0; i < x - 1; i++)
         {
-            float y = Mathf.Clamp(decreaseDiff - (i * decreaseMultiplier), decreaseMultiplier, 1);
+            float y = Mathf.Clamp(decreaseDiff - (i * decreaseMultiplier), 0, Mathf.Infinity);
             d -= y;
-            multiplier -= d;
+            multiplier = Mathf.Clamp(multiplier - d, 0, Mathf.Infinity);
         }
 
         for (int i = 0; i < buttons.Count; i++)
