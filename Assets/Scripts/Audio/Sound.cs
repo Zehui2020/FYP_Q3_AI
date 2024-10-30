@@ -66,7 +66,9 @@ public class Sound
         ScorpionWalk,
 
         UndeadLoop,
-        UndeadAttack
+        UndeadAttack,
+
+
     }
     public SoundName name;
 
