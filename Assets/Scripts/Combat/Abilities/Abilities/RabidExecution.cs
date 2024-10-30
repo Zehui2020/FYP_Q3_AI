@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Abilities/Contagious Haze")]
-public class ContagiousHaze : BaseAbility
+[CreateAssetMenu(menuName = "Abilities/Rabid Execution")]
+public class RabidExecution : BaseAbility
 {
     [SerializeField] private LayerMask targetLayer;
     private BaseStats target;
@@ -54,11 +54,11 @@ public class ContagiousHaze : BaseAbility
                             StatusEffect.StatusType.Type.Debuff,
                             StatusEffect.StatusType.Status.Poison
                             ),
-                        abilityStats.contagiousHazeStacks
+                        abilityStats.rabidExecutionStacks
                         );
             }
 
-            abilityStats.contagiousHazeStacks = 0;
+            abilityStats.rabidExecutionStacks = 0;
         }
     }
 
