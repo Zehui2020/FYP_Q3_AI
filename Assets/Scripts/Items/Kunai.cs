@@ -28,7 +28,7 @@ public class Kunai : PooledObject
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!Utility.Instance.CheckLayer(collision.gameObject, targetLayer))
+        if (!Utility.CheckLayer(collision.gameObject, targetLayer))
             return;
 
         if (!collision.TryGetComponent<BaseStats>(out BaseStats target))

@@ -119,7 +119,7 @@ public class BossDagger : PooledObject
             ReleaseDagger();
         }
 
-        if (Utility.Instance.CheckLayer(collision.gameObject, groundLayer))
+        if (Utility.CheckLayer(collision.gameObject, groundLayer))
             ReleaseDagger();
     }
 

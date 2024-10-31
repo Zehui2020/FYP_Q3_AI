@@ -35,7 +35,7 @@ public class CombatCollisionController : MonoBehaviour
 
     private void TriggerEvent(Collider2D col, BaseStats.Damage.DamageSource damageSource)
     {
-        if (!Utility.Instance.CheckLayer(col.gameObject, targetLayer))
+        if (!Utility.CheckLayer(col.gameObject, targetLayer))
             return;
 
         Vector3 closestPoint = col.ClosestPoint(transform.position);

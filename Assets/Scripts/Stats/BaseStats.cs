@@ -12,7 +12,8 @@ public class BaseStats : MonoBehaviour
         Dodge,
         Block,
         Parry,
-        StoneSkin
+        StoneSkin,
+        HitImmune
     }
     public ImmuneType immuneType;
 
@@ -42,7 +43,8 @@ public class BaseStats : MonoBehaviour
             Gavel,
             BloodArts,
             ContagiousHaze,
-            Shatter
+            Shatter,
+            Unparriable
         }
 
         public DamageSource damageSource;
@@ -169,26 +171,31 @@ public class BaseStats : MonoBehaviour
         // Check for immunity
         if (isImmune)
         {
-            DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-
             switch (immuneType)
             {
                 case ImmuneType.Dodge:
+                    DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
                     popup.SetupPopup("Dodged!", transform.position, Color.white, new Vector2(1, 3));
-                    break;
+                    return false;
                 case ImmuneType.Block:
+                    popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
                     popup.SetupPopup("Blocked!", transform.position, Color.white, new Vector2(1, 3));
-                    break;
+                    return false;
                 case ImmuneType.Parry:
+                    if (damage.damageSource == DamageSource.Unparriable)
+                        break;
+
+                    popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
                     OnParry?.Invoke(attacker);
                     popup.SetupPopup("Parried!", transform.position, Color.white, new Vector2(1, 3));
-                    break;
+                    return false;
                 case ImmuneType.StoneSkin:
+                    popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
                     popup.SetupPopup("Stone Skin!", transform.position, Color.yellow, new Vector2(1, 3));
-                    break;
+                    return false;
+                case ImmuneType.HitImmune:
+                    return false;
             }
-
-            return false;
         }
 
         DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;

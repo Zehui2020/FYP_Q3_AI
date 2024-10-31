@@ -43,10 +43,15 @@ public class Undead : Enemy
 
         onFinishIdle += () => { ChangeState(State.Patrol); };
         onPlayerInChaseRange += () => { ChangeState(State.Chase); };
-        OnDieEvent += (target) => { ChangeState(State.Die); };
         OnBreached += (multiplier) => { animator.Play(RestAnim); };
         OnParry += (stat) => { animator.Play(RestAnim); };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
+    }
+
+    public override void OnDie()
+    {
+        base.OnDie();
+        ChangeState(State.Die);
     }
 
     private void ChangeState(State newState)

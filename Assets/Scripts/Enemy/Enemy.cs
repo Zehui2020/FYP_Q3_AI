@@ -88,6 +88,7 @@ public class Enemy : EnemyStats
         onHitEvent += player.OnHitEnemyEvent;
         OnDieEvent += (target) => 
         {
+            OnDie();
             player.OnEnemyDie(target);
             uiController.SetCanvasActive(false);
         };
@@ -164,9 +165,9 @@ public class Enemy : EnemyStats
         collisionController.DisableCollider(col);
     }
 
-    public void OnDie()
+    public virtual void OnDie()
     {
-        Destroy(transform.parent.gameObject, 10f);
+
     }
 
     protected void PatrolUpdate()

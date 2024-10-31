@@ -16,7 +16,8 @@ public class PlayerController : PlayerStats
         Dialogue,
         Ability,
         Map,
-        Shop
+        Shop,
+        ShadowBound
     }
     public PlayerStates currentState;
 
@@ -63,6 +64,8 @@ public class PlayerController : PlayerStats
 
     private Coroutine transceiverBuffRoutine;
     private Coroutine gavelCooldown;
+
+    private int shadowBoundClicks;
 
     private void Awake()
     {
@@ -135,6 +138,17 @@ public class PlayerController : PlayerStats
 
         if (Input.GetKeyDown(KeyCode.Return))
             ConsoleManager.Instance.OnInputCommand();
+
+        if (currentState == PlayerStates.ShadowBound)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                playerEffectsController.ShakeCamera(1f, 1f, 0.3f);
+                shadowBoundClicks++;
+            }
+
+            return;
+        }
 
         if (abilityController != null && abilityController.swappingAbility)
         {
@@ -315,7 +329,7 @@ public class PlayerController : PlayerStats
 
     private void FixedUpdate()
     {
-        if (health <= 0)
+        if (health <= 0 || currentState == PlayerStates.ShadowBound)
             return;
 
         movementController.MovePlayer(movementSpeedMultiplier.GetTotalModifier());
@@ -390,6 +404,7 @@ public class PlayerController : PlayerStats
             return false;
 
         bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
+        ApplyImmune(0.5f, ImmuneType.HitImmune);
 
         if (health <= 0 && tookDamage)
         {
@@ -905,7 +920,26 @@ public class PlayerController : PlayerStats
                 movementController.StopPlayer();
                 movementController.ChangeState(MovementState.Idle);
                 break;
+            case PlayerStates.ShadowBound:
+                animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f, AnimationManager.AnimType.CannotOverride);
+                StartCoroutine(ShadowBoundRoutine());
+                break;
         }
+    }
+
+    private IEnumerator ShadowBoundRoutine()
+    {
+        float timer = 10f;
+
+        while (timer > 0)
+        {
+            playerRB.velocity = Vector2.zero;
+            timer -= Time.deltaTime * shadowBoundClicks;
+            yield return null;
+        }
+
+        shadowBoundClicks = 0;
+        ChangeState(PlayerStates.Movement);
     }
 
     public void AddJumpCount(int count)

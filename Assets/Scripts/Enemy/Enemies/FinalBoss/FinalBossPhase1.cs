@@ -1,7 +1,6 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class FinalBossPhase1 : Enemy
@@ -14,7 +13,8 @@ public class FinalBossPhase1 : Enemy
         Rush,
         PunchAttack,
         SummonDagger,
-        DaggerAttack
+        DaggerAttack,
+        Die
     }
 
     private readonly int IdleAnim = Animator.StringToHash("BossP1Idle");
@@ -50,6 +50,8 @@ public class FinalBossPhase1 : Enemy
 
     [Header("Others")]
     [SerializeField] private CutsceneGroup cutscene;
+    [SerializeField] private CutsceneGroup dieCutscene;
+    [SerializeField] private GameObject nextPhase;
 
     private int moveCounter;
     private bool canCharge = false;
@@ -68,11 +70,16 @@ public class FinalBossPhase1 : Enemy
         OnParry += (baseStats) => {
             animator.Play(IdleAnim);
         };
+
         cutscene.CutsceneEnd.AddListener(() => { ChangeState(State.Walk); });
+        dieCutscene.CutsceneEnd.AddListener(() => { nextPhase.SetActive(true); transform.parent.gameObject.SetActive(false); });
     }
 
     public void ChangeState(State newState)
     {
+        if (newState == currentState || currentState == State.Die)
+            return;
+
         if (newState != State.Idle)
         {
             isInCombat = true;
@@ -110,6 +117,9 @@ public class FinalBossPhase1 : Enemy
                 moveCounter++;
                 animator.Play(DaggerAttackAnim);
                 bossDaggers[0].ShootDagger();
+                break;
+            case State.Die:
+                dieCutscene.EnterCutscene();
                 break;
         }
     }
@@ -167,9 +177,6 @@ public class FinalBossPhase1 : Enemy
                 }
                 break;
         }
-
-        if (Input.GetKeyDown(KeyCode.L))
-            ChangeState(State.SlamAttack);
 
         if (currentState != State.PunchAttack)
             UpdateDirectionToPlayer();
@@ -244,6 +251,12 @@ public class FinalBossPhase1 : Enemy
         enemyRB.isKinematic = true;
     }
 
+    public override void OnDie()
+    {
+        base.OnDie();
+        ChangeState(State.Die);
+    }
+
     private void OnValidate()
     {
         if (currentState != previousState)
@@ -255,7 +268,7 @@ public class FinalBossPhase1 : Enemy
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (Utility.Instance.CheckLayer(collision.gameObject, groundLayer) && currentState == State.SlamAttack)
+        if (Utility.CheckLayer(collision.gameObject, groundLayer) && currentState == State.SlamAttack)
         {
             player.playerEffectsController.ShakeCamera(10f, 4f, 0.6f);
 
