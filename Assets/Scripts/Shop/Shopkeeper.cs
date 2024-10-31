@@ -73,7 +73,7 @@ public class Shopkeeper : MonoBehaviour, IInteractable
         if (player.gold < rerollCost)
             return;
 
-        player.gold -= rerollCost;
+        player.RemoveGold(rerollCost);
         rerollCost += incrementRerollCost;
         incrementRerollCost = Mathf.CeilToInt(incrementRerollCost * incrementModifier);
         uiManager.OnReroll(rerollCost);

@@ -72,7 +72,7 @@ public class GoldPickup : PooledObject
             if (chaseRoutine != null)
                 StopCoroutine(chaseRoutine);
 
-            player.gold += goldToGive;
+            player.AddGold(goldToGive);
 
             chaseRoutine = null;
             trail.enabled = false;
