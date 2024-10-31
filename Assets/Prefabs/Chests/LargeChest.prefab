@@ -629,7 +629,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 70d30219631ecf84f8173a001a755e44, type: 3}
-  m_Color: {r: 0, g: 1, b: 0.8414297, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -701,6 +701,9 @@ MonoBehaviour:
     commonItemRate: 0
     uncommonItemRate: 50
     legendaryItemRate: 50
+  OnChestOpen:
+    m_PersistentCalls:
+      m_Calls: []
   fixedItemToSpawn: {fileID: 0}
   defaultLayer:
     serializedVersion: 2

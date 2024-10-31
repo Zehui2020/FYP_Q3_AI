@@ -314,7 +314,11 @@ public class MovementController : MonoBehaviour
     {
         if (currentState == MovementState.Grapple ||
             currentState == MovementState.GrappleIdle)
+        {
             StopGrappling();
+            ChangeState(MovementState.Falling);
+            return;
+        }
 
         if (fallingDuration > movementData.cyoteTime && jumpCount == maxJumpCount)
             return;
@@ -365,7 +369,6 @@ public class MovementController : MonoBehaviour
 
     public void HandleWallJump(Collider2D col, float horizontal)
     {
-        jumpCount++;
         ChangeState(MovementState.WallJump);
         jumpRoutine = StartCoroutine(WallJumpRoutine(col, horizontal));
     }

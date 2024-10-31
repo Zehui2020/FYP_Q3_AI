@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 338205859346686767}
   - component: {fileID: 1846919737687231635}
   m_Layer: 0
-  m_Name: MapCamera
+  m_Name: MinimapCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -141,6 +141,7 @@ GameObject:
   - component: {fileID: 6937396380385949449}
   - component: {fileID: 4252948386430941580}
   - component: {fileID: 2109268654121522328}
+  - component: {fileID: -2208120123208381112}
   m_Layer: 0
   m_Name: MapGenerator
   m_TagString: Untagged
@@ -195,7 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b300e8134b1da245b8a2ba62617b35d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mData: {fileID: 11400000, guid: e4ad18ed27a607d4a92271d46f1751ba, type: 2}
+  mData: {fileID: 11400000, guid: ac50a809b00886945991ddbef819d5cc, type: 2}
   fogPrefab: {fileID: 4415651972284593925, guid: 946ec13a2a3d6d64db26b6b78e857521, type: 3}
   doorPrefab: {fileID: 4820102909102417710, guid: 86d530a28d4d99a439742af9f6956792, type: 3}
   portalPrefab: {fileID: 593515161954378261, guid: 1b03f6e46eff09745ac3e2467e852eac, type: 3}
@@ -206,7 +207,8 @@ MonoBehaviour:
   - {fileID: 0}
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
   cam: {fileID: 338205859346686767}
-  noFog: 0
+  tilesetLoader: {fileID: -2208120123208381112}
+  noFog: 1
 --- !u!114 &4252948386430941580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -290,3 +292,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 755018ad579f7334d9e87f706ca0cd4e, type: 2}
   - {fileID: 11400000, guid: 7b6273946236ae34bab9ac70ff0762a6, type: 2}
   - {fileID: 11400000, guid: 03227739e82ff0845bd18db099dae3ba, type: 2}
+--- !u!114 &-2208120123208381112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2991996846907943603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3290dbea05c480499d68c21f5d924ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imageSaver: {fileID: 4252948386430941580}

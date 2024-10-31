@@ -1015,6 +1015,63 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1001 &385004749
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5786112119982917683, guid: edc10046208d9564fad40fbab594fdd5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5786112119982917683, guid: edc10046208d9564fad40fbab594fdd5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5786112119982917683, guid: edc10046208d9564fad40fbab594fdd5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5786112119982917683, guid: edc10046208d9564fad40fbab594fdd5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5786112119982917683, guid: edc10046208d9564fad40fbab594fdd5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5786112119982917683, guid: edc10046208d9564fad40fbab594fdd5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5786112119982917683, guid: edc10046208d9564fad40fbab594fdd5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5786112119982917683, guid: edc10046208d9564fad40fbab594fdd5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5786112119982917683, guid: edc10046208d9564fad40fbab594fdd5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5786112119982917683, guid: edc10046208d9564fad40fbab594fdd5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7414315121988114018, guid: edc10046208d9564fad40fbab594fdd5, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: edc10046208d9564fad40fbab594fdd5, type: 3}
 --- !u!1 &432436356
 GameObject:
   m_ObjectHideFlags: 0
@@ -7145,7 +7202,7 @@ GameObject:
   - component: {fileID: 876245218}
   - component: {fileID: 876245219}
   m_Layer: 5
-  m_Name: Master
+  m_Name: BGM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7223,7 +7280,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: MixerManager, Assembly-CSharp
+        m_MethodName: SetBGMVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &905456939
 GameObject:
   m_ObjectHideFlags: 0
@@ -7533,7 +7602,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: MixerManager, Assembly-CSharp
+        m_MethodName: SetMasterVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1101680073
 GameObject:
   m_ObjectHideFlags: 0
@@ -14215,7 +14296,7 @@ GameObject:
   - component: {fileID: 1773729032}
   - component: {fileID: 1773729033}
   m_Layer: 5
-  m_Name: Master
+  m_Name: SFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14293,7 +14374,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: MixerManager, Assembly-CSharp
+        m_MethodName: SetSFXVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1801662101
 GameObject:
   m_ObjectHideFlags: 0
@@ -34575,3 +34668,4 @@ SceneRoots:
   - {fileID: 853573066}
   - {fileID: 2056215794}
   - {fileID: 1288020197}
+  - {fileID: 385004749}

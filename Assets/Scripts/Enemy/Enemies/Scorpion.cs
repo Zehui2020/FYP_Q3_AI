@@ -23,6 +23,7 @@ public class Scorpion : Enemy
     private readonly int DieAnim = Animator.StringToHash("ScorpionDie");
 
     [Header("Scorpion Stats")]
+    [SerializeField] private AudioProxy audioProxy;
     [SerializeField] private float meleeRange;
     [SerializeField] private float throwCooldown;
     [SerializeField] private Transform bombSpawnPos;
@@ -54,6 +55,11 @@ public class Scorpion : Enemy
             return;
 
         currentState = newState;
+
+        if (currentState == State.Patrol)
+            audioProxy.PlayAudioOneShot(Sound.SoundName.ScorpionWalk);
+        else
+            audioProxy.StopAudioInstantly(Sound.SoundName.ScorpionWalk);
 
         switch (newState)
         {

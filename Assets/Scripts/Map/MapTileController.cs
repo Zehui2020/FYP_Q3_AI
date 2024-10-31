@@ -30,40 +30,30 @@ public class MapTileController : MonoBehaviour
         borderTilePrefabs = mData.borderTilePrefabs;
         solidTilePrefabs = mData.solidTilePrefabs;
         shopTilePrefabs = mData.shopTilePrefabs;
-        AddSortTiles();
-        SetTileContraints();
+        ConfigureTiles();
     }
 
-    private void AddSortTiles()
+    private void ConfigureTiles()
     {
-        // store auto set tiles
-        for (int i = 0; i < autoInitTilePrefabs.Count; i++)
-            CheckTileNeighbours(autoInitTilePrefabs[i]);
-        // store dead end tiles
-        for (int i = 0; i < deadEndTilePrefabs.Count; i++)
-            CheckTileNeighbours(deadEndTilePrefabs[i]);
-        // store unique tiles
-        for (int i = 0; i < uniqueTilePrefabs.Count; i++)
-            CheckTileNeighbours(uniqueTilePrefabs[i]);
-        // store shop tiles
-        for (int i = 0; i < shopTilePrefabs.Count; i++)
-            CheckTileNeighbours(shopTilePrefabs[i]);
+        AddTilesToSort(autoInitTilePrefabs);
+        AddTilesToSort(uniqueTilePrefabs);
+        AddTilesToSort(shopTilePrefabs);
+
+        SetTileContraints(startTilePrefabs, false);
+
+        AddTilesToSort(deadEndTilePrefabs);
+
+        SetTileContraints(autoInitTilePrefabs, false);
+        SetTileContraints(borderTilePrefabs, true);
+        SetTileContraints(shopTilePrefabs, false);
+        SetTileContraints(deadEndTilePrefabs, true);
     }
 
-    private void SetTileContraints()
+    private void AddTilesToSort(List<GameObject> objList)
     {
-        // set auto set tiles
-        for (int i = 0; i < autoInitTilePrefabs.Count; i++)
-            SetTileNeighbours(autoInitTilePrefabs[i].GetComponent<MapTile>(), true);
-        // set border tiles
-        for (int i = 0; i < borderTilePrefabs.Count; i++)
-            SetTileNeighbours(borderTilePrefabs[i].GetComponent<MapTile>(), true);
-        // set shop tiles
-        for (int i = 0; i < shopTilePrefabs.Count; i++)
-            SetTileNeighbours(shopTilePrefabs[i].GetComponent<MapTile>(), false);
-        // set dead end tiles
-        for (int i = 0; i < deadEndTilePrefabs.Count; i++)
-            SetTileNeighbours(deadEndTilePrefabs[i].GetComponent<MapTile>(), false);
+        // store tiles
+        for (int i = 0; i < objList.Count; i++)
+            CheckTileNeighbours(objList[i]);
     }
 
     private void CheckTileNeighbours(GameObject tile)
@@ -89,27 +79,39 @@ public class MapTileController : MonoBehaviour
             tile1R.Add(tile);
     }
 
+    private void SetTileContraints(List<GameObject> objList, bool setToSelf)
+    {
+        // set tiles
+        for (int i = 0; i < objList.Count; i++)
+            SetTileNeighbours(objList[i].GetComponent<MapTile>(), setToSelf);
+    }
+
     private void SetTileNeighbours(MapTile tileToSet, bool setToSelf)
     {
+        tileToSet.availableTilesUp.Clear();
+        tileToSet.availableTilesDown.Clear();
+        tileToSet.availableTilesLeft.Clear();
+        tileToSet.availableTilesRight.Clear();
+
         if (tileToSet.name.Contains("0U"))
-            tileToSet.availableTilesUp = tile0D;
+            tileToSet.availableTilesUp.AddRange(tile0D);
         else if (tileToSet.name.Contains("1U"))
-            tileToSet.availableTilesUp = tile1D;
+            tileToSet.availableTilesUp.AddRange(tile1D);
 
         if (tileToSet.name.Contains("0D"))
-            tileToSet.availableTilesDown = tile0U;
+            tileToSet.availableTilesDown.AddRange(tile0U);
         else if (tileToSet.name.Contains("1D"))
-            tileToSet.availableTilesDown = tile1U;
+            tileToSet.availableTilesDown.AddRange(tile1U);
 
         if (tileToSet.name.Contains("0L"))
-            tileToSet.availableTilesLeft = tile0R;
+            tileToSet.availableTilesLeft.AddRange(tile0R);
         else if (tileToSet.name.Contains("1L"))
-            tileToSet.availableTilesLeft = tile1R;
+            tileToSet.availableTilesLeft.AddRange(tile1R);
 
         if (tileToSet.name.Contains("0R"))
-            tileToSet.availableTilesRight = tile0L;
+            tileToSet.availableTilesRight.AddRange(tile0L);
         else if (tileToSet.name.Contains("1R"))
-            tileToSet.availableTilesRight = tile1L;
+            tileToSet.availableTilesRight.AddRange(tile1L);
 
         if (!setToSelf)
         {
