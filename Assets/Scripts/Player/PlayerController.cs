@@ -17,7 +17,7 @@ public class PlayerController : PlayerStats
         Ability,
         Map,
         Shop,
-        ShadowBound
+        ShadowBound,
         Transition
     }
     public PlayerStates currentState;
