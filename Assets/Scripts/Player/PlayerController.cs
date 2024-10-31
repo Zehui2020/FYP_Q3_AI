@@ -18,6 +18,7 @@ public class PlayerController : PlayerStats
         Map,
         Shop,
         ShadowBound
+        Transition
     }
     public PlayerStates currentState;
 
@@ -149,6 +150,8 @@ public class PlayerController : PlayerStats
 
             return;
         }
+        if (currentState == PlayerStates.Transition)
+            return;
 
         if (abilityController != null && abilityController.swappingAbility)
         {

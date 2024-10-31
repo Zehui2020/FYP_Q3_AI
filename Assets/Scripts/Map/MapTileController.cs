@@ -38,15 +38,15 @@ public class MapTileController : MonoBehaviour
         AddTilesToSort(autoInitTilePrefabs);
         AddTilesToSort(uniqueTilePrefabs);
         AddTilesToSort(shopTilePrefabs);
-
+        AddTilesToSort(solidTilePrefabs);
         SetTileContraints(startTilePrefabs, false);
-
         AddTilesToSort(deadEndTilePrefabs);
-
         SetTileContraints(autoInitTilePrefabs, false);
-        SetTileContraints(borderTilePrefabs, true);
         SetTileContraints(shopTilePrefabs, false);
         SetTileContraints(deadEndTilePrefabs, true);
+        SetTileContraints(solidTilePrefabs, true);
+        AddTilesToSort(borderTilePrefabs);
+        SetTileContraints(borderTilePrefabs, true);
     }
 
     private void AddTilesToSort(List<GameObject> objList)

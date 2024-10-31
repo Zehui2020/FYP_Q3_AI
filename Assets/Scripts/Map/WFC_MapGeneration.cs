@@ -125,6 +125,7 @@ public class WFC_MapGeneration : MonoBehaviour
         allTilePrefabs.AddRange(mapTileController.autoInitTilePrefabs);
         allTilePrefabs.AddRange(mapTileController.deadEndTilePrefabs);
         allTilePrefabs.AddRange(mapTileController.uniqueTilePrefabs);
+        allTilePrefabs.AddRange(mapTileController.solidTilePrefabs);
         borderTilePrefabs.AddRange(mapTileController.borderTilePrefabs);
         allTilePrefabs.AddRange(mapTileController.shopTilePrefabs);
         shopTilePrefabs.AddRange(mapTileController.shopTilePrefabs);
