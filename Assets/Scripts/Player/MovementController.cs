@@ -816,7 +816,7 @@ public class MovementController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (Utility.Instance.CheckLayer(collision.gameObject, groundLayer) && (currentState == MovementState.Falling || currentState == MovementState.Land))
+        if (Utility.CheckLayer(collision.gameObject, groundLayer) && (currentState == MovementState.Falling || currentState == MovementState.Land))
         {
             playerEffectsController.BurstLandPS();
             AudioManager.Instance.PlayOneShot(Sound.SoundName.Land);
