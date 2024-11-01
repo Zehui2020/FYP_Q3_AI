@@ -173,6 +173,12 @@ public class Chest : MonoBehaviour, IInteractable
 
     private void Update()
     {
+        if (cost <= 0)
+        {
+            costText.text = "Free!";
+            return;
+        }
+
         if (PlayerController.Instance.gold < cost)
             costText.text = "<color=red>" + cost.ToString() + "</color>";
         else

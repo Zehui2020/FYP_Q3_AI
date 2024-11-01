@@ -43,6 +43,18 @@ public class Scorpion : Enemy
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
     }
 
+    public override bool AttackTarget(BaseStats target, Damage.DamageSource damageSource, Vector3 closestPoint)
+    {
+        bool tookDamage = base.AttackTarget(target, damageSource, closestPoint);
+        if (tookDamage)
+        {
+            int randNum = Random.Range(0, 2);
+            if (randNum == 0)
+                target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), 1);
+        }
+        return tookDamage;
+    }
+
     public override void OnDie()
     {
         base.OnDie();

@@ -89,10 +89,17 @@ public class ScorpionBomb : PooledObject
                 target.TakeDamage(thrower, new BaseStats.Damage(damage), crit, target.transform.position, damageType);
         }
 
-        Release();
-        gameObject.SetActive(false);
         animator.ResetTrigger("detonate");
         isParried = false;
+        bombRB.velocity = Vector3.zero;
+        bombRB.isKinematic = true;
+    }
+
+    public void ReleaseBomb()
+    {
+        Release();
+        gameObject.SetActive(false);
+        bombRB.isKinematic = false;
     }
 
     private void Update()

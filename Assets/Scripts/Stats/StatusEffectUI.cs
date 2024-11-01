@@ -20,6 +20,7 @@ public class StatusEffectUI : PooledObject
     [SerializeField] private List<StatusEffectHolder> effects = new();
     [SerializeField] private Image effectIcon;
     [SerializeField] private TextMeshProUGUI effectStacks;
+    [SerializeField] private RectTransform rectTransform;
 
     public void SetStatusEffectUI(StatusEffect.StatusType type, int count)
     {
@@ -45,6 +46,8 @@ public class StatusEffectUI : PooledObject
 
             break;
         }
+
+        rectTransform.sizeDelta = new Vector3(0.5f, 0.5f, 0.5f);
     }
 
     public void SetStackCount(int count)
