@@ -67,7 +67,6 @@ public class FinalBossPhase2 : Enemy
                 break;
             case State.LaserAttack:
                 animator.Play(LaserAnim);
-                DoLaserAttack();
                 break;
             case State.SmashAttack:
                 animator.Play(SmashAnim);
@@ -108,7 +107,7 @@ public class FinalBossPhase2 : Enemy
         base.UpdateEnemy();
     }
 
-    private void DoLaserAttack()
+    public void DoLaserAttack()
     {
         StartCoroutine(LaserSwipeRoutine());
     }
@@ -126,8 +125,6 @@ public class FinalBossPhase2 : Enemy
             laserStartPoint.position,
             Physics2D.Raycast(laserStartPoint.position, dirToPlayer, 100, groundLayer).point
         );
-
-        yield return new WaitForSeconds(2f);
 
         while (elapsed < timer)
         {
