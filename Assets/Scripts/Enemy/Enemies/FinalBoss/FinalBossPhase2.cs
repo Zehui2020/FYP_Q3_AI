@@ -54,6 +54,9 @@ public class FinalBossPhase2 : Enemy
 
     public void ChangeState(State newState)
     {
+        //if (health <= 0 && newState != State.Die)
+        //    return;
+
         currentState = newState;
         damageMultipler.RemoveAllModifiers();
 

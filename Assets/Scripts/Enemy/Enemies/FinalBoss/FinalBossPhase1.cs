@@ -80,6 +80,9 @@ public class FinalBossPhase1 : Enemy
         if (newState == currentState || currentState == State.Die)
             return;
 
+        if (health <= 0 && newState != State.Die)
+            return;
+
         if (newState != State.Idle)
         {
             isInCombat = true;

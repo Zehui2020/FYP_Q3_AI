@@ -59,6 +59,9 @@ public class Slime : Enemy
         if (isFrozen || !canUpdate || currentState == State.Die)
             return;
 
+        if (health <= 0 && newState != State.Die)
+            return;
+
         currentState = newState;
 
         switch (newState)

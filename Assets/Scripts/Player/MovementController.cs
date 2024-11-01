@@ -178,6 +178,12 @@ public class MovementController : MonoBehaviour
         if (!canMove || currentState == MovementState.Knockback || playerRB == null)
             return;
 
+        // Afterimage
+        if (dashRoutine != null)
+            playerEffectsController.StartSpawnAfterimage();
+        else
+            playerEffectsController.StopSpawnAfterimage();
+
         // Calculate move dir
         direction = Camera.main.transform.forward.normalized;
         Vector3 sideDirection = Vector3.ProjectOnPlane(Camera.main.transform.right * horizontal, Vector3.up);

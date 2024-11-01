@@ -43,10 +43,18 @@ public class Chest : MonoBehaviour, IInteractable
     [SerializeField] private ItemStats itemStats;
     private bool isOpened = false;
 
+    [SerializeField] private Animator uiAnimator;
+
     public bool OnInteract()
     {
-        if (isOpened || PlayerController.Instance.gold < cost)
+        if (isOpened)
             return false;
+
+        if (PlayerController.Instance.gold < cost)
+        {
+            uiAnimator.SetTrigger("interactFailed");
+            return false;
+        }
 
         OnChestOpen?.Invoke();
 
@@ -155,13 +163,20 @@ public class Chest : MonoBehaviour, IInteractable
         if (PlayerController.Instance.gold >= cost)
             keycodeUI.Show();
 
-        costText.text = cost.ToString();
         canvas.gameObject.SetActive(true);
         LayoutRebuilder.ForceRebuildLayoutImmediate(costRect);
 
         int layer = Mathf.RoundToInt(Mathf.Log(defaultLayer.value) / Mathf.Log(2));
         gameObject.layer = layer;
         minimapIcon.SetActive(true);
+    }
+
+    private void Update()
+    {
+        if (PlayerController.Instance.gold < cost)
+            costText.text = "<color=red>" + cost.ToString() + "</color>";
+        else
+            costText.text = cost.ToString();
     }
 
     public void OnLeaveRange()

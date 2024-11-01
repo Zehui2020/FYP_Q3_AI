@@ -62,6 +62,9 @@ public class Undead : Enemy
         if (currentState == State.Die)
             return;
 
+        if (health <= 0 && newState != State.Die)
+            return;
+
         currentState = newState;
 
         switch (currentState)

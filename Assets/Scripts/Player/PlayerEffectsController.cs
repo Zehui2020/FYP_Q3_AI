@@ -1,7 +1,6 @@
 using Cinemachine;
+using DesignPatterns.ObjectPool;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -27,11 +26,14 @@ public class PlayerEffectsController : MonoBehaviour
 
     [Header("Others")]
     [SerializeField] private MoneyPopupCounter moneyPopup;
+    [SerializeField] private SpriteRenderer playerSR;
+    [SerializeField] private float afterimageSpawnRate;
 
     private Vignette vignette;
     private ChromaticAberration chromaticAberration;
 
     private Coroutine pulseRoutine;
+    private Coroutine afterimageRoutine;
 
     private void Awake()
     {
@@ -44,6 +46,30 @@ public class PlayerEffectsController : MonoBehaviour
 
         volume.profile.TryGet(out vignette);
         volume.profile.TryGet(out chromaticAberration);
+    }
+
+    public void StartSpawnAfterimage()
+    {
+        if (afterimageRoutine == null)
+            afterimageRoutine = StartCoroutine(SpawnAfterimageRoutine());
+    }
+    public void StopSpawnAfterimage()
+    {
+        if (afterimageRoutine != null)
+        {
+            StopCoroutine(afterimageRoutine);
+            afterimageRoutine = null;
+        }
+    }
+    private IEnumerator SpawnAfterimageRoutine()
+    {
+        while (true)
+        {
+            PlayerAfterimage afterimage = ObjectPool.Instance.GetPooledObject("Afterimage", true) as PlayerAfterimage;
+            afterimage.SetupImage(playerSR.sprite, Mathf.Sign(transform.localScale.x));
+            afterimage.transform.position = transform.position;
+            yield return new WaitForSeconds(afterimageSpawnRate);
+        }
     }
 
     public void AddMoney(int amount)
