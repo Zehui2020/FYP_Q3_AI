@@ -16,6 +16,12 @@ public class PortalController : MonoBehaviour
     private float decreaseDiff = 0.035f;
     private float decreaseMultiplier = 0.005f;
 
+    private void Start()
+    {
+        for (int i = 0; i < buttons.Count; i++)
+            buttons[i].SetActive(false);
+    }
+
     public void PositionPortals(List<Portal> mapPortals, Camera cam)
     {
         mmController = GetComponent<MinimapController>();
@@ -36,7 +42,6 @@ public class PortalController : MonoBehaviour
         {
             buttons[i].transform.localPosition = portals[i].transform.position * multiplier;
             portals[i].button = buttons[i];
-            buttons[i].SetActive(false);
         }
     }
 
@@ -54,17 +59,23 @@ public class PortalController : MonoBehaviour
         // turn off map and lock it
         mmController.ChangeView(false);
         mmController.viewLocked = true;
+
         // lock player and fade out
         PlayerController.Instance.ChangeState(PlayerController.PlayerStates.Transition);
         PlayerController.Instance.FadeOut();
+
         // timer for fade out
         yield return new WaitForSeconds(0.75f);
+
         // teleport player
         PlayerController.Instance.transform.position = portals[i].transform.position;
+
         // timer for player teleport
         yield return new WaitForSeconds(0.75f);
+
         // unlock map
         mmController.viewLocked = false;
+
         // unlock player and fade back in
         PlayerController.Instance.ChangeState(PlayerController.PlayerStates.Movement);
         PlayerController.Instance.FadeIn();

@@ -187,9 +187,15 @@ public class PlayerController : PlayerStats
                 minimapController.ChangeView(false);
                 ChangeState(PlayerStates.Movement);
             }
-
+            else
+            {
+                playerRB.velocity = Vector3.zero;
+                playerRB.isKinematic = true;
+            }
             return;
         }
+        else
+            playerRB.isKinematic = false;
 
         if (health <= 0)
             return;
