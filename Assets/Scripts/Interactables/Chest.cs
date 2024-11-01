@@ -44,6 +44,7 @@ public class Chest : MonoBehaviour, IInteractable
     private bool isOpened = false;
 
     [SerializeField] private Animator uiAnimator;
+    [SerializeField] private GameObject minimapIndicator;
 
     public bool OnInteract()
     {
@@ -57,6 +58,7 @@ public class Chest : MonoBehaviour, IInteractable
         }
 
         OnChestOpen?.Invoke();
+        minimapIndicator.SetActive(false);
 
         if (chestType.type == ChestType.Type.FixedItem)
         {
@@ -173,6 +175,12 @@ public class Chest : MonoBehaviour, IInteractable
 
     private void Update()
     {
+        if (cost <= 0)
+        {
+            costText.text = "Free!";
+            return;
+        }
+
         if (PlayerController.Instance.gold < cost)
             costText.text = "<color=red>" + cost.ToString() + "</color>";
         else

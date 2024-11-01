@@ -36,6 +36,7 @@ public class FinalBossPhase2 : Enemy
     [SerializeField] private List<Transform> handSpawnPoint;
     [SerializeField] private List<Transform> pillarSpawnPoint;
     [SerializeField] private GameObject shadowPillar;
+    [SerializeField] private Animator healthBarAnimator;
 
     [SerializeField] private int armsToSummon;
 
@@ -50,6 +51,12 @@ public class FinalBossPhase2 : Enemy
         base.InitializeEnemy();
         currentSegment = 4;
         segmentMinHealth = Mathf.CeilToInt(maxHealth / maxSegments * currentSegment);
+    }
+
+    public void InitBarUI()
+    {
+        healthBarAnimator.enabled = false;
+        uiController.InitUIController(this);
     }
 
     public void ChangeState(State newState)
@@ -67,7 +74,6 @@ public class FinalBossPhase2 : Enemy
                 break;
             case State.LaserAttack:
                 animator.Play(LaserAnim);
-                DoLaserAttack();
                 break;
             case State.SmashAttack:
                 animator.Play(SmashAnim);
@@ -108,7 +114,7 @@ public class FinalBossPhase2 : Enemy
         base.UpdateEnemy();
     }
 
-    private void DoLaserAttack()
+    public void DoLaserAttack()
     {
         StartCoroutine(LaserSwipeRoutine());
     }
@@ -126,8 +132,6 @@ public class FinalBossPhase2 : Enemy
             laserStartPoint.position,
             Physics2D.Raycast(laserStartPoint.position, dirToPlayer, 100, groundLayer).point
         );
-
-        yield return new WaitForSeconds(2f);
 
         while (elapsed < timer)
         {

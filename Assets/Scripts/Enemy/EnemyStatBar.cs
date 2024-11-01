@@ -88,7 +88,7 @@ public class EnemyStatBar : MonoBehaviour
 
             yield return new WaitForSeconds(delayDuration);
 
-            float targetWidth = (float)amount / maxAmount * delayBarWidth;
+            float targetWidth = (statBar.value / statBar.maxValue) * delayBarWidth;
 
             while (Mathf.Abs(delayBar.sizeDelta.x - targetWidth) > 0.01f)
             {

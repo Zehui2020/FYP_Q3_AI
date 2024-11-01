@@ -32,6 +32,7 @@ public class Enemy : EnemyStats
     [SerializeField] protected float parryDazeDuration;
     [SerializeField] protected float parryShieldReduction;
     [SerializeField] protected bool knockbackOnParry = true;
+    [SerializeField] protected bool initUI = true;
 
     protected int currentWaypoint = 0;
 
@@ -67,7 +68,8 @@ public class Enemy : EnemyStats
         statusEffectManager = GetComponent<StatusEffectManager>();
 
         aiNavigation.InitPathfindingAgent();
-        uiController.InitUIController(this);
+        if (initUI)
+            uiController.InitUIController(this);
         collisionController.InitCollisionController(this);
         player = PlayerController.Instance;
 
