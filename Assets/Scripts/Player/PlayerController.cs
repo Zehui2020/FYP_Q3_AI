@@ -184,10 +184,15 @@ public class PlayerController : PlayerStats
         {
             if (Input.GetKeyUp(KeyCode.Tab))
             {
+                playerRB.isKinematic = false;
                 minimapController.ChangeView(false);
                 ChangeState(PlayerStates.Movement);
             }
-
+            else
+            {
+                playerRB.velocity = Vector3.zero;
+                playerRB.isKinematic = true;
+            }
             return;
         }
 
