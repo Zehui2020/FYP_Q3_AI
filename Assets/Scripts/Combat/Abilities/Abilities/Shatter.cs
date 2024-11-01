@@ -26,6 +26,8 @@ public class Shatter : BaseAbility
                 target.transform.position, 
                 damageType
                 );
+
+            target.particleVFXManager.OnFrozen();
         }
     }
 
