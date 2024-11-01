@@ -184,7 +184,6 @@ public class PlayerController : PlayerStats
         {
             if (Input.GetKeyUp(KeyCode.Tab))
             {
-                playerRB.isKinematic = false;
                 minimapController.ChangeView(false);
                 ChangeState(PlayerStates.Movement);
             }
@@ -195,6 +194,8 @@ public class PlayerController : PlayerStats
             }
             return;
         }
+        else
+            playerRB.isKinematic = false;
 
         if (health <= 0)
             return;
