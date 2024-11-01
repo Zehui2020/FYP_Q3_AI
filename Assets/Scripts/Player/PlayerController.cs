@@ -234,7 +234,7 @@ public class PlayerController : PlayerStats
                 return;
 
             ChangeState(PlayerStates.Combat);
-            combatController.HandleAttack();
+            combatController.HandleAttack(horizontal);
         }
         else if (Input.GetMouseButtonUp(0))
         {
