@@ -381,6 +381,7 @@ GameObject:
   - component: {fileID: 2023163631545587301}
   - component: {fileID: 89104866918829964}
   - component: {fileID: 2350521974649744487}
+  - component: {fileID: 7433579402298571043}
   m_Layer: 7
   m_Name: HealthBar
   m_TagString: Untagged
@@ -403,6 +404,7 @@ RectTransform:
   - {fileID: 6901652220650413315}
   - {fileID: 1633585936112357793}
   - {fileID: 1006316768801006967}
+  - {fileID: 7248371284047034507}
   m_Father: {fileID: 4912159185618630005}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
@@ -515,6 +517,33 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!114 &7433579402298571043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483168235379011593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: facd69298b83d07408c4e411e2fc633c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnAnimationEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7356434703958323572}
+        m_TargetAssemblyTypeName: FinalBossPhase2, Assembly-CSharp
+        m_MethodName: InitBarUI
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1684843549704256685
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,7 +668,6 @@ RectTransform:
   m_Children:
   - {fileID: 118631096960905904}
   - {fileID: 6031470000801119616}
-  - {fileID: 7248371284047034507}
   m_Father: {fileID: 6712241356704515581}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
@@ -1654,6 +1682,7 @@ MonoBehaviour:
   parryDazeDuration: 3
   parryShieldReduction: 15
   knockbackOnParry: 0
+  initUI: 0
   currentState: 0
   maxSegments: 5
   laserStartPoint: {fileID: 3958146979835703052}
@@ -1666,6 +1695,7 @@ MonoBehaviour:
   - {fileID: 6639314997083043424}
   - {fileID: 7865798405787990986}
   shadowPillar: {fileID: 6210911466917007748, guid: c10d7d406da38354c982b952196e56f7, type: 3}
+  healthBarAnimator: {fileID: 89104866918829964}
   armsToSummon: 3
 --- !u!114 &4288359845613055838
 MonoBehaviour:
@@ -1775,12 +1805,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4912159185618630005}
+  m_Father: {fileID: 6031470000801119616}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 49.999996}
-  m_SizeDelta: {x: 580, y: 0}
+  m_AnchoredPosition: {x: 0, y: 12.55447}
+  m_SizeDelta: {x: 89.91333, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6278612907852537135
 CanvasRenderer:

@@ -736,17 +736,7 @@ CompositeCollider2D:
   m_GeometryType: 0
   m_GenerationType: 0
   m_EdgeRadius: 0
-  m_ColliderPaths:
-  - m_Collider: {fileID: 548039307}
-    m_ColliderPaths:
-    - - X: -200000000
-        Y: 40000000
-      - X: -210000000
-        Y: 40000000
-      - X: -210000000
-        Y: -10000000
-      - X: -200000000
-        Y: -10000000
+  m_ColliderPaths: []
   m_CompositePaths:
     m_Paths:
     - - {x: -20.000029, y: -1}
@@ -3545,13 +3535,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1458382477647792356, guid: b0ae5c833cec5ab45851762a573d0d0b, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 7.875
+      objectReference: {fileID: 0}
+    - target: {fileID: 1458382477647792356, guid: b0ae5c833cec5ab45851762a573d0d0b, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 7.875
+      objectReference: {fileID: 0}
     - target: {fileID: 3039103161929495251, guid: b0ae5c833cec5ab45851762a573d0d0b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.69
       objectReference: {fileID: 0}
     - target: {fileID: 3039103161929495251, guid: b0ae5c833cec5ab45851762a573d0d0b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4900867215830640161, guid: b0ae5c833cec5ab45851762a573d0d0b, type: 3}
       propertyPath: m_Sprite
@@ -3563,7 +3561,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5080904586711507095, guid: b0ae5c833cec5ab45851762a573d0d0b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5955810268208953471, guid: b0ae5c833cec5ab45851762a573d0d0b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3619,11 +3617,11 @@ PrefabInstance:
       objectReference: {fileID: 335604512}
     - target: {fileID: 7228673839976799339, guid: b0ae5c833cec5ab45851762a573d0d0b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.69
       objectReference: {fileID: 0}
     - target: {fileID: 7228673839976799339, guid: b0ae5c833cec5ab45851762a573d0d0b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4194,8 +4192,8 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 1
-  m_LookAt: {fileID: 335604515}
-  m_Follow: {fileID: 335604515}
+  m_LookAt: {fileID: 1863348673}
+  m_Follow: {fileID: 1863348673}
   m_Lens:
     FieldOfView: 40
     OrthographicSize: 6
@@ -4677,7 +4675,7 @@ Transform:
   m_GameObject: {fileID: 1863348672}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.28, y: 0, z: 0}
+  m_LocalPosition: {x: -24.23, y: 1.82, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4700,10 +4698,10 @@ MonoBehaviour:
   m_UpdateMethod: 2
   m_Targets:
   - target: {fileID: 1822931130}
-    weight: 0
+    weight: 1
     radius: 4.8
   - target: {fileID: 602328684}
-    weight: 1
+    weight: 0
     radius: 4.8
 --- !u!95 &1863348675
 Animator:
@@ -4963,11 +4961,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1006316768801006967, guid: 6e9d35216bfce2446abf431658a3200d, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1006316768801006967, guid: 6e9d35216bfce2446abf431658a3200d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1328818723662083745, guid: 6e9d35216bfce2446abf431658a3200d, type: 3}
       propertyPath: m_Name
@@ -4975,7 +4973,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1328818723662083745, guid: 6e9d35216bfce2446abf431658a3200d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6277937447021463115, guid: 6e9d35216bfce2446abf431658a3200d, type: 3}
       propertyPath: m_LocalPosition.x
