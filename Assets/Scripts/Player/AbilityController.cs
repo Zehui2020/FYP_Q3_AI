@@ -167,7 +167,7 @@ public class AbilityController : MonoBehaviour
             else
                 abilityUI[j].InitAbilityUI("[ " + (j + 1).ToString() + " ]");
 
-            if (abilityCooldowns[j] > 0)
+            if (abilityCooldowns.Count > j && abilityCooldowns[j] > 0)
                 abilityCooldownRoutines[j] = StartCoroutine(AbilityCooldownRoutine(j, abilities[j], abilityCooldowns[j]));
         }
     }
