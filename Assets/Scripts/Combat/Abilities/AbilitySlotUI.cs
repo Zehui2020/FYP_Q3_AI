@@ -25,7 +25,7 @@ public class AbilitySlotUI : MonoBehaviour
         abilitySelect.fadeTexts.AddRange(texts);
         abilitySelect.abilitySlots.Add(this);
         abilityIcon.enabled = false;
-        SetCooldown(0, 0);
+        SetCooldown(0, 0, 0);
         keybindText.text = keybind;
     }
 
@@ -33,17 +33,17 @@ public class AbilitySlotUI : MonoBehaviour
     {
         abilityIcon.enabled = true;
         abilityIcon.sprite = ability.spriteIcon;
-        SetCooldown(0, ability.abilityCharges);
+        SetCooldown(0, ability.abilityCharges, ability.abilityMaxCharges);
         keybindText.text = keybind;
     }
 
-    public void SetCooldown(float amount, int charge)
+    public void SetCooldown(float amount, int charge, int maxCharge)
     {
         cooldownSlider.fillAmount = amount;
-        chargeText.text = "";
-        for (int i = 0; i < charge; i++)
-        {
-            chargeText.text += ".";
-        }
+
+        chargeText.text = charge.ToString();
+
+        if (charge < 1 || maxCharge <= 1)
+            chargeText.text = "";
     }
 }
