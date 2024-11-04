@@ -53,6 +53,7 @@ public class PlayerController : PlayerStats
 
     public int chestUnlockCount = 0;
     public int extraLives = 0;
+    private bool hitImmune = false;
 
     [SerializeField] private TextMeshProUGUI goldText;
     public int gold = 0;
@@ -413,7 +414,7 @@ public class PlayerController : PlayerStats
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
-        if (health <= 0 || hurtRoutine != null)
+        if (health <= 0 || hurtRoutine != null || hitImmune)
             return false;
 
         bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
@@ -461,8 +462,6 @@ public class PlayerController : PlayerStats
             // Charged Defibrillators
             if (itemStats.defibrillatorHealMultiplier != 0)
                 StartCoroutine(DefibrillatorRoutine());
-
-            ApplyImmune(0.5f, ImmuneType.HitImmune);
         }
         else
         {
@@ -490,7 +489,15 @@ public class PlayerController : PlayerStats
             }
         }
 
+        StartCoroutine(HitRoutine());
+
         return tookDamage;
+    }
+    private IEnumerator HitRoutine()
+    {
+        hitImmune = true;
+        yield return new WaitForSeconds(0.5f);
+        hitImmune = false;
     }
     private IEnumerator DieRoutine()
     {

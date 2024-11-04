@@ -42,6 +42,12 @@ public class Shockwave : PooledObject
 
     public void ReleaseShockwave()
     {
+        rbs[0].velocity = Vector2.zero;
+        rbs[1].velocity = Vector2.zero;
+
+        rbs[0].transform.localPosition = Vector2.zero;
+        rbs[1].transform.localPosition = Vector2.zero;
+
         Release();
         gameObject.SetActive(false);
     }

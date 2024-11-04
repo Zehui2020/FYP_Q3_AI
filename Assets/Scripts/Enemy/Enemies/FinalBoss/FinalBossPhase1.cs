@@ -72,7 +72,6 @@ public class FinalBossPhase1 : Enemy
         };
 
         cutscene.CutsceneEnd.AddListener(() => { ChangeState(State.Walk); });
-        dieCutscene.CutsceneEnd.AddListener(() => { nextPhase.SetActive(true); transform.parent.gameObject.SetActive(false); });
     }
 
     public void ChangeState(State newState)
@@ -122,6 +121,8 @@ public class FinalBossPhase1 : Enemy
                 bossDaggers[0].ShootDagger();
                 break;
             case State.Die:
+                nextPhase.SetActive(true); 
+                transform.parent.gameObject.SetActive(false);
                 dieCutscene.EnterCutscene();
                 break;
         }
@@ -156,7 +157,7 @@ public class FinalBossPhase1 : Enemy
     {
         bool damagedTarget = base.AttackTarget(target, damageSource, closestPoint);
         if (damagedTarget)
-            player.movementController.Knockback(30f);
+            player.movementController.Knockback(30f, transform.position.x < player.transform.position.x ? Vector2.right : Vector2.left);
         
         return damagedTarget;
     }

@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BossP2Smash
+  m_Name: BossP2Punch
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -42,12 +42,6 @@ AnimationClip:
       value: {fileID: -660067742, guid: b88cba6547df42349b01bb6ea3102d8b, type: 3}
     - time: 0.8333333
       value: {fileID: -1428671607, guid: b88cba6547df42349b01bb6ea3102d8b, type: 3}
-    - time: 0.9166667
-      value: {fileID: 1470621395, guid: b88cba6547df42349b01bb6ea3102d8b, type: 3}
-    - time: 1
-      value: {fileID: -460923369, guid: b88cba6547df42349b01bb6ea3102d8b, type: 3}
-    - time: 1.0833334
-      value: {fileID: -1161703060, guid: b88cba6547df42349b01bb6ea3102d8b, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -81,15 +75,12 @@ AnimationClip:
     - {fileID: -1043082174, guid: b88cba6547df42349b01bb6ea3102d8b, type: 3}
     - {fileID: -660067742, guid: b88cba6547df42349b01bb6ea3102d8b, type: 3}
     - {fileID: -1428671607, guid: b88cba6547df42349b01bb6ea3102d8b, type: 3}
-    - {fileID: 1470621395, guid: b88cba6547df42349b01bb6ea3102d8b, type: 3}
-    - {fileID: -460923369, guid: b88cba6547df42349b01bb6ea3102d8b, type: 3}
-    - {fileID: -1161703060, guid: b88cba6547df42349b01bb6ea3102d8b, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 1.1666667
+    m_StopTime: 0.9166666
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -110,14 +101,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.8333333
-    functionName: SummonShockwaves
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 1.0833334
-    functionName: Decide
+    functionName: SummonPunchArm
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

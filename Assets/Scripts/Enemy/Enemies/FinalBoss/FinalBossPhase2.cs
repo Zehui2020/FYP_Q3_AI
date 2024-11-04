@@ -1,6 +1,7 @@
 using DesignPatterns.ObjectPool;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FinalBossPhase2 : Enemy
@@ -35,17 +36,26 @@ public class FinalBossPhase2 : Enemy
     [SerializeField] private Transform shockwaveSpawnPoint;
     [SerializeField] private List<Transform> handSpawnPoint;
     [SerializeField] private List<Transform> pillarSpawnPoint;
+    [SerializeField] private List<Transform> handPunchSpawnPoint;
     [SerializeField] private GameObject shadowPillar;
     [SerializeField] private Animator healthBarAnimator;
 
+    [SerializeField] private int movesToLaser;
+    [SerializeField] private int handChance;
     [SerializeField] private int armsToSummon;
 
     [Header("Others")]
     [SerializeField] private CutsceneGroup cutscene;
+    private int moveCounter;
+
+    private Coroutine Deciding;
 
     private readonly int IdleAnim = Animator.StringToHash("BossP2Idle");
     private readonly int LaserAnim = Animator.StringToHash("BossP2Laser");
+    private readonly int LaserEndAnim = Animator.StringToHash("BossP2LaserEnd");
     private readonly int SmashAnim = Animator.StringToHash("BossP2Smash");
+    private readonly int PunchAnim = Animator.StringToHash("BossP2Punch");
+    private readonly int PunchEndAnim = Animator.StringToHash("BossP2PunchEnd");
     private readonly int SummonArmsAnim = Animator.StringToHash("BossP2SummonArms");
     private readonly int SummonPillarAnim = Animator.StringToHash("BossP2SummonPillar");
 
@@ -83,6 +93,9 @@ public class FinalBossPhase2 : Enemy
             case State.SmashAttack:
                 animator.Play(SmashAnim);
                 break;
+            case State.PunchAttack:
+                animator.Play(PunchAnim);
+                break;
             case State.SummonArms:
                 animator.Play(SummonArmsAnim);
                 break;
@@ -90,6 +103,42 @@ public class FinalBossPhase2 : Enemy
                 animator.Play(SummonPillarAnim);
                 break;
         }
+    }
+
+    public void Decide()
+    {
+        if (Deciding != null)
+            StopCoroutine(Deciding);
+
+        Deciding = StartCoroutine(DecideRoutine());
+    }
+    private IEnumerator DecideRoutine()
+    {
+        ChangeState(State.Idle);
+        enemyRB.velocity = Vector2.zero;
+
+        yield return new WaitForSeconds(2f);
+
+        if (moveCounter >= movesToLaser)
+        {
+            ChangeState(State.LaserAttack);
+            Deciding = null;
+            yield break;
+        }
+
+        int doHands = Random.Range(0, 100);
+        if (doHands < handChance)
+            ChangeState(State.SummonArms);
+        else
+        {
+            int randNum = Random.Range(0, 100);
+            if (randNum < 50)
+                ChangeState(State.SmashAttack);
+            else
+                ChangeState(State.PunchAttack);
+        }
+
+        Deciding = null;
     }
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
@@ -174,6 +223,7 @@ public class FinalBossPhase2 : Enemy
             yield return null;
         }
 
+        animator.Play(LaserEndAnim, 0, 0);
         bossLaser.ReleaseLaser();
     }
 
@@ -210,6 +260,19 @@ public class FinalBossPhase2 : Enemy
             previousState = currentState;
             ChangeState(previousState);
         }
+    }
+
+    public void SummonPunchArm()
+    {
+        int randNum = Random.Range(0, 2);
+
+        BossPunchHand bossPunchHand = ObjectPool.Instance.GetPooledObject("BossPunchHand", true) as BossPunchHand;
+        bossPunchHand.InitHand(this, handPunchSpawnPoint[randNum].position.x < transform.position.x ? Vector3.right : Vector3.left);
+        bossPunchHand.transform.position = handPunchSpawnPoint[randNum].position;
+    }
+    public void PunchEnd()
+    {
+        animator.Play(PunchEndAnim, 0, 0);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
