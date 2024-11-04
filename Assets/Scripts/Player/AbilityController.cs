@@ -216,7 +216,7 @@ public class AbilityController : MonoBehaviour
             List<BaseStats> targetsInArea = new List<BaseStats>();
             foreach (Collider2D col in targetColliders)
             {
-                if (col.GetComponent<BaseStats>() != null)
+                if (col.GetComponent<BaseStats>() != null && col.GetComponent<BaseStats>().health > 0)
                 {
                     if (!Physics2D.Raycast(
                         player.transform.position,

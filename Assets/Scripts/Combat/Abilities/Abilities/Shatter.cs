@@ -18,21 +18,46 @@ public class Shatter : BaseAbility
 
             if (target.isFrozen)
                 damageDealt *= 2;
+            else
+                target.particleVFXManager.OnFrozen();
 
             target.TakeDamage(
                 PlayerController.Instance, 
-                new BaseStats.Damage(BaseStats.Damage.DamageSource.Shatter, damageDealt),
+                new BaseStats.Damage(damageDealt),
                 isCrit, 
                 target.transform.position, 
                 damageType
                 );
 
-            target.particleVFXManager.OnFrozen();
             AudioManager.Instance.PlayOneShot(Sound.SoundName.Shatter);
         }
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
+        for (int i = 0; i < targetList.Count; i++)
+        {
+            BaseStats target = targetList[i];
+
+            if (target.shield <= 0)
+            {            
+                // deal damage
+                float damageDealt = GetDamage();
+
+                if (target.isFrozen)
+                    damageDealt *= 2;
+
+                target.TakeDamage(
+                    PlayerController.Instance,
+                    new BaseStats.Damage(damageDealt),
+                    isCrit,
+                    target.transform.position,
+                    damageType
+                    );
+            }
+
+            if (!target.isFrozen)
+                target.particleVFXManager.StopFrozen();
+        }
     }
 }

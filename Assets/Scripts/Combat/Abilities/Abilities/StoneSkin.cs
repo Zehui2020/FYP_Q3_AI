@@ -15,7 +15,7 @@ public class StoneSkin : BaseAbility
         // stop player movement
         PlayerController.Instance.ChangeState(PlayerController.PlayerStates.Ability);
         // immune
-        singleTarget.ApplyImmune(abilityDuration, BaseStats.ImmuneType.StoneSkin);
+        singleTarget.ApplyImmune(abilityDuration + 0.6f, BaseStats.ImmuneType.StoneSkin);
         AudioManager.Instance.PlayOneShot(Sound.SoundName.StoneSkin);
     }
 

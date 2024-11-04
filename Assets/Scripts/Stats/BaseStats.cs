@@ -222,12 +222,6 @@ public class BaseStats : MonoBehaviour
                 damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.cyan, new Vector2(0, 3));
                 shield = 0;
                 OnBreached?.Invoke(breachedMultiplier.GetTotalModifier());
-
-                if (damage.damageSource == Damage.DamageSource.Shatter)
-                {
-                    damagePopup.SetupPopup("Shattered!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.white, new Vector2(0, 3));
-                    TakeTrueDamage(damage);
-                }
             }
 
             return true;
