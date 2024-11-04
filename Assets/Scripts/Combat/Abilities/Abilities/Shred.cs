@@ -27,6 +27,7 @@ public class Shred : BaseAbility
                     continue;
                 target.GetComponent<Rigidbody2D>().velocity = new Vector3(0, abilityRange * 2, 0);
                 target.particleVFXManager.OnStunned();
+                AudioManager.Instance.PlayOneShot(Sound.SoundName.Shred);
             }
         }
     }
@@ -48,6 +49,7 @@ public class Shred : BaseAbility
             float dir = Random.Range(0, 2) == 0 ? -1 : 1;
             target.GetComponent<Rigidbody2D>().velocity = new Vector3(dir * abilityRange, abilityRange, 0);
             target.particleVFXManager.OnStatic();
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.Shred);
         }
         count--;
 

@@ -28,6 +28,7 @@ public class Shatter : BaseAbility
                 );
 
             target.particleVFXManager.OnFrozen();
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.Shatter);
         }
     }
 

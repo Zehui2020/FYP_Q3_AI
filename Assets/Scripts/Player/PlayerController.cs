@@ -436,10 +436,9 @@ public class PlayerController : PlayerStats
         {
             if (movementController.currentState != MovementState.Plunge &&
                 movementController.currentState != MovementState.LedgeGrab &&
+                currentState != PlayerStates.Ability &&
                 movementController.isGrounded)
-            {
                 ChangeState(PlayerStates.Hurt);
-            }
 
             combatController.ResetComboInstantly();
 
@@ -462,6 +461,8 @@ public class PlayerController : PlayerStats
             // Charged Defibrillators
             if (itemStats.defibrillatorHealMultiplier != 0)
                 StartCoroutine(DefibrillatorRoutine());
+
+            ApplyImmune(0.5f, ImmuneType.HitImmune);
         }
         else
         {
@@ -488,8 +489,6 @@ public class PlayerController : PlayerStats
                     break;
             }
         }
-
-        ApplyImmune(0.5f, ImmuneType.HitImmune);
 
         return tookDamage;
     }

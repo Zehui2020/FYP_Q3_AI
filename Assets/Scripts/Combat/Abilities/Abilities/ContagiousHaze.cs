@@ -60,6 +60,8 @@ public class ContagiousHaze : BaseAbility
 
             abilityStats.rabidExecutionStacks = 0;
         }
+
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.RabidExecution);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)

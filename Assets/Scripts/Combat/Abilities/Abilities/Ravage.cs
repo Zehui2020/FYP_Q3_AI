@@ -21,6 +21,8 @@ public class Ravage : BaseAbility
                 (int)abilityStrength
                 );
         }
+
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.Ravage);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)

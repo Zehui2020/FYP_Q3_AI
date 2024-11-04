@@ -73,7 +73,19 @@ public class Sound
         FreezingOrb,
         ProjectileThrow,
         HeatWave,
-        MolotovCocktail
+        MolotovCocktail,
+        PoisonKnives,
+        RabidExecution,
+        Ravage,
+        Shatter,
+        Shred,
+        StoneSkin,
+        StoneSkinEnd,
+        HealthPotion,
+        ProtectionShieldActivate,
+        ProtectionShieldActive,
+        ProtectionShieldDeactivate,
+
     }
     public SoundName name;
 

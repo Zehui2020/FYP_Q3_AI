@@ -15,10 +15,16 @@ public class ProtectionSphere : BaseAbility
     {
         count = (int)(10 / abilityDuration);
         PlayerController.Instance.abilityController.abilityOverlayAnimator.TriggerOverlayAnim(0.4f, "ProtectionSphere");
+
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.ProtectionShieldActivate);
+        AudioManager.Instance.Play(Sound.SoundName.ProtectionShieldActive);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.ProtectionShieldDeactivate);
+        AudioManager.Instance.Stop(Sound.SoundName.ProtectionShieldActive);
+
         if (count <= 0)
         {
             PlayerController.Instance.abilityController.abilityOverlayAnimator.TriggerOverlayAnim(0.4f, "ProtectionSphereOff");

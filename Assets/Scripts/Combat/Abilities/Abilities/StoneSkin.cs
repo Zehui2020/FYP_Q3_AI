@@ -15,10 +15,12 @@ public class StoneSkin : BaseAbility
         PlayerController.Instance.ChangeState(PlayerController.PlayerStates.Ability);
         // immune
         singleTarget.ApplyImmune(abilityDuration, BaseStats.ImmuneType.StoneSkin);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.StoneSkin);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
         PlayerController.Instance.abilityController.abilityOverlayAnimator.TriggerOverlayAnim(1, "StoneSkinOff");
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.StoneSkinEnd);
     }
 }
