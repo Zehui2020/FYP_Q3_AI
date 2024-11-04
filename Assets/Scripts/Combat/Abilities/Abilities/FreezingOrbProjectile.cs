@@ -7,6 +7,7 @@ public class FreezingOrbProjectile : AbilityProjectile
     protected override void OnHit(BaseStats target)
     {
         InitParticles(10, range, 3);
+
         AudioManager.Instance.PlayOneShot(Sound.SoundName.FreezingOrb);
         base.OnHit(target);
     }
