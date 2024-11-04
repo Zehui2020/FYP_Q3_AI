@@ -10,7 +10,6 @@ public class AbilityParticle : MonoBehaviour
     [SerializeField] private int stackPerInterval = 1;
     [SerializeField] private float lifeTime = 10;
     public AbilityProjectile projectile;
-    private int count = 0;
     private bool isActivated = false;
     [SerializeField] private LayerMask groundLayer;
 
@@ -20,15 +19,15 @@ public class AbilityParticle : MonoBehaviour
         {
             GetComponent<Rigidbody2D>().isKinematic = true;
             GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-            count++;
         }
 
         foreach (string tag in targetTag)
         {
             if (other.CompareTag(tag) && !projectile.stats.Contains(other.GetComponent<BaseStats>()))
             {
-                projectile.stats.Add(other.GetComponent<BaseStats>());
-                StartCoroutine(StatusOverTime(other.GetComponent<BaseStats>()));
+                BaseStats target = other.GetComponent<BaseStats>();
+                projectile.stats.Add(target);
+                StartCoroutine(StatusOverTime(target));
             }
         }
     }
