@@ -29544,7 +29544,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7390274019100842802}
@@ -29720,10 +29720,10 @@ GameObject:
   - component: {fileID: 5458811163132113277}
   - component: {fileID: 8635729855689514880}
   - component: {fileID: 9197336083159752736}
-  - component: {fileID: 1281113676820431998}
   - component: {fileID: 1478723252960053222}
   - component: {fileID: 8058715310140854864}
   - component: {fileID: 1269768469557317136}
+  - component: {fileID: 6685156675946415596}
   m_Layer: 7
   m_Name: Enemy
   m_TagString: Enemy
@@ -29789,12 +29789,12 @@ SpriteRenderer:
   m_SortingLayerID: -983140795
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 347730987, guid: b58bd6bc1aa59ab4d83590d6e51b44bb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e4270810835b29b4c87a8caa0caedf9f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 5, y: 5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -29853,9 +29853,9 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.021797206, y: -0.27831852}
-  m_Size: {x: 1.7799462, y: 0.940714}
-  m_Direction: 1
+  m_Offset: {x: -0.046046734, y: -0.0337016}
+  m_Size: {x: 0.7397108, y: 1.9316651}
+  m_Direction: 0
 --- !u!50 &8635729855689514880
 Rigidbody2D:
   serializedVersion: 4
@@ -29919,93 +29919,6 @@ MonoBehaviour:
     stackThreshold: 15
   effectCanvas: {fileID: 6155959602276995}
   statusEffectUIParent: {fileID: 6155959602276995}
---- !u!114 &1281113676820431998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6091463107489060920}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88384d1c5900f6b4a879af0cb3a175c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  immuneType: 0
-  statusEffectManager: {fileID: 0}
-  particleVFXManager: {fileID: 2269671507873526722}
-  statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
-  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
-  abilityStats: {fileID: 11400000, guid: 637d944b389817a4e8d8bbb63c6c2cda, type: 2}
-  health: 100000000
-  maxHealth: 100000000
-  shield: 100
-  maxShield: 100
-  attack: 0
-  attackSpeed: 0
-  shieldRegenDelay: 5
-  isImmune: 0
-  isFrozen: 0
-  goldUponDeath: 8
-  attackSpeedMultiplier:
-    baseAmount: 1
-    modifiers: []
-  attackIncrease:
-    baseAmount: 0
-    modifiers: []
-  critRate:
-    baseAmount: 0
-    modifiers: []
-  critDamage:
-    baseAmount: 1
-    modifiers: []
-  comboDamageMultipler:
-    baseAmount: 1
-    modifiers: []
-  damageMultipler:
-    baseAmount: 1
-    modifiers: []
-  breachDamageMultiplier:
-    baseAmount: 1
-    modifiers: []
-  breachedMultiplier:
-    baseAmount: 1
-    modifiers: []
-  totalDamageMultiplier:
-    baseAmount: 1
-    modifiers: []
-  damageReduction:
-    baseAmount: 0
-    modifiers: []
-  movementSpeedMultiplier:
-    baseAmount: 0
-    modifiers: []
-  canAbilityKnockback: 1
-  patrolThreshold: 0
-  chaseRange: 0
-  attackRange: 0
-  idleDuration: 0
-  patrolMovementSpeed: 0
-  chaseMovementSpeed: 0
-  isEnemy: 1
-  OnTakeDamage:
-    m_PersistentCalls:
-      m_Calls: []
-  enemyClass: 2
-  enemyType: 0
-  canUpdate: 1
-  animator: {fileID: 3367981881694059500}
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  waypoints: []
-  hurtValue: 0
-  parryDazeDuration: 3
-  parryShieldReduction: 20
-  knockbackOnParry: 1
 --- !u!114 &1478723252960053222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30051,6 +29964,94 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c6d8ec259fc4474ab66ebaeda2b5999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6685156675946415596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6091463107489060920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20d708afdd19c9544aa0c2b53b37b78f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  immuneType: 0
+  statusEffectManager: {fileID: 0}
+  particleVFXManager: {fileID: 2269671507873526722}
+  statusEffectStats: {fileID: 11400000, guid: d59814a449ebdd940997d685f553b032, type: 2}
+  itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  abilityStats: {fileID: 11400000, guid: 637d944b389817a4e8d8bbb63c6c2cda, type: 2}
+  health: 500
+  maxHealth: 500
+  shield: 200
+  maxShield: 200
+  attack: 0
+  attackSpeed: 0
+  shieldRegenDelay: 5
+  isImmune: 0
+  isFrozen: 0
+  goldUponDeath: 0
+  attackSpeedMultiplier:
+    baseAmount: 0
+    modifiers: []
+  attackIncrease:
+    baseAmount: 0
+    modifiers: []
+  critRate:
+    baseAmount: 0
+    modifiers: []
+  critDamage:
+    baseAmount: 0
+    modifiers: []
+  comboDamageMultipler:
+    baseAmount: 0
+    modifiers: []
+  damageMultipler:
+    baseAmount: 0
+    modifiers: []
+  breachDamageMultiplier:
+    baseAmount: 1.5
+    modifiers: []
+  breachedMultiplier:
+    baseAmount: 1.5
+    modifiers: []
+  totalDamageMultiplier:
+    baseAmount: 1
+    modifiers: []
+  damageReduction:
+    baseAmount: 0
+    modifiers: []
+  movementSpeedMultiplier:
+    baseAmount: 0
+    modifiers: []
+  canAbilityKnockback: 1
+  patrolThreshold: 0
+  chaseRange: 0
+  attackRange: 0
+  idleDuration: 0
+  patrolMovementSpeed: 0
+  chaseMovementSpeed: 0
+  isEnemy: 1
+  OnTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  enemyClass: 0
+  enemyType: 0
+  canUpdate: 1
+  animator: {fileID: 3367981881694059500}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  waypoints: []
+  hurtValue: 100
+  parryDazeDuration: 0
+  parryShieldReduction: 0
+  knockbackOnParry: 1
+  initUI: 1
 --- !u!1 &6667195406366294546
 GameObject:
   m_ObjectHideFlags: 0

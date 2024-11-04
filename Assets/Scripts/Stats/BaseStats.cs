@@ -142,7 +142,7 @@ public class BaseStats : MonoBehaviour
         if (shield <= 0)
         {
             damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-            damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.blue, new Vector2(0, 3));
+            damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.cyan, new Vector2(0, 3));
             shield = 0;
             OnBreached?.Invoke(breachedMultiplier.GetTotalModifier());
         }
@@ -154,7 +154,7 @@ public class BaseStats : MonoBehaviour
         }
 
         damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-        damagePopup.SetupPopup(Mathf.CeilToInt(damage.damage).ToString(), transform.position, Color.blue, new Vector2(1, 2));
+        damagePopup.SetupPopup(Mathf.CeilToInt(damage.damage).ToString(), transform.position, Color.cyan, new Vector2(1, 2));
     }
     public void TakeShieldDamageOnly(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
@@ -219,7 +219,7 @@ public class BaseStats : MonoBehaviour
             if (shield <= 0)
             {
                 damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-                damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.blue, new Vector2(0, 3));
+                damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.cyan, new Vector2(0, 3));
                 shield = 0;
                 OnBreached?.Invoke(breachedMultiplier.GetTotalModifier());
 
@@ -433,7 +433,7 @@ public class BaseStats : MonoBehaviour
                 if (frozenRoutine != null)
                     StopCoroutine(frozenRoutine);
 
-                popup.SetupPopup("Frozen!", transform.position, Color.blue, new Vector2(0, 3));
+                popup.SetupPopup("Frozen!", transform.position, Color.cyan, new Vector2(0, 3));
                 frozenRoutine = StartCoroutine(FrozenRoutine(duration));
                 break;
             case StatusEffect.StatusType.Status.Dazed:
