@@ -326,7 +326,7 @@ public class PlayerController : PlayerStats
         movementController.canMove = false;
         playerRB.velocity = Vector2.zero;
 
-        playerEffectsController.HitStop(0.1f);
+        playerEffectsController.HitStop(0.3f, 0, true, 6f);
         playerEffectsController.ShakeCamera(6f, 8f, 0.2f);
         playerEffectsController.Pulse(0.5f, 3f, 0f, 0.3f, true);
 
@@ -417,7 +417,6 @@ public class PlayerController : PlayerStats
             return false;
 
         bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
-        ApplyImmune(0.5f, ImmuneType.HitImmune);
 
         if (health <= 0 && tookDamage)
         {
@@ -482,13 +481,15 @@ public class PlayerController : PlayerStats
                         attacker.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Freeze), itemStats.cramponFreezeStacks);
                     }
 
-                    playerEffectsController.HitStop(0.1f);
+                    playerEffectsController.HitStop(0.3f, 0, true, 6f);
 
                     break;
                 case ImmuneType.Parry:
                     break;
             }
         }
+
+        ApplyImmune(0.5f, ImmuneType.HitImmune);
 
         return tookDamage;
     }
@@ -858,7 +859,7 @@ public class PlayerController : PlayerStats
     public void OnParryEnemy(BaseStats target)
     {
         AudioManager.Instance.PlayOneShot(Sound.SoundName.ParryHit);
-        playerEffectsController.HitStop(0.5f);
+        playerEffectsController.HitStop(0.3f, 0, false, 0);
         playerEffectsController.ShakeCamera(5, 20, 0.5f);
         playerEffectsController.SetCameraTrigger("parry");
 

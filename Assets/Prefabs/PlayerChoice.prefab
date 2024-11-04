@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 2318074070434911166}
   - component: {fileID: 6611304098063114404}
   - component: {fileID: 424827324285242379}
+  - component: {fileID: 2692445993211961661}
+  - component: {fileID: 4913573190735850497}
   m_Layer: 7
   m_Name: PlayerChoice
   m_TagString: Untagged
@@ -191,6 +193,39 @@ MonoBehaviour:
   objectName: DialogueChoice
   poolAmount: 3
   choiceText: {fileID: 3693498592642884609}
+--- !u!95 &2692445993211961661
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95883647842718550}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 134993a23eb87e646a12e6cdee66ca42, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!225 &4913573190735850497
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95883647842718550}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4496831122276431111
 GameObject:
   m_ObjectHideFlags: 0

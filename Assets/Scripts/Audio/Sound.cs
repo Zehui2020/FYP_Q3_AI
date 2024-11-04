@@ -68,7 +68,12 @@ public class Sound
         UndeadLoop,
         UndeadAttack,
 
-
+        BloodArts,
+        DivineBlessing,
+        FreezingOrb,
+        ProjectileThrow,
+        HeatWave,
+        MolotovCocktail
     }
     public SoundName name;
 

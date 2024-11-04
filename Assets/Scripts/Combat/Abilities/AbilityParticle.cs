@@ -12,10 +12,11 @@ public class AbilityParticle : MonoBehaviour
     public AbilityProjectile projectile;
     private int count = 0;
     private bool isActivated = false;
+    [SerializeField] private LayerMask groundLayer;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag(transform.tag) && isActivated)
+        if (isActivated && Utility.CheckLayer(other.gameObject, groundLayer))
         {
             GetComponent<Rigidbody2D>().isKinematic = true;
             GetComponent<Rigidbody2D>().velocity = Vector3.zero;
@@ -34,12 +35,6 @@ public class AbilityParticle : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (!other.CompareTag(transform.tag) && isActivated)
-        {
-            GetComponent<Rigidbody2D>().isKinematic = true;
-            GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-        }
-
         foreach (string tag in targetTag)
         {
             if (other.CompareTag(tag) && !projectile.stats.Contains(other.GetComponent<BaseStats>()))
@@ -48,17 +43,6 @@ public class AbilityParticle : MonoBehaviour
                 StartCoroutine(StatusOverTime(other.GetComponent<BaseStats>()));
             }
         }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (!other.CompareTag(transform.tag) && isActivated)
-        {
-            count--;
-        }
-
-        if (count <= 0)
-            GetComponent<Rigidbody2D>().isKinematic = false;
     }
 
     public void HandleStatusOverTime()

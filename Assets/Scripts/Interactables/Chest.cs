@@ -130,8 +130,6 @@ public class Chest : MonoBehaviour, IInteractable
                     break;
             }
 
-            Debug.Log("Rarity: " + rarity);
-
             if (items.Count == 0 && abilities.Count == 0)
             {
                 Debug.Log("MISSING ITEM!");

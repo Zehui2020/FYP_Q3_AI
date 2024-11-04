@@ -84,7 +84,7 @@ public class Enemy : EnemyStats
         {
             ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Breached), 0);
             TriggerStatusState(StatusEffect.StatusType.Status.Dazed, shieldRegenDelay);
-            PlayerEffectsController.Instance.HitStop(0.2f); 
+            PlayerEffectsController.Instance.HitStop(0.3f, 0, true, 5f); 
         };
 
         onHitEvent += player.OnHitEnemyEvent;

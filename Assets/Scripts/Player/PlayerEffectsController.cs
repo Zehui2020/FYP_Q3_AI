@@ -107,15 +107,29 @@ public class PlayerEffectsController : MonoBehaviour
         shakeRoutine = null;
     }
 
-    public void HitStop(float duration)
+    public void HitStop(float duration, float timeScale, bool lerp, float lerpSpeed)
     {
-        StartCoroutine(ApplyHitStop(duration));
+        StartCoroutine(ApplyHitStop(duration, timeScale, lerp, lerpSpeed));
     }
-    private IEnumerator ApplyHitStop(float duration)
+    private IEnumerator ApplyHitStop(float duration, float timeScale, bool lerp, float lerpSpeed)
     {
-        Time.timeScale = 0;
-        yield return new WaitForSecondsRealtime(duration);
-        Time.timeScale = 1;
+        Time.timeScale = timeScale;
+
+        if (lerp)
+        {
+            while (Time.timeScale <= 0.97f)
+            {
+                Time.timeScale = Mathf.Lerp(Time.timeScale, 1, Time.deltaTime * lerpSpeed);
+                yield return null;
+            }
+
+            Time.timeScale = 1;
+        }
+        else
+        {
+            yield return new WaitForSecondsRealtime(duration);
+            Time.timeScale = 1;
+        }
     }
 
     public void SetCameraTrigger(string trigger)

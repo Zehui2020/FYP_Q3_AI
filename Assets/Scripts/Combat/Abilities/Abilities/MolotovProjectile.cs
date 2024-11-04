@@ -12,6 +12,7 @@ public class MolotovProjectile : AbilityProjectile
             particleVFXManager[i].OnBurning(0);
         }
 
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.MolotovCocktail);
         base.OnHit(target);
     }
 }

@@ -12,6 +12,7 @@ public class DivineBlessing : BaseAbility
     {
         // remove status effects
         singleTarget.Cleanse(StatusEffect.StatusType.Type.Debuff);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.DivineBlessing);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
