@@ -40,6 +40,9 @@ public class FinalBossPhase2 : Enemy
 
     [SerializeField] private int armsToSummon;
 
+    [Header("Others")]
+    [SerializeField] private CutsceneGroup cutscene;
+
     private readonly int IdleAnim = Animator.StringToHash("BossP2Idle");
     private readonly int LaserAnim = Animator.StringToHash("BossP2Laser");
     private readonly int SmashAnim = Animator.StringToHash("BossP2Smash");
@@ -51,6 +54,8 @@ public class FinalBossPhase2 : Enemy
         base.InitializeEnemy();
         currentSegment = 4;
         segmentMinHealth = Mathf.CeilToInt(maxHealth / maxSegments * currentSegment);
+
+        cutscene.CutsceneEnd.AddListener(() => { ChangeState(State.LaserAttack); });
     }
 
     public void InitBarUI()
