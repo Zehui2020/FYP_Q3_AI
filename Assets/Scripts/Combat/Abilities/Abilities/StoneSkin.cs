@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ public class StoneSkin : BaseAbility
         // stop player movement
         PlayerController.Instance.ChangeState(PlayerController.PlayerStates.Ability);
         // immune
-        singleTarget.ApplyImmune(abilityDuration, BaseStats.ImmuneType.StoneSkin);
+        singleTarget.ApplyImmune(abilityDuration + 0.6f, BaseStats.ImmuneType.StoneSkin);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
