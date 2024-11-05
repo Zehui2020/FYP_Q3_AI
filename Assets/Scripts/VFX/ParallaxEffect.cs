@@ -10,6 +10,7 @@ public class ParallaxEffect : MonoBehaviour
     [SerializeField] private float parallaxEffect;
 
     private SpriteRenderer spriteRenderer;
+    [SerializeField] private string levelName;
     [SerializeField] private string filename;
     private ImageSaver imageSaver;
 
@@ -32,7 +33,10 @@ public class ParallaxEffect : MonoBehaviour
         imageSaver = GetComponent<ImageSaver>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + GameData.Instance.currentLevel);
+        if (levelName == string.Empty)
+            spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + GameData.Instance.currentLevel);
+        else
+            spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + levelName);
     }
 
     private void LateUpdate()

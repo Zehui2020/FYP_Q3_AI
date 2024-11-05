@@ -35,8 +35,8 @@ public class WFC_MapGeneration : MonoBehaviour
     private List<GameObject> shopTilePrefabs = new();
     private List<GameObject> topEdgeTilePrefabs = new();
     private List<GameObject> bottomEdgeTilePrefabs = new();
-    private List<GameObject> leftEdgeTilePrefabs = new();
-    private List<GameObject> rightEdgeTilePrefabs = new();
+    public List<GameObject> leftEdgeTilePrefabs = new();
+    public List<GameObject> rightEdgeTilePrefabs = new();
     private List<GameObject> TLCornerTilePrefabs = new();
     private List<GameObject> TRCornerTilePrefabs = new();
     private List<GameObject> BLCornerTilePrefabs = new();
@@ -52,6 +52,7 @@ public class WFC_MapGeneration : MonoBehaviour
     private List<Chest> mapChestList = new();
     private List<Sprite> tileSprites = new();
     private Vector2 currTilePos;
+    private Vector2 prevTilePos;
     private Vector2 startingTilePos;
     private FogOfWar fogOfWar;
     private bool isShopPlaced = false;
@@ -131,7 +132,7 @@ public class WFC_MapGeneration : MonoBehaviour
         shopTilePrefabs.AddRange(mapTileController.shopTilePrefabs);
         for (int i = 0; i < borderTilePrefabs.Count; i++)
         {
-            if (borderTilePrefabs[i].name.Contains("1U_1D"))
+            if (borderTilePrefabs[i].name.Contains("1U_1D") || borderTilePrefabs[i].name.Contains("XU"))
             {
                 if (borderTilePrefabs[i].name.Contains("0L"))
                     leftEdgeTilePrefabs.Add(borderTilePrefabs[i]);
@@ -194,7 +195,9 @@ public class WFC_MapGeneration : MonoBehaviour
         }
         if (tileToCollapse == null || leastTilesToCollapse < 0)
             return;
+
         // set curr tile to it
+        prevTilePos = currTilePos;
         currTilePos = tileToCollapse;
         // check neighbouring tiles for placeable tiles in current tile
         List<GameObject> availableTiles = GetAvailableTilesList();
@@ -286,24 +289,33 @@ public class WFC_MapGeneration : MonoBehaviour
         // place corners
         GameObject corner;
         // top left corner
-        corner = InstantiateTile(TLCornerTilePrefabs[Random.Range(0, TLCornerTilePrefabs.Count)], new Vector2(-1, mapSize.y) * mapTileSize, true);
-        // set room
-        mapTileList.Add(corner.GetComponent<MapTile>());
-
-        // top right corner
-        corner = InstantiateTile(TRCornerTilePrefabs[Random.Range(0, TRCornerTilePrefabs.Count)], new Vector2(mapSize.x, mapSize.y) * mapTileSize, true);
-        // set room
-        mapTileList.Add(corner.GetComponent<MapTile>());
-
-        // bottom left corner
-        corner = InstantiateTile(BLCornerTilePrefabs[Random.Range(0, BLCornerTilePrefabs.Count)], new Vector2(-1, -1) * mapTileSize, true);
-        // set room
-        mapTileList.Add(corner.GetComponent<MapTile>());
-
-        // bottom right corner
-        corner = InstantiateTile(BRCornerTilePrefabs[Random.Range(0, BRCornerTilePrefabs.Count)], new Vector2(mapSize.x, -1) * mapTileSize, true);
-        // set room
-        mapTileList.Add(corner.GetComponent<MapTile>());
+        if (TLCornerTilePrefabs.Count > 0)
+        {
+            corner = InstantiateTile(TLCornerTilePrefabs[Random.Range(0, TLCornerTilePrefabs.Count)], new Vector2(-1, mapSize.y) * mapTileSize, true);
+            // set room
+            mapTileList.Add(corner.GetComponent<MapTile>());
+        }
+        if (TRCornerTilePrefabs.Count > 0)
+        {
+            // top right corner
+            corner = InstantiateTile(TRCornerTilePrefabs[Random.Range(0, TRCornerTilePrefabs.Count)], new Vector2(mapSize.x, mapSize.y) * mapTileSize, true);
+            // set room
+            mapTileList.Add(corner.GetComponent<MapTile>());
+        }
+        if (BLCornerTilePrefabs.Count > 0)
+        {
+            // bottom left corner
+            corner = InstantiateTile(BLCornerTilePrefabs[Random.Range(0, BLCornerTilePrefabs.Count)], new Vector2(-1, -1) * mapTileSize, true);
+            // set room
+            mapTileList.Add(corner.GetComponent<MapTile>());
+        }
+        if (BRCornerTilePrefabs.Count > 0)
+        {
+            // bottom right corner
+            corner = InstantiateTile(BRCornerTilePrefabs[Random.Range(0, BRCornerTilePrefabs.Count)], new Vector2(mapSize.x, -1) * mapTileSize, true);
+            // set room
+            mapTileList.Add(corner.GetComponent<MapTile>());
+        }
 
         PlaceSolidBorderTiles();
     }
@@ -469,11 +481,16 @@ public class WFC_MapGeneration : MonoBehaviour
         {
             placeableTiles = mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesLeft;
             // get list of tiles that are available in each list
-            availableTiles.AddRange(allTilePrefabs);
+            availableTiles.AddRange(leftEdgeTilePrefabs);
             for (int i = 0; i < availableTiles.Count; i++)
             {
-                if (!placeableTiles.Contains(availableTiles[i]) ||
-                    !leftEdgeTilePrefabs.Contains(availableTiles[i]))
+                if (mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].name.Contains("1L") && 
+                    !availableTiles[i].name.Contains("0L_1R"))
+                {
+                    tilesToRemove.Add(availableTiles[i]);
+                }
+                else if (mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].name.Contains("0L") &&
+                    !availableTiles[i].name.Contains("0L_0R"))
                 {
                     tilesToRemove.Add(availableTiles[i]);
                 }
@@ -487,11 +504,16 @@ public class WFC_MapGeneration : MonoBehaviour
         {
             placeableTiles = mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].availableTilesRight;
             // get list of tiles that are available in each list
-            availableTiles.AddRange(allTilePrefabs);
+            availableTiles.AddRange(rightEdgeTilePrefabs);
             for (int i = 0; i < availableTiles.Count; i++)
             {
-                if (!placeableTiles.Contains(availableTiles[i]) ||
-                    !rightEdgeTilePrefabs.Contains(availableTiles[i]))
+                if (mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].name.Contains("1R") &&
+                    !availableTiles[i].name.Contains("1L_0R"))
+                {
+                    tilesToRemove.Add(availableTiles[i]);
+                }
+                else if (mapTileList[(int)checkTilePos.x + (int)(checkTilePos.y * mapSize.x)].name.Contains("0R") &&
+                    !availableTiles[i].name.Contains("0L_0R"))
                 {
                     tilesToRemove.Add(availableTiles[i]);
                 }
@@ -580,6 +602,14 @@ public class WFC_MapGeneration : MonoBehaviour
                 !NameRight.Contains(availableTiles[i].name))
             {
                 tilesToRemove.Add(availableTiles[i]);
+            }
+        }
+        if (mapTileList[(int)prevTilePos.x + (int)(prevTilePos.y * mapSize.x)].name.Contains("XU"))
+        {
+            for (int i = 0; i < availableTiles.Count; i++)
+            {
+                if (!tilesToRemove.Contains(availableTiles[i]) && !availableTiles[i].name.Contains("XU"))
+                    tilesToRemove.Add(availableTiles[i]);
             }
         }
         for (int i = 0; i < tilesToRemove.Count; i++)
