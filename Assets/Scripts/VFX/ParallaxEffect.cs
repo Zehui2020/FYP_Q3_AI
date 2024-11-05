@@ -6,6 +6,7 @@ public class ParallaxEffect : MonoBehaviour
     private Vector2 startPos;
     private Animator animator;
 
+    [SerializeField] private bool centerPivot = false;
     [SerializeField] private bool updateY;
     [SerializeField] private Transform followPos;
     [SerializeField] private Transform player;
@@ -30,22 +31,29 @@ public class ParallaxEffect : MonoBehaviour
         startPos = transform.position;
     }
 
+    public void Fade(bool fadeOut)
+    {
+        animator.SetBool("fadeOut", fadeOut);
+    }
+
     private void Awake()
     {
         imageSaver = GetComponent<ImageSaver>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
+        Vector2 pivot = centerPivot ? new Vector2(0.5f, 0.5f) : new Vector2(0.5f, 0);
+
         if (levelName == string.Empty)
-            spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + GameData.Instance.currentLevel);
+            spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + GameData.Instance.currentLevel, pivot);
         else
         {
-            spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + levelName);
+            spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + levelName, pivot);
             animator.SetBool("fadeOut", true);
         }
     }
 
-    private void LateUpdate()
+    public void UpdateParallax()
     {
         // Parallax X
         float dist = followPos.transform.position.x * parallaxEffect;

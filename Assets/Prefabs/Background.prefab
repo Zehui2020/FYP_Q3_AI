@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 871440466542974377}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -3.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d2e65e66de283a4aaf34fd390b6d626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  centerPivot: 0
   updateY: 0
   followPos: {fileID: 0}
   player: {fileID: 0}
@@ -189,15 +190,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fed8306fb73255d40ac4608972ae8447, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxUndegroundY: 0
+  maxUndegroundY: -3.3
+  canFade: 1
   backgrounds:
-  - {fileID: 8525044202841097547}
-  - {fileID: 7500422506045811786}
-  - {fileID: 5485918497915114396}
+  - {fileID: 5920827322137243512}
+  - {fileID: 8217304448559914779}
+  - {fileID: 3694774018812474917}
   caveBackgrounds:
-  - {fileID: 5797917220944895985}
-  - {fileID: 1946605071546373792}
-  - {fileID: 4836509616152551203}
+  - {fileID: 6538944644339564745}
+  - {fileID: 8241764186639167001}
+  - {fileID: 1003070790451825825}
 --- !u!1 &1827181520388520350
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +229,7 @@ Transform:
   m_GameObject: {fileID: 1827181520388520350}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -3.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -309,6 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d2e65e66de283a4aaf34fd390b6d626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  centerPivot: 0
   updateY: 0
   followPos: {fileID: 0}
   player: {fileID: 0}
@@ -366,7 +369,7 @@ Transform:
   m_GameObject: {fileID: 1919793789302642487}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -418,7 +421,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 700, y: 15}
+  m_Size: {x: 700, y: 130.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -436,6 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d2e65e66de283a4aaf34fd390b6d626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  centerPivot: 0
   updateY: 0
   followPos: {fileID: 0}
   player: {fileID: 0}
@@ -505,7 +509,7 @@ Transform:
   m_GameObject: {fileID: 1926306384536537676}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -30, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -587,7 +591,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d2e65e66de283a4aaf34fd390b6d626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  updateY: 0
+  centerPivot: 0
+  updateY: 1
   followPos: {fileID: 0}
   player: {fileID: 0}
   parallaxEffect: 0.02
@@ -644,7 +649,7 @@ Transform:
   m_GameObject: {fileID: 6159433819909190553}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -30, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -696,7 +701,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 700, y: 15}
+  m_Size: {x: 700, y: 130.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -714,7 +719,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d2e65e66de283a4aaf34fd390b6d626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  updateY: 0
+  centerPivot: 0
+  updateY: 1
   followPos: {fileID: 0}
   player: {fileID: 0}
   parallaxEffect: 0
@@ -783,7 +789,7 @@ Transform:
   m_GameObject: {fileID: 6556632720044655011}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -30, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -853,7 +859,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d2e65e66de283a4aaf34fd390b6d626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  updateY: 0
+  centerPivot: 0
+  updateY: 1
   followPos: {fileID: 0}
   player: {fileID: 0}
   parallaxEffect: 0.01
