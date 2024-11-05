@@ -4,7 +4,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Abilities/Shred")]
 public class Shred : BaseAbility
 {
-    public int damageCount;
+    [SerializeField] private GameObject shredVFX;
+    [SerializeField] private int damageCount;
     private int count;
 
     public override void InitAbility()
@@ -26,7 +27,8 @@ public class Shred : BaseAbility
                 if (!target.canAbilityKnockback)
                     continue;
                 target.GetComponent<Rigidbody2D>().velocity = new Vector3(0, abilityRange * 2, 0);
-                target.particleVFXManager.OnStunned();
+                GameObject obj = Instantiate(shredVFX, target.transform, false);
+                obj.transform.localEulerAngles = new Vector3(0, 0, 90);
                 AudioManager.Instance.PlayOneShot(Sound.SoundName.Shred);
             }
         }
@@ -48,7 +50,8 @@ public class Shred : BaseAbility
                 continue;
             float dir = Random.Range(0, 2) == 0 ? -1 : 1;
             target.GetComponent<Rigidbody2D>().velocity = new Vector3(dir * abilityRange, abilityRange, 0);
-            target.particleVFXManager.OnStatic();
+            GameObject obj = Instantiate(shredVFX, target.transform, false);
+            obj.transform.localEulerAngles = new Vector3(0, 0, Random.Range(0, 360));
             AudioManager.Instance.PlayOneShot(Sound.SoundName.Shred);
         }
         count--;
