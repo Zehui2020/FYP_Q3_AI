@@ -20,6 +20,8 @@ public class Ravage : BaseAbility
                     ), 
                 (int)abilityStrength
                 );
+
+            target.particleVFXManager.OnStunned();
         }
 
         AudioManager.Instance.PlayOneShot(Sound.SoundName.Ravage);

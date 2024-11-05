@@ -1,17 +1,16 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using System.Collections.Generic;
 using System.Collections;
 
 public class AbilityAnimationController : MonoBehaviour
 {
-    [SerializeField] public Animator abilityOverlayAnimator;
-    [SerializeField] private List<Light2D> spotLight;
+    [SerializeField] private Animator abilityOverlayAnimator;
+    [SerializeField] private Light2D spotLight;
+    public string animName;
 
     private void Awake()
     {
-        for (int i = 0; i < spotLight.Count; i++)
-            spotLight[i].enabled = false;
+        spotLight.enabled = false;
     }
 
     public void TriggerOverlayAnim(float alpha, string trigger)
@@ -26,13 +25,13 @@ public class AbilityAnimationController : MonoBehaviour
         abilityOverlayAnimator.GetComponent<SpriteRenderer>().enabled = show;
     }
 
-    public void ShowAbilityLight(int i)
+    public void ShowAbilityLight()
     {
-        bool show = !spotLight[i].enabled;
-        StartCoroutine(LightRoutine(i, show));
+        bool show = !spotLight.enabled;
+        StartCoroutine(LightRoutine(show));
     }
 
-    private IEnumerator LightRoutine(int i, bool show)
+    private IEnumerator LightRoutine(bool show)
     {
         float timer = 2;
         float a;
@@ -40,12 +39,12 @@ public class AbilityAnimationController : MonoBehaviour
         if (show)
         {
             a = 0;
-            spotLight[i].enabled = show;
+            spotLight.enabled = show;
         }
         else
             a = 1;
 
-        spotLight[i].color = new Color(spotLight[i].color.r, spotLight[i].color.g, spotLight[i].color.b, a);
+        spotLight.color = new Color(spotLight.color.r, spotLight.color.g, spotLight.color.b, a);
 
         while (timer > 0)
         {
@@ -54,18 +53,18 @@ public class AbilityAnimationController : MonoBehaviour
             else
                 a = Mathf.Lerp(a, 0, 0.05f);
 
-            spotLight[i].color = new Color(spotLight[i].color.r, spotLight[i].color.g, spotLight[i].color.b, a);
+            spotLight.color = new Color(spotLight.color.r, spotLight.color.g, spotLight.color.b, a);
 
             timer -= Time.deltaTime;
             yield return null;
         }
 
-        spotLight[i].enabled = show;
+        spotLight.enabled = show;
 
         if (!show)
-            spotLight[i].color = new Color(spotLight[i].color.r, spotLight[i].color.g, spotLight[i].color.b, 0);
+            spotLight.color = new Color(spotLight.color.r, spotLight.color.g, spotLight.color.b, 0);
         else
-            spotLight[i].color = new Color(spotLight[i].color.r, spotLight[i].color.g, spotLight[i].color.b, 1);
+            spotLight.color = new Color(spotLight.color.r, spotLight.color.g, spotLight.color.b, 1);
     }
 
     public void ShowPlayer(int i)
