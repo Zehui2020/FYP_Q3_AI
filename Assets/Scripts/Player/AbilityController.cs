@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AbilityController : MonoBehaviour
 {
-    [SerializeField] public AbilityAnimationController abilityOverlayAnimator;
+    [SerializeField] public List<AbilityAnimationController> abilityOverlayAnimator;
     [SerializeField] private ItemPickupAlert itemPickupAlert;
     [SerializeField] private GameObject abilityUIPrefab;
     [SerializeField] private Transform abilityUIParent;
@@ -379,5 +379,16 @@ public class AbilityController : MonoBehaviour
             if (charges[randomIndex] < maxCharges[randomIndex])
                 abilityCooldownRoutines[randomIndex] = StartCoroutine(AbilityCooldownRoutine(randomIndex, abilities[randomIndex]));
         }
+    }
+
+    public AbilityAnimationController GetAnimController(string name)
+    {
+        foreach (AbilityAnimationController controller in abilityOverlayAnimator)
+        {
+            if (controller.animName.Contains(name))
+                return controller;
+        }
+
+        return null;
     }
 }
