@@ -57,10 +57,12 @@ MonoBehaviour:
   tilesetGeneration: {fileID: 0}
   uiManager: {fileID: 0}
   playerPrefs: {fileID: 11400000, guid: b33e3ea1f4612984a98d70266f2a4d4a, type: 2}
+  bgRecievedCounter: 0
+  currentLevelPrompt: 0
+  queueLevelData: 0
   allPromptDatas:
   - {fileID: 11400000, guid: ff378708ffa553e48a3b97620bf1e291, type: 2}
-  - {fileID: 11400000, guid: a9a57c10734b71e48bab910746320ac9, type: 2}
-  - {fileID: 11400000, guid: 9124985a2caeb294d97427affce73ea0, type: 2}
+  - {fileID: 11400000, guid: 263fdfef690660b4f8a042053d844d3c, type: 2}
   bgPrompts: []
 --- !u!114 &1329634201744609800
 MonoBehaviour:
@@ -104,7 +106,7 @@ MonoBehaviour:
           m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
@@ -116,6 +118,30 @@ MonoBehaviour:
           m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
+        m_MethodName: SetTrigger
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: activate
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: activate
           m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &6799923746978944399

@@ -72,4 +72,12 @@ public static class Utility
     {
         return Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
     }
+
+    public static bool StringExistsInString(string stringToFind, string fullString)
+    {
+        if (string.IsNullOrEmpty(stringToFind) || string.IsNullOrEmpty(fullString))
+            return false;
+
+        return fullString.Contains(stringToFind);
+    }
 }

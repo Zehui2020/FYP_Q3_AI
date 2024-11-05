@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.VFX;
+using UnityEngine.VFX.Utility;
 
 public class FinalBossPhase2 : Enemy
 {
@@ -46,6 +48,7 @@ public class FinalBossPhase2 : Enemy
 
     [Header("Others")]
     [SerializeField] private CutsceneGroup cutscene;
+    [SerializeField] private VisualEffect laserVFX;
     private int moveCounter;
 
     private Coroutine Deciding;

@@ -10,58 +10,79 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b1a5068364eb0649b9642252d4dbe3f, type: 3}
-  m_Name: Level2
+  m_Name: LevelData
   m_EditorClassIdentifier: 
   themePrompts:
   - Mountain
+  - Forest
   foregroundBGPrompts:
   - type: 0
     bgType: 0
     keywords: Mountain
     prompt: pixel art, trees, snowy, white tips
     referenceImage: mountain_fg
+  - type: 0
+    bgType: 0
+    keywords: Forest
+    prompt: pixel art, forest, trees, vines, dark forest, bushes, leaves, tree trunks,
+      tree branches, green leaves, brown trunks, foilage
+    referenceImage: forest_fg
   middleGroundBGPrompts:
   - type: 1
     bgType: 0
     keywords: Mountain
     prompt: pixel art, mountain, snowy
     referenceImage: mountain_mg
+  - type: 1
+    bgType: 0
+    keywords: Forest
+    prompt: pixel art, forest, trees, dark forest, bushes, leaves, tree trunks, tree
+      branches, green leaves, brown trunks, foilage
+    referenceImage: forest_mg
   backgroundBGPrompts:
   - type: 2
     bgType: 1
     keywords: Mountain
     prompt: pixel art, sky, snowy. cloudy, grey
     referenceImage: mountain_bg
+  - type: 2
+    bgType: 1
+    keywords: Mountain
+    prompt: pixel art, thick forest, green leaves, brown trunks, tree branches
+    referenceImage: forest_bg
   promptCheckers:
   - foundPrompts: Mountain
     endPrompt: pixel art, snowy, stone and rock, tileset
     controlnetImage: rock_tileset
-  parallaxBGJSON: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 390653800406070,\r\n     
+  - foundPrompts: Forest
+    endPrompt: pixel art, dirt, tileset, side view
+    controlnetImage: rock_tileset
+  parallaxBGJSON: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 534477093758828,\r\n     
     \"steps\": 20,\r\n      \"cfg\": 7,\r\n      \"sampler_name\": \"euler\",\r\n     
     \"scheduler\": \"normal\",\r\n      \"denoise\": 1,\r\n      \"model\": [\r\n       
-    \"62\",\r\n        0\r\n      ],\r\n      \"positive\": [\r\n        \"12\",\r\n       
+    \"46\",\r\n        0\r\n      ],\r\n      \"positive\": [\r\n        \"12\",\r\n       
     0\r\n      ],\r\n      \"negative\": [\r\n        \"12\",\r\n        1\r\n     
     ],\r\n      \"latent_image\": [\r\n        \"5\",\r\n        0\r\n      ]\r\n   
     },\r\n    \"class_type\": \"KSampler\",\r\n    \"_meta\": {\r\n      \"title\":
     \"KSampler\"\r\n    }\r\n  },\r\n  \"4\": {\r\n    \"inputs\": {\r\n      \"ckpt_name\":
-    \"anyloraCheckpoint_bakedvaeBlessedFp16.safetensors\"\r\n    },\r\n    \"class_type\":
-    \"CheckpointLoaderSimple\",\r\n    \"_meta\": {\r\n      \"title\": \"Load Checkpoint\"\r\n   
-    }\r\n  },\r\n  \"5\": {\r\n    \"inputs\": {\r\n      \"width\": 1024,\r\n     
-    \"height\": 1024,\r\n      \"batch_size\": 1\r\n    },\r\n    \"class_type\":
-    \"EmptyLatentImage\",\r\n    \"_meta\": {\r\n      \"title\": \"Empty Latent
-    Image\"\r\n    }\r\n  },\r\n  \"6\": {\r\n    \"inputs\": {\r\n      \"text\":
-    \"Pprompt\",\r\n      \"clip\": [\r\n        \"62\",\r\n        1\r\n      ]\r\n   
-    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\":
-    \"Prompt\"\r\n    }\r\n  },\r\n  \"7\": {\r\n    \"inputs\": {\r\n      \"text\":
-    \"\",\r\n      \"clip\": [\r\n        \"62\",\r\n        1\r\n      ]\r\n   
-    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\":
-    \"Negative Prompt\"\r\n    }\r\n  },\r\n  \"8\": {\r\n    \"inputs\": {\r\n     
-    \"samples\": [\r\n        \"3\",\r\n        0\r\n      ],\r\n      \"vae\": [\r\n       
-    \"4\",\r\n        2\r\n      ]\r\n    },\r\n    \"class_type\": \"VAEDecode\",\r\n   
-    \"_meta\": {\r\n      \"title\": \"VAE Decode\"\r\n    }\r\n  },\r\n  \"11\":
-    {\r\n    \"inputs\": {\r\n      \"control_net_name\": \"control_v11p_sd15_canny.pth\"\r\n   
-    },\r\n    \"class_type\": \"ControlNetLoader\",\r\n    \"_meta\": {\r\n     
-    \"title\": \"Load ControlNet Model\"\r\n    }\r\n  },\r\n  \"12\": {\r\n    \"inputs\":
+    \"pixelstyleckpt_strength07.safetensors\"\r\n    },\r\n    \"class_type\": \"CheckpointLoaderSimple\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Load Checkpoint\"\r\n    }\r\n  },\r\n  \"5\":
+    {\r\n    \"inputs\": {\r\n      \"width\": 1920,\r\n      \"height\": 1920,\r\n     
+    \"batch_size\": 1\r\n    },\r\n    \"class_type\": \"EmptyLatentImage\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Empty Latent Image\"\r\n    }\r\n  },\r\n 
+    \"6\": {\r\n    \"inputs\": {\r\n      \"text\": \"Pprompt\",\r\n      \"clip\":
+    [\r\n        \"4\",\r\n        1\r\n      ]\r\n    },\r\n    \"class_type\":
+    \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\": \"Prompt\"\r\n   
+    }\r\n  },\r\n  \"7\": {\r\n    \"inputs\": {\r\n      \"text\": \"\",\r\n     
+    \"clip\": [\r\n        \"4\",\r\n        1\r\n      ]\r\n    },\r\n    \"class_type\":
+    \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\": \"Negative Prompt\"\r\n   
+    }\r\n  },\r\n  \"8\": {\r\n    \"inputs\": {\r\n      \"samples\": [\r\n       
+    \"3\",\r\n        0\r\n      ],\r\n      \"vae\": [\r\n        \"4\",\r\n       
+    2\r\n      ]\r\n    },\r\n    \"class_type\": \"VAEDecode\",\r\n    \"_meta\":
+    {\r\n      \"title\": \"VAE Decode\"\r\n    }\r\n  },\r\n  \"11\": {\r\n    \"inputs\":
+    {\r\n      \"control_net_name\": \"control_v11p_sd15_canny.pth\"\r\n    },\r\n   
+    \"class_type\": \"ControlNetLoader\",\r\n    \"_meta\": {\r\n      \"title\":
+    \"Load ControlNet Model\"\r\n    }\r\n  },\r\n  \"12\": {\r\n    \"inputs\":
     {\r\n      \"strength\": 1,\r\n      \"start_percent\": 0,\r\n      \"end_percent\":
     1,\r\n      \"positive\": [\r\n        \"6\",\r\n        0\r\n      ],\r\n     
     \"negative\": [\r\n        \"7\",\r\n        0\r\n      ],\r\n      \"control_net\":
@@ -71,13 +92,13 @@ MonoBehaviour:
     },\r\n  \"13\": {\r\n    \"inputs\": {\r\n      \"image\": \"placeholder.png\",\r\n     
     \"upload\": \"image\"\r\n    },\r\n    \"class_type\": \"LoadImage\",\r\n   
     \"_meta\": {\r\n      \"title\": \"Input\"\r\n    }\r\n  },\r\n  \"16\": {\r\n   
-    \"inputs\": {\r\n      \"images\": [\r\n        \"58\",\r\n        0\r\n     
+    \"inputs\": {\r\n      \"images\": [\r\n        \"50\",\r\n        0\r\n     
     ]\r\n    },\r\n    \"class_type\": \"PreviewImage\",\r\n    \"_meta\": {\r\n     
     \"title\": \"Preview Image\"\r\n    }\r\n  },\r\n  \"24\": {\r\n    \"inputs\":
     {\r\n      \"filename_prefix\": \"ComfyUI\",\r\n      \"images\": [\r\n       
     \"36\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"SaveImage\",\r\n   
     \"_meta\": {\r\n      \"title\": \"Save Image\"\r\n    }\r\n  },\r\n  \"35\":
-    {\r\n    \"inputs\": {\r\n      \"pixel_size\": 2,\r\n      \"image\": [\r\n       
+    {\r\n    \"inputs\": {\r\n      \"pixel_size\": 4,\r\n      \"image\": [\r\n       
     \"8\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"Pixelization\",\r\n   
     \"_meta\": {\r\n      \"title\": \"Pixelization\"\r\n    }\r\n  },\r\n  \"36\":
     {\r\n    \"inputs\": {\r\n      \"rmbgmodel\": [\r\n        \"37\",\r\n       
@@ -90,8 +111,8 @@ MonoBehaviour:
     \"image\": [\r\n        \"35\",\r\n        0\r\n      ],\r\n      \"mask\": [\r\n       
     \"45\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"Mix Color
     By Mask\",\r\n    \"_meta\": {\r\n      \"title\": \"Mix Color By Mask\"\r\n   
-    }\r\n  },\r\n  \"45\": {\r\n    \"inputs\": {\r\n      \"width\": 1024,\r\n     
-    \"height\": 1024,\r\n      \"interpolation\": \"nearest\",\r\n      \"method\":
+    }\r\n  },\r\n  \"45\": {\r\n    \"inputs\": {\r\n      \"width\": 1920,\r\n     
+    \"height\": 1920,\r\n      \"interpolation\": \"nearest\",\r\n      \"method\":
     \"stretch\",\r\n      \"condition\": \"always\",\r\n      \"multiple_of\": 0,\r\n     
     \"image\": [\r\n        \"13\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
     \"ImageResize+\",\r\n    \"_meta\": {\r\n      \"title\": \"\u25A1 Image Resize\"\r\n   
@@ -106,28 +127,19 @@ MonoBehaviour:
     \"class_type\": \"PreviewImage\",\r\n    \"_meta\": {\r\n      \"title\": \"Preview
     Image\"\r\n    }\r\n  },\r\n  \"50\": {\r\n    \"inputs\": {\r\n      \"low_threshold\":
     0,\r\n      \"high_threshold\": 255,\r\n      \"resolution\": 1024,\r\n     
-    \"image\": [\r\n        \"58\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
+    \"image\": [\r\n        \"13\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
     \"CannyEdgePreprocessor\",\r\n    \"_meta\": {\r\n      \"title\": \"Canny Edge\"\r\n   
     }\r\n  },\r\n  \"51\": {\r\n    \"inputs\": {\r\n      \"images\": [\r\n       
     \"50\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"PreviewImage\",\r\n   
-    \"_meta\": {\r\n      \"title\": \"Preview Image\"\r\n    }\r\n  },\r\n  \"58\":
-    {\r\n    \"inputs\": {\r\n      \"coarse\": \"disable\",\r\n      \"resolution\":
-    1024,\r\n      \"image\": [\r\n        \"13\",\r\n        0\r\n      ]\r\n   
-    },\r\n    \"class_type\": \"LineArtPreprocessor\",\r\n    \"_meta\": {\r\n     
-    \"title\": \"Realistic Lineart\"\r\n    }\r\n  },\r\n  \"62\": {\r\n    \"inputs\":
-    {\r\n      \"lora_name\": \"PixelScenery.safetensors\",\r\n      \"strength_model\":
-    1,\r\n      \"strength_clip\": 1,\r\n      \"model\": [\r\n        \"46\",\r\n       
-    0\r\n      ],\r\n      \"clip\": [\r\n        \"4\",\r\n        1\r\n      ]\r\n   
-    },\r\n    \"class_type\": \"Load Lora\",\r\n    \"_meta\": {\r\n      \"title\":
-    \"Load Lora\"\r\n    }\r\n  },\r\n  \"65\": {\r\n    \"inputs\": {\r\n      \"images\":
-    [\r\n        \"8\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
-    \"PreviewImage\",\r\n    \"_meta\": {\r\n      \"title\": \"Preview Image\"\r\n   
-    }\r\n  },\r\n  \"66\": {\r\n    \"inputs\": {\r\n      \"width\": 1920,\r\n     
-    \"height\": 1920,\r\n      \"interpolation\": \"nearest\",\r\n      \"method\":
-    \"stretch\",\r\n      \"condition\": \"always\",\r\n      \"multiple_of\": 0,\r\n     
-    \"image\": [\r\n        \"40\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
-    \"ImageResize+\",\r\n    \"_meta\": {\r\n      \"title\": \"\U0001F527 Image
-    Resize\"\r\n    }\r\n  }\r\n}"
+    \"_meta\": {\r\n      \"title\": \"Preview Image\"\r\n    }\r\n  },\r\n  \"65\":
+    {\r\n    \"inputs\": {\r\n      \"images\": [\r\n        \"8\",\r\n        0\r\n     
+    ]\r\n    },\r\n    \"class_type\": \"PreviewImage\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"Preview Image\"\r\n    }\r\n  },\r\n  \"66\": {\r\n    \"inputs\":
+    {\r\n      \"width\": 1920,\r\n      \"height\": 1920,\r\n      \"interpolation\":
+    \"nearest\",\r\n      \"method\": \"stretch\",\r\n      \"condition\": \"always\",\r\n     
+    \"multiple_of\": 0,\r\n      \"image\": [\r\n        \"40\",\r\n        0\r\n     
+    ]\r\n    },\r\n    \"class_type\": \"ImageResize+\",\r\n    \"_meta\": {\r\n     
+    \"title\": \"\U0001F527 Image Resize\"\r\n    }\r\n  }\r\n}"
   staticBGJSON: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"seed\": 471013842958786,\r\n     
     \"steps\": 20,\r\n      \"cfg\": 7,\r\n      \"sampler_name\": \"euler\",\r\n     
     \"scheduler\": \"normal\",\r\n      \"denoise\": 1,\r\n      \"model\": [\r\n       

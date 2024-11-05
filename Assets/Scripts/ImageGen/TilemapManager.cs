@@ -27,7 +27,7 @@ public class TilemapManager : MonoBehaviour
             return;
         }
 
-        Texture2D texture = imageSaver.GetTextureFromLocalDisk(fileName + "_Level" + GameData.Instance.currentLevel);
+        Texture2D texture = imageSaver.GetTextureFromLocalDisk(fileName + "_" + GameData.Instance.currentLevel);
 
         foreach (Rect rect in tileRects)
         {
@@ -42,7 +42,7 @@ public class TilemapManager : MonoBehaviour
     {
         List<Sprite> sprites = new();
 
-        Texture2D texture = imageSaver.GetTextureFromLocalDisk(fileName + "_Level" + GameData.Instance.currentLevel);
+        Texture2D texture = imageSaver.GetTextureFromLocalDisk(fileName + "_" + GameData.Instance.currentLevel);
 
         foreach (Rect rect in tileRects)
         {

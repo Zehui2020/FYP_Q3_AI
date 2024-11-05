@@ -81,6 +81,10 @@ public class ConsoleManager : MonoBehaviour
                 }
             }
         }
+        else if (command.Equals("/tp"))
+        {
+            PlayerController.Instance.transform.position = FindObjectOfType<Door>().transform.position;
+        }
 
         //else if (command.Equals("/win"))
         //{

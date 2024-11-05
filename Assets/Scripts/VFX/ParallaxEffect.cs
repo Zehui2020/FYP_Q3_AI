@@ -1,11 +1,10 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ParallaxEffect : MonoBehaviour
 {
     private Vector2 startPos;
 
+    [SerializeField] private bool updateY;
     [SerializeField] private Transform followPos;
     [SerializeField] private Transform player;
     [SerializeField] private float parallaxEffect;
@@ -33,7 +32,7 @@ public class ParallaxEffect : MonoBehaviour
         imageSaver = GetComponent<ImageSaver>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_Level" + GameData.Instance.currentLevel);
+        spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + GameData.Instance.currentLevel);
     }
 
     private void LateUpdate()
@@ -43,7 +42,7 @@ public class ParallaxEffect : MonoBehaviour
         transform.position = new Vector3(startPos.x - dist, transform.position.y, transform.position.z);
 
         // Parallax Y
-        if (mapSizeY == 0)
+        if (mapSizeY == 0 || !updateY)
             return;
 
         float diff = transform.position.y - mapOriginY;

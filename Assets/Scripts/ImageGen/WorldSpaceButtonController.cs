@@ -27,10 +27,15 @@ public class WorldSpaceButtonController : MonoBehaviour
 
     public void SpawnButtons()
     {
+        DestroyAllButtons();
+
         List<string> buttonPrompts = promptData.GetButtonPromptList();
 
         foreach (string prompt in buttonPrompts)
         {
+            if (Utility.StringExistsInString(prompt, GameData.Instance.levelThemes))
+                continue;
+
             float randX = Random.Range(minSpawnXRange, maxSpawnXRange);
             WorldSpaceButton button = Instantiate(worldSpaceButtonPrefab, new Vector3(randX, spawnY, 0), Quaternion.identity);
             button.SetPrompt(prompt, uiManager);
@@ -43,6 +48,14 @@ public class WorldSpaceButtonController : MonoBehaviour
         if (uiManager.CheckAdditionalPrompts())
             return;
 
+        DestroyAllButtons();
+        buttons.Clear();
+        uiManager.ResetPrompt();
+        SpawnButtons();
+    }
+
+    public void DestroyAllButtons()
+    {
         for (int i = 0; i < buttons.Count; i++)
         {
             if (buttons[i] == null)
@@ -50,9 +63,5 @@ public class WorldSpaceButtonController : MonoBehaviour
 
             Destroy(buttons[i].gameObject);
         }
-
-        buttons.Clear();
-        uiManager.ResetPrompt();
-        SpawnButtons();
     }
 }
