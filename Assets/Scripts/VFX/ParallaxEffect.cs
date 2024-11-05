@@ -1,8 +1,10 @@
+using System.Collections;
 using UnityEngine;
 
 public class ParallaxEffect : MonoBehaviour
 {
     private Vector2 startPos;
+    private Animator animator;
 
     [SerializeField] private bool updateY;
     [SerializeField] private Transform followPos;
@@ -32,11 +34,15 @@ public class ParallaxEffect : MonoBehaviour
     {
         imageSaver = GetComponent<ImageSaver>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
 
         if (levelName == string.Empty)
             spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + GameData.Instance.currentLevel);
         else
+        {
             spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + levelName);
+            animator.SetBool("fadeOut", true);
+        }
     }
 
     private void LateUpdate()
