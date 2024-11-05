@@ -69,6 +69,7 @@ public class FinalBossPhase2 : Enemy
         segmentMinHealth = Mathf.CeilToInt(maxHealth / maxSegments * currentSegment);
 
         cutscene.CutsceneEnd.AddListener(() => { ChangeState(State.LaserAttack); });
+        laserVFX.enabled = false;
     }
 
     public void InitBarUI()
@@ -177,18 +178,13 @@ public class FinalBossPhase2 : Enemy
     }
     private IEnumerator LaserSwipeRoutine()
     {
+        laserVFX.enabled = true;
         float timer = 5f;
         float elapsed = 0f;
 
         Vector2 dirToPlayer = (player.transform.position - laserStartPoint.position).normalized;
         float startAngle = Utility.GetAngleFromDirection(dirToPlayer);
         float targetAngle = transform.position.x < player.transform.position.x ? 200 : -200;
-
-        BossLaser bossLaser = ObjectPool.Instance.GetPooledObject("BossLaser", true) as BossLaser;
-        bossLaser.SetupLaser(
-            laserStartPoint.position,
-            Physics2D.Raycast(laserStartPoint.position, dirToPlayer, 100, groundLayer).point
-        );
 
         while (elapsed < timer)
         {
@@ -205,7 +201,8 @@ public class FinalBossPhase2 : Enemy
                 System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
                 RaycastHit2D lastHit = hits[hits.Length - 1];
 
-                bossLaser.UpdateLaser(laserStartPoint.position, lastHit.point);
+                laserVFX.SetVector3("StartPosition_position", laserStartPoint.position);
+                laserVFX.SetVector3("EndPosition_position", lastHit.point);
 
                 foreach (RaycastHit2D hit in hits)
                 {
@@ -226,8 +223,8 @@ public class FinalBossPhase2 : Enemy
             yield return null;
         }
 
+        laserVFX.enabled = false;
         animator.Play(LaserEndAnim, 0, 0);
-        bossLaser.ReleaseLaser();
     }
 
     public void SummonShockwaves()
