@@ -225,6 +225,9 @@ public class WFC_MapGeneration : MonoBehaviour
         {
             Vector2 tilePos = new Vector2(i, mapSize.y);
             // check tile available up with top edge border tiles
+            Vector2 pos = tilePos - Vector2.up;
+            if (mapTileList[(int)pos.x + (int)(pos.y * mapSize.x)].name.Contains("XU"))
+                break;
             List<GameObject> availableTiles = GetAvailableBorderTilesList(tilePos - Vector2.up, Vector2.up);
             // choose random tile
             GameObject tileToSet = availableTiles[Random.Range(0, availableTiles.Count)];
