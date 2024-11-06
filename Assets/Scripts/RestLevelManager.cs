@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using static PromptData;
 
 public class RestLevelManager : MonoBehaviour
 {
@@ -26,21 +27,41 @@ public class RestLevelManager : MonoBehaviour
     {
         DestroyAllButtons();
 
+        bool foundPrompt = false;
+
         foreach (string prompt in setPromptData.themePrompts)
         {
             if (!Utility.StringExistsInString(prompt, GameData.Instance.levelThemes) || Utility.StringExistsInString(prompt, GameData.Instance.choseThemes))
                 continue;
 
-            float randX = Random.Range(minSpawnXRange, maxSpawnXRange);
-            WorldSpaceButton button = Instantiate(worldSpaceButtonPrefab, new Vector3(randX, spawnY, 0), Quaternion.identity);
-            button.SetPrompt(prompt, null);
-            button.AddButton += RecieveButton;
-            buttons.Add(button);
+            SpawnButton(prompt);
+            foundPrompt = true;
         }
+
+        if (!foundPrompt)
+            SpawnButton("Boss");
+    }
+
+    private void SpawnButton(string prompt)
+    {
+        float randX = Random.Range(minSpawnXRange, maxSpawnXRange);
+        WorldSpaceButton button = Instantiate(worldSpaceButtonPrefab, new Vector3(randX, spawnY, 0), Quaternion.identity);
+        button.SetPrompt(prompt, null);
+        button.AddButton += RecieveButton;
+        buttons.Add(button);
     }
 
     public void RecieveButton(string prompt)
     {
+        if (prompt == "Boss")
+        {
+            GameData.Instance.currentLevel = "Cave";
+            nextDestination.text = nextDestination.text + " " + prompt;
+            OnRecieveButton?.Invoke(prompt);
+            DestroyAllButtons();
+            return;
+        }
+
         GameData.Instance.choseThemes += prompt;
         GameData.Instance.currentLevel = prompt;
         nextDestination.text = nextDestination.text + " " + prompt;

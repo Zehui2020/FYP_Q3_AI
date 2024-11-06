@@ -62,6 +62,9 @@
         },
         {
             "m_Id": "4bfbd167880d43dcae92c6367a3a6085"
+        },
+        {
+            "m_Id": "e0205ad0b7304df9b4868db6ddbd9ae4"
         }
     ],
     "m_GroupDatas": [],
@@ -168,6 +171,20 @@
         {
             "m_OutputSlot": {
                 "m_Node": {
+                    "m_Id": "f0cf358048ed494ba9ec59b1f4632d18"
+                },
+                "m_SlotId": 2
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "e0205ad0b7304df9b4868db6ddbd9ae4"
+                },
+                "m_SlotId": 0
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
                     "m_Id": "f84ccd80ec4e48a2b55bf0ae034acb2d"
                 },
                 "m_SlotId": 4
@@ -214,6 +231,9 @@
             },
             {
                 "m_Id": "2539b95ffde84a8aac034bc696017268"
+            },
+            {
+                "m_Id": "e0205ad0b7304df9b4868db6ddbd9ae4"
             }
         ]
     },
@@ -628,6 +648,36 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.ColorRGBMaterialSlot",
+    "m_ObjectId": "3e2080da2d3243cd8f7c156bf6005ae6",
+    "m_Id": 0,
+    "m_DisplayName": "Emission",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Emission",
+    "m_StageCapability": 2,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_Labels": [],
+    "m_ColorMode": 1,
+    "m_DefaultColor": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 1.0
+    }
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Texture2DInputMaterialSlot",
     "m_ObjectId": "47702312dd9342d98509d265fc070e7a",
     "m_Id": 1,
@@ -686,10 +736,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -641.2470092773438,
-            "y": 91.75294494628906,
-            "width": 208.0,
-            "height": 302.0
+            "x": -628.0000610351563,
+            "y": 6.000002384185791,
+            "width": 208.00003051757813,
+            "height": 302.0000305175781
         }
     },
     "m_Slots": [
@@ -1443,10 +1493,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1312.9998779296875,
-            "y": 88.00005340576172,
+            "x": -1318.0,
+            "y": 100.00001525878906,
             "width": 130.0,
-            "height": 33.99998474121094
+            "height": 33.999969482421878
         }
     },
     "m_Slots": [
@@ -1465,6 +1515,40 @@
     "m_Property": {
         "m_Id": "e47183baa4ee45cfbd0dd70e71fbb1c0"
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
+    "m_ObjectId": "e0205ad0b7304df9b4868db6ddbd9ae4",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "SurfaceDescription.Emission",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 0.0,
+            "height": 0.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "3e2080da2d3243cd8f7c156bf6005ae6"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_DismissedVersion": 0,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_SerializedDescriptor": "SurfaceDescription.Emission"
 }
 
 {
@@ -1534,9 +1618,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -886.0000610351563,
+            "x": -822.0000610351563,
             "y": 357.0000305175781,
-            "width": 208.00006103515626,
+            "width": 208.0,
             "height": 302.0000305175781
         }
     },
@@ -1577,9 +1661,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1153.9998779296875,
-            "y": 83.00001525878906,
-            "width": 207.99993896484376,
+            "x": -1159.0,
+            "y": 95.0,
+            "width": 208.0,
             "height": 435.0
         }
     },

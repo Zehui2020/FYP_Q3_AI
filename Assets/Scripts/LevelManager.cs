@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class LevelManager : MonoBehaviour
 {
@@ -13,8 +14,10 @@ public class LevelManager : MonoBehaviour
         public List<GameObject> GOsToActivate = new();
         public List<GameObject> GOsToDeactivate = new();
         public VolumeProfile volume;
+        public float globalLightIntensity;
     }
     [SerializeField] private Volume globalVolume;
+    [SerializeField] private Light2D globalLight;
     [SerializeField] private List<LevelData> levelDatas = new();
     [SerializeField] private List<SpriteRenderer> backgrounds = new();
 
@@ -50,5 +53,6 @@ public class LevelManager : MonoBehaviour
             go.SetActive(false);
 
         globalVolume.profile = currentData.volume;
+        globalLight.intensity = currentData.globalLightIntensity;
     }
 }

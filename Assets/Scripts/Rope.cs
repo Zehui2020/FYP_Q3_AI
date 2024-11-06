@@ -15,7 +15,7 @@ public class Rope : MonoBehaviour
     private void Start()
     {
         col = GetComponent<BoxCollider2D>();
-        maxRopeHeight = transform.position.y + col.size.y / 2f;
+        maxRopeHeight = transform.position.y + col.size.y / 2f + 0.3f;
         minRopeHeight = transform.position.y - col.size.y / 2f;
     }
 
