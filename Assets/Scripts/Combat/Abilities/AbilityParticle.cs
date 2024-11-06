@@ -54,9 +54,8 @@ public class AbilityParticle : MonoBehaviour
         yield return new WaitForSeconds(0.25f);
         isActivated = true;
         yield return new WaitForSeconds(lifeTime);
-        if (GetComponent<ParticleVFXManager>() != null)
-            GetComponent<ParticleVFXManager>().StopEverything();
-        Destroy(gameObject, 1);
+        Destroy(projectile.gameObject);
+        Destroy(gameObject);
         StopAllCoroutines();
     }
 
@@ -67,6 +66,7 @@ public class AbilityParticle : MonoBehaviour
 
         yield return new WaitForSeconds(interval);
 
-        projectile.stats.Remove(stat);
+        if (projectile.stats.Contains(stat))
+            projectile.stats.Remove(stat);
     }
 }

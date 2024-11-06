@@ -50,6 +50,7 @@ public class StatusEffectManager : MonoBehaviour
                     OnThresholdReached?.Invoke(StatusEffect.StatusType.Status.BloodLoss, 0);
                     bleedStacks.SetThreshold(bleedStacks.stackThreshold * statusEffectStats.bleedThresholdMultiplier);
                     RemoveEffectUI(StatusEffect.StatusType.Status.Bleed);
+                    AudioManager.Instance.PlayOneShot(Sound.SoundName.Bleed);
                 }
                 else
                     AddEffectUI(statusEffect, bleedStacks.stackCount);
@@ -57,19 +58,26 @@ public class StatusEffectManager : MonoBehaviour
             case StatusEffect.StatusType.Status.Burn:
                 burnStacks.AddStack(amount);
                 AddEffectUI(statusEffect, burnStacks.stackCount);
+                if (!AudioManager.Instance.CheckIfSoundPlaying(Sound.SoundName.Burn))
+                    AudioManager.Instance.Play(Sound.SoundName.Burn);
                 break;
             case StatusEffect.StatusType.Status.Poison:
                 poisonStacks.AddStack(amount);
                 AddEffectUI(statusEffect, poisonStacks.stackCount);
+                AudioManager.Instance.PlayOneShot(Sound.SoundName.Poison);
                 break;
             case StatusEffect.StatusType.Status.Freeze:
                 if (freezeStacks.AddStack(amount))
                 {
                     OnThresholdReached?.Invoke(StatusEffect.StatusType.Status.Frozen, statusEffectStats.frozenDuration);
                     RemoveEffectUI(StatusEffect.StatusType.Status.Freeze);
+                    AudioManager.Instance.PlayOneShot(Sound.SoundName.Frozen);
                 }
                 else
+                {
                     AddEffectUI(statusEffect, freezeStacks.stackCount);
+                    AudioManager.Instance.PlayOneShot(Sound.SoundName.FreezingOrb);
+                }
                 break;
             case StatusEffect.StatusType.Status.Static:
                 particleVFXManager.OnStatic();
@@ -80,9 +88,13 @@ public class StatusEffectManager : MonoBehaviour
 
                     OnThresholdReached?.Invoke(StatusEffect.StatusType.Status.Stunned, statusEffectStats.stunDuration);
                     RemoveEffectUI(StatusEffect.StatusType.Status.Static);
+                    AudioManager.Instance.PlayOneShot(Sound.SoundName.Stunned);
                 }
                 else
+                {
                     AddEffectUI(statusEffect, staticStacks.stackCount);
+                    AudioManager.Instance.PlayOneShot(Sound.SoundName.Static);
+                }
                 break;
             default:
                 AddEffectUI(statusEffect, 0);
@@ -133,6 +145,9 @@ public class StatusEffectManager : MonoBehaviour
                 break;
             case StatusEffect.StatusType.Status.Burn:
                 ReduceStackCount(burnStacks, effectUI, amount);
+
+                if (burnStacks.stackCount == 0)
+                    AudioManager.Instance.Stop(Sound.SoundName.Burn);
                 break;
             case StatusEffect.StatusType.Status.Poison:
                 ReduceStackCount(poisonStacks, effectUI, amount);

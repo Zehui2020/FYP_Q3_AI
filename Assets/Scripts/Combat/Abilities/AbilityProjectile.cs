@@ -6,7 +6,7 @@ public class AbilityProjectile : MonoBehaviour
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected LayerMask targetLayer;
     [SerializeField] private GameObject particlePrefab;
-    [HideInInspector] public List<BaseStats> stats = new();
+     public List<BaseStats> stats = new();
     protected List<ParticleVFXManager> particleVFXManager = new();
 
     public void LaunchProjectile(Vector3 force)
@@ -24,7 +24,8 @@ public class AbilityProjectile : MonoBehaviour
 
     protected virtual void OnHit(BaseStats target)
     {
-        Destroy(gameObject);
+        rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
     }
 
     protected virtual void InitParticles(int amount, float interval, float verticalOffset)

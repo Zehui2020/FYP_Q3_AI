@@ -73,6 +73,7 @@ public class ParticleVFXManager : MonoBehaviour
     public void OnBloodLoss()
     {
         bloodLossPS.PlayAll();
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.Bleed);
     }
 
     public void GasolineBurst()
