@@ -58,7 +58,7 @@ public class ConsoleManager : MonoBehaviour
             }
             else if (words[1].Equals("ability"))
             {
-                PlayerController.Instance.GiveAbility(words[2], words[3]);
+                PlayerController.Instance.GiveAbility(words[2]);
             }
             else if (words[1].Equals("gold"))
             {
@@ -84,6 +84,10 @@ public class ConsoleManager : MonoBehaviour
         else if (command.Equals("/tp"))
         {
             PlayerController.Instance.transform.position = FindObjectOfType<Door>().transform.position;
+        }
+        else if (command.Equals("/portal"))
+        {
+            PlayerController.Instance.portalController.ActivateAllPortals();
         }
 
         //else if (command.Equals("/win"))

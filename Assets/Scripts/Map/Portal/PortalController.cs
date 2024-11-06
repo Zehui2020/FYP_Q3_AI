@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.WSA;
 
 public class PortalController : MonoBehaviour
 {
@@ -38,7 +39,7 @@ public class PortalController : MonoBehaviour
             multiplier = Mathf.Clamp(multiplier - d, 0, Mathf.Infinity);
         }
 
-        for (int i = 0; i < buttons.Count; i++)
+        for (int i = 0; i < portals.Count; i++)
         {
             buttons[i].transform.localPosition = portals[i].transform.position * multiplier;
             portals[i].button = buttons[i];
@@ -80,5 +81,13 @@ public class PortalController : MonoBehaviour
         PlayerController.Instance.ChangeState(PlayerController.PlayerStates.Movement);
         PlayerController.Instance.FadeIn();
         teleportRoutine = null;
+    }
+
+    public void ActivateAllPortals()
+    {
+        for (int i = 0; i < portals.Count; i++)
+        {
+            portals[i].OnEnterRange();
+        }
     }
 }

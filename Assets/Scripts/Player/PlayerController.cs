@@ -1062,16 +1062,16 @@ public class PlayerController : PlayerStats
     {
         itemManager.GiveAllItems();
     }
-    public void GiveAbility(string itemName, string amount)
+    public void GiveAbility(string itemName)
     {
         if (itemName == "Test")
         {
-            itemManager.GiveAbility("FreezingOrb", "1");
-            itemManager.GiveAbility("Shatter", "1");
+            itemManager.GiveAbility("FreezingOrb");
+            itemManager.GiveAbility("Shatter");
             return;
         }
 
-        itemManager.GiveAbility(itemName, amount);
+        itemManager.GiveAbility(itemName);
     }
 
     private void OnApplicationQuit()
