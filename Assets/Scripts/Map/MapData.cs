@@ -11,6 +11,7 @@ public class MapData : ScriptableObject
     public float mapTileSize;
     public int solidTileBorderThickness;
     public int mapSeed;
+    public int maxPortalCount;
     [Header("Map Prefabs")]
     public List<GameObject> startTilePrefabs;
     public List<GameObject> autoInitTilePrefabs;

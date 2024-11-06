@@ -421,7 +421,7 @@ public class WFC_MapGeneration : MonoBehaviour
         Instantiate(doorPrefab, doorTransform, false);
 
         doors.Remove(doorTransform);
-        for (int i = doors.Count - 1; i > doors.Count - 4; i--)
+        for (int i = doors.Count - 1; i > doors.Count - mData.maxPortalCount; i--)
         {
             if (i < 0)
                 break;

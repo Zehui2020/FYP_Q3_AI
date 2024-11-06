@@ -434,6 +434,7 @@ public class BaseStats : MonoBehaviour
                 if (dazedRoutine != null)
                     StopCoroutine(dazedRoutine);
 
+                AudioManager.Instance.PlayOneShot(Sound.SoundName.Dazed);
                 popup.SetupPopup("Dazed!", transform.position, Color.yellow, new Vector2(0, 3));
                 dazedRoutine = StartCoroutine(DazedRoutine(duration));
                 break;

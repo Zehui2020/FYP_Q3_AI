@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2353660783324343013}
   - component: {fileID: 5276744332779339906}
   - component: {fileID: 722845059918400486}
-  - component: {fileID: 1092369458349308683}
   m_Layer: 0
   m_Name: 'FirePS '
   m_TagString: Untagged
@@ -4834,25 +4833,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &1092369458349308683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2742136140023427700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9a9cf48ab2bf264d92c6c5623b6d08a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 0}
-  allPSs:
-  - {fileID: 5276744332779339906}
-  - {fileID: 831425366479446610}
-  - {fileID: 881960376445878463}
-  lights:
-  - {fileID: 6609246468783069550}
 --- !u!1 &4075768778413337710
 GameObject:
   m_ObjectHideFlags: 0
@@ -14665,34 +14645,13 @@ MonoBehaviour:
     statusEffect: 1
   targetTag:
   - Enemy
-  interval: 2
+  interval: 1
   stackPerInterval: 1
   lifeTime: 10
   projectile: {fileID: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
---- !u!114 &226802775192034152
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7299122812306567947}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4097861dc68805740b6bd44dd38c745e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firePS: {fileID: 1092369458349308683}
-  iceAnimator: {fileID: 6853928460905783656}
-  icePS: {fileID: 6639126398170181957}
-  poisonPS: {fileID: 9034050805553561319}
-  staticPS: {fileID: 2732174532926976645}
-  stunnedPS: {fileID: 6658651181753016403}
-  bleedPS: {fileID: 3223375598793925346}
-  bloodLossPS: {fileID: 4322241240178585800}
-  gasolinePS: {fileID: 7353290285744173727}
 --- !u!61 &2084980863325439347
 BoxCollider2D:
   m_ObjectHideFlags: 0

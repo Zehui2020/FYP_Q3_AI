@@ -286,6 +286,7 @@ public class AbilityController : MonoBehaviour
         }
         else
         {
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.AbilityCooldownReset);
             charges[abilityNo]++;
             abilityUI[abilityNo].SetCooldown(0, charges[abilityNo], maxCharges[abilityNo]);
             if (charges[abilityNo] < maxCharges[abilityNo])
@@ -316,6 +317,7 @@ public class AbilityController : MonoBehaviour
         }
         else
         {
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.AbilityCooldownReset);
             charges[abilityNo]++;
             abilityUI[abilityNo].SetCooldown(0, charges[abilityNo], maxCharges[abilityNo]);
             if (charges[abilityNo] < maxCharges[abilityNo])

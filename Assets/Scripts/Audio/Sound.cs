@@ -85,7 +85,15 @@ public class Sound
         ProtectionShieldActivate,
         ProtectionShieldActive,
         ProtectionShieldDeactivate,
-        
+        AbilityCooldownReset,
+
+        Burn,
+        Bleed,
+        Poison,
+        Static,
+        Stunned,
+        Frozen,
+        Dazed,
     }
     public SoundName name;
 
