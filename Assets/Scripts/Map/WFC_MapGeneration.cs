@@ -165,7 +165,8 @@ public class WFC_MapGeneration : MonoBehaviour
         startingTilePos = (currTilePos * mapTileSize) - new Vector2((mapSize.x - 1) * mapTileSize / 2, (mapSize.y - 1) * mapTileSize / 2);
         // set random starting room tile
         int randomIndex = Random.Range(0, startingTilePrefabs.Count);
-        mapTileList[(int)currTilePos.x + (int)(currTilePos.y * mapSize.x)] = InstantiateTile(startingTilePrefabs[randomIndex], currTilePos * mapTileSize, true).GetComponent<MapTile>();
+        mapTileList[(int)currTilePos.x + (int)(currTilePos.y * mapSize.x)] = 
+            InstantiateTile(startingTilePrefabs[randomIndex], currTilePos * mapTileSize, true).GetComponent<MapTile>();
         mapPortalList.Add(mapTileList[(int)currTilePos.x + (int)(currTilePos.y * mapSize.x)].doorTransform.GetComponent<Portal>());
         // add new collapsable tiles
         collapsedTilePosList.Add(currTilePos);
@@ -237,9 +238,7 @@ public class WFC_MapGeneration : MonoBehaviour
             if (tileToSet == null)
                 return;
             // set room
-            mapTileList.Add(tileToSet.GetComponent<MapTile>());
-            // place room
-            InstantiateTile(tileToSet, tilePos * mapTileSize, true);
+            mapTileList.Add(InstantiateTile(tileToSet, tilePos * mapTileSize, true).GetComponent<MapTile>());
         }
         // bottom
         for (int i = 0; i < mapSize.x; i++)
@@ -252,9 +251,7 @@ public class WFC_MapGeneration : MonoBehaviour
             if (tileToSet == null)
                 return;
             // set room
-            mapTileList.Add(tileToSet.GetComponent<MapTile>());
-            // place room
-            InstantiateTile(tileToSet, tilePos * mapTileSize, true);
+            mapTileList.Add(InstantiateTile(tileToSet, tilePos * mapTileSize, true).GetComponent<MapTile>());
         }
         // left
         for (int i = 0; i < mapSize.y; i++)
@@ -267,9 +264,7 @@ public class WFC_MapGeneration : MonoBehaviour
             if (tileToSet == null)
                 return;
             // set room
-            mapTileList.Add(tileToSet.GetComponent<MapTile>());
-            // place room
-            InstantiateTile(tileToSet, tilePos * mapTileSize, true);
+            mapTileList.Add(InstantiateTile(tileToSet, tilePos * mapTileSize, true).GetComponent<MapTile>());
         }
         // right
         for (int i = 0; i < mapSize.y; i++)
@@ -282,9 +277,7 @@ public class WFC_MapGeneration : MonoBehaviour
             if (tileToSet == null)
                 return;
             // set room
-            mapTileList.Add(tileToSet.GetComponent<MapTile>());
-            // place room
-            InstantiateTile(tileToSet, tilePos * mapTileSize, true);
+            mapTileList.Add(InstantiateTile(tileToSet, tilePos * mapTileSize, true).GetComponent<MapTile>());
         }
         // place corners
         GameObject corner;
@@ -415,7 +408,7 @@ public class WFC_MapGeneration : MonoBehaviour
         // get doors
         for (int i = 0; i < mapTileList.Count; i++)
         {
-            if (mapTileList[i].doorTransform != null)
+            if (mapTileList[i].doorTransform != null && mapTileList[i].doorTransform.GetComponent<Portal>() == null)
                 doors.Add(mapTileList[i].doorTransform);
         }
         // choose furthest door
@@ -430,6 +423,8 @@ public class WFC_MapGeneration : MonoBehaviour
         doors.Remove(doorTransform);
         for (int i = doors.Count - 1; i > doors.Count - 4; i--)
         {
+            if (i < 0)
+                break;
             mapPortalList.Add(Instantiate(portalPrefab, doors[i], false).GetComponent<Portal>());
         }
 

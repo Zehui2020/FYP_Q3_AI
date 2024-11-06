@@ -202,15 +202,14 @@ public class ItemManager : MonoBehaviour
             AddItem(item);
     }
 
-    public void GiveAbility(string itemName, string amount)
+    public void GiveAbility(string itemName)
     {
         foreach (BaseAbility ability in allAbilities)
         {
             if (!ability.abilityName.ToString().Equals(itemName))
                 continue;
 
-            for (int i = 0; i < int.Parse(amount); i++)
-                AddAbility(ability);
+            AddAbility(ability);
         }
     }
 }
