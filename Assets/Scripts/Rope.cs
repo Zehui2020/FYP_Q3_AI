@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Rope : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer spriteRenderer;
+    private BoxCollider2D col;
     [SerializeField] private List<PlatformEffector2D> platforms;
     [SerializeField] private LayerMask playerLayer;
 
@@ -14,9 +14,9 @@ public class Rope : MonoBehaviour
 
     private void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        maxRopeHeight = transform.position.y + transform.localScale.y / 2f;
-        minRopeHeight = transform.position.y - transform.localScale.y / 2f;
+        col = GetComponent<BoxCollider2D>();
+        maxRopeHeight = transform.position.y + col.size.y / 2f;
+        minRopeHeight = transform.position.y - col.size.y / 2f;
     }
 
     public bool CheckCannotGrappleUp(Transform grappler)
