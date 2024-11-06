@@ -319,6 +319,7 @@ GameObject:
   - component: {fileID: 8835913358760781655}
   - component: {fileID: 2342768417653394624}
   - component: {fileID: 2080992250222419385}
+  - component: {fileID: 3332588641560765381}
   m_Layer: 9
   m_Name: Canvas
   m_TagString: Untagged
@@ -393,6 +394,27 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 1
+--- !u!95 &3332588641560765381
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2959945764054904083}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bc29a18320c03c342a4f4dca43ce211a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4006087708878257076
 GameObject:
   m_ObjectHideFlags: 0
@@ -701,6 +723,9 @@ MonoBehaviour:
     commonItemRate: 70
     uncommonItemRate: 25
     legendaryItemRate: 5
+  OnChestOpen:
+    m_PersistentCalls:
+      m_Calls: []
   fixedItemToSpawn: {fileID: 0}
   defaultLayer:
     serializedVersion: 2
@@ -712,3 +737,5 @@ MonoBehaviour:
   costText: {fileID: 5524382374063369361}
   cost: 25
   itemStats: {fileID: 11400000, guid: 824135dfbababa4499c6125fc3559610, type: 2}
+  uiAnimator: {fileID: 3332588641560765381}
+  minimapIndicator: {fileID: 2782778108587794350}

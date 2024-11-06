@@ -12,7 +12,8 @@ public class BaseStats : MonoBehaviour
         Dodge,
         Block,
         Parry,
-        StoneSkin
+        StoneSkin,
+        HitImmune
     }
     public ImmuneType immuneType;
 
@@ -42,7 +43,8 @@ public class BaseStats : MonoBehaviour
             Gavel,
             BloodArts,
             ContagiousHaze,
-            Shatter
+            Shatter,
+            Unparriable
         }
 
         public DamageSource damageSource;
@@ -140,7 +142,7 @@ public class BaseStats : MonoBehaviour
         if (shield <= 0)
         {
             damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-            damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.blue, new Vector2(0, 3));
+            damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.cyan, new Vector2(0, 3));
             shield = 0;
             OnBreached?.Invoke(breachedMultiplier.GetTotalModifier());
         }
@@ -152,7 +154,7 @@ public class BaseStats : MonoBehaviour
         }
 
         damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-        damagePopup.SetupPopup(Mathf.CeilToInt(damage.damage).ToString(), transform.position, Color.blue, new Vector2(1, 2));
+        damagePopup.SetupPopup(Mathf.CeilToInt(damage.damage).ToString(), transform.position, Color.cyan, new Vector2(1, 2));
     }
     public void TakeShieldDamageOnly(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
@@ -169,26 +171,31 @@ public class BaseStats : MonoBehaviour
         // Check for immunity
         if (isImmune)
         {
-            DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-
             switch (immuneType)
             {
                 case ImmuneType.Dodge:
+                    DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
                     popup.SetupPopup("Dodged!", transform.position, Color.white, new Vector2(1, 3));
-                    break;
+                    return false;
                 case ImmuneType.Block:
+                    popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
                     popup.SetupPopup("Blocked!", transform.position, Color.white, new Vector2(1, 3));
-                    break;
+                    return false;
                 case ImmuneType.Parry:
+                    if (damage.damageSource == DamageSource.Unparriable)
+                        break;
+
+                    popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
                     OnParry?.Invoke(attacker);
                     popup.SetupPopup("Parried!", transform.position, Color.white, new Vector2(1, 3));
-                    break;
+                    return false;
                 case ImmuneType.StoneSkin:
+                    popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
                     popup.SetupPopup("Stone Skin!", transform.position, Color.yellow, new Vector2(1, 3));
-                    break;
+                    return false;
+                case ImmuneType.HitImmune:
+                    return false;
             }
-
-            return false;
         }
 
         DamagePopup damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
@@ -212,15 +219,9 @@ public class BaseStats : MonoBehaviour
             if (shield <= 0)
             {
                 damagePopup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
-                damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.blue, new Vector2(0, 3));
+                damagePopup.SetupPopup("Breached!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.cyan, new Vector2(0, 3));
                 shield = 0;
                 OnBreached?.Invoke(breachedMultiplier.GetTotalModifier());
-
-                if (damage.damageSource == Damage.DamageSource.Shatter)
-                {
-                    damagePopup.SetupPopup("Shattered!", new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), Color.white, new Vector2(0, 3));
-                    TakeTrueDamage(damage);
-                }
             }
 
             return true;
@@ -236,7 +237,7 @@ public class BaseStats : MonoBehaviour
         if (health <= 0)
         {
             if (damage.damageSource == Damage.DamageSource.ContagiousHaze)
-                attacker.abilityStats.contagiousHazeStacks = statusEffectManager.poisonStacks.stackCount;
+                attacker.abilityStats.rabidExecutionStacks = statusEffectManager.poisonStacks.stackCount;
 
             OnDieEvent?.Invoke(this);
             statusEffectManager.OnDie();
@@ -426,7 +427,7 @@ public class BaseStats : MonoBehaviour
                 if (frozenRoutine != null)
                     StopCoroutine(frozenRoutine);
 
-                popup.SetupPopup("Frozen!", transform.position, Color.blue, new Vector2(0, 3));
+                popup.SetupPopup("Frozen!", transform.position, Color.cyan, new Vector2(0, 3));
                 frozenRoutine = StartCoroutine(FrozenRoutine(duration));
                 break;
             case StatusEffect.StatusType.Status.Dazed:

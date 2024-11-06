@@ -13,6 +13,8 @@ public class WorldSpaceButton : MonoBehaviour
 
     private bool isLaunched = false;
 
+    public event System.Action<string> AddButton;
+
     public void SetPrompt(string prompt, ComfyUIManager comfyUIManager)
     {
         promptText.text = prompt;
@@ -49,8 +51,11 @@ public class WorldSpaceButton : MonoBehaviour
         buttonRB.isKinematic = true;
         Destroy(gameObject, 1f);
         transform.position = new Vector3(targetPoint.position.x, transform.position.y, 0);
-        uiManager.AddPrompt(promptText.text);
 
+        if (uiManager != null)
+            uiManager.AddPrompt(promptText.text);
+
+        AddButton?.Invoke(promptText.text);
         StartCoroutine(LaunchRoutine(targetPoint));
     }
     private IEnumerator LaunchRoutine(Transform targetPoint)

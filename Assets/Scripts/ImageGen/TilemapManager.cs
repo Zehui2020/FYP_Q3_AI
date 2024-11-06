@@ -14,9 +14,15 @@ public class TilemapManager : MonoBehaviour
     [SerializeField] private List<Tilemap> tilemaps;
     public List<TileBase> targetTiles;
 
+    [Header("Initing")]
+    [SerializeField] private string startLevel = string.Empty;
+
     private void Start()
     {
-        SliceTexture();
+        if (string.IsNullOrEmpty(startLevel))
+            SliceTexture();
+        else 
+            SliceTexture(startLevel);
     }
 
     public void SliceTexture()
@@ -27,7 +33,25 @@ public class TilemapManager : MonoBehaviour
             return;
         }
 
-        Texture2D texture = imageSaver.GetTextureFromLocalDisk(fileName + "_Level" + GameData.Instance.currentLevel);
+        Texture2D texture = imageSaver.GetTextureFromLocalDisk(fileName + "_" + GameData.Instance.currentLevel);
+
+        foreach (Rect rect in tileRects)
+        {
+            Sprite newSprite = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f), 302);
+            slicedSprites.Add(newSprite);
+        }
+
+        AssignTileSprites();
+    }
+    public void SliceTexture(string levelName)
+    {
+        if (targetTiles.Count != tileRects.Count)
+        {
+            Debug.LogError("Insufficient Tiles To Set!");
+            return;
+        }
+
+        Texture2D texture = imageSaver.GetTextureFromLocalDisk(fileName + "_" + levelName);
 
         foreach (Rect rect in tileRects)
         {
@@ -42,7 +66,7 @@ public class TilemapManager : MonoBehaviour
     {
         List<Sprite> sprites = new();
 
-        Texture2D texture = imageSaver.GetTextureFromLocalDisk(fileName + "_Level" + GameData.Instance.currentLevel);
+        Texture2D texture = imageSaver.GetTextureFromLocalDisk(fileName + "_" + GameData.Instance.currentLevel);
 
         foreach (Rect rect in tileRects)
         {

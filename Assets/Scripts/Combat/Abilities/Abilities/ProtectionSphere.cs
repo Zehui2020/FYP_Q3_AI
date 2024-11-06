@@ -14,14 +14,20 @@ public class ProtectionSphere : BaseAbility
     public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
         count = (int)(10 / abilityDuration);
-        PlayerController.Instance.abilityController.abilityOverlayAnimator.TriggerOverlayAnim(0.4f, "ProtectionSphere");
+        PlayerController.Instance.abilityController.GetAnimController("ProtectionSphere").TriggerOverlayAnim(0.4f, "ProtectionSphere");
+
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.ProtectionShieldActivate);
+        AudioManager.Instance.Play(Sound.SoundName.ProtectionShieldActive);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)
     {
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.ProtectionShieldDeactivate);
+        AudioManager.Instance.Stop(Sound.SoundName.ProtectionShieldActive);
+
         if (count <= 0)
         {
-            PlayerController.Instance.abilityController.abilityOverlayAnimator.TriggerOverlayAnim(0.4f, "ProtectionSphereOff");
+            PlayerController.Instance.abilityController.GetAnimController("ProtectionSphere").TriggerOverlayAnim(0.4f, "ProtectionSphereOff");
             return;
         }
 
@@ -43,7 +49,7 @@ public class ProtectionSphere : BaseAbility
                     continue;
                 float dir = target.transform.position.x < PlayerController.Instance.transform.position.x ? -1 : 1;
                 target.GetComponent<Rigidbody2D>().velocity = new Vector3(dir * abilityStrength, abilityStrength, 0);
-                target.particleVFXManager.OnStunned();
+                target.particleVFXManager.OnStatic();
             }
         }
         count--;

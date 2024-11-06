@@ -105,6 +105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statBar: {fileID: 6370803735276591926}
   delayBar: {fileID: 3731149009272118515}
+  shakeAnimator: {fileID: 0}
   delayDuration: 0.5
   delayBarSpeed: 5
   shakeIntensity: 0.03
@@ -237,6 +238,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2978139127368084057}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+--- !u!1 &2166754423681969817
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 435793535615661316}
+  m_Layer: 7
+  m_Name: CutscenePos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &435793535615661316
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2166754423681969817}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.03, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5955810268208953471}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2700560037494174352
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,6 +601,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statBar: {fileID: 7058412420188381358}
   delayBar: {fileID: 6928353670999200122}
+  shakeAnimator: {fileID: 0}
   delayDuration: 0.5
   delayBarSpeed: 5
   shakeIntensity: 0.03
@@ -789,6 +822,7 @@ Transform:
   - {fileID: 2978139127368084057}
   - {fileID: 8822606074352880203}
   - {fileID: 7458289566332066347}
+  - {fileID: 435793535615661316}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5236446996482929475
@@ -1425,7 +1459,7 @@ SpriteRenderer:
   m_SortingLayerID: -983140795
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: -2095750726, guid: 7b03eac8998cc0a499a473ca393c9c8d, type: 3}
+  m_Sprite: {fileID: -276149636, guid: 99a26051de380a745b1d8088e64dd814, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -1652,6 +1686,7 @@ MonoBehaviour:
   parryDazeDuration: 3
   parryShieldReduction: 15
   knockbackOnParry: 0
+  initUI: 1
   currentState: 0
   walkSpeed: 3
   rushSpeed: 35
@@ -1668,6 +1703,8 @@ MonoBehaviour:
   - {fileID: 40448769117293303}
   bossDaggers: []
   cutscene: {fileID: 0}
+  dieCutscene: {fileID: 0}
+  nextPhase: {fileID: 0}
 --- !u!114 &4254695898782168221
 MonoBehaviour:
   m_ObjectHideFlags: 0

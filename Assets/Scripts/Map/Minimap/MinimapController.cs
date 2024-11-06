@@ -5,6 +5,7 @@ public class MinimapController : MonoBehaviour
 {
     [SerializeField] List<GameObject> maps;
     [SerializeField] List<GameObject> cam;
+    public bool viewLocked = false;
 
     private void Start()
     {
@@ -17,9 +18,15 @@ public class MinimapController : MonoBehaviour
 
     public void ChangeView(bool showMap)
     {
+        if (viewLocked)
+            return;
+
         cam[0].SetActive(!showMap);
-        cam[1].SetActive(showMap);
         maps[0].SetActive(!showMap);
+        cam[1].SetActive(showMap);
         maps[1].SetActive(showMap);
+
+        if (cam[0] == cam[1])
+            cam[0].SetActive(true);
     }
 }

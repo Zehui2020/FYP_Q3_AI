@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Abilities/Contagious Haze")]
+[CreateAssetMenu(menuName = "Abilities/Rabid Execution")]
 public class ContagiousHaze : BaseAbility
 {
     [SerializeField] private LayerMask targetLayer;
@@ -54,12 +54,14 @@ public class ContagiousHaze : BaseAbility
                             StatusEffect.StatusType.Type.Debuff,
                             StatusEffect.StatusType.Status.Poison
                             ),
-                        abilityStats.contagiousHazeStacks
+                        abilityStats.rabidExecutionStacks
                         );
             }
 
-            abilityStats.contagiousHazeStacks = 0;
+            abilityStats.rabidExecutionStacks = 0;
         }
+
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.RabidExecution);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)

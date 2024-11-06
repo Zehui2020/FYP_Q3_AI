@@ -48,7 +48,7 @@ public class ComfyTilesetGeneration : ComfyManager
         if (tilesetRecieved >= playerBGPrompts.Count)
             return false;
 
-        fileName = "Tileset_Level" + (tilesetRecieved + 2);
+        fileName = "Tileset_" + playerBGPrompts[tilesetRecieved];
         Debug.Log("RECIEVED " + fileName);
 
         if (base.OnRecieveImage(promptID, texture))

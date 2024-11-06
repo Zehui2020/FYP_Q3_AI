@@ -8,6 +8,7 @@ public class EnemyStatBar : MonoBehaviour
     [Header("Components")]
     [SerializeField] private Slider statBar;
     [SerializeField] private RectTransform delayBar;
+    [SerializeField] private Animator shakeAnimator;
 
     [Header("Values")]
     [SerializeField] private float delayDuration;
@@ -50,6 +51,9 @@ public class EnemyStatBar : MonoBehaviour
             StopShakeRoutine();
             BarShakeRoutine = StartCoroutine(ShakeRoutine(critical));
         }
+
+        if (shakeAnimator != null)
+            shakeAnimator.SetTrigger("shake");
     }
 
     public void OnIncreased(int amount, int maxAmount, bool critical)
@@ -84,7 +88,7 @@ public class EnemyStatBar : MonoBehaviour
 
             yield return new WaitForSeconds(delayDuration);
 
-            float targetWidth = (float)amount / maxAmount * delayBarWidth;
+            float targetWidth = (statBar.value / statBar.maxValue) * delayBarWidth;
 
             while (Mathf.Abs(delayBar.sizeDelta.x - targetWidth) > 0.01f)
             {

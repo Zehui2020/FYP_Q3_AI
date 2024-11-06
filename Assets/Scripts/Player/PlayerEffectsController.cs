@@ -1,6 +1,6 @@
 using Cinemachine;
+using DesignPatterns.ObjectPool;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -21,11 +21,19 @@ public class PlayerEffectsController : MonoBehaviour
     [SerializeField] private ParticleSystem airDashPS;
     [SerializeField] private ParticleSystem groundDashPS;
     [SerializeField] private ParticleSystem doubleJumpPS;
+    [SerializeField] private ParticleSystem dustPS;
+    [SerializeField] private ParticleSystem landPS;
+
+    [Header("Others")]
+    [SerializeField] private MoneyPopupCounter moneyPopup;
+    [SerializeField] private SpriteRenderer playerSR;
+    [SerializeField] private float afterimageSpawnRate;
 
     private Vignette vignette;
     private ChromaticAberration chromaticAberration;
 
     private Coroutine pulseRoutine;
+    private Coroutine afterimageRoutine;
 
     private void Awake()
     {
@@ -38,6 +46,35 @@ public class PlayerEffectsController : MonoBehaviour
 
         volume.profile.TryGet(out vignette);
         volume.profile.TryGet(out chromaticAberration);
+    }
+
+    public void StartSpawnAfterimage()
+    {
+        if (afterimageRoutine == null)
+            afterimageRoutine = StartCoroutine(SpawnAfterimageRoutine());
+    }
+    public void StopSpawnAfterimage()
+    {
+        if (afterimageRoutine != null)
+        {
+            StopCoroutine(afterimageRoutine);
+            afterimageRoutine = null;
+        }
+    }
+    private IEnumerator SpawnAfterimageRoutine()
+    {
+        while (true)
+        {
+            PlayerAfterimage afterimage = ObjectPool.Instance.GetPooledObject("Afterimage", true) as PlayerAfterimage;
+            afterimage.SetupImage(playerSR.sprite, Mathf.Sign(transform.localScale.x));
+            afterimage.transform.position = transform.position;
+            yield return new WaitForSeconds(afterimageSpawnRate);
+        }
+    }
+
+    public void AddMoney(int amount)
+    {
+        moneyPopup.AddMoney(amount);
     }
 
     public void ShakeCamera(float intensity, float frequency, float timer)
@@ -70,20 +107,44 @@ public class PlayerEffectsController : MonoBehaviour
         shakeRoutine = null;
     }
 
-    public void HitStop(float duration)
+    public void HitStop(float duration, float timeScale, bool lerp, float lerpSpeed)
     {
-        StartCoroutine(ApplyHitStop(duration));
+        StartCoroutine(ApplyHitStop(duration, timeScale, lerp, lerpSpeed));
     }
-    private IEnumerator ApplyHitStop(float duration)
+    private IEnumerator ApplyHitStop(float duration, float timeScale, bool lerp, float lerpSpeed)
     {
-        Time.timeScale = 0;
-        yield return new WaitForSecondsRealtime(duration);
-        Time.timeScale = 1;
+        Time.timeScale = timeScale;
+
+        if (lerp)
+        {
+            while (Time.timeScale <= 0.97f)
+            {
+                Time.timeScale = Mathf.Lerp(Time.timeScale, 1, Time.deltaTime * lerpSpeed);
+                yield return null;
+            }
+
+            Time.timeScale = 1;
+        }
+        else
+        {
+            yield return new WaitForSecondsRealtime(duration);
+            Time.timeScale = 1;
+        }
     }
 
     public void SetCameraTrigger(string trigger)
     {
         camAnimator.SetTrigger(trigger);
+    }
+
+    public void BurstDustPS()
+    {
+        dustPS.Play();
+    }
+
+    public void BurstLandPS()
+    {
+        landPS.Play();
     }
 
     public void PlayDashPS(bool isGroundDash)

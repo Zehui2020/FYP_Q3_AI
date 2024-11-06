@@ -16,10 +16,10 @@ public class SceneTrigger : MonoBehaviour
     {
         if (col.CompareTag(triggerTag))
         {
-            if (GameData.Instance.currentLevel >= GameData.Instance.maxLevels)
+            if (GameData.Instance.levelCount >= GameData.Instance.maxLevels)
                 SceneLoader.Instance.LoadScene("BossLevel");
             else
-                SceneLoader.Instance.LoadScene(baseSceneName + GameData.Instance.currentLevel);
+                SceneLoader.Instance.LoadScene(baseSceneName + GameData.Instance.levelCount);
         }
     }
 }

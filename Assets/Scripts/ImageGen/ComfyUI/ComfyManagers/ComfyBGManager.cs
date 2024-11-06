@@ -54,7 +54,15 @@ public class ComfyBGManager : ComfyManager
         if (uiManager.GetPrompt() == uiManager.setPrompts)
             return false;
 
-        bgPrompts.Add(uiManager.GetPrompt());
+        foreach (string prompt in allPromptDatas[0].themePrompts)
+        {
+            if (Utility.StringExistsInString(prompt, uiManager.GetPrompt()))
+            {
+                bgPrompts.Add(prompt);
+                GameData.Instance.levelThemes += ", " + prompt;
+                break;
+            }
+        }
 
         if (queueLevelData != allPromptDatas.Count)
         {
@@ -82,7 +90,7 @@ public class ComfyBGManager : ComfyManager
         if (currentLevelPrompt >= allPromptDatas.Count)
             return false;
 
-        fileName = ((BGPrompt.Type)bgRecievedCounter).ToString() + "_Level" + (currentLevelPrompt + 2);
+        fileName = ((BGPrompt.Type)bgRecievedCounter).ToString() + "_" + bgPrompts[currentLevelPrompt];
 
         if (base.OnRecieveImage(promptID, texture))
         {

@@ -16,7 +16,9 @@ public class PlayerController : PlayerStats
         Dialogue,
         Ability,
         Map,
-        Shop
+        Shop,
+        ShadowBound,
+        Transition
     }
     public PlayerStates currentState;
 
@@ -51,6 +53,7 @@ public class PlayerController : PlayerStats
 
     public int chestUnlockCount = 0;
     public int extraLives = 0;
+    private bool hitImmune = false;
 
     [SerializeField] private TextMeshProUGUI goldText;
     public int gold = 0;
@@ -63,6 +66,8 @@ public class PlayerController : PlayerStats
 
     private Coroutine transceiverBuffRoutine;
     private Coroutine gavelCooldown;
+
+    private int shadowBoundClicks;
 
     private void Awake()
     {
@@ -136,6 +141,19 @@ public class PlayerController : PlayerStats
         if (Input.GetKeyDown(KeyCode.Return))
             ConsoleManager.Instance.OnInputCommand();
 
+        if (currentState == PlayerStates.ShadowBound)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                playerEffectsController.ShakeCamera(1f, 1f, 0.3f);
+                shadowBoundClicks++;
+            }
+
+            return;
+        }
+        if (currentState == PlayerStates.Transition)
+            return;
+
         if (abilityController != null && abilityController.swappingAbility)
         {
             movementController.currentState = MovementState.Idle;
@@ -170,9 +188,15 @@ public class PlayerController : PlayerStats
                 minimapController.ChangeView(false);
                 ChangeState(PlayerStates.Movement);
             }
-
+            else
+            {
+                playerRB.velocity = Vector3.zero;
+                playerRB.isKinematic = true;
+            }
             return;
         }
+        else
+            playerRB.isKinematic = false;
 
         if (health <= 0)
             return;
@@ -217,7 +241,7 @@ public class PlayerController : PlayerStats
                 return;
 
             ChangeState(PlayerStates.Combat);
-            combatController.HandleAttack();
+            combatController.HandleAttack(horizontal);
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -303,6 +327,10 @@ public class PlayerController : PlayerStats
         movementController.canMove = false;
         playerRB.velocity = Vector2.zero;
 
+        playerEffectsController.HitStop(0.3f, 0, true, 6f);
+        playerEffectsController.ShakeCamera(6f, 8f, 0.2f);
+        playerEffectsController.Pulse(0.5f, 3f, 0f, 0.3f, true);
+
         yield return new WaitForSeconds(0.5f);
 
         combatController.canAttack = true;
@@ -315,7 +343,7 @@ public class PlayerController : PlayerStats
 
     private void FixedUpdate()
     {
-        if (health <= 0)
+        if (health <= 0 || currentState == PlayerStates.ShadowBound)
             return;
 
         movementController.MovePlayer(movementSpeedMultiplier.GetTotalModifier());
@@ -386,7 +414,7 @@ public class PlayerController : PlayerStats
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
-        if (health <= 0 || hurtRoutine != null)
+        if (health <= 0 || hurtRoutine != null || hitImmune)
             return false;
 
         bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
@@ -407,15 +435,11 @@ public class PlayerController : PlayerStats
 
         if (tookDamage)
         {
-            playerEffectsController.ShakeCamera(4f, 5f, 0.2f);
-            playerEffectsController.Pulse(0.5f, 3f, 0f, 0.3f, true);
-
             if (movementController.currentState != MovementState.Plunge &&
                 movementController.currentState != MovementState.LedgeGrab &&
+                currentState != PlayerStates.Ability &&
                 movementController.isGrounded)
-            {
                 ChangeState(PlayerStates.Hurt);
-            }
 
             combatController.ResetComboInstantly();
 
@@ -433,7 +457,7 @@ public class PlayerController : PlayerStats
             }
 
             // Rebate Token
-            gold += itemStats.rebateGold;
+            AddGold(itemStats.rebateGold);
 
             // Charged Defibrillators
             if (itemStats.defibrillatorHealMultiplier != 0)
@@ -457,7 +481,7 @@ public class PlayerController : PlayerStats
                         attacker.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Freeze), itemStats.cramponFreezeStacks);
                     }
 
-                    playerEffectsController.HitStop(0.1f);
+                    playerEffectsController.HitStop(0.3f, 0, true, 6f);
 
                     break;
                 case ImmuneType.Parry:
@@ -465,7 +489,15 @@ public class PlayerController : PlayerStats
             }
         }
 
+        StartCoroutine(HitRoutine());
+
         return tookDamage;
+    }
+    private IEnumerator HitRoutine()
+    {
+        hitImmune = true;
+        yield return new WaitForSeconds(0.5f);
+        hitImmune = false;
     }
     private IEnumerator DieRoutine()
     {
@@ -833,7 +865,7 @@ public class PlayerController : PlayerStats
     public void OnParryEnemy(BaseStats target)
     {
         AudioManager.Instance.PlayOneShot(Sound.SoundName.ParryHit);
-        playerEffectsController.HitStop(0.5f);
+        playerEffectsController.HitStop(0.3f, 0, false, 0);
         playerEffectsController.ShakeCamera(5, 20, 0.5f);
         playerEffectsController.SetCameraTrigger("parry");
 
@@ -906,7 +938,26 @@ public class PlayerController : PlayerStats
                 movementController.StopPlayer();
                 movementController.ChangeState(MovementState.Idle);
                 break;
+            case PlayerStates.ShadowBound:
+                animationManager.ChangeAnimation(animationManager.Idle, 0f, 0f, AnimationManager.AnimType.CannotOverride);
+                StartCoroutine(ShadowBoundRoutine());
+                break;
         }
+    }
+
+    private IEnumerator ShadowBoundRoutine()
+    {
+        float timer = 10f;
+
+        while (timer > 0)
+        {
+            playerRB.velocity = Vector2.zero;
+            timer -= Time.deltaTime * shadowBoundClicks;
+            yield return null;
+        }
+
+        shadowBoundClicks = 0;
+        ChangeState(PlayerStates.Movement);
     }
 
     public void AddJumpCount(int count)
@@ -969,6 +1020,16 @@ public class PlayerController : PlayerStats
         }
     }
 
+    public void AddGold(int amount)
+    {
+        gold += amount;
+        playerEffectsController.AddMoney(amount);
+    }
+    public void RemoveGold(int amount)
+    {
+        gold -= amount;
+    }
+
     public bool IsGrounded()
     {
         return movementController.isGrounded;
@@ -1003,6 +1064,13 @@ public class PlayerController : PlayerStats
     }
     public void GiveAbility(string itemName, string amount)
     {
+        if (itemName == "Test")
+        {
+            itemManager.GiveAbility("FreezingOrb", "1");
+            itemManager.GiveAbility("Shatter", "1");
+            return;
+        }
+
         itemManager.GiveAbility(itemName, amount);
     }
 

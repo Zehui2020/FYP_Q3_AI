@@ -7,11 +7,24 @@ public class MolotovProjectile : AbilityProjectile
     protected override void OnHit(BaseStats target)
     {
         InitParticles(10, range, 1.5f);
-        for (int i = 0; i < particleVFXManager.Count; i++)
+
+        // get all target objects in area
+        Collider2D[] targetColliders = Physics2D.OverlapCircleAll(target.transform.position, 2, targetLayer);
+
+        foreach (Collider2D col in targetColliders)
         {
-            particleVFXManager[i].OnBurning(0);
+            BaseStats targetInArea = col.GetComponent<BaseStats>();
+            if (target != null)
+                targetInArea.ApplyStatusEffect(
+                    new StatusEffect.StatusType(
+                        StatusEffect.StatusType.Type.Debuff,
+                        StatusEffect.StatusType.Status.Burn
+                        ),
+                    8
+                    );
         }
 
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.MolotovCocktail);
         base.OnHit(target);
     }
 }

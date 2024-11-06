@@ -32,6 +32,7 @@ public class Enemy : EnemyStats
     [SerializeField] protected float parryDazeDuration;
     [SerializeField] protected float parryShieldReduction;
     [SerializeField] protected bool knockbackOnParry = true;
+    [SerializeField] protected bool initUI = true;
 
     protected int currentWaypoint = 0;
 
@@ -67,7 +68,8 @@ public class Enemy : EnemyStats
         statusEffectManager = GetComponent<StatusEffectManager>();
 
         aiNavigation.InitPathfindingAgent();
-        uiController.InitUIController(this);
+        if (initUI)
+            uiController.InitUIController(this);
         collisionController.InitCollisionController(this);
         player = PlayerController.Instance;
 
@@ -82,12 +84,13 @@ public class Enemy : EnemyStats
         {
             ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Breached), 0);
             TriggerStatusState(StatusEffect.StatusType.Status.Dazed, shieldRegenDelay);
-            PlayerEffectsController.Instance.HitStop(0.2f); 
+            PlayerEffectsController.Instance.HitStop(0.3f, 0, true, 5f); 
         };
 
         onHitEvent += player.OnHitEnemyEvent;
         OnDieEvent += (target) => 
         {
+            OnDie();
             player.OnEnemyDie(target);
             uiController.SetCanvasActive(false);
         };
@@ -164,9 +167,9 @@ public class Enemy : EnemyStats
         collisionController.DisableCollider(col);
     }
 
-    public void OnDie()
+    public virtual void OnDie()
     {
-        Destroy(transform.parent.gameObject, 10f);
+
     }
 
     protected void PatrolUpdate()

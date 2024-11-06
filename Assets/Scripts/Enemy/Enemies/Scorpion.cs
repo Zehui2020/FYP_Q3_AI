@@ -38,15 +38,35 @@ public class Scorpion : Enemy
 
         onReachWaypoint += () => { ChangeState(State.Idle); };
         onFinishIdle += () => { ChangeState(State.Patrol); };
-        OnDieEvent += (target) => { ChangeState(State.Die); };
         OnBreached += (multiplier) => { animator.Play(IdleAnim); };
         OnParry += (stat) => { animator.Play(IdleAnim); };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
     }
 
+    public override bool AttackTarget(BaseStats target, Damage.DamageSource damageSource, Vector3 closestPoint)
+    {
+        bool tookDamage = base.AttackTarget(target, damageSource, closestPoint);
+        if (tookDamage)
+        {
+            int randNum = Random.Range(0, 2);
+            if (randNum == 0)
+                target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Poison), 1);
+        }
+        return tookDamage;
+    }
+
+    public override void OnDie()
+    {
+        base.OnDie();
+        ChangeState(State.Die);
+    }
+
     private void ChangeState(State newState)
     {
         if (currentState == State.Die)
+            return;
+
+        if (health <= 0 && newState != State.Die)
             return;
 
         currentState = newState;

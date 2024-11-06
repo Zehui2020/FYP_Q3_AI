@@ -37,11 +37,17 @@ public class Shockwave : PooledObject
         if (!collision.TryGetComponent<PlayerController>(out PlayerController player))
             return;
 
-        player.TakeDamage(thrower, new BaseStats.Damage(damage), false, player.transform.position, DamagePopup.DamageType.Health);
+        player.TakeDamage(thrower, new BaseStats.Damage(BaseStats.Damage.DamageSource.Unparriable, damage), false, player.transform.position, DamagePopup.DamageType.Health);
     }
 
     public void ReleaseShockwave()
     {
+        rbs[0].velocity = Vector2.zero;
+        rbs[1].velocity = Vector2.zero;
+
+        rbs[0].transform.localPosition = Vector2.zero;
+        rbs[1].transform.localPosition = Vector2.zero;
+
         Release();
         gameObject.SetActive(false);
     }

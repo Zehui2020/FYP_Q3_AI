@@ -89,10 +89,15 @@ public class CombatController : MonoBehaviour
         parryCooldownRoutine = StartCoroutine(ParryCooldownRoutine());
     }
 
-    public void HandleAttack()
+    public void HandleAttack(float horizontal)
     {
         if (!canAttack)
             return;
+
+        if (horizontal > 0)
+            transform.localScale = new Vector3(1, 1, 1);
+        else if (horizontal < 0)
+            transform.localScale = new Vector3(-1, 1, 1);
 
         if (resetComboRoutine != null)
         {

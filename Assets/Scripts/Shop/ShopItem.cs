@@ -37,7 +37,7 @@ public class ShopItem : PooledObject
             return;
 
         OnPurchaseEvent.Invoke();
-        player.gold -= cost;
+        player.RemoveGold(cost);
         player.GiveShopItem(shopItem);
         itemAnimator.SetTrigger("purchase");
         isPurchased = true;

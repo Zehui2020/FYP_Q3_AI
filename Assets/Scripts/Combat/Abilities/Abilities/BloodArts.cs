@@ -19,6 +19,7 @@ public class BloodArts : BaseAbility
         abilityStats.bloodArtsLifestealMultiplier += 0.5f;
 
         singleTarget.particleVFXManager.OnBloodLoss();
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.BloodArts);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)

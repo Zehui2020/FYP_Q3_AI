@@ -48,7 +48,7 @@ public class AbilitySelectUI : MonoBehaviour
         }
         else
         {
-            layout.padding = new RectOffset(0, 35, 0, 90);
+            layout.padding = new RectOffset(0, 15, 0, 60);
             layout.childAlignment = TextAnchor.LowerRight;
             layout.spacing = 15;
 

@@ -44,7 +44,6 @@ public class Undead : Enemy
 
         onFinishIdle += () => { ChangeState(State.Patrol); };
         onPlayerInChaseRange += () => { ChangeState(State.Chase); };
-        OnDieEvent += (target) => { ChangeState(State.Die); };
         OnBreached += (multiplier) => { animator.Play(RestAnim); };
         OnParry += (stat) => { animator.Play(RestAnim); };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
@@ -52,9 +51,18 @@ public class Undead : Enemy
         audioProxy.PlayAudioOneShot(Sound.SoundName.UndeadLoop);
     }
 
+    public override void OnDie()
+    {
+        base.OnDie();
+        ChangeState(State.Die);
+    }
+
     private void ChangeState(State newState)
     {
         if (currentState == State.Die)
+            return;
+
+        if (health <= 0 && newState != State.Die)
             return;
 
         currentState = newState;

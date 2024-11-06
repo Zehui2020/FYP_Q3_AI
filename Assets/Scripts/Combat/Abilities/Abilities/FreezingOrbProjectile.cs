@@ -8,6 +8,7 @@ public class FreezingOrbProjectile : AbilityProjectile
     {
         InitParticles(10, range, 3);
 
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.FreezingOrb);
         base.OnHit(target);
     }
 }

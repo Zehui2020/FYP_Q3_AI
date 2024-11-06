@@ -71,6 +71,8 @@ public class BossDagger : PooledObject
             yield return null;
         }
 
+        StopCoroutine(rotateRoutine);
+        rotateRoutine = null;
         moveRoutine = StartCoroutine(MoveRoutine());
     }
 
@@ -119,7 +121,7 @@ public class BossDagger : PooledObject
             ReleaseDagger();
         }
 
-        if (Utility.Instance.CheckLayer(collision.gameObject, groundLayer))
+        if (Utility.CheckLayer(collision.gameObject, groundLayer))
             ReleaseDagger();
     }
 

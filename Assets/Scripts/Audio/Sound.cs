@@ -66,7 +66,26 @@ public class Sound
         ScorpionWalk,
 
         UndeadLoop,
-        UndeadAttack
+        UndeadAttack,
+
+        BloodArts,
+        DivineBlessing,
+        FreezingOrb,
+        ProjectileThrow,
+        HeatWave,
+        MolotovCocktail,
+        PoisonKnives,
+        RabidExecution,
+        Ravage,
+        Shatter,
+        Shred,
+        StoneSkin,
+        StoneSkinEnd,
+        HealthPotion,
+        ProtectionShieldActivate,
+        ProtectionShieldActive,
+        ProtectionShieldDeactivate,
+
     }
     public SoundName name;
 

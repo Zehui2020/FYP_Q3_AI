@@ -17,6 +17,8 @@ public class PoisonKnives : BaseAbility
         obj.transform.localScale = new Vector3(PlayerController.Instance.transform.localScale.x, 1, 1);
         Vector3 force = new Vector3(PlayerController.Instance.transform.localScale.x * abilityRange + PlayerController.Instance.GetComponent<Rigidbody2D>().velocity.x, abilityStrength, 0);
         obj.GetComponent<PoisonKnifeProjectile>().LaunchProjectile(force);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.PoisonKnives);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.ProjectileThrow);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)

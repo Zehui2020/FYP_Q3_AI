@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AbilityController : MonoBehaviour
 {
-    [SerializeField] public AbilityAnimationController abilityOverlayAnimator;
+    [SerializeField] public List<AbilityAnimationController> abilityOverlayAnimator;
     [SerializeField] private ItemPickupAlert itemPickupAlert;
     [SerializeField] private GameObject abilityUIPrefab;
     [SerializeField] private Transform abilityUIParent;
@@ -129,7 +129,7 @@ public class AbilityController : MonoBehaviour
         {
             StopCoroutine(abilityCooldownRoutines[i]);
             abilityCooldownRoutines[i] = null;
-            abilityUI[i].SetCooldown(0, charges[i]);
+            abilityUI[i].SetCooldown(0, charges[i], maxCharges[i]);
         }
         // init ability
         InitializeAbility(i);
@@ -167,7 +167,7 @@ public class AbilityController : MonoBehaviour
             else
                 abilityUI[j].InitAbilityUI("[ " + (j + 1).ToString() + " ]");
 
-            if (abilityCooldowns[j] > 0)
+            if (abilityCooldowns.Count > j && abilityCooldowns[j] > 0)
                 abilityCooldownRoutines[j] = StartCoroutine(AbilityCooldownRoutine(j, abilities[j], abilityCooldowns[j]));
         }
     }
@@ -216,7 +216,7 @@ public class AbilityController : MonoBehaviour
             List<BaseStats> targetsInArea = new List<BaseStats>();
             foreach (Collider2D col in targetColliders)
             {
-                if (col.GetComponent<BaseStats>() != null)
+                if (col.GetComponent<BaseStats>() != null && col.GetComponent<BaseStats>().health > 0)
                 {
                     if (!Physics2D.Raycast(
                         player.transform.position,
@@ -272,7 +272,7 @@ public class AbilityController : MonoBehaviour
         while (timer > 0)
         {
             abilityCooldowns[abilityNo] = timer / ability.abilityCooldown;
-            abilityUI[abilityNo].SetCooldown(abilityCooldowns[abilityNo], charges[abilityNo]);
+            abilityUI[abilityNo].SetCooldown(abilityCooldowns[abilityNo], charges[abilityNo], maxCharges[abilityNo]);
             timer -= Time.deltaTime;
             yield return null;
         }
@@ -281,13 +281,13 @@ public class AbilityController : MonoBehaviour
 
         if (ability.isConsumable)
         {
-            abilityUI[abilityNo].SetCooldown(0, charges[abilityNo]);
+            abilityUI[abilityNo].SetCooldown(0, charges[abilityNo], maxCharges[abilityNo]);
             abilityCooldownRoutines[abilityNo] = null;
         }
         else
         {
             charges[abilityNo]++;
-            abilityUI[abilityNo].SetCooldown(0, charges[abilityNo]);
+            abilityUI[abilityNo].SetCooldown(0, charges[abilityNo], maxCharges[abilityNo]);
             if (charges[abilityNo] < maxCharges[abilityNo])
                 abilityCooldownRoutines[abilityNo] = StartCoroutine(AbilityCooldownRoutine(abilityNo, ability));
             else
@@ -302,7 +302,7 @@ public class AbilityController : MonoBehaviour
         while (timer > 0)
         {
             abilityCooldowns[abilityNo] = timer / ability.abilityCooldown;
-            abilityUI[abilityNo].SetCooldown(abilityCooldowns[abilityNo], charges[abilityNo]);
+            abilityUI[abilityNo].SetCooldown(abilityCooldowns[abilityNo], charges[abilityNo], maxCharges[abilityNo]);
             timer -= Time.deltaTime;
             yield return null;
         }
@@ -311,13 +311,13 @@ public class AbilityController : MonoBehaviour
 
         if (ability.isConsumable)
         {
-            abilityUI[abilityNo].SetCooldown(0, charges[abilityNo]);
+            abilityUI[abilityNo].SetCooldown(0, charges[abilityNo], maxCharges[abilityNo]);
             abilityCooldownRoutines[abilityNo] = null;
         }
         else
         {
             charges[abilityNo]++;
-            abilityUI[abilityNo].SetCooldown(0, charges[abilityNo]);
+            abilityUI[abilityNo].SetCooldown(0, charges[abilityNo], maxCharges[abilityNo]);
             if (charges[abilityNo] < maxCharges[abilityNo])
                 abilityCooldownRoutines[abilityNo] = StartCoroutine(AbilityCooldownRoutine(abilityNo, ability));
             else
@@ -335,7 +335,7 @@ public class AbilityController : MonoBehaviour
             StopCoroutine(abilityCooldownRoutines[i]);
 
             charges[i]++;
-            abilityUI[i].SetCooldown(0, charges[i]);
+            abilityUI[i].SetCooldown(0, charges[i], maxCharges[i]);
             if (charges[i] < maxCharges[i])
                 abilityCooldownRoutines[i] = StartCoroutine(AbilityCooldownRoutine(i, abilities[i]));
             else
@@ -379,5 +379,16 @@ public class AbilityController : MonoBehaviour
             if (charges[randomIndex] < maxCharges[randomIndex])
                 abilityCooldownRoutines[randomIndex] = StartCoroutine(AbilityCooldownRoutine(randomIndex, abilities[randomIndex]));
         }
+    }
+
+    public AbilityAnimationController GetAnimController(string name)
+    {
+        foreach (AbilityAnimationController controller in abilityOverlayAnimator)
+        {
+            if (controller.animName.Contains(name))
+                return controller;
+        }
+
+        return null;
     }
 }

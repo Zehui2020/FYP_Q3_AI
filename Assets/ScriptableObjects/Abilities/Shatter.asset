@@ -17,9 +17,9 @@ MonoBehaviour:
   spriteIcon: {fileID: 0}
   itemOutlineMaterial: {fileID: 2100000, guid: 21fe65a90f7cb164a9e6b65a37cbc0f6, type: 2}
   title: Shatter
-  description: All nearby enemies are dealt 250% of base attack as damage, if their
-    shield is broken from this ability, they are dealt another 250% of base attack
-    as damage. Damage is doubled for frozen enemies.
+  description: All nearby enemies are dealt 250% of base attack as damage, if the
+    enemy does not have shield after the initial damage, they are dealt another 250%
+    of base attack as damage. Damage is doubled for frozen enemies.
   simpleDescription: Deal damage to nearby enemies. Damage is doubled for <color=blue>Frozen</color>
     enemies.
   abilityStats: {fileID: 11400000, guid: 637d944b389817a4e8d8bbb63c6c2cda, type: 2}
@@ -29,7 +29,7 @@ MonoBehaviour:
   abilityUseType: 2
   abilityRange: 10
   abilityStrength: 250
-  abilityDuration: 0
+  abilityDuration: 0.1
   abilityCooldown: 30
   abilityCharges: 1
   abilityMaxCharges: 1

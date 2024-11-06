@@ -1,16 +1,19 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ParallaxEffect : MonoBehaviour
 {
     private Vector2 startPos;
+    private Animator animator;
 
+    [SerializeField] private bool centerPivot = false;
+    [SerializeField] private bool updateY;
     [SerializeField] private Transform followPos;
     [SerializeField] private Transform player;
     [SerializeField] private float parallaxEffect;
 
     private SpriteRenderer spriteRenderer;
+    [SerializeField] private string levelName;
     [SerializeField] private string filename;
     private ImageSaver imageSaver;
 
@@ -28,22 +31,36 @@ public class ParallaxEffect : MonoBehaviour
         startPos = transform.position;
     }
 
+    public void Fade(bool fadeOut)
+    {
+        animator.SetBool("fadeOut", fadeOut);
+    }
+
     private void Awake()
     {
         imageSaver = GetComponent<ImageSaver>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
 
-        spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_Level" + GameData.Instance.currentLevel);
+        Vector2 pivot = centerPivot ? new Vector2(0.5f, 0.5f) : new Vector2(0.5f, 0);
+
+        if (levelName == string.Empty)
+            spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + GameData.Instance.currentLevel, pivot);
+        else
+        {
+            spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + levelName, pivot);
+            animator.SetBool("fadeOut", true);
+        }
     }
 
-    private void LateUpdate()
+    public void UpdateParallax()
     {
         // Parallax X
         float dist = followPos.transform.position.x * parallaxEffect;
         transform.position = new Vector3(startPos.x - dist, transform.position.y, transform.position.z);
 
         // Parallax Y
-        if (mapSizeY == 0)
+        if (mapSizeY == 0 || !updateY)
             return;
 
         float diff = transform.position.y - mapOriginY;

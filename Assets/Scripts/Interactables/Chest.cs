@@ -43,12 +43,22 @@ public class Chest : MonoBehaviour, IInteractable
     [SerializeField] private ItemStats itemStats;
     private bool isOpened = false;
 
+    [SerializeField] private Animator uiAnimator;
+    [SerializeField] private GameObject minimapIndicator;
+
     public bool OnInteract()
     {
-        if (isOpened || PlayerController.Instance.gold < cost)
+        if (isOpened)
             return false;
 
+        if (PlayerController.Instance.gold < cost)
+        {
+            uiAnimator.SetTrigger("interactFailed");
+            return false;
+        }
+
         OnChestOpen?.Invoke();
+        minimapIndicator.SetActive(false);
 
         if (chestType.type == ChestType.Type.FixedItem)
         {
@@ -79,7 +89,7 @@ public class Chest : MonoBehaviour, IInteractable
         }
 
         PlayerController.Instance.chestUnlockCount++;
-        PlayerController.Instance.gold -= cost;
+        PlayerController.Instance.RemoveGold(cost);
         LayoutRebuilder.ForceRebuildLayoutImmediate(costRect);
         keycodeUI.Hide();
 
@@ -120,8 +130,6 @@ public class Chest : MonoBehaviour, IInteractable
                     break;
             }
 
-            Debug.Log("Rarity: " + rarity);
-
             if (items.Count == 0 && abilities.Count == 0)
             {
                 Debug.Log("MISSING ITEM!");
@@ -155,13 +163,26 @@ public class Chest : MonoBehaviour, IInteractable
         if (PlayerController.Instance.gold >= cost)
             keycodeUI.Show();
 
-        costText.text = cost.ToString();
         canvas.gameObject.SetActive(true);
         LayoutRebuilder.ForceRebuildLayoutImmediate(costRect);
 
         int layer = Mathf.RoundToInt(Mathf.Log(defaultLayer.value) / Mathf.Log(2));
         gameObject.layer = layer;
         minimapIcon.SetActive(true);
+    }
+
+    private void Update()
+    {
+        if (cost <= 0)
+        {
+            costText.text = "Free!";
+            return;
+        }
+
+        if (PlayerController.Instance.gold < cost)
+            costText.text = "<color=red>" + cost.ToString() + "</color>";
+        else
+            costText.text = cost.ToString();
     }
 
     public void OnLeaveRange()

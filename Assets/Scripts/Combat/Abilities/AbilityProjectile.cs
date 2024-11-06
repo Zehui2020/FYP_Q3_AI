@@ -4,7 +4,7 @@ using UnityEngine;
 public class AbilityProjectile : MonoBehaviour
 {
     [SerializeField] protected Rigidbody2D rb;
-    [SerializeField] private int targetLayer = 7;
+    [SerializeField] protected LayerMask targetLayer;
     [SerializeField] private GameObject particlePrefab;
     [HideInInspector] public List<BaseStats> stats = new();
     protected List<ParticleVFXManager> particleVFXManager = new();
@@ -16,7 +16,7 @@ public class AbilityProjectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.layer == targetLayer)
+        if (Utility.CheckLayer(other.gameObject, targetLayer))
         {
             OnHit(other.GetComponent<BaseStats>());
         }

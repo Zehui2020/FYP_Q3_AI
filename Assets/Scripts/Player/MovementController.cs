@@ -133,18 +133,17 @@ public class MovementController : MonoBehaviour
         currentState = movementState;
     }
 
-    public void Knockback(float initialSpeed)
+    public void Knockback(float initialSpeed, Vector2 dir)
     {
         ChangeState(MovementState.Knockback);
 
         if (knockbackRoutine != null)
             StopCoroutine(knockbackRoutine);
-        knockbackRoutine = StartCoroutine(KnockbackRoutine(initialSpeed));
+        knockbackRoutine = StartCoroutine(KnockbackRoutine(initialSpeed, dir));
     }
 
-    private IEnumerator KnockbackRoutine(float force)
+    private IEnumerator KnockbackRoutine(float force, Vector2 dir)
     {
-        Vector2 dir = transform.localScale.x > 0 ? -transform.right : transform.right;
         playerRB.AddForce(dir * force, ForceMode2D.Impulse);
         playerRB.drag = movementData.groundDrag;
 
@@ -177,6 +176,12 @@ public class MovementController : MonoBehaviour
     {
         if (!canMove || currentState == MovementState.Knockback || playerRB == null)
             return;
+
+        // Afterimage
+        if (dashRoutine != null)
+            playerEffectsController.StartSpawnAfterimage();
+        else
+            playerEffectsController.StopSpawnAfterimage();
 
         // Calculate move dir
         direction = Camera.main.transform.forward.normalized;
@@ -812,6 +817,15 @@ public class MovementController : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (Utility.CheckLayer(collision.gameObject, groundLayer) && (currentState == MovementState.Falling || currentState == MovementState.Land))
+        {
+            playerEffectsController.BurstLandPS();
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.Land);
+        }
     }
 
     private void OnDisable()

@@ -1,18 +1,9 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Utility : MonoBehaviour
+public static class Utility
 {
-    public static Utility Instance;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
-
-    public Transform GetTopmostParent(Transform child)
+    public static Transform GetTopmostParent(Transform child)
     {
         if (child == null)
             return null;
@@ -27,7 +18,7 @@ public class Utility : MonoBehaviour
         return parent;
     }
 
-    public List<T> SetListSize<T>(List<T> list, int desiredSize)
+    public static List<T> SetListSize<T>(List<T> list, int desiredSize)
     {
         List<T> removedList = new List<T>();
 
@@ -43,7 +34,7 @@ public class Utility : MonoBehaviour
         return removedList;
     }
 
-    public string ToRoman(int number)
+    public static string ToRoman(int number)
     {
         if (number < 1 || number > 3999)
             return string.Empty;
@@ -63,8 +54,30 @@ public class Utility : MonoBehaviour
         return "I" + ToRoman(number - 1);
     }
 
-    public bool CheckLayer(GameObject collidedGO, LayerMask layer)
+    public static bool CheckLayer(GameObject collidedGO, LayerMask layer)
     {
         return (layer & 1 << collidedGO.layer) == 1 << collidedGO.layer;
+    }
+
+    public static Vector2 GetDirectionFromAngle(float angleInDegrees)
+    {
+        float angleInRadians = angleInDegrees * Mathf.Deg2Rad;
+        float x = Mathf.Cos(angleInRadians);
+        float y = Mathf.Sin(angleInRadians);
+
+        return new Vector2(x, y).normalized;
+    }
+
+    public static float GetAngleFromDirection(Vector2 direction)
+    {
+        return Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+    }
+
+    public static bool StringExistsInString(string stringToFind, string fullString)
+    {
+        if (string.IsNullOrEmpty(stringToFind) || string.IsNullOrEmpty(fullString))
+            return false;
+
+        return fullString.Contains(stringToFind);
     }
 }

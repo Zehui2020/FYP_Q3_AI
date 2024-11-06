@@ -16,6 +16,7 @@ public class HeatWave : BaseAbility
         obj.transform.localScale = new Vector3(PlayerController.Instance.transform.localScale.x, 1, 1);
         Vector3 force = new Vector3(PlayerController.Instance.transform.localScale.x * abilityRange + PlayerController.Instance.GetComponent<Rigidbody2D>().velocity.x, 0, 0);
         obj.GetComponent<HeatWaveProjectile>().LaunchProjectile(force);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.HeatWave);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)

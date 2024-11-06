@@ -2,9 +2,13 @@ using Cinemachine;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Playables;
 
 public class CutsceneGroup : MonoBehaviour
 {
+    [SerializeField] private PlayableDirector timeline;
+
+    [SerializeField] private CinemachineVirtualCamera cinemachine;
     [SerializeField] private CinemachineTargetGroup targetGroup;
     [SerializeField] private float lerpSpeed;
 
@@ -24,9 +28,12 @@ public class CutsceneGroup : MonoBehaviour
 
     public void EnterCutscene()
     {
+        timeline.Play();
+        cinemachine.Follow = targetGroup.transform;
+        cinemachine.LookAt = targetGroup.transform;
         cutsceneRoutine = StartCoroutine(EnterCustsceneRoutine());
         CutsceneStart?.Invoke();
-        PlayerController.Instance.ChangeState(PlayerController.PlayerStates.Map);
+        PlayerController.Instance.ChangeState(PlayerController.PlayerStates.Ability);
     }
 
     public void ExitCutscene() 

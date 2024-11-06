@@ -5,7 +5,7 @@ public class GameData : MonoBehaviour
 {
     public static GameData Instance;
 
-    public float currentLevel = 1;
+    public float levelCount = 1;
     public float maxLevels = 1;
 
     public float timer;
@@ -14,6 +14,10 @@ public class GameData : MonoBehaviour
     public WeaponData currentWeapon;
     public List<Item> items = new();
     public List<BaseAbility> abilities = new();
+
+    public string levelThemes;
+    public string choseThemes;
+    public string currentLevel;
 
     private void Awake()
     {
@@ -24,7 +28,7 @@ public class GameData : MonoBehaviour
         }
 
         Instance = this;
-        currentLevel = 1;
+        currentLevel = "Cave";
 
         DontDestroyOnLoad(gameObject);
     }

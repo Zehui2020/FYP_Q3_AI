@@ -11,6 +11,7 @@ public class HealthPotion : BaseAbility
     public override void OnAbilityUse(BaseStats singleTarget, List<BaseStats> targetList)
     {
         singleTarget.Heal((int)(singleTarget.maxHealth * abilityStrength / 100));
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.HealthPotion);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)

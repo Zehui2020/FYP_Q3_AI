@@ -15,6 +15,7 @@ public class MolotovCocktail : BaseAbility
         obj.transform.position = PlayerController.Instance.transform.position;
         Vector3 force = new Vector3(PlayerController.Instance.transform.localScale.x * abilityRange + PlayerController.Instance.GetComponent<Rigidbody2D>().velocity.x, abilityStrength, 0);
         obj.GetComponent<MolotovProjectile>().LaunchProjectile(force);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.ProjectileThrow);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)

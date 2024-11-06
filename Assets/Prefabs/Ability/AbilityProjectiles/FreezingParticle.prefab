@@ -4882,13 +4882,13 @@ MonoBehaviour:
     statusEffect: 3
   targetTag:
   - Enemy
-  collisionTag:
-  - Enemy
-  - Ground
   interval: 10
   stackPerInterval: 10
   lifeTime: 1
   projectile: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!61 &2084980863325439347
 BoxCollider2D:
   m_ObjectHideFlags: 0
