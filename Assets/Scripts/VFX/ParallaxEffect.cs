@@ -27,7 +27,9 @@ public class ParallaxEffect : MonoBehaviour
         this.mapSizeY = mapSizeY;
 
         mapOriginY = mapSizeY / 2f;
-        transform.position = player.transform.position;
+        if (updateY)
+            transform.position = player.transform.position;
+
         startPos = transform.position;
     }
 

@@ -19,13 +19,13 @@ MonoBehaviour:
   - type: 0
     bgType: 0
     keywords: Mountain
-    prompt: pixel art, trees, snowy, white tips
+    prompt: pixel art, trees, snowy, white tips, foreground, large trees, thick forest,
+      trees in front
     referenceImage: mountain_fg
   - type: 0
     bgType: 0
     keywords: Forest
-    prompt: pixel art, forest, trees, vines, dark forest, bushes, leaves, tree trunks,
-      tree branches, green leaves, brown trunks, foilage
+    prompt: pixel art, bushes, foliage, foreground
     referenceImage: forest_fg
   middleGroundBGPrompts:
   - type: 1
@@ -42,13 +42,9 @@ MonoBehaviour:
   backgroundBGPrompts:
   - type: 2
     bgType: 1
-    keywords: Mountain
-    prompt: pixel art, sky, snowy. cloudy, grey
-    referenceImage: mountain_bg
-  - type: 2
-    bgType: 1
-    keywords: Mountain
-    prompt: pixel art, thick forest, green leaves, brown trunks, tree branches
+    keywords: Forest
+    prompt: pixel art, thick forest, large trees, large tree trunks, large tree branches,
+      sub canopy area, tree trunks only, leaves on top canopy
     referenceImage: forest_bg
   promptCheckers:
   - foundPrompts: Mountain

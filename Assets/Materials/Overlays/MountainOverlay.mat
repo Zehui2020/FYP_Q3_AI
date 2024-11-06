@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OverlayMaterial
+  m_Name: MountainOverlay
   m_Shader: {fileID: -6465566751694194690, guid: 28496e8a237aca64e9bf4a3174b9ff61, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -37,7 +37,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BlendTex:
-        m_Texture: {fileID: 2800000, guid: b1d9dc8ce2907684d9cfd1b4b8031f67, type: 3}
+        m_Texture: {fileID: 2800000, guid: b31b44095857f0249bfcec1542a944af, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
@@ -58,6 +58,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _ImageSaturation: 0.5
     - _Saturation: 1
     - _Weight: 1
     m_Colors: []

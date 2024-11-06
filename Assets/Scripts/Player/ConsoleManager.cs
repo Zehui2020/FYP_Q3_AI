@@ -89,6 +89,11 @@ public class ConsoleManager : MonoBehaviour
         {
             PlayerController.Instance.portalController.ActivateAllPortals();
         }
+        else if (command.Equals("/level"))
+        {
+            GameData.Instance.currentLevel = words[1];
+            SceneLoader.Instance.LoadScene("Level2");
+        }
 
         //else if (command.Equals("/win"))
         //{
