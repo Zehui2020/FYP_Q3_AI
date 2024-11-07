@@ -105,6 +105,7 @@ public class Sound
         Error,
         PickUp,
         HeartBeat,
+        Haste,
     }
     public SoundName name;
 

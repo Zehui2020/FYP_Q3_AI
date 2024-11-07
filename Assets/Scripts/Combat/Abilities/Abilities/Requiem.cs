@@ -22,7 +22,7 @@ public class Requiem : BaseAbility
             abilityStats.bloodArtsBleedChance += (int)abilityStrength;
 
             AudioManager.Instance.PlayOneShot(Sound.SoundName.BloodArts);
-            AudioManager.Instance.Play(Sound.SoundName.HeartBeat);
+            AudioManager.Instance.FadeSound(true, Sound.SoundName.HeartBeat, 1, 0.25f);
         }
         else if (isInState)
         {
@@ -31,7 +31,7 @@ public class Requiem : BaseAbility
             PlayerController.Instance.attackSpeedMultiplier.RemoveModifier(abilityRange / 100);
             abilityStats.bloodArtsBleedChance -= (int)abilityStrength;
 
-            AudioManager.Instance.Stop(Sound.SoundName.HeartBeat);
+            AudioManager.Instance.FadeSound(false, Sound.SoundName.HeartBeat, 2, 0);
         }
     }
 
