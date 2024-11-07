@@ -86,6 +86,7 @@ public class AbilityController : MonoBehaviour
         }
 
         // add ability
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.PickUp);
         abilities.Add(newAbility);
         abilityCooldownRoutines.Add(null);
         this.charges.Add(charges);
@@ -139,6 +140,7 @@ public class AbilityController : MonoBehaviour
         swappingAbility = false;
         swapAbility = null;
         selectUI.ShowSelectAbility(false, swapAbility);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.PickUp);
     }
 
     private void RemoveAbility(int i)

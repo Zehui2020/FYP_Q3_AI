@@ -100,6 +100,11 @@ public class Sound
         DialogHover,
         DialogClick,
         AbilitySelect,
+
+        ChestOpen,
+        Error,
+        PickUp,
+        HeartBeat,
     }
     public SoundName name;
 

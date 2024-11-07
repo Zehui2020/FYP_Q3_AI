@@ -51,8 +51,10 @@ public class Chest : MonoBehaviour, IInteractable
         if (isOpened)
             return false;
 
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.ChestOpen);
         if (PlayerController.Instance.gold < cost)
         {
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.Error);
             uiAnimator.SetTrigger("interactFailed");
             return false;
         }
@@ -93,6 +95,8 @@ public class Chest : MonoBehaviour, IInteractable
         LayoutRebuilder.ForceRebuildLayoutImmediate(costRect);
         keycodeUI.Hide();
 
+        isOpened = true;
+        OnLeaveRange();
         return true;
     }
 
