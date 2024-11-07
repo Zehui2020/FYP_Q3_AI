@@ -80,6 +80,7 @@ public class ItemManager : MonoBehaviour
         }
 
         OnPickupItem(itemToAdd);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.PickUp);
     }
 
     public void AddAbility(BaseAbility ability)

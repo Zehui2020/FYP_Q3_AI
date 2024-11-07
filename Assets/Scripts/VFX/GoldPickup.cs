@@ -73,6 +73,7 @@ public class GoldPickup : PooledObject
                 StopCoroutine(chaseRoutine);
 
             player.AddGold(goldToGive);
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.PickUp);
 
             chaseRoutine = null;
             trail.enabled = false;

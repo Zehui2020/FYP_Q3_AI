@@ -21,6 +21,7 @@ public class WeaponPickup : MonoBehaviour, IInteractable
         PlayerController.Instance.PickupWeapon(weapon);
         OnPickup?.Invoke();
         gameObject.SetActive(false);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.PickUp);
         return true;
     }
 

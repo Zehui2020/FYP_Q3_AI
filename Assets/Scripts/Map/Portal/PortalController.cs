@@ -56,6 +56,7 @@ public class PortalController : MonoBehaviour
 
     private IEnumerator TeleportRoutine(int i)
     {
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.TeleportStart);
         // turn off map and lock it
         mmController.ChangeView(false);
         mmController.viewLocked = true;
@@ -71,7 +72,9 @@ public class PortalController : MonoBehaviour
         PlayerController.Instance.transform.position = portals[i].transform.position;
 
         // timer for player teleport
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(0.5f);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.TeleportEnd);
+        yield return new WaitForSeconds(0.5f);
 
         // unlock map
         mmController.viewLocked = false;

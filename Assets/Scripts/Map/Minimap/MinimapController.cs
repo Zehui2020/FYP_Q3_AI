@@ -21,6 +21,11 @@ public class MinimapController : MonoBehaviour
         if (viewLocked)
             return;
 
+        if (showMap)
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.Map);
+        if (!showMap)
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.MapClose);
+
         cam[0].SetActive(!showMap);
         maps[0].SetActive(!showMap);
         cam[1].SetActive(showMap);

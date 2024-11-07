@@ -20,7 +20,9 @@ public class Requiem : BaseAbility
             PlayerController.Instance.attackSpeedMultiplier.AddModifier(abilityRange / 100);
             // increase bleed chance
             abilityStats.bloodArtsBleedChance += (int)abilityStrength;
+
             AudioManager.Instance.PlayOneShot(Sound.SoundName.BloodArts);
+            AudioManager.Instance.FadeSound(true, Sound.SoundName.HeartBeat, 1, 0.25f);
         }
         else if (isInState)
         {
@@ -28,6 +30,8 @@ public class Requiem : BaseAbility
             // reset mods
             PlayerController.Instance.attackSpeedMultiplier.RemoveModifier(abilityRange / 100);
             abilityStats.bloodArtsBleedChance -= (int)abilityStrength;
+
+            AudioManager.Instance.FadeSound(false, Sound.SoundName.HeartBeat, 2, 0);
         }
     }
 

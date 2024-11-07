@@ -9,9 +9,7 @@ public class Portal : MonoBehaviour, IInteractable
 
     public void OnEnterRange()
     {
-        animator.SetTrigger("activate");
-        isActivated = true;
-        button.SetActive(true);
+        ActivatePortal();
     }
 
     public bool OnInteract()
@@ -21,6 +19,16 @@ public class Portal : MonoBehaviour, IInteractable
 
     public void OnLeaveRange()
     {
+        ActivatePortal();
+    }
+
+    private void ActivatePortal()
+    {
+        if (isActivated)
+            return;
+
+        animator.SetTrigger("activate");
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.PortalActivate);
         isActivated = true;
         button.SetActive(true);
     }

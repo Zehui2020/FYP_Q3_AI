@@ -15,6 +15,7 @@ public class Haste : BaseAbility
     {
         singleTarget.movementSpeedMultiplier.AddModifier(abilityStrength / 100);
         obj = Instantiate(particleVFX, PlayerController.Instance.transform, false);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.Haste);
     }
 
     public override void OnAbilityEnd(BaseStats singleTarget, List<BaseStats> targetList)

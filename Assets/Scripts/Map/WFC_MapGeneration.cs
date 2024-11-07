@@ -35,8 +35,8 @@ public class WFC_MapGeneration : MonoBehaviour
     private List<GameObject> shopTilePrefabs = new();
     private List<GameObject> topEdgeTilePrefabs = new();
     private List<GameObject> bottomEdgeTilePrefabs = new();
-    public List<GameObject> leftEdgeTilePrefabs = new();
-    public List<GameObject> rightEdgeTilePrefabs = new();
+    private List<GameObject> leftEdgeTilePrefabs = new();
+    private List<GameObject> rightEdgeTilePrefabs = new();
     private List<GameObject> TLCornerTilePrefabs = new();
     private List<GameObject> TRCornerTilePrefabs = new();
     private List<GameObject> BLCornerTilePrefabs = new();

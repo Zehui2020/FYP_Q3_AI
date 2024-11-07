@@ -94,6 +94,26 @@ public class Sound
         Stunned,
         Frozen,
         Dazed,
+
+        ButtonHover,
+        ButtonClick,
+        DialogHover,
+        DialogClick,
+        AbilitySelect,
+
+        ChestOpen,
+        Error,
+        PickUp,
+        HeartBeat,
+        Haste,
+
+        Map,
+        TeleportStart,
+        TeleportEnd,
+        PortalActivate,
+        PortalIdle,
+        MapClose,
+
     }
     public SoundName name;
 
