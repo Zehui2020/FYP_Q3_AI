@@ -32,6 +32,7 @@ public class AbilitySelectUI : MonoBehaviour
         newAbilityUI.SetActive(show);
         if (show)
         {
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.AbilitySelect);
             layout.padding = new RectOffset(0, 0, 150, 0);
             layout.childAlignment = TextAnchor.MiddleCenter;
             layout.spacing = 35;

@@ -99,6 +99,7 @@ public class Sound
         ButtonClick,
         DialogHover,
         DialogClick,
+        AbilitySelect,
     }
     public SoundName name;
 
