@@ -106,6 +106,14 @@ public class Sound
         PickUp,
         HeartBeat,
         Haste,
+
+        Map,
+        TeleportStart,
+        TeleportEnd,
+        PortalActivate,
+        PortalIdle,
+        MapClose,
+
     }
     public SoundName name;
 
