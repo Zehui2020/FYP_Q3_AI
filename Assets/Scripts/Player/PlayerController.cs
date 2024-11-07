@@ -739,7 +739,9 @@ public class PlayerController : PlayerStats
 
                 targetEnemy.TakeDamage(this, proccDamage, proccCrit, targetEnemy.transform.position, proccDamageType);
                 targetEnemy.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), itemStats.frazzledWireStaticStacks);
+
             }
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.FrazzledWire);
 
             totalDamageMultiplier.RemoveModifier(itemStats.frazzledWireTotalDamageModifier);
         }
@@ -761,7 +763,9 @@ public class PlayerController : PlayerStats
 
                 float dynamightDamage = CalculateDamageDealt(enemy, DamageSource.Item, out bool dynamightCrit, out DamagePopup.DamageType dynamightDamageType);
                 enemy.TakeDamage(this, new Damage(DamageSource.Item, dynamightDamage), dynamightCrit, enemy.transform.position, dynamightDamageType);
+
             }
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.DynaMight);
 
             totalDamageMultiplier.RemoveModifier(itemStats.dynamightTotalDamageMultiplier);
         }
@@ -778,6 +782,7 @@ public class PlayerController : PlayerStats
                 target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), itemStats.gavelStacks);
                 target.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Static), itemStats.gavelStacks);
 
+                AudioManager.Instance.PlayOneShot(Sound.SoundName.Ravage);
                 gavelCooldown = StartCoroutine(GavelCooldown());
             }
         }
@@ -810,7 +815,9 @@ public class PlayerController : PlayerStats
 
                 targetEnemy.TakeDamage(this, damage, isCrit, enemy.transform.position, damageType);
                 targetEnemy.ApplyStatusEffect(new StatusEffect.StatusType(StatusEffect.StatusType.Type.Debuff, StatusEffect.StatusType.Status.Burn), itemStats.gasolineBurnStacks);
+
             }
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.DynaMight);
 
             target.particleVFXManager.GasolineBurst();
         }
@@ -842,7 +849,9 @@ public class PlayerController : PlayerStats
                     randStatusEffect);
 
                 enemiesInRange[randNum].ApplyStatusEffect(statusType, 1);
+
             }
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.BottleOSurprise);
         }
 
         // Interest Contract

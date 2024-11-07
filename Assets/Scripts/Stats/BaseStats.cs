@@ -336,6 +336,7 @@ public class BaseStats : MonoBehaviour
         OnHealthChanged?.Invoke(true, false);
         DamagePopup popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
         popup.SetupPopup("+" + amount, transform.position, Color.green, new Vector2(1, 2));
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.Heal);
     }
 
     public void ApplyImmune(float duration, ImmuneType immuneType)

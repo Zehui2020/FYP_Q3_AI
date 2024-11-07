@@ -29,6 +29,7 @@ public class Portal : MonoBehaviour, IInteractable
 
         animator.SetTrigger("activate");
         AudioManager.Instance.PlayOneShot(Sound.SoundName.PortalActivate);
+        AudioManager.Instance.FadeSound(true, Sound.SoundName.PortalIdle, 2, 0.4f);
         isActivated = true;
         button.SetActive(true);
     }
