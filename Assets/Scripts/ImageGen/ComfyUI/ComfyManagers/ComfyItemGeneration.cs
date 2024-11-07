@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static PromptData;
 
 public class ComfyItemGenration : ComfyManager
 {
@@ -27,10 +27,14 @@ public class ComfyItemGenration : ComfyManager
     public void QueueItems()
     {
         if (currentPromptIndex >= itemPrompts.Count)
+        {
+            Destroy(gameObject);
             return;
+        }
 
         promptCtr.QueuePromptWithControlNet(itemPrompts[currentPromptIndex].Pprompt, itemPrompts[currentPromptIndex].controlNetImage);
         fileName = itemPrompts[currentPromptIndex].filename.ToString();
+        GameData.Instance.currentlyLoadingImage.Enqueue(fileName + "_Icon");
     }
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
@@ -40,6 +44,7 @@ public class ComfyItemGenration : ComfyManager
 
         currentPromptIndex++;
         QueueItems();
+
         return true;
     }
 }

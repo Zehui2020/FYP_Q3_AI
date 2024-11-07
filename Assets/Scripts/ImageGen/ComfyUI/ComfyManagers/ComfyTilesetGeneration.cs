@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class ComfyTilesetGeneration : ComfyManager
 {
@@ -38,6 +36,8 @@ public class ComfyTilesetGeneration : ComfyManager
         if (finalPrompt == string.Empty)
             finalPrompt = setPrompts + ", dirt themed";
 
+        GameData.Instance.currentlyLoadingImage.Enqueue(playerBGPrompts[tilesetRecieved] + "_Tileset");
+
         Debug.Log("Tileset Theme: " + finalPrompt);
 
         promptCtr.QueuePromptWithControlNet(setPrompts + finalPrompt, controlnetImage);
@@ -46,7 +46,10 @@ public class ComfyTilesetGeneration : ComfyManager
     public override bool OnRecieveImage(string promptID, Texture2D texture)
     {
         if (tilesetRecieved >= playerBGPrompts.Count)
+        {
+            Destroy(gameObject);
             return false;
+        }
 
         fileName = "Tileset_" + playerBGPrompts[tilesetRecieved];
         Debug.Log("RECIEVED " + fileName);

@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
-using UnityEngine.Events;
 using static PromptData;
 
 public class ComfyBGManager : ComfyManager
@@ -33,17 +30,6 @@ public class ComfyBGManager : ComfyManager
         }
 
         uiManager.SetStartingPrompt(2);
-    }
-
-    private void Update()
-    {
-        if (uiManager == null)
-            return;
-
-        if (comfyWebsocket.currentProgress != -1 && comfyWebsocket.maxProgress != -1)
-            uiManager.SetLoadingBar(comfyWebsocket.currentProgress, comfyWebsocket.maxProgress, "Background");
-        else
-            uiManager.SetLoadingText("Waiting for queue...");
     }
 
     public bool StartBGGeneration()
@@ -83,6 +69,7 @@ public class ComfyBGManager : ComfyManager
     {
         PromptData.BGPrompt bgPrompt = allPromptDatas[currentLevelPrompt].GetBGPrompt((PromptData.BGPrompt.Type)bgRecievedCounter, bgPrompts[currentLevelPrompt]);
         promptCtr.QueuePromptWithControlNet(allPromptDatas[currentLevelPrompt].GetPromptJSON(bgPrompt.bgType), bgPrompt.prompt, bgPrompt.referenceImage);
+        GameData.Instance.currentlyLoadingImage.Enqueue(bgPrompt.keywords + "_" + bgPrompt.type.ToString());
     }
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
@@ -106,6 +93,7 @@ public class ComfyBGManager : ComfyManager
                     {
                         tilesetGeneration.InitTilesetGeneration(allPromptDatas, bgPrompts);
                         tilesetGeneration.QueueTilesetPrompt();
+                        Destroy(gameObject);
                         return true;
                     }
 

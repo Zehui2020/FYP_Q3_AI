@@ -10,11 +10,14 @@ public class ComfyWebsocket : MonoBehaviour
     private string clientId = Guid.NewGuid().ToString();
     private ClientWebSocket ws = new ClientWebSocket();
 
+    [HideInInspector] public string response;
     public ComfyImageCtr comfyImageCtr;
     [HideInInspector] public string promptID;
 
     [HideInInspector] public int currentProgress = -1;
     [HideInInspector] public int maxProgress = -1;
+
+    [SerializeField] private bool saveImageAfter = true;
 
     public async void InitWebsocket()
     {
@@ -45,63 +48,32 @@ public class ComfyWebsocket : MonoBehaviour
             }
             while (!result.EndOfMessage);
 
-            string response = stringBuilder.ToString();
+            response = stringBuilder.ToString();
             //Debug.Log("Received: " + response);
 
             if (ParsePromptID(response).Equals(promptID))
             {
-                currentProgress = ParseJsonValue(response, "value");
-                maxProgress = ParseJsonValue(response, "max");
+                currentProgress = Utility.ParseJsonValue(response, "value");
+                maxProgress = Utility.ParseJsonValue(response, "max");
             }
             else
             {
-                currentProgress = -1;
-                maxProgress = -1;
+                currentProgress = 0;
+                maxProgress = 0;
             }
 
             if (response.Contains("\"queue_remaining\": 0") && promptID != string.Empty && promptID != "0")
             {
-                comfyImageCtr.RequestFileName(promptID);
+                if (saveImageAfter)
+                    comfyImageCtr.RequestFileName(promptID);
 
-                currentProgress = -1;
-                maxProgress = -1;
+                currentProgress = 0;
+                maxProgress = 0;
+                response = string.Empty;
             }
         }
     }
 
-    private int ParseJsonValue(string json, string key)
-    {
-        // Find the key in the JSON string
-        int keyIndex = json.IndexOf($"\"{key}\"");
-        if (keyIndex == -1)
-        {
-            return -1;
-        }
-
-        // Find the colon after the key
-        int colonIndex = json.IndexOf(':', keyIndex);
-        if (colonIndex == -1)
-        {
-            return -1;
-        }
-
-        // Extract the value part (assumes the value is an integer)
-        int commaIndex = json.IndexOf(',', colonIndex);
-        int endIndex = commaIndex != -1 ? commaIndex : json.Length;
-
-        string valueString = json.Substring(colonIndex + 1, endIndex - colonIndex - 1).Trim();
-
-        // Parse the value to an integer
-        if (int.TryParse(valueString, out int result))
-        {
-            return result;
-        }
-        else
-        {
-            Debug.LogError($"Failed to parse value for key \"{key}\".");
-            return -1;
-        }
-    }
 
     private string ParsePromptID(string json)
     {

@@ -80,4 +80,38 @@ public static class Utility
 
         return fullString.Contains(stringToFind);
     }
+
+    public static int ParseJsonValue(string json, string key)
+    {
+        // Find the key in the JSON string
+        int keyIndex = json.IndexOf($"\"{key}\"");
+        if (keyIndex == -1)
+        {
+            return -1;
+        }
+
+        // Find the colon after the key
+        int colonIndex = json.IndexOf(':', keyIndex);
+        if (colonIndex == -1)
+        {
+            return -1;
+        }
+
+        // Extract the value part (assumes the value is an integer)
+        int commaIndex = json.IndexOf(',', colonIndex);
+        int endIndex = commaIndex != -1 ? commaIndex : json.Length;
+
+        string valueString = json.Substring(colonIndex + 1, endIndex - colonIndex - 1).Trim();
+
+        // Parse the value to an integer
+        if (int.TryParse(valueString, out int result))
+        {
+            return result;
+        }
+        else
+        {
+            Debug.LogError($"Failed to parse value for key \"{key}\".");
+            return -1;
+        }
+    }
 }

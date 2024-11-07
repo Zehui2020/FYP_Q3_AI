@@ -19,6 +19,8 @@ public class GameData : MonoBehaviour
     public string choseThemes;
     public string currentLevel;
 
+    public Queue<string> currentlyLoadingImage = new();
+
     private void Awake()
     {
         if (Instance != null && Instance != this)

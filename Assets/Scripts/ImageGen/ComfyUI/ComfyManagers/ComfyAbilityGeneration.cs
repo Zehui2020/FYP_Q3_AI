@@ -1,6 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ComfyAbilityGeneration : ComfyManager
 {
@@ -16,6 +16,9 @@ public class ComfyAbilityGeneration : ComfyManager
     private int currentPromptIndex = 0;
 
     [SerializeField] private bool queueOnStart = false;
+    private bool finishedGenerating = false;
+
+    public UnityEvent OnFinishAllAbilities;
 
     private void Start()
     {
@@ -26,11 +29,18 @@ public class ComfyAbilityGeneration : ComfyManager
 
     public void QueueItems()
     {
-        if (currentPromptIndex >= itemPrompts.Count)
+        if (currentPromptIndex >= itemPrompts.Count && !finishedGenerating)
+        {
+            OnFinishAllAbilities?.Invoke();
+            finishedGenerating = true;
+            Debug.Log("Start Generating Items");
+            Destroy(gameObject);
             return;
+        }
 
         promptCtr.QueuePromptWithControlNet(itemPrompts[currentPromptIndex].Pprompt, itemPrompts[currentPromptIndex].controlNetImage);
         fileName = itemPrompts[currentPromptIndex].filename.ToString();
+        GameData.Instance.currentlyLoadingImage.Enqueue(fileName + "_Icon");
     }
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
@@ -39,7 +49,10 @@ public class ComfyAbilityGeneration : ComfyManager
             return false;
 
         currentPromptIndex++;
+        Debug.Log("GOT ABILIOTY!");
+
         QueueItems();
+
         return true;
     }
 }
