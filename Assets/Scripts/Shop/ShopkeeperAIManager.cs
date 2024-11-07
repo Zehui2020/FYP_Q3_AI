@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Diagnostics;
+using System.Net.WebSockets;
 using System.Text.RegularExpressions;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,6 +12,9 @@ public class ShopkeeperAIManager : MonoBehaviour
     [SerializeField] private ShopkeeperData shopkeeperData;
     [SerializeField] private ShopkeeperUIManager shopkeeperUIManager;
     [SerializeField] private bool isDebugging;
+
+    [HideInInspector] public int currentProgress = -1;
+    [HideInInspector] public int maxProgress = -1;
 
     [Header("Sentiment Analysis")]
     //Sentiment Analysis
@@ -21,6 +27,7 @@ public class ShopkeeperAIManager : MonoBehaviour
     private bool analyseText;
 
     public UnityEvent OnFinishGenerating;
+    private Process process;
 
     public void InitAIManager()
     {
@@ -30,6 +37,17 @@ public class ShopkeeperAIManager : MonoBehaviour
         AI_Sentiment_Analysis.OnAnalysisEnabled();
 
         AI_Chat_Introduction();
+
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.playModeStateChanged += (state) => 
+        { 
+            if (process != null && state == UnityEditor.PlayModeStateChange.ExitingPlayMode)
+            {
+                process.Kill();
+                UnityEngine.Debug.Log("CALLED!");
+            }
+        };
+        #endif
     }
 
     private string GetFinalPromptString(string promptTitle, string promptContent, string additionalPrompts)
@@ -54,7 +72,7 @@ public class ShopkeeperAIManager : MonoBehaviour
             //additionalPrompts+
             promptTitle + " <</SYS>> {" + promptContent + "} [/INST]" + '"';
 
-        return $"cd {shopkeeperData.llamaDirectory} && llama-cli -m {shopkeeperData.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
+        return $"cd {shopkeeperData.llamaDirectory} && llama-cli -m {shopkeeperData.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt} -ngl 20000000 -t 10";
     }
 
     public void AI_Chat_Introduction()
@@ -138,9 +156,8 @@ public class ShopkeeperAIManager : MonoBehaviour
     IEnumerator OpenCommandPrompt(string command)
     {
         string AI_Output = "";
-        bool AI_ChatUpdated = false;
 
-        ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/c {command}")
+        ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/k {command}")
         {
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -148,7 +165,7 @@ public class ShopkeeperAIManager : MonoBehaviour
             CreateNoWindow = true
         };
 
-        Process process = new Process
+        process = new Process
         {
             StartInfo = startInfo,
         };
@@ -166,39 +183,36 @@ public class ShopkeeperAIManager : MonoBehaviour
             }
         };
 
+        string speedString = string.Empty;
         process.ErrorDataReceived += (sender, e) =>
         {
             if (e.Data != null)
             {
+                speedString += e.Data.ToString() + "\n";
                 //Note: These are actually errors. This is just to distinguish the Text Generation from the Statistics Output
-                UnityEngine.Debug.Log(e.Data);
             }
         };
 
         process.Start();
-
         process.BeginErrorReadLine();
-
         process.BeginOutputReadLine();
 
-        yield return new WaitUntil(() => process.HasExited);
+        UnityEngine.Debug.Log("Sent!");
 
-        // Ensure the final output is updated
-        do
-        {
-            if (process.HasExited && AI_Output.Contains("</result>"))
-            {
-                //Bug: e.Data and AI_Output can contain AI_Text_Generation
-                //     but the UpdateChatboxOutput(ExtractContent(AI_Output)) could end up running with a null string.
-                previousContext = ExtractContent(AI_Output);
-                AI_ChatUpdated = true;
-                shopkeeperUIManager.SetShopkeeperOutput(previousContext);
-                OnFinishGenerating?.Invoke();
-            }
-        }
-        while (!AI_ChatUpdated);
+        while (!process.HasExited)
         {
             yield return null;
+        }
+
+        UnityEngine.Debug.Log("Receieved!");
+
+        if (process.HasExited && AI_Output.Contains("</result>"))
+        {
+            //Bug: e.Data and AI_Output can contain AI_Text_Generation
+            //     but the UpdateChatboxOutput(ExtractContent(AI_Output)) could end up running with a null string.
+            previousContext = ExtractContent(AI_Output);
+            shopkeeperUIManager.SetShopkeeperOutput(previousContext);
+            OnFinishGenerating?.Invoke();
         }
 
         if (analyseText)
@@ -206,6 +220,12 @@ public class ShopkeeperAIManager : MonoBehaviour
             AI_Sentiment_Analysis.SendPredictionText(ExtractContent(AI_Output));
             analyseText = false;
         }
+
+        UnityEngine.Debug.Log("Result: " + AI_Output);
+        UnityEngine.Debug.Log(speedString);
+
+        process.Kill();
+        process = null;
     }
 
     string ExtractContent(string text)
@@ -228,5 +248,11 @@ public class ShopkeeperAIManager : MonoBehaviour
         introFinished = false;
         analyseText = false;
         hasIntroduced = false;
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (process != null)
+            process.Kill();
     }
 }

@@ -94,6 +94,10 @@ public class ConsoleManager : MonoBehaviour
             GameData.Instance.currentLevel = words[1];
             SceneLoader.Instance.LoadScene("Level2");
         }
+        else if (command.Equals("/shop"))
+        {
+            PlayerController.Instance.transform.position = FindObjectOfType<Shopkeeper>().transform.position;
+        }
 
         //else if (command.Equals("/win"))
         //{

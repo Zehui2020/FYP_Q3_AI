@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
     {
         public string level;
         public Material levelBGMaterial;
+        public float backgroundScaleX = -1;
         public List<GameObject> GOsToActivate = new();
         public List<GameObject> GOsToDeactivate = new();
         public VolumeProfile volume;
@@ -45,6 +46,9 @@ public class LevelManager : MonoBehaviour
             foreach (SpriteRenderer bgs in backgrounds)
                 bgs.material = currentData.levelBGMaterial;
         }
+
+        if (currentData.backgroundScaleX != -1)
+            backgrounds[0].transform.localScale = new Vector3(currentData.backgroundScaleX, currentData.backgroundScaleX, currentData.backgroundScaleX);
 
         foreach (GameObject go in currentData.GOsToActivate)
             go.SetActive(true);

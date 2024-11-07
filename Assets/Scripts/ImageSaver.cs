@@ -54,7 +54,7 @@ public class ImageSaver : MonoBehaviour
         loadTexture = new Texture2D(0, 0);
         loadTexture.LoadImage(textureBytes);
         loadTexture.filterMode = FilterMode.Point;
-        return Sprite.Create(loadTexture, new Rect(0f, 0f, loadTexture.width, loadTexture.height), new Vector2(0.5f, 0.5f));
+        return Sprite.Create(loadTexture, new Rect(0f, 0f, loadTexture.width, loadTexture.height), pivot);
     }
 
     public Texture2D GetTextureFromLocalDisk(string fileName)
