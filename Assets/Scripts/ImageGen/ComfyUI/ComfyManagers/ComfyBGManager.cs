@@ -94,7 +94,7 @@ public class ComfyBGManager : ComfyManager
 
         if (base.OnRecieveImage(promptID, texture))
         {
-            if (bgRecievedCounter >= (int)PromptData.BGPrompt.Type.Background)
+            if (bgRecievedCounter >= (int)PromptData.BGPrompt.Type.Middleground)
             {
                 if (startGenerating)
                 {

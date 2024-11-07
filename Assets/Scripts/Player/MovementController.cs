@@ -287,7 +287,7 @@ public class MovementController : MonoBehaviour
 
         rope.GrappleEnd();
         rope = null;
-    }
+    } 
 
     public void OnJump(float horizontal)
     {
