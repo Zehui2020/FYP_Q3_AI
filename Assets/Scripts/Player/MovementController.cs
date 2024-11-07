@@ -282,7 +282,9 @@ public class MovementController : MonoBehaviour
         playerRB.gravityScale = movementData.gravityScale;
         playerRB.drag = movementData.airDrag;
 
-        Debug.Log("CALLED!");
+        if (rope == null)
+            return;
+
         rope.GrappleEnd();
         rope = null;
     }
