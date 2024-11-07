@@ -131,6 +131,7 @@ public class CombatController : MonoBehaviour
             Kunai kunai = ObjectPool.Instance.GetPooledObject("Kunai", false) as Kunai;
             kunai.transform.position = transform.position;
             kunai.SetupKunai(player, transform.localScale.x < 0 ? Vector2.left : Vector2.right);
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.ProjectileThrow);
         }
     }
 

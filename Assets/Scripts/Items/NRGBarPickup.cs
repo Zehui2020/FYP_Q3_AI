@@ -36,6 +36,7 @@ public class NRGBarPickup : PooledObject
             return;
 
         abilityController.ResetAbilityCooldowns();
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.NRGBar);
 
         Release();
         gameObject.SetActive(false);

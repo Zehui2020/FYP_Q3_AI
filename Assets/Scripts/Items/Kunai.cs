@@ -40,6 +40,7 @@ public class Kunai : PooledObject
             out DamagePopup.DamageType damageType);
 
         target.TakeDamage(thrower, damage, isCrit, collision.transform.position, damageType);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.PoisonKnives);
 
         Release();
         gameObject.SetActive(false);

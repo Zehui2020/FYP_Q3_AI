@@ -114,6 +114,11 @@ public class Sound
         PortalIdle,
         MapClose,
 
+        BottleOSurprise,
+        DynaMight,
+        FrazzledWire,
+        NRGBar,
+
     }
     public SoundName name;
 
