@@ -94,6 +94,11 @@ public class Sound
         Stunned,
         Frozen,
         Dazed,
+
+        ButtonHover,
+        ButtonClick,
+        DialogHover,
+        DialogClick,
     }
     public SoundName name;
 

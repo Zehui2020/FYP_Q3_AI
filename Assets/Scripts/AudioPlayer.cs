@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,15 +6,13 @@ public class AudioPlayer : MonoBehaviour
 {
     [SerializeField] private List<Sound.SoundName> soundsToPlay = new();
 
-    public void PlayOneShot()
+    public void PlayOneShot(int index)
     {
-        foreach (Sound.SoundName sound in soundsToPlay)
-            AudioManager.Instance.PlayOneShot(sound);
+        AudioManager.Instance.PlayOneShot(soundsToPlay[index]);
     }
 
-    public void Play()
+    public void Play(int index)
     {
-        foreach (Sound.SoundName sound in soundsToPlay)
-            AudioManager.Instance.Play(sound);
+        AudioManager.Instance.Play(soundsToPlay[index]);
     }
 }
