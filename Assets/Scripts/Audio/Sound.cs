@@ -119,6 +119,8 @@ public class Sound
         FrazzledWire,
         NRGBar,
 
+        Heal,
+
     }
     public SoundName name;
 
