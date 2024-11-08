@@ -1,18 +1,20 @@
 using UnityEngine;
 using DesignPatterns.ObjectPool;
+using System.Collections;
 
 public class BossPunchHand : PooledObject
 {
     private FinalBossPhase2 boss;
     [SerializeField] private Collider2D hitBox;
+    [SerializeField] private Animator animator;
 
     public void InitHand(FinalBossPhase2 attacker, Vector2 dir)
     {
         boss = attacker;
         if (dir == Vector2.right)
-            transform.localScale = new Vector3(-1f, 1f, 1f);
-        else
             transform.localScale = new Vector3(1f, 1f, 1f);
+        else
+            transform.localScale = new Vector3(-1f, 1f, 1f);
     }
 
     public void OnDamageEventStart()
@@ -23,6 +25,19 @@ public class BossPunchHand : PooledObject
     {
         hitBox.enabled = false;
     }
+
+    public void Retreat()
+    {
+        StartCoroutine(RetreatRoutine());
+    }
+
+    private IEnumerator RetreatRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+
+        animator.SetTrigger("retreat");
+    }
+
     public void PunchEnd()
     {
         Release();

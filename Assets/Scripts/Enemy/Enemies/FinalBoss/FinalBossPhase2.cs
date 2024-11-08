@@ -15,7 +15,8 @@ public class FinalBossPhase2 : Enemy
         PunchAttack,
         SmashAttack,
         SummonArms,
-        SummonPillars
+        SummonPillars,
+        Die
     }
 
     public enum LaserType
@@ -31,9 +32,10 @@ public class FinalBossPhase2 : Enemy
     private State previousState;
 
     private int segmentMinHealth;
+    private int prevSegmentMinHealth;
     private int currentSegment;
     [SerializeField] private int maxSegments;
-
+    [SerializeField] private LevelManager levelManager;
     [SerializeField] private Transform laserStartPoint;
     [SerializeField] private Transform shockwaveSpawnPoint;
     [SerializeField] private List<Transform> handSpawnPoint;
@@ -67,9 +69,12 @@ public class FinalBossPhase2 : Enemy
         base.InitializeEnemy();
         currentSegment = 4;
         segmentMinHealth = Mathf.CeilToInt(maxHealth / maxSegments * currentSegment);
+        prevSegmentMinHealth = Mathf.CeilToInt(maxHealth / maxSegments * currentSegment);
 
         cutscene.CutsceneEnd.AddListener(() => { ChangeState(State.LaserAttack); });
         laserVFX.enabled = false;
+
+        OnDieEvent += (die) => { ChangeState(State.Die); };
     }
 
     public void InitBarUI()
@@ -80,8 +85,8 @@ public class FinalBossPhase2 : Enemy
 
     public void ChangeState(State newState)
     {
-        //if (health <= 0 && newState != State.Die)
-        //    return;
+        if (health <= 0 && newState != State.Die)
+            return;
 
         currentState = newState;
         damageMultipler.RemoveAllModifiers();
@@ -104,7 +109,11 @@ public class FinalBossPhase2 : Enemy
                 animator.Play(SummonArmsAnim);
                 break;
             case State.SummonPillars:
+                ApplyImmune(1000000, ImmuneType.BossImmune);
                 animator.Play(SummonPillarAnim);
+                break;
+            case State.Die:
+                cutscene.EnterCutscene();
                 break;
         }
     }
@@ -147,12 +156,18 @@ public class FinalBossPhase2 : Enemy
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
+        if (health - damage.damage <= prevSegmentMinHealth)
+            damage = new Damage(health - prevSegmentMinHealth);
+
         bool tookDamage = base.TakeDamage(attacker, damage, isCrit, closestPoint, damageType);
         CheckSummonPillars();
         return tookDamage;
     }
     public override void TakeTrueDamage(Damage damage)
     {
+        if (health - damage.damage <= prevSegmentMinHealth)
+            damage = new Damage(health - prevSegmentMinHealth);
+
         base.TakeTrueDamage(damage);
         CheckSummonPillars();
     }
@@ -163,6 +178,7 @@ public class FinalBossPhase2 : Enemy
         {
             ChangeState(State.SummonPillars);
             currentSegment--;
+            prevSegmentMinHealth = segmentMinHealth;
             segmentMinHealth = Mathf.CeilToInt(maxHealth / maxSegments * currentSegment);
         }
     }
@@ -251,6 +267,7 @@ public class FinalBossPhase2 : Enemy
     {
         float randX = Random.Range(pillarSpawnPoint[0].position.x, pillarSpawnPoint[1].position.x);
         Instantiate(shadowPillar, new Vector3(randX, pillarSpawnPoint[1].position.y, 0), Quaternion.identity);
+        levelManager.ChangeRandomTheme();
     }
 
     private void OnValidate()
@@ -267,7 +284,7 @@ public class FinalBossPhase2 : Enemy
         int randNum = Random.Range(0, 2);
 
         BossPunchHand bossPunchHand = ObjectPool.Instance.GetPooledObject("BossPunchHand", true) as BossPunchHand;
-        bossPunchHand.InitHand(this, handPunchSpawnPoint[randNum].position.x < transform.position.x ? Vector3.right : Vector3.left);
+        bossPunchHand.InitHand(this, handPunchSpawnPoint[randNum].position.x < player.transform.position.x ? Vector3.left : Vector3.right);
         bossPunchHand.transform.position = handPunchSpawnPoint[randNum].position;
     }
     public void PunchEnd()
@@ -279,6 +296,9 @@ public class FinalBossPhase2 : Enemy
     {
         if (!collision.collider.CompareTag("Crystal"))
             return;
+
+        ApplyImmune(100, ImmuneType.None);
+        prevSegmentMinHealth = segmentMinHealth;
 
         player.playerEffectsController.ShakeCamera(10f, 4f, 0.6f);
         TriggerStatusState(StatusEffect.StatusType.Status.Dazed, shieldRegenDelay);

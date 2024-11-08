@@ -13,7 +13,8 @@ public class BaseStats : MonoBehaviour
         Block,
         Parry,
         StoneSkin,
-        HitImmune
+        HitImmune,
+        BossImmune
     }
     public ImmuneType immuneType;
 
@@ -192,6 +193,10 @@ public class BaseStats : MonoBehaviour
                 case ImmuneType.StoneSkin:
                     popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
                     popup.SetupPopup("Stone Skin!", transform.position, Color.yellow, new Vector2(1, 3));
+                    return false;
+                case ImmuneType.BossImmune:
+                    popup = ObjectPool.Instance.GetPooledObject("DamagePopup", true) as DamagePopup;
+                    popup.SetupPopup("Immune!", transform.position, Color.yellow, new Vector2(1, 3));
                     return false;
                 case ImmuneType.HitImmune:
                     return false;

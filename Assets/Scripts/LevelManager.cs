@@ -22,6 +22,12 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private List<LevelData> levelDatas = new();
     [SerializeField] private List<SpriteRenderer> backgrounds = new();
 
+    [Header("For Boss")]
+    [SerializeField] private List<ParallaxEffect> parallaxBGs = new();
+    [SerializeField] private TilemapManager tilemapManager;
+
+    private LevelData previousRandomLevel;
+
     private void Start()
     {
         LevelData currentData = null;
@@ -58,5 +64,45 @@ public class LevelManager : MonoBehaviour
 
         globalVolume.profile = currentData.volume;
         globalLight.intensity = currentData.globalLightIntensity;
+    }
+
+    public void ChangeRandomTheme()
+    {
+        LevelData currentData;
+
+        do
+        {
+            currentData = levelDatas[Random.Range(0, levelDatas.Count - 1)];
+        }
+        while (currentData == previousRandomLevel);
+
+        if (currentData == null)
+        {
+            Debug.LogWarning("Level in level manager not found");
+            return;
+        }
+
+        if (currentData.levelBGMaterial != null)
+        {
+            foreach (SpriteRenderer bgs in backgrounds)
+                bgs.material = currentData.levelBGMaterial;
+        }
+
+        if (currentData.backgroundScaleX != -1)
+            backgrounds[0].transform.localScale = new Vector3(currentData.backgroundScaleX, currentData.backgroundScaleX, currentData.backgroundScaleX);
+
+        foreach (GameObject go in currentData.GOsToActivate)
+            go.SetActive(true);
+
+        foreach (GameObject go in currentData.GOsToDeactivate)
+            go.SetActive(false);
+
+        foreach (ParallaxEffect bg in parallaxBGs)
+            bg.ChangeSprite(currentData.level);
+
+        globalVolume.profile = currentData.volume;
+        globalLight.intensity = currentData.globalLightIntensity;
+
+        tilemapManager.SliceTexture(currentData.level);
     }
 }

@@ -924,7 +924,10 @@ public class PlayerController : PlayerStats
 
     public void ChangeState(PlayerStates newState)
     {
-        if (currentState == newState || health <= 0)
+        if (currentState == newState || 
+            health <= 0 || 
+            (currentState == PlayerStates.ShadowBound && newState != PlayerStates.Movement) ||
+            (currentState == PlayerStates.ShadowBound && newState == PlayerStates.ShadowBound))
             return;
 
         currentState = newState;
@@ -957,6 +960,7 @@ public class PlayerController : PlayerStats
     private IEnumerator ShadowBoundRoutine()
     {
         float timer = 10f;
+        playerEffectsController.SetShadowBound(true);
 
         while (timer > 0)
         {
@@ -967,6 +971,7 @@ public class PlayerController : PlayerStats
 
         shadowBoundClicks = 0;
         ChangeState(PlayerStates.Movement);
+        playerEffectsController.SetShadowBound(false);
     }
 
     public void AddJumpCount(int count)

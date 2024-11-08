@@ -22,23 +22,7 @@ public class ParallaxEffect : MonoBehaviour
 
     [SerializeField] private float YDiff;
 
-    public void InitParallaxEffect(float mapSizeY)
-    {
-        this.mapSizeY = mapSizeY;
-
-        mapOriginY = mapSizeY / 2f;
-        if (updateY)
-            transform.position = player.transform.position;
-
-        startPos = transform.position;
-    }
-
-    public void Fade(bool fadeOut)
-    {
-        animator.SetBool("fadeOut", fadeOut);
-    }
-
-    private void Awake()
+    private void Start()
     {
         imageSaver = GetComponent<ImageSaver>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -53,6 +37,22 @@ public class ParallaxEffect : MonoBehaviour
             spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + levelName, pivot);
             animator.SetBool("fadeOut", true);
         }
+    }
+
+    public void InitParallaxEffect(float mapSizeY)
+    {
+        this.mapSizeY = mapSizeY;
+
+        mapOriginY = mapSizeY / 2f;
+        if (updateY)
+            transform.position = player.transform.position;
+
+        startPos = transform.position;
+    }
+
+    public void Fade(bool fadeOut)
+    {
+        animator.SetBool("fadeOut", fadeOut);
     }
 
     public void UpdateParallax()
@@ -70,5 +70,11 @@ public class ParallaxEffect : MonoBehaviour
         offsetY = diff < 0 ? offsetY * parallaxEffect : -offsetY * parallaxEffect;
         offsetY = Mathf.Clamp(offsetY, -YDiff, YDiff);
         transform.position = new Vector3(transform.position.x, followPos.transform.position.y + offsetY, transform.position.z);
+    }
+
+    public void ChangeSprite(string level)
+    {
+        Vector2 pivot = centerPivot ? new Vector2(0.5f, 0.5f) : new Vector2(0.5f, 0);
+        spriteRenderer.sprite = imageSaver.GetSpriteFromLocalDisk(filename + "_" + level, pivot);
     }
 }

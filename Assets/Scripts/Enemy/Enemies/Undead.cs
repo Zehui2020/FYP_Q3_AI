@@ -72,6 +72,7 @@ public class Undead : Enemy
                 animator.Play(WalkAnim, -1, 0);
                 break;
             case State.Chase:
+                enemyRB.velocity = Vector2.zero;
                 animator.Play(ChaseAnim, -1, 0);
                 break;
             case State.Attack:

@@ -28,6 +28,7 @@ public class PlayerEffectsController : MonoBehaviour
     [SerializeField] private MoneyPopupCounter moneyPopup;
     [SerializeField] private SpriteRenderer playerSR;
     [SerializeField] private float afterimageSpawnRate;
+    [SerializeField] private GameObject shadowBound;
 
     private Vignette vignette;
     private ChromaticAberration chromaticAberration;
@@ -46,6 +47,20 @@ public class PlayerEffectsController : MonoBehaviour
 
         volume.profile.TryGet(out vignette);
         volume.profile.TryGet(out chromaticAberration);
+    }
+
+    public void SetShadowBound(bool active)
+    {
+        if (active)
+            StartCoroutine(ShadowBoundRoutine());
+        else
+            shadowBound.SetActive(false);
+    }
+    private IEnumerator ShadowBoundRoutine()
+    { 
+        yield return new WaitForSeconds(0.8f);
+
+        shadowBound.SetActive(true);
     }
 
     public void StartSpawnAfterimage()
