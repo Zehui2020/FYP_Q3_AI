@@ -83,6 +83,7 @@ public class BossDagger : PooledObject
         Vector3 dirToTarget = Vector3.Normalize(transform.position - target.transform.position);
         transform.up = dirToTarget;
 
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP1Knife);
         while (true)
         {
             daggerRB.velocity = -dirToTarget * speed;
