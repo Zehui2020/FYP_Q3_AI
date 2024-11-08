@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using static PromptData;
 
 public class ComfyItemGenration : ComfyManager
@@ -16,6 +17,7 @@ public class ComfyItemGenration : ComfyManager
     private int currentPromptIndex = 0;
 
     [SerializeField] private bool queueOnStart = false;
+    public UnityEvent OnFinishAllItems;
 
     private void Start()
     {
@@ -28,6 +30,7 @@ public class ComfyItemGenration : ComfyManager
     {
         if (currentPromptIndex >= itemPrompts.Count)
         {
+            OnFinishAllItems?.Invoke();
             Destroy(gameObject);
             return;
         }

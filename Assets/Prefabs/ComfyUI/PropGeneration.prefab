@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4344038791873354257
+--- !u!1 &7100520397188320895
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,26 +8,26 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4669132284300597017}
-  - component: {fileID: 8806196999414827142}
-  - component: {fileID: 2661525801501936454}
-  - component: {fileID: 2505023775370818175}
-  - component: {fileID: 2686420497923583905}
-  - component: {fileID: 1685083019309393866}
+  - component: {fileID: 4805006082965449500}
+  - component: {fileID: 4389356009794711900}
+  - component: {fileID: 5254762923598581443}
+  - component: {fileID: 5943365386888468630}
+  - component: {fileID: 5931100547445593754}
+  - component: {fileID: 249322296587501534}
   m_Layer: 0
-  m_Name: ItemIconGeneration
+  m_Name: PropGeneration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4669132284300597017
+--- !u!4 &4805006082965449500
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4344038791873354257}
+  m_GameObject: {fileID: 7100520397188320895}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -36,187 +36,71 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8806196999414827142
+--- !u!114 &4389356009794711900
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4344038791873354257}
+  m_GameObject: {fileID: 7100520397188320895}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6498f3cdf39e90846a35bc8524ec6a5d, type: 3}
+  m_Script: {fileID: 11500000, guid: 2d80184d0afaf7148b899e66f43945d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  comfyWebsocket: {fileID: 2661525801501936454}
-  promptCtr: {fileID: 2505023775370818175}
-  imageCtr: {fileID: 2686420497923583905}
-  imageSaver: {fileID: 1685083019309393866}
+  comfyWebsocket: {fileID: 5254762923598581443}
+  promptCtr: {fileID: 5943365386888468630}
+  imageCtr: {fileID: 5931100547445593754}
+  imageSaver: {fileID: 249322296587501534}
   fileName: 
-  itemPrompts:
-  - Pprompt: pixel art, glasses, futuristic, transparent background, opaque lenses
-    controlNetImage: item_glasses
-    filename: 0
-  - Pprompt: pixel art, sickle, transparent background
-    controlNetImage: item_sickle
-    filename: 1
-  - Pprompt: pixel art, knuckle duster, transparent background, solid color background
-    controlNetImage: item_knuckle_duster
-    filename: 2
-  - Pprompt: pixel art, dagger, transparent background, solid color
-    controlNetImage: item_dagger
-    filename: 3
-  - Pprompt: pixel art, crude knife, transparent background, solid color
-    controlNetImage: item_crude_knife
-    filename: 4
-  - Pprompt: pixel art, copper frazzled electric wire, transparent background, solid
-      color background, no background
-    controlNetImage: item_frazzled_wire
-    filename: 5
-  - Pprompt: pixel art, ice crampon, transparent background, solid color background,
-      no background
-    controlNetImage: item_crampon
-    filename: 6
-  - Pprompt: pixel art, gasoline tank, transparent background, solid color background,
-      no background
-    controlNetImage: item_gasoline_tank
-    filename: 7
-  - Pprompt: pixel art, overloaded capacitor, transparent background, solid color
-      background, no background
-    controlNetImage: item_capacitor
-    filename: 8
-  - Pprompt: pixel art, syringe and needle, transparent background, solid color background,
-      no background
-    controlNetImage: item_adrenaline
-    filename: 9
-  - Pprompt: pixel art, baseball bat, transparent background, solid color background,
-      no background
-    controlNetImage: item_metal_bat
-    filename: 10
-  - Pprompt: pixel art, kunai, transparent background, solid color background, no
-      background
-    controlNetImage: item_kunai
-    filename: 11
-  - Pprompt: pixel art, spiked chestplate, medieval chestplate, poison themed, transparent
-      background, solid color background, no background
-    controlNetImage: item_chestplate
-    filename: 12
-  - Pprompt: pixel art, walkie talkie, transparent background, solid color background,
-      no background
-    controlNetImage: item_transceiver
-    filename: 13
-  - Pprompt: pixel art, lead plunger, transparent background, solid color background,
-      no background
-    controlNetImage: item_plunger
-    filename: 14
-  - Pprompt: pixel art, dynamite, transparent background, solid color background,
-      no background
-    controlNetImage: item_dynamite
-    filename: 15
-  - Pprompt: pixel art, gavel, transparent background, solid color background, no
-      background
-    controlNetImage: item_gavel
-    filename: 16
-  - Pprompt: pixel art, bottle, corck, rainbow content, transparent background, solid
-      color background, no background
-    controlNetImage: item_bottle
-    filename: 17
-  - Pprompt: pixel art, feathered cape, transparent background, solid color background,
-      no background
-    controlNetImage: item_cape
-    filename: 18
-  - Pprompt: pixel art, blood bag, transparent background, solid color background,
-      no background
-    controlNetImage: item_blood_bag
-    filename: 19
-  - Pprompt: pixel art, tattered vouchers, transparent background, solid color background,
-      no background
-    controlNetImage: item_voucher
-    filename: 20
-  - Pprompt: pixel art, aztec totem, transparent background, solid color background,
-      no background
-    controlNetImage: item_totem
-    filename: 21
-  - Pprompt: pixel art, paper contracts, transparent background, solid color background,
-      no background
-    controlNetImage: item_contract
-    filename: 22
-  - Pprompt: pixel art, gold coin, gold token, transparent background, solid color
-      background, no background
-    controlNetImage: item_token
-    filename: 23
-  - Pprompt: pixel art, energy bar, transparent background, solid color background,
-      no background
-    controlNetImage: item_energy_bar
-    filename: 24
-  - Pprompt: pixel art, stun grenade, transparent background, solid color background,
-      no background
-    controlNetImage: item_grenade
-    filename: 25
-  - Pprompt: pixel art, sci-fi battery, transparent background, solid color background,
-      no background
-    controlNetImage: item_shield
-    filename: 26
-  - Pprompt: pixel art, sci-fi battery, transparent background, solid color background,
-      no background
-    controlNetImage: item_defibrillator
-    filename: 27
-  - Pprompt: pixel art, wooden stake, bloody tip, transparent background, solid color
-      background
-    controlNetImage: item_stake
-    filename: 28
-  - Pprompt: pixel art, blood fungi, transparent background, solid color background
-    controlNetImage: item_fungi
-    filename: 29
-  - Pprompt: pixel art, glass tank of algae, transparent background, solid color
-      background
-    controlNetImage: item_algae
-    filename: 30
-  - Pprompt: pixel art, credit card, black and gold, transparent background, solid
-      color background
-    controlNetImage: item_card
-    filename: 31
-  queueOnStart: 0
-  OnFinishAllItems:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ComfyPropsManager, Assembly-CSharp
-        m_MethodName: QueuePropPrompt
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &2661525801501936454
+  propsRecieved: 0
+  propDatas:
+  - fileName: grass1
+    prompt: pixel art, grass, dark green, cave grass
+    referenceImage: grass_1
+  - fileName: grass2
+    prompt: pixel art, grass, dark green, cave grass
+    referenceImage: grass_2
+  - fileName: mushroom1
+    prompt: pixel art, mushroom, cave mushroom
+    referenceImage: mushroom_1
+  - fileName: mushroom2
+    prompt: pixel art, mushroom, cave mushroom
+    referenceImage: mushroom_2
+  - fileName: rock1
+    prompt: pixel art, rock, gray color, small rock
+    referenceImage: rock_1
+  - fileName: rock2
+    prompt: pixel art, rock pile, gray color, stack of rocks
+    referenceImage: rock_2
+  - fileName: rock3
+    prompt: pixel art, boulder, gray color, big rock
+    referenceImage: rock_3
+--- !u!114 &5254762923598581443
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4344038791873354257}
+  m_GameObject: {fileID: 7100520397188320895}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7ebcfd1775a21944b232b6724737c2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   response: 
-  comfyImageCtr: {fileID: 2686420497923583905}
+  comfyImageCtr: {fileID: 5931100547445593754}
   promptID: 
   currentProgress: 0
   maxProgress: 0
   saveImageAfter: 1
---- !u!114 &2505023775370818175
+--- !u!114 &5943365386888468630
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4344038791873354257}
+  m_GameObject: {fileID: 7100520397188320895}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f79945781b6eb3b469512ff72c92081f, type: 3}
@@ -301,13 +185,13 @@ MonoBehaviour:
   OnQueuePrompt:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2686420497923583905
+--- !u!114 &5931100547445593754
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4344038791873354257}
+  m_GameObject: {fileID: 7100520397188320895}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c8341c5dc26d3e4bbb6cc0c655ae5ec, type: 3}
@@ -317,13 +201,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   isControlNet: 1
---- !u!114 &1685083019309393866
+--- !u!114 &249322296587501534
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4344038791873354257}
+  m_GameObject: {fileID: 7100520397188320895}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9fb7b725e864671448e8c09318a3291e, type: 3}
