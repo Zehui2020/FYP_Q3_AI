@@ -58,7 +58,7 @@ public class PortalController : MonoBehaviour
     {
         AudioManager.Instance.PlayOneShot(Sound.SoundName.TeleportStart);
         // turn off map and lock it
-        mmController.ChangeView(false);
+        mmController.ChangeView(false, false);
         mmController.viewLocked = true;
 
         // lock player and fade out

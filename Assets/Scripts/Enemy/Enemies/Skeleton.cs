@@ -24,6 +24,7 @@ public class Skeleton : Enemy
     private readonly int DieAnim = Animator.StringToHash("SkeletonDie");
 
     [Header("Skeleton Stats")]
+    [SerializeField] private AudioProxy audioProxy;
     [SerializeField] private Vector2 lungeForce;
     [SerializeField] private float lungeAngle;
     [SerializeField] private float scratchRange;
@@ -183,5 +184,10 @@ public class Skeleton : Enemy
             ChangeState(State.Die);
 
         return tookDamage;
+    }
+
+    public void PlayAudioProxy(Sound.SoundName soundName)
+    {
+        audioProxy.PlayAudioOneShot(soundName);
     }
 }
