@@ -228,125 +228,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &92675148
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 92675149}
-  - component: {fileID: 92675150}
-  - component: {fileID: 92675151}
-  m_Layer: 0
-  m_Name: BossTilemapManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &92675149
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 92675148}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &92675150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 92675148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91098c77b02a2314a89946d37e7e55a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  imageSaver: {fileID: 92675151}
-  fileName: Tileset
-  tileRects:
-  - serializedVersion: 2
-    x: 104
-    y: 600
-    width: 303
-    height: 303
-  - serializedVersion: 2
-    x: 360
-    y: 600
-    width: 303
-    height: 303
-  - serializedVersion: 2
-    x: 600
-    y: 600
-    width: 303
-    height: 303
-  - serializedVersion: 2
-    x: 104
-    y: 361
-    width: 303
-    height: 303
-  - serializedVersion: 2
-    x: 360
-    y: 361
-    width: 303
-    height: 303
-  - serializedVersion: 2
-    x: 600
-    y: 361
-    width: 303
-    height: 303
-  - serializedVersion: 2
-    x: 104
-    y: 100
-    width: 303
-    height: 303
-  - serializedVersion: 2
-    x: 360
-    y: 100
-    width: 303
-    height: 303
-  - serializedVersion: 2
-    x: 600
-    y: 100
-    width: 303
-    height: 303
-  tilemaps:
-  - {fileID: 548039309}
-  - {fileID: 1194137628}
-  targetTiles:
-  - {fileID: 11400000, guid: 819b449ba3507e64a9f0aa05f3d71c9a, type: 2}
-  - {fileID: 11400000, guid: 3bba73f6b0b563b49a68742ae65f6f44, type: 2}
-  - {fileID: 11400000, guid: 0ae0480f52f375749b3b3b2f825cd831, type: 2}
-  - {fileID: 11400000, guid: e580982580c46a741bb5e028c678a6ae, type: 2}
-  - {fileID: 11400000, guid: f7cf0aec804d62c4abf231014a28ced7, type: 2}
-  - {fileID: 11400000, guid: 98c890698b56ddd40b6000026267dc2f, type: 2}
-  - {fileID: 11400000, guid: 755018ad579f7334d9e87f706ca0cd4e, type: 2}
-  - {fileID: 11400000, guid: 7b6273946236ae34bab9ac70ff0762a6, type: 2}
-  - {fileID: 11400000, guid: 03227739e82ff0845bd18db099dae3ba, type: 2}
-  startLevel: Cave
---- !u!114 &92675151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 92675148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fb7b725e864671448e8c09318a3291e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &120232810
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -448,12 +329,24 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1322990256}
     - target: {fileID: 6666422315369701533, guid: cef3d38ce3091fa4eb7716478c5a2737, type: 3}
+      propertyPath: levelDatas.Array.data[0].backgroundScaleX
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6666422315369701533, guid: cef3d38ce3091fa4eb7716478c5a2737, type: 3}
+      propertyPath: levelDatas.Array.data[1].backgroundScaleX
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6666422315369701533, guid: cef3d38ce3091fa4eb7716478c5a2737, type: 3}
+      propertyPath: levelDatas.Array.data[3].backgroundScaleX
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6666422315369701533, guid: cef3d38ce3091fa4eb7716478c5a2737, type: 3}
       propertyPath: levelDatas.Array.data[0].globalLightIntensity
-      value: 1
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 6666422315369701533, guid: cef3d38ce3091fa4eb7716478c5a2737, type: 3}
       propertyPath: levelDatas.Array.data[1].globalLightIntensity
-      value: 1
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 6666422315369701533, guid: cef3d38ce3091fa4eb7716478c5a2737, type: 3}
       propertyPath: levelDatas.Array.data[2].globalLightIntensity
@@ -461,7 +354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6666422315369701533, guid: cef3d38ce3091fa4eb7716478c5a2737, type: 3}
       propertyPath: levelDatas.Array.data[3].globalLightIntensity
-      value: 1
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 6666422315369701533, guid: cef3d38ce3091fa4eb7716478c5a2737, type: 3}
       propertyPath: levelDatas.Array.data[3].GOsToActivate.Array.size
@@ -6625,6 +6518,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3272518939412396057, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
+      propertyPath: m_Color.b
+      value: 0.7169812
+      objectReference: {fileID: 0}
+    - target: {fileID: 3272518939412396057, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7169812
+      objectReference: {fileID: 0}
+    - target: {fileID: 3272518939412396057, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
+      propertyPath: m_Color.r
+      value: 0.7169812
+      objectReference: {fileID: 0}
     - target: {fileID: 3694774018812474917, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
       propertyPath: player
       value: 
@@ -6636,6 +6541,18 @@ PrefabInstance:
     - target: {fileID: 3802695943972612030, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4655751867307234432, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
+      propertyPath: m_Color.b
+      value: 0.7169812
+      objectReference: {fileID: 0}
+    - target: {fileID: 4655751867307234432, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7169812
+      objectReference: {fileID: 0}
+    - target: {fileID: 4655751867307234432, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
+      propertyPath: m_Color.r
+      value: 0.7169812
       objectReference: {fileID: 0}
     - target: {fileID: 4782784040119573612, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
       propertyPath: canFade
@@ -6668,6 +6585,18 @@ PrefabInstance:
     - target: {fileID: 8647293445530689674, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
       propertyPath: m_Size.x
       value: 220
+      objectReference: {fileID: 0}
+    - target: {fileID: 8647293445530689674, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
+      propertyPath: m_Color.b
+      value: 0.7169812
+      objectReference: {fileID: 0}
+    - target: {fileID: 8647293445530689674, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7169812
+      objectReference: {fileID: 0}
+    - target: {fileID: 8647293445530689674, guid: 372bf85314424dd4fa23da74a9bcb799, type: 3}
+      propertyPath: m_Color.r
+      value: 0.7169812
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -43497,7 +43426,6 @@ SceneRoots:
   - {fileID: 1577164524}
   - {fileID: 1427589569}
   - {fileID: 2071129165209114399}
-  - {fileID: 92675149}
   - {fileID: 2102371245}
   - {fileID: 120232810}
   - {fileID: 2130742576}

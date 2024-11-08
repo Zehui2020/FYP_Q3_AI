@@ -13,6 +13,7 @@ public class TilemapManager : MonoBehaviour
     [Header("Tilemap Manipulation")]
     [SerializeField] private List<Tilemap> tilemaps;
     public List<TileBase> targetTiles;
+    private List<Tile> replacedTiles = new();
 
     [Header("Initing")]
     [SerializeField] private string startLevel = string.Empty;
@@ -52,7 +53,6 @@ public class TilemapManager : MonoBehaviour
         }
 
         Texture2D texture = imageSaver.GetTextureFromLocalDisk(fileName + "_" + levelName);
-
         foreach (Rect rect in tileRects)
         {
             Sprite newSprite = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f), 302);
@@ -79,12 +79,25 @@ public class TilemapManager : MonoBehaviour
 
     public void AssignTileSprites()
     {
+        List<Tile> tilesToReplace = new();
+
         for (int i = 0; i < slicedSprites.Count; i++)
         {
             Tile tile = ScriptableObject.CreateInstance<Tile>();
             tile.sprite = slicedSprites[i];
+            tilesToReplace.Add(tile);
+
             foreach (Tilemap tilemap in tilemaps)
-                tilemap.SwapTile(targetTiles[i], tile);
+            {
+                if (replacedTiles.Count == 0)
+                    tilemap.SwapTile(targetTiles[i], tile);
+                else
+                    tilemap.SwapTile(replacedTiles[i], tile);
+            }
         }
+
+        replacedTiles.Clear();
+        replacedTiles.AddRange(tilesToReplace);
+        slicedSprites.Clear();
     }
 }
