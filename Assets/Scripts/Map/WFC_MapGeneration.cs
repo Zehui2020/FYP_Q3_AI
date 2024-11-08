@@ -418,7 +418,7 @@ public class WFC_MapGeneration : MonoBehaviour
                 doorTransform = doors[i];
         }
         // set door
-        Instantiate(doorPrefab, doorTransform, false);
+        GameObject door = Instantiate(doorPrefab, doorTransform, false);
 
         doors.Remove(doorTransform);
         for (int i = doors.Count - 1; i > doors.Count - mData.maxPortalCount; i--)
@@ -428,7 +428,7 @@ public class WFC_MapGeneration : MonoBehaviour
             mapPortalList.Add(Instantiate(portalPrefab, doors[i], false).GetComponent<Portal>());
         }
 
-        PlayerController.Instance.portalController.PositionPortals(mapPortalList, cam);
+        PlayerController.Instance.portalController.PositionPortals(mapPortalList, door.GetComponent<Door>(), cam);
     }
 
     private List<GameObject> GetAvailableBorderTilesList(Vector2 checkTilePos, Vector2 direction)

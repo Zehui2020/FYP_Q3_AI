@@ -48,6 +48,8 @@ public class SceneLoader : MonoBehaviour
     private IEnumerator LoadNewScene(string sceneName)
     {
         FadeOut();
+        AudioManager.Instance.FadeAllSound(false, 0.5f, 0);
+
         if (GameData.Instance != null)
             GameData.Instance.SavePlayerData();
 
