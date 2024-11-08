@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PortalController : MonoBehaviour
 {
     [SerializeField] public List<GameObject> buttons;
-    [SerializeField] public List<Portal> portals = new List<Portal>();
+    [SerializeField] public GameObject doorIcon;
+    public List<Portal> portals = new List<Portal>();
 
     private MinimapController mmController;
     private Coroutine teleportRoutine;
@@ -22,7 +24,7 @@ public class PortalController : MonoBehaviour
             buttons[i].SetActive(false);
     }
 
-    public void PositionPortals(List<Portal> mapPortals, Camera cam)
+    public void PositionPortals(List<Portal> mapPortals, Door door, Camera cam)
     {
         mmController = GetComponent<MinimapController>();
         portals.AddRange(mapPortals);
@@ -43,6 +45,9 @@ public class PortalController : MonoBehaviour
             buttons[i].transform.localPosition = portals[i].transform.position * multiplier;
             portals[i].button = buttons[i];
         }
+
+        doorIcon.transform.localPosition = door.transform.position * multiplier;
+        door.icon = doorIcon;
     }
 
     public void OnTeleport(int i)

@@ -11,7 +11,18 @@ public class MapTile : MonoBehaviour
 
     [SerializeField] public Transform chestTransform;
     [SerializeField] public Transform doorTransform;
-    
+
+    public void InitializeTile() // for debugging
+    {
+        foreach (Transform obj in GetComponentsInChildren<Transform>())
+        {
+            if (obj.name.Contains("Chest"))
+                chestTransform = obj;
+            if (obj.name.Contains("Door"))
+                doorTransform = obj;
+        }
+    }
+
     public void InitializeTile(TileBase targetTile, Tile tile)
     {
         Tilemap[] tilemaps = GetComponentsInChildren<Tilemap>();

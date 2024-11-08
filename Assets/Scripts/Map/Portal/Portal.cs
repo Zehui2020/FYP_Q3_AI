@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class Portal : MonoBehaviour, IInteractable
 {
     [SerializeField] private Animator animator;
+    [SerializeField] private AudioSource audioSource;
     public bool isActivated = false;
     public GameObject button;
 
@@ -29,7 +30,7 @@ public class Portal : MonoBehaviour, IInteractable
 
         animator.SetTrigger("activate");
         AudioManager.Instance.PlayOneShot(Sound.SoundName.PortalActivate);
-        AudioManager.Instance.FadeSound(true, Sound.SoundName.PortalIdle, 2, 0.4f);
+        audioSource.Play();
         isActivated = true;
         button.SetActive(true);
     }

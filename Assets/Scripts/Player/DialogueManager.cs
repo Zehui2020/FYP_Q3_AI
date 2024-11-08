@@ -125,7 +125,7 @@ public class DialogueManager : MonoBehaviour
     {
         currentNPC = npc;
         dialogueCanvas.enabled = true;
-        ShowDialogue(npc.GetCurrentDialogue());
+        ShowDialogue(npc.GetCurrentDialogue(), npc.minPitch, npc.maxPitch);
         dialoguePopup.HidePopupImmediately();
     }
 
@@ -170,10 +170,10 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        ShowDialogue(currentNPC.GetNextDialogue());
+        ShowDialogue(currentNPC.GetNextDialogue(), currentNPC.minPitch, currentNPC.maxPitch);
     }
 
-    public void ShowDialogue(Dialogue dialogue)
+    public void ShowDialogue(Dialogue dialogue, float min, float max)
     {
         if (dialogue == null)
             return;
@@ -181,7 +181,7 @@ public class DialogueManager : MonoBehaviour
         currentDialogue = dialogue;
 
         canShowNextDialogue = false;
-        npcDialogue.SetSpeakerName(dialogue.speakerName);
+        npcDialogue.SetSpeakerName(dialogue.speakerName, min, max);
         npcPortrait.sprite = dialogue.speakerIcon;
 
         // Show message
@@ -194,7 +194,7 @@ public class DialogueManager : MonoBehaviour
             }
 
             dialogueBox.SetActive(true);
-            npcDialogue.ShowMessage(dialogue.speakerName, dialogue.dialogue);
+            npcDialogue.ShowMessage(dialogue.speakerName, dialogue.dialogue, min, max);
             playerPortrait.color = hideColor;
             npcPortrait.color = showColor;
         }
@@ -215,11 +215,11 @@ public class DialogueManager : MonoBehaviour
         if (currentNPC == null)
             return;
 
-        dialoguePopup.ShowDialoguePopup(currentNPC.GetDialoguePopupFromIndex(index));
+        dialoguePopup.ShowDialoguePopup(currentNPC.GetDialoguePopupFromIndex(index), currentNPC.minPitch, currentNPC.maxPitch);
     }
-    public void ShowDialoguePopup(PopupDialogue dialogue)
+    public void ShowDialoguePopup(PopupDialogue dialogue, float min, float max)
     {
-        dialoguePopup.ShowDialoguePopup(dialogue);
+        dialoguePopup.ShowDialoguePopup(dialogue, min, max);
     }
 
     public void ShowDialogueChoices(Dialogue dialogue)
@@ -235,7 +235,7 @@ public class DialogueManager : MonoBehaviour
 
             dialogueChoice.OnSelectEvent += (currentChoice) => 
             {
-                ShowDialogue(currentNPC.GetDialogueFromIndex(currentChoice.nextDialogueIndex)); 
+                ShowDialogue(currentNPC.GetDialogueFromIndex(currentChoice.nextDialogueIndex), currentNPC.minPitch, currentNPC.maxPitch);
                 foreach (DialogueChoice dialogue in dalogueChoices)
                     dialogue.ReturnToPool();
 

@@ -210,7 +210,7 @@ public class PlayerController : PlayerStats
         if (currentState == PlayerStates.Ability)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Tab))
+        if (Input.GetKeyDown(KeyCode.Tab) && movementController.currentState != MovementState.LedgeGrab)
         {
             minimapController.ChangeView(true, true);
             ChangeState(PlayerStates.Map);
@@ -850,8 +850,9 @@ public class PlayerController : PlayerStats
 
                 enemiesInRange[randNum].ApplyStatusEffect(statusType, 1);
 
+                if (i == 0)
+                    AudioManager.Instance.PlayOneShot(Sound.SoundName.BottleOSurprise);
             }
-            AudioManager.Instance.PlayOneShot(Sound.SoundName.BottleOSurprise);
         }
 
         // Interest Contract

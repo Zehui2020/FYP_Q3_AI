@@ -10,17 +10,21 @@ public class TypewriterEffect : MonoBehaviour
     [SerializeField] float timeBtwChars = 0.5f;
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private TextMeshProUGUI speakerName;
+    [SerializeField] private float minPitch = 0.6f;
+    [SerializeField] private float maxPitch = 0.8f;
 
     public UnityEvent OnFinishTyping;
     private Coroutine TypeRoutine;
     private string messageToDisplay;
 
-    public void SetSpeakerName(string speaker)
+    public void SetSpeakerName(string speaker, float min, float max)
     {
         if (speakerName == null)
             return;
 
         speakerName.text = speaker;
+        minPitch = min;
+        maxPitch = max;
     }
 
     public void ShowMessage(string speaker, string message)
@@ -31,6 +35,19 @@ public class TypewriterEffect : MonoBehaviour
         dialogueText.text = string.Empty;
         if (speakerName != null)
             speakerName.text = speaker;
+        TypeRoutine = StartCoroutine(TypeWriterTMP(message));
+    }
+
+    public void ShowMessage(string speaker, string message, float min, float max)
+    {
+        if (TypeRoutine != null)
+            StopCoroutine(TypeRoutine);
+
+        dialogueText.text = string.Empty;
+        if (speakerName != null)
+            speakerName.text = speaker;
+        minPitch = min;
+        maxPitch = max;
         TypeRoutine = StartCoroutine(TypeWriterTMP(message));
     }
 
@@ -60,6 +77,8 @@ public class TypewriterEffect : MonoBehaviour
                 dialogueText.text += message[i];
             }
 
+            AudioManager.Instance.RandomiseAudioPitch(Sound.SoundName.Dialog, minPitch, maxPitch);
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.Dialog);
             if (leadingChar != "")
             {
                 dialogueText.text += leadingChar;

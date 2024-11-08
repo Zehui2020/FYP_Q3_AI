@@ -120,6 +120,9 @@ public class Sound
         NRGBar,
 
         Heal,
+        DoorIdle,
+        DoorChime,
+        Dialog,
 
     }
     public SoundName name;
