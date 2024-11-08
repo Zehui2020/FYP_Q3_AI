@@ -24,7 +24,6 @@ public class Undead : Enemy
     private readonly int DieAnim = Animator.StringToHash("UndeadDie");
 
     [Header("Undead stats")]
-    [SerializeField] private AudioProxy audioProxy;
     [SerializeField] private float teleportThreshold;
     [SerializeField] private float teleportCooldown;
 

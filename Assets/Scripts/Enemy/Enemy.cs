@@ -50,6 +50,9 @@ public class Enemy : EnemyStats
     protected bool isInCombat = false;
     private int currentShield;
 
+    [Header("Audio")]
+    [SerializeField] protected AudioProxy audioProxy;
+
     private void Start()
     {
         InitializeEnemy();
@@ -451,5 +454,10 @@ public class Enemy : EnemyStats
         onReachChaseTarget = null;
         onHitEvent = null;
         onDazeEnd = null;
+    }
+
+    public void PlayAudioProxy(Sound.SoundName soundName)
+    {
+        audioProxy.PlayAudioOneShot(soundName);
     }
 }
