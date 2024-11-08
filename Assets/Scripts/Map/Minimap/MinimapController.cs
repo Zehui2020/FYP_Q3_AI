@@ -13,17 +13,17 @@ public class MinimapController : MonoBehaviour
             cam.Add(cam[0]);
         else if (cam[1] == null)
             cam[1] = cam[0];
-        ChangeView(false);
+        ChangeView(false, false);
     }
 
-    public void ChangeView(bool showMap)
+    public void ChangeView(bool showMap, bool playSound)
     {
         if (viewLocked)
             return;
 
-        if (showMap)
+        if (showMap && playSound)
             AudioManager.Instance.PlayOneShot(Sound.SoundName.Map);
-        if (!showMap)
+        if (!showMap && playSound)
             AudioManager.Instance.PlayOneShot(Sound.SoundName.MapClose);
 
         cam[0].SetActive(!showMap);
