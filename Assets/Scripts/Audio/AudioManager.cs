@@ -52,6 +52,12 @@ public class AudioManager : MonoBehaviour
             walkIndex = 0;
     }
 
+    public void RandomiseAudioPitch(Sound.SoundName sound, float minPitch, float maxPitch)
+    {
+        Sound s = FindSound(sound);
+        s.source.pitch = Random.Range(minPitch, maxPitch);
+    }
+
     public Sound FindSound(Sound.SoundName name)
     {
         foreach (Sound s in sounds)

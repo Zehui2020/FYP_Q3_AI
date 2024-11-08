@@ -122,6 +122,7 @@ public class Sound
         Heal,
         DoorIdle,
         DoorChime,
+        Dialog,
 
     }
     public SoundName name;

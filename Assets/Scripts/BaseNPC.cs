@@ -16,13 +16,15 @@ public class BaseNPC : MonoBehaviour, IInteractable
 
     private int dialogueIndex;
 
+    public float minPitch, maxPitch;
+
     private void Start()
     {
         player = PlayerController.Instance;
         foreach (PopupDialogue dialogue in popupDialogues)
         {
             if (dialogue.playOnAwake)
-                PlayerController.Instance.dialogueManager.ShowDialoguePopup(dialogue);
+                PlayerController.Instance.dialogueManager.ShowDialoguePopup(dialogue, minPitch, maxPitch);
         }
     }
 

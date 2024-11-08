@@ -14,7 +14,7 @@ public class DialoguePopup : MonoBehaviour
 
     private Coroutine HideCoroutine;
 
-    public void ShowDialoguePopup(DialogueManager.PopupDialogue? dialogue)
+    public void ShowDialoguePopup(DialogueManager.PopupDialogue? dialogue, float min, float max)
     {
         if (!dialogue.HasValue)
             return;
@@ -31,7 +31,7 @@ public class DialoguePopup : MonoBehaviour
         SetCanvasEnabled(true);
         animator.SetTrigger("show");
         characterIcon.sprite = currentDialogue.speakerIcon;
-        dialogueText.ShowMessage(currentDialogue.speakerName, currentDialogue.dialogue);
+        dialogueText.ShowMessage(currentDialogue.speakerName, currentDialogue.dialogue, min, max);
         currentDialogue.onDialogueDone.InvokeEvent();
 
         if (currentDialogue.questDestination != null)
