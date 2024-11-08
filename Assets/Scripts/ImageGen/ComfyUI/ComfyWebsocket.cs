@@ -12,7 +12,7 @@ public class ComfyWebsocket : MonoBehaviour
 
     [HideInInspector] public string response;
     public ComfyImageCtr comfyImageCtr;
-    [HideInInspector] public string promptID;
+    public string promptID;
 
     [HideInInspector] public int currentProgress = -1;
     [HideInInspector] public int maxProgress = -1;

@@ -6,6 +6,8 @@ public class ParticleManager : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private ParticleSystem[] allPSs;
     [SerializeField] private LightFlicker[] lights;
+    [SerializeField] private AudioProxy audioProxy;
+    [SerializeField] private Sound.SoundName soundToPlay;
 
     public void PlayAll()
     {
@@ -19,6 +21,9 @@ public class ParticleManager : MonoBehaviour
 
         foreach (LightFlicker light in lights)
             light.StartFlicker();
+
+        if (audioProxy != null)
+            audioProxy.PlayAudioOneShot(soundToPlay);
     }
 
     public void StopAll()
@@ -28,6 +33,9 @@ public class ParticleManager : MonoBehaviour
 
         foreach (LightFlicker light in lights)
             light.StopFlicker();
+
+        if (audioProxy != null)
+            audioProxy.StopAudio(soundToPlay);
     }
 
     public void SetAllEmissionRate(float rate)

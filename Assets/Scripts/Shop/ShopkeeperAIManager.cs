@@ -29,6 +29,8 @@ public class ShopkeeperAIManager : MonoBehaviour
     public UnityEvent OnFinishGenerating;
     private Process process;
 
+    private bool isProcessing = false;
+
     public void InitAIManager()
     {
         introFinished = false;
@@ -101,9 +103,10 @@ public class ShopkeeperAIManager : MonoBehaviour
 
     public void AI_Chat_Response()
     {
-        if (isDebugging)
+        if (isDebugging || isProcessing)
             return;
 
+        isProcessing = true;
         string user_Input = shopkeeperUIManager.GetUserInput();
 
         string promptTitle;
@@ -213,6 +216,7 @@ public class ShopkeeperAIManager : MonoBehaviour
             previousContext = ExtractContent(AI_Output);
             shopkeeperUIManager.SetShopkeeperOutput(previousContext);
             OnFinishGenerating?.Invoke();
+            isProcessing = false;
         }
 
         if (analyseText)
@@ -224,8 +228,11 @@ public class ShopkeeperAIManager : MonoBehaviour
         UnityEngine.Debug.Log("Result: " + AI_Output);
         UnityEngine.Debug.Log(speedString);
 
-        process.Kill();
-        process = null;
+        if (process != null)
+        {
+            process.Kill();
+            process = null;
+        }
     }
 
     string ExtractContent(string text)

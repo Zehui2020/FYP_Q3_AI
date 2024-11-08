@@ -24,6 +24,13 @@ public class ImageLoading : MonoBehaviour
 
     private void Update()
     {
+        if (GameData.Instance.currentlyLoadingImage.Count == 0)
+        {
+            loadingSlider.value = 1;
+            loadingSlider.maxValue = 1;
+            return;
+        }
+
         currentImage.text = "Generating:\n" + GameData.Instance.currentlyLoadingImage.Peek();
         SetSliderValue();
     }
@@ -45,11 +52,10 @@ public class ImageLoading : MonoBehaviour
         }
 
         if (loadingSlider.value == loadingSlider.maxValue)
-        {
             GameData.Instance.currentlyLoadingImage.Dequeue();
-            loadingSlider.value = 0;
-            loadingSlider.maxValue = 100;
-        }
+
+        if (GameData.Instance.currentlyLoadingImage.Count == 0)
+            return;
 
         if (GameData.Instance.currentlyLoadingImage.Peek() != previousPrompt)
         {
@@ -76,8 +82,6 @@ public class ImageLoading : MonoBehaviour
             if (fadeOutRoutine == null)
                 fadeOutRoutine = StartCoroutine(FadeRoutine()); 
         }
-
-        Debug.Log(GameData.Instance.currentlyLoadingImage.Count);
     }
 
     private IEnumerator FadeRoutine()

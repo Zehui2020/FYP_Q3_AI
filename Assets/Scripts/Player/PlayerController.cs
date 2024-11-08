@@ -185,7 +185,7 @@ public class PlayerController : PlayerStats
         {
             if (Input.GetKeyUp(KeyCode.Tab))
             {
-                minimapController.ChangeView(false);
+                minimapController.ChangeView(false, true);
                 ChangeState(PlayerStates.Movement);
             }
             else
@@ -212,7 +212,7 @@ public class PlayerController : PlayerStats
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            minimapController.ChangeView(true);
+            minimapController.ChangeView(true, true);
             ChangeState(PlayerStates.Map);
         }
 
