@@ -124,6 +124,15 @@ public class Sound
         DoorChime,
         Dialog,
 
+        BossShockwave,
+
+        BossP1Summon,
+        BossP1Knife,
+        BossP1PunchCharge,
+        BossP1PunchRelease,
+        BossP1Jump,
+        BossP1Land,
+
     }
     public SoundName name;
 
