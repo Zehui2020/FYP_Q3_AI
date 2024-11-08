@@ -304,5 +304,7 @@ public class FinalBossPhase2 : Enemy
         TriggerStatusState(StatusEffect.StatusType.Status.Dazed, shieldRegenDelay);
         TakeDamage(this, new Damage(maxHealth * 0.08f), false, transform.position, DamagePopup.DamageType.Health);
         Destroy(collision.gameObject);
+
+        ApplyImmune(100, ImmuneType.None);
     }
 }

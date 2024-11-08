@@ -91,8 +91,8 @@ public class LevelManager : MonoBehaviour
         if (currentData.backgroundScaleX != -1)
             backgrounds[0].transform.localScale = new Vector3(currentData.backgroundScaleX, currentData.backgroundScaleX, currentData.backgroundScaleX);
 
-        foreach (GameObject go in currentData.GOsToActivate)
-            go.SetActive(true);
+        //foreach (GameObject go in currentData.GOsToActivate)
+        //    go.SetActive(true);
 
         foreach (GameObject go in currentData.GOsToDeactivate)
             go.SetActive(false);

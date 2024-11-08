@@ -105,6 +105,7 @@ public class FinalBossPhase1 : Enemy
                 break;
             case State.Rush:
                 animator.Play(RushAnim);
+                AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP1PunchCharge);
                 break;
             case State.PunchAttack:
                 damageMultipler.AddModifier(punchDamageModifier);
@@ -231,6 +232,7 @@ public class FinalBossPhase1 : Enemy
     {
         animator.Play(JumpAnim);
         damageMultipler.AddModifier(slamDamageModifier);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP1Jump);
 
         yield return new WaitForSeconds(jumpWaitDuration);
 
@@ -288,5 +290,10 @@ public class FinalBossPhase1 : Enemy
             animator.Play(SlamAnim);
             SlamRoutine = null;
         }
+    }
+
+    public void PlayAudio(Sound.SoundName soundName)
+    {
+        AudioManager.Instance.PlayOneShot(soundName);
     }
 }

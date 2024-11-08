@@ -438,7 +438,8 @@ public class PlayerController : PlayerStats
             if (movementController.currentState != MovementState.Plunge &&
                 movementController.currentState != MovementState.LedgeGrab &&
                 currentState != PlayerStates.Ability &&
-                movementController.isGrounded)
+                movementController.isGrounded &&
+                currentState != PlayerStates.ShadowBound)
                 ChangeState(PlayerStates.Hurt);
 
             combatController.ResetComboInstantly();
