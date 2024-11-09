@@ -20,14 +20,7 @@ public class NPC_Dialogue_Tree : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //OptionText.text = OptionData.OptionTitle;
         promptUsed = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void SetTitle(string Header)

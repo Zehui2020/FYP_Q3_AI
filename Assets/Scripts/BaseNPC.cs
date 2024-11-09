@@ -6,7 +6,7 @@ using static DialogueManager;
 
 public class BaseNPC : MonoBehaviour, IInteractable
 {
-    private PlayerController player;
+    protected PlayerController player;
 
     [SerializeField] private SimpleAnimation keycodeUI;
     [SerializeField] private List<Dialogue> dialogues;
@@ -20,6 +20,11 @@ public class BaseNPC : MonoBehaviour, IInteractable
 
     private void Start()
     {
+        InitNPC();
+    }
+
+    public virtual void InitNPC()
+    {
         player = PlayerController.Instance;
         foreach (PopupDialogue dialogue in popupDialogues)
         {
@@ -28,7 +33,7 @@ public class BaseNPC : MonoBehaviour, IInteractable
         }
     }
 
-    public void OnEnterRange()
+    public virtual void OnEnterRange()
     {
         keycodeUI.Show();
     }
@@ -41,7 +46,7 @@ public class BaseNPC : MonoBehaviour, IInteractable
         return true;
     }
 
-    public void OnLeaveRange()
+    public virtual void OnLeaveRange()
     {
         keycodeUI.Hide();
     }
