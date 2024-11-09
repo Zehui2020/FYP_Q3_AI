@@ -91,32 +91,24 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
         hasIntroduced = true;
     }
-    public void AI_Dialogue_Tree_Response(string AdditionalContext, string premadePrompt)
-    {
-        string AI_Gen_Prompt =
-            '"' +
-            "[INST] <<SYS>> You are the voice of a character. " +
-            "This is your character's backstory:  " +
-            "~" + NPC_Data.AI_CharacterContext + "~ " +
-            "This is additional world lore:  " +
-            "~" + AdditionalContext + "~ " +
-            "In this environment, address the user as Adventurer, " +
-            "keep your responses less than 30 words, " +
-            "and do not show XML tags other than these ones: <result></result>" +
-
-            "Here are a few examples of what your output should look like: " +
-            "<result>" + NPC_Data.AI_Example_Output_1 + "</result> " +
-            "<result>" + NPC_Data.AI_Example_Output_2 + "</result> " +
-            "Here is the player's input" + " <</SYS>> {" + premadePrompt + "} [/INST]" + '"';
-
-        string finalprompt = $"cd {NPC_Data.llamaDirectory} && llama-cli -m {NPC_Data.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt}";
-
-        StartCoroutine(OpenCommandPrompt(finalprompt, false));
-    }
 
     public void AI_Chat_Response(DialogueOptionData option)
     {
         DialogueManager.Dialogue dialogue = new();
+
+        if (option.OptionTitle == "Goodbye.")
+        {
+            dialogue.speakerType = NPC_Data.speakerType;
+            dialogue.speakerName = NPC_Data.npcName;
+            dialogue.speakerIcon = NPC_Data.npcSprite;
+            dialogue.dialogue = "Best of luck out there adventurer!";
+
+            PlayerController.Instance.dialogueManager.ShowDialogue(dialogue, npc.minPitch, npc.maxPitch);
+
+            npc.OnLeaveConvo();
+
+            return;
+        }
 
         dialogue.speakerType = NPC_Data.speakerType;
         dialogue.speakerName = NPC_Data.npcName;

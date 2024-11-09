@@ -367,7 +367,10 @@ MonoBehaviour:
       m_Calls: []
   minPitch: 0
   maxPitch: 0
-  tree: {fileID: 11400000, guid: 1ed414218a447c7478adc5efe10f7450, type: 2}
+  trees:
+  - {fileID: 11400000, guid: 1ed414218a447c7478adc5efe10f7450, type: 2}
+  - {fileID: 11400000, guid: bbda5eb792463a549a35ff84ae19acf7, type: 2}
+  - {fileID: 11400000, guid: f5e98dcf57cd9b54fafbf7518c7c3d1d, type: 2}
   isTutorialGuide: 0
 --- !u!114 &3657026719975648699
 MonoBehaviour:
@@ -383,6 +386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   npc: {fileID: 6436100295297822228}
   AI_Sentiment_Analysis: {fileID: 915882611922797882}
+  isGenerating: 0
   OnFinishGeneratingResponse:
     m_PersistentCalls:
       m_Calls: []

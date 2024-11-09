@@ -1,9 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TutorialGuide : BaseNPC
 {
-    [SerializeField] private NPC_Dialogue_Tree tree;
+    [SerializeField] private List<NPC_Dialogue_Tree> trees = new();
+    private NPC_Dialogue_Tree tree;
 
     private NPC_Dialogue_Generator aiManager;
     private TextAnalysis textAnalysis;
@@ -21,6 +23,12 @@ public class TutorialGuide : BaseNPC
     public override void InitNPC()
     {
         base.InitNPC();
+
+        foreach (NPC_Dialogue_Tree tree in trees)
+        {
+            if (tree.restLevel == GameData.Instance.levelCount)
+                this.tree = tree;
+        }
 
         if (!isTutorialGuide)
             aiManager.InitAIManager(tree.npcData);
@@ -91,15 +99,12 @@ public class TutorialGuide : BaseNPC
         else
         {
             base.OnInteract();
-            //aiManager.EnterNPCDialogue();
         }
         return true;
     }
 
     public void OnLeaveConvo()
     {
-        aiManager.AI_Chat_Exit();
-        player.ChangeState(PlayerController.PlayerStates.Movement);
         player.dialogueManager.lockShowNextDialogue = false;
     }
 }
