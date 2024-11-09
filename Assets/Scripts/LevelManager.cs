@@ -6,6 +6,8 @@ using UnityEngine.Rendering.Universal;
 
 public class LevelManager : MonoBehaviour
 {
+    public static LevelManager Instance;
+
     [System.Serializable]
     public class LevelData
     {
@@ -19,7 +21,7 @@ public class LevelManager : MonoBehaviour
     }
     [SerializeField] private Volume globalVolume;
     [SerializeField] private Light2D globalLight;
-    [SerializeField] private List<LevelData> levelDatas = new();
+    public List<LevelData> levelDatas = new();
     [SerializeField] private List<SpriteRenderer> backgrounds = new();
 
     [Header("For Boss")]
@@ -27,6 +29,11 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private TilemapManager tilemapManager;
 
     private LevelData previousRandomLevel;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -68,13 +75,19 @@ public class LevelManager : MonoBehaviour
 
     public void ChangeRandomTheme()
     {
-        LevelData currentData;
+        LevelData currentData = null;
 
         do
         {
             currentData = levelDatas[Random.Range(0, levelDatas.Count - 1)];
         }
         while (currentData == previousRandomLevel);
+
+        foreach (LevelData data in levelDatas) 
+        {
+            if (data.level == "Forest")
+                currentData = data;
+        }
 
         if (currentData == null)
         {
@@ -91,8 +104,8 @@ public class LevelManager : MonoBehaviour
         if (currentData.backgroundScaleX != -1)
             backgrounds[0].transform.localScale = new Vector3(currentData.backgroundScaleX, currentData.backgroundScaleX, currentData.backgroundScaleX);
 
-        //foreach (GameObject go in currentData.GOsToActivate)
-        //    go.SetActive(true);
+        foreach (GameObject go in currentData.GOsToActivate)
+            go.SetActive(true);
 
         foreach (GameObject go in currentData.GOsToDeactivate)
             go.SetActive(false);

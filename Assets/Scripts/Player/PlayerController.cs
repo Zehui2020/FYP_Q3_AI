@@ -60,6 +60,7 @@ public class PlayerController : PlayerStats
 
     private GameData gameData;
     [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private GameObject mouseClick;
 
     private float horizontal;
     private float vertical;
@@ -963,6 +964,7 @@ public class PlayerController : PlayerStats
     {
         float timer = 10f;
         playerEffectsController.SetShadowBound(true);
+        mouseClick.SetActive(true);
 
         while (timer > 0)
         {
@@ -974,6 +976,7 @@ public class PlayerController : PlayerStats
         shadowBoundClicks = 0;
         ChangeState(PlayerStates.Movement);
         playerEffectsController.SetShadowBound(false);
+        mouseClick.SetActive(false);
     }
 
     public void AddJumpCount(int count)

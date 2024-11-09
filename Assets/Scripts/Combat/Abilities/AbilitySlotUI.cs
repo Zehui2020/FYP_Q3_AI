@@ -32,9 +32,20 @@ public class AbilitySlotUI : MonoBehaviour
     public void InitAbilityUI(BaseAbility ability, string keybind)
     {
         abilityIcon.enabled = true;
-        abilityIcon.sprite = ability.spriteIcon;
-        SetCooldown(0, ability.abilityCharges, ability.abilityMaxCharges);
-        keybindText.text = keybind;
+
+        if (ability != null)
+        {
+            abilityIcon.gameObject.SetActive(true);
+            abilityIcon.sprite = ability.spriteIcon;
+            SetCooldown(0, ability.abilityCharges, ability.abilityMaxCharges);
+            keybindText.text = keybind;
+        }
+        else
+        {
+            abilityIcon.gameObject.SetActive(false);
+            SetCooldown(0, 0, 0);
+            keybindText.text = keybind;
+        }
     }
 
     public void SetCooldown(float amount, int charge, int maxCharge)

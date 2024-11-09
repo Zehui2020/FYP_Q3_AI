@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Playables;
 using UnityEngine;
 
 public class AbilityController : MonoBehaviour
@@ -174,6 +175,31 @@ public class AbilityController : MonoBehaviour
             if (abilityCooldowns.Count > j && abilityCooldowns[j] > 0)
                 abilityCooldownRoutines[j] = StartCoroutine(AbilityCooldownRoutine(j, abilities[j], abilityCooldowns[j]));
         }
+    }
+
+    public void RemoveAllAbilities()
+    {
+        for (int i = 0; i < abilities.Count; i++)
+        {
+            abilities.RemoveAt(i);
+            charges.RemoveAt(i);
+            maxCharges.RemoveAt(i);
+            abilityCooldowns.RemoveAt(i);
+
+            if (abilityCooldownRoutines[i] != null)
+            {
+                StopCoroutine(abilityCooldownRoutines[i]);
+                abilityCooldownRoutines[i] = null;
+            }
+
+            foreach (AbilitySlotUI ui in abilityUI)
+                ui.InitAbilityUI(null, "");
+        }
+
+        abilities.Clear();
+        charges.Clear();
+        maxCharges.Clear();
+        abilityCooldowns.Clear();
     }
 
     public void SpawnAbilityPickUp(BaseAbility newAbility, Transform chest)

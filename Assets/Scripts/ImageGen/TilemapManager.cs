@@ -17,6 +17,20 @@ public class TilemapManager : MonoBehaviour
 
     [Header("Initing")]
     [SerializeField] private string startLevel = string.Empty;
+    [SerializeField] private List<string> levelNames = new();
+
+    public struct LevelSprites
+    {
+        public string level;
+        public List<Sprite> tileSprites;
+
+        public LevelSprites(string level, List<Sprite> tileSprites)
+        {
+            this.level = level;
+            this.tileSprites = tileSprites;
+        }
+    }
+    public List<LevelSprites> levelSprites = new();
 
     private void Start()
     {
@@ -24,6 +38,12 @@ public class TilemapManager : MonoBehaviour
             SliceTexture();
         else 
             SliceTexture(startLevel);
+
+        foreach (LevelManager.LevelData levelData in LevelManager.Instance.levelDatas)
+            levelNames.Add(levelData.level);
+
+        foreach (string level in levelNames)
+            levelSprites.Add(new LevelSprites(level, GetTileSpritesFromLevel(level)));
     }
 
     public void SliceTexture()
@@ -42,24 +62,35 @@ public class TilemapManager : MonoBehaviour
             slicedSprites.Add(newSprite);
         }
 
-        AssignTileSprites();
+        AssignTileSprites(slicedSprites);
     }
     public void SliceTexture(string levelName)
     {
+        foreach (LevelSprites levelSprite in levelSprites)
+        {
+            if (levelSprite.level == levelName)
+                AssignTileSprites(levelSprite.tileSprites);
+        }
+    }
+
+    private List<Sprite> GetTileSpritesFromLevel(string levelName)
+    {
+        List<Sprite> result = new List<Sprite>();
+
         if (targetTiles.Count != tileRects.Count)
         {
             Debug.LogError("Insufficient Tiles To Set!");
-            return;
+            return null;
         }
 
         Texture2D texture = imageSaver.GetTextureFromLocalDisk(fileName + "_" + levelName);
         foreach (Rect rect in tileRects)
         {
-            Sprite newSprite = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f), 302);
-            slicedSprites.Add(newSprite);
+            Sprite newSprite = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f), 302, 0, SpriteMeshType.FullRect);
+            result.Add(newSprite);
         }
 
-        AssignTileSprites();
+        return result;
     }
 
     public List<Sprite> GetAllTileSprites()
@@ -77,22 +108,26 @@ public class TilemapManager : MonoBehaviour
         return sprites;
     }
 
-    public void AssignTileSprites()
+    public void AssignTileSprites(List<Sprite> sprites)
     {
         List<Tile> tilesToReplace = new();
 
-        for (int i = 0; i < slicedSprites.Count; i++)
+        for (int i = 0; i < sprites.Count; i++)
         {
             Tile tile = ScriptableObject.CreateInstance<Tile>();
-            tile.sprite = slicedSprites[i];
+            tile.sprite = sprites[i];
             tilesToReplace.Add(tile);
 
             foreach (Tilemap tilemap in tilemaps)
             {
+                tilemap.enabled = false;
+
                 if (replacedTiles.Count == 0)
                     tilemap.SwapTile(targetTiles[i], tile);
                 else
                     tilemap.SwapTile(replacedTiles[i], tile);
+
+                tilemap.enabled = true;
             }
         }
 

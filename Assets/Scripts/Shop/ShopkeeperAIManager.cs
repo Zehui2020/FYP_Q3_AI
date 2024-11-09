@@ -74,7 +74,7 @@ public class ShopkeeperAIManager : MonoBehaviour
             //additionalPrompts+
             promptTitle + " <</SYS>> {" + promptContent + "} [/INST]" + '"';
 
-        return $"cd {shopkeeperData.llamaDirectory} && llama-cli -m {shopkeeperData.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt} -ngl 20000000 -t 10";
+        return $"cd {shopkeeperData.llamaDirectory} && llama-cli -m {shopkeeperData.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt} -ngl 20000000 -t 5";
     }
 
     public void AI_Chat_Introduction()

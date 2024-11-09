@@ -47,14 +47,14 @@ public class ImageSaver : MonoBehaviour
             loadTexture = Resources.Load<Texture2D>("FYP_Q3_AI_" + fileName);
             loadTexture.filterMode = FilterMode.Point;
 
-            return Sprite.Create(loadTexture, new Rect(0f, 0f, loadTexture.width, loadTexture.height), pivot);
+            return Sprite.Create(loadTexture, new Rect(0f, 0f, loadTexture.width, loadTexture.height), pivot, 100, 0, SpriteMeshType.FullRect);
         }
 
         textureBytes = File.ReadAllBytes(Application.persistentDataPath + "_" + fileName);
         loadTexture = new Texture2D(0, 0);
         loadTexture.LoadImage(textureBytes);
         loadTexture.filterMode = FilterMode.Point;
-        return Sprite.Create(loadTexture, new Rect(0f, 0f, loadTexture.width, loadTexture.height), pivot);
+        return Sprite.Create(loadTexture, new Rect(0f, 0f, loadTexture.width, loadTexture.height), pivot, 100, 0, SpriteMeshType.FullRect);
     }
 
     public Texture2D GetTextureFromLocalDisk(string fileName)

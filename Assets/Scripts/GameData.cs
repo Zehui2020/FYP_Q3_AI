@@ -11,6 +11,7 @@ public class GameData : MonoBehaviour
     public float timer;
     public bool pauseTimer = false;
 
+    public ItemStats itemStats;
     public WeaponData currentWeapon;
     public List<Item> items = new();
     public List<BaseAbility> abilities = new();
@@ -55,5 +56,27 @@ public class GameData : MonoBehaviour
         abilities = player.abilityController.abilities;
         items = player.itemManager.itemList;
         currentWeapon = player.combatController.wData;
+    }
+
+    public void ResetData()
+    {
+        levelCount = 1;
+        maxLevels = 1;
+        timer = 0;
+
+        pauseTimer = false;
+        currentWeapon = null;
+
+        PlayerController.Instance.abilityController.RemoveAllAbilities();
+
+        items.Clear();
+        abilities.Clear();
+
+        levelThemes = string.Empty;
+        choseThemes = string.Empty;
+        currentLevel = string.Empty;
+
+        currentlyLoadingImage.Clear();
+        itemStats.ResetStats();
     }
 }

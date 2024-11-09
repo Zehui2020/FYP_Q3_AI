@@ -11,6 +11,8 @@ public class Door : MonoBehaviour, IInteractable
     [HideInInspector] public GameObject icon;
     private bool isActivated = false;
 
+    [SerializeField] private bool endingDoor;
+
     public void OnEnterRange()
     {
         keycodeUI.Show();
@@ -21,20 +23,26 @@ public class Door : MonoBehaviour, IInteractable
                 source.Play();
 
         isActivated = true;
-        icon.SetActive(true);
+
+        if (icon != null)
+            icon.SetActive(true);
     }
 
     public bool OnInteract()
     {
         StartCoroutine(TeleportRoutine());
-
         keycodeUI.Hide();
-        GameData.Instance.levelCount++;
+
         return true;
     }
 
     private IEnumerator TeleportRoutine()
     {
+        if (!endingDoor)
+            GameData.Instance.levelCount++;
+        else
+            GameData.Instance.ResetData();
+
         SceneLoader.Instance.FadeOut();
         AudioManager.Instance.PlayOneShot(Sound.SoundName.TeleportStart);
         yield return new WaitForSecondsRealtime(1);

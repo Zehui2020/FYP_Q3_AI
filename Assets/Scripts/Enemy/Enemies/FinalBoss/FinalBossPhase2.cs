@@ -71,7 +71,6 @@ public class FinalBossPhase2 : Enemy
         segmentMinHealth = Mathf.CeilToInt(maxHealth / maxSegments * currentSegment);
         prevSegmentMinHealth = Mathf.CeilToInt(maxHealth / maxSegments * currentSegment);
 
-        cutscene.CutsceneEnd.AddListener(() => { ChangeState(State.LaserAttack); });
         laserVFX.enabled = false;
 
         OnDieEvent += (die) => { ChangeState(State.Die); };
@@ -85,7 +84,7 @@ public class FinalBossPhase2 : Enemy
 
     public void ChangeState(State newState)
     {
-        if (health <= 0 && newState != State.Die)
+        if (health <= 0 && newState != State.Die && currentState != State.LaserAttack)
             return;
 
         currentState = newState;
@@ -136,6 +135,7 @@ public class FinalBossPhase2 : Enemy
         {
             ChangeState(State.LaserAttack);
             Deciding = null;
+            moveCounter = 0;
             yield break;
         }
 
@@ -150,6 +150,8 @@ public class FinalBossPhase2 : Enemy
             else
                 ChangeState(State.PunchAttack);
         }
+
+        moveCounter++;
 
         Deciding = null;
     }
@@ -171,21 +173,32 @@ public class FinalBossPhase2 : Enemy
         base.TakeTrueDamage(damage);
         CheckSummonPillars();
     }
+    public override void TakeTrueShieldDamage(Damage damage)
+    {
+        base.TakeTrueShieldDamage(damage);
+        CheckSummonPillars();
+    }
 
     private void CheckSummonPillars()
     {
-        if (health <= segmentMinHealth)
+        if (health <= segmentMinHealth && health > 0)
         {
             ChangeState(State.SummonPillars);
             currentSegment--;
             prevSegmentMinHealth = segmentMinHealth;
             segmentMinHealth = Mathf.CeilToInt(maxHealth / maxSegments * currentSegment);
+            SummonPillars();
         }
     }
 
     public override void UpdateEnemy()
     {
         base.UpdateEnemy();
+    }
+
+    public void DoLaser()
+    {
+        ChangeState(State.LaserAttack);
     }
 
     public void DoLaserAttack()

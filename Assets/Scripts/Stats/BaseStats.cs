@@ -245,7 +245,8 @@ public class BaseStats : MonoBehaviour
                 attacker.abilityStats.rabidExecutionStacks = statusEffectManager.poisonStacks.stackCount;
 
             OnDieEvent?.Invoke(this);
-            statusEffectManager.OnDie();
+            if (statusEffectManager != null)
+                statusEffectManager.OnDie();
             particleVFXManager.StopEverything();
         }
 
