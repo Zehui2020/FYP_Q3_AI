@@ -83,12 +83,6 @@ public class LevelManager : MonoBehaviour
         }
         while (currentData == previousRandomLevel);
 
-        foreach (LevelData data in levelDatas) 
-        {
-            if (data.level == "Forest")
-                currentData = data;
-        }
-
         if (currentData == null)
         {
             Debug.LogWarning("Level in level manager not found");
