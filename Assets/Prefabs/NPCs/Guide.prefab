@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1541035776712180820}
   - component: {fileID: 6581121436857916359}
   m_Layer: 9
-  m_Name: Canvas
+  m_Name: WorldCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -192,7 +192,6 @@ GameObject:
   - component: {fileID: 1043583132266696521}
   - component: {fileID: 6436100295297822228}
   - component: {fileID: 3657026719975648699}
-  - component: {fileID: 5133656635473317055}
   - component: {fileID: 915882611922797882}
   - component: {fileID: 4601429439853817794}
   m_Layer: 0
@@ -350,12 +349,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   keycodeUI: {fileID: 8141412987417742115}
   dialogues: []
-  popupDialogues: []
+  popupDialogues:
+  - showOnce: 0
+    playOnAwake: 0
+    isShown: 0
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Sorry, I'm generating a response right now. Check up on me later!
+    questDestination: {fileID: 0}
   InteractEvent:
     m_PersistentCalls:
       m_Calls: []
   minPitch: 0
   maxPitch: 0
+  tree: {fileID: 11400000, guid: 1ed414218a447c7478adc5efe10f7450, type: 2}
   isTutorialGuide: 0
 --- !u!114 &3657026719975648699
 MonoBehaviour:
@@ -369,37 +381,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88fb9cd30e9eb8c40a7b57434eda58ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  npc_UI_Manager: {fileID: 0}
-  npc: {fileID: 0}
-  NPC_Data: {fileID: 11400000, guid: c35089ccc74526540b60355c6343593d, type: 2}
-  AI_Sentiment_Analysis: {fileID: 0}
-  OnStartGeneratingResponse:
-    m_PersistentCalls:
-      m_Calls: []
+  npc: {fileID: 6436100295297822228}
+  AI_Sentiment_Analysis: {fileID: 915882611922797882}
   OnFinishGeneratingResponse:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5133656635473317055
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5198039901327084798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 725ffa7c29f9bd04c98cd96669feeddf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NPC_Dialogue_Canvas: {fileID: 0}
-  user_Input: {fileID: 0}
-  NPCOutput: {fileID: 0}
-  NPCName: NPC
-  DialogueOptionsList: {fileID: 0}
-  OptionPrefab: {fileID: 2291802368279692758, guid: 91ffbd3239e3ad44eb229af0ea9cbabc, type: 3}
-  DO_DataList:
-  - {fileID: 11400000, guid: 8789ed0b81e5bd6458e0ae79416f4bfe, type: 2}
-  isInteracting: 0
 --- !u!114 &915882611922797882
 MonoBehaviour:
   m_ObjectHideFlags: 0

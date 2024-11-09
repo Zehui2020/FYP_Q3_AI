@@ -3,6 +3,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NPCData")]
 public class NPCData : ScriptableObject
 {
+    public string npcName;
+    public DialogueManager.Dialogue.SpeakerType speakerType;
+    public Sprite npcSprite;
+
     [TextArea(3, 10)] public string llamaDirectory;
     [TextArea(3, 10)] public string modelDirectory;
 

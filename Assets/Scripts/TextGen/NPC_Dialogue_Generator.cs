@@ -3,14 +3,13 @@ using UnityEngine;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using UnityEngine.Events;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 
 public class NPC_Dialogue_Generator : MonoBehaviour
 {
     [Header("NPC Manager")]
     [SerializeField] private TutorialGuide npc;
-
-    [Header("NPC Scriptable Object")]
-    [SerializeField] private NPCData NPC_Data;
+    private NPCData NPC_Data;
 
     [Header("Sentiment Analysis")]
     public TextAnalysis AI_Sentiment_Analysis;
@@ -23,21 +22,22 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     private string previousContext;
 
     //AI Chat Bools
+    public bool isGenerating = false;
+
     private bool introFinished;
     private bool hasIntroduced;
     private bool analyseText;
-
     private bool EndTextFinished;
 
-    public UnityEvent OnStartGeneratingResponse;
-    public UnityEvent OnFinishGeneratingResponse;
+    public UnityEvent<string> OnFinishGeneratingResponse;
 
-    public void InitAIManager()
+    public void InitAIManager(NPCData npc)
     {
         introFinished = false;
         analyseText = false;
         hasIntroduced = false;
         EndTextFinished = false;
+        NPC_Data = npc;
 
         AI_Chat_Introduction();
     }
@@ -51,7 +51,6 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     }
     private string GetFinalPromptString(string promptTitle, string promptContent, string additionalPrompts)
     {
-
         string AI_Gen_Prompt =
             '"' +
             "[INST] <<SYS>> You are the voice of a character. " +
@@ -115,19 +114,29 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         StartCoroutine(OpenCommandPrompt(finalprompt, false));
     }
 
-    public void AI_Chat_Response(string user_Input)
+    public void AI_Chat_Response(DialogueOptionData option)
     {
+        DialogueManager.Dialogue dialogue = new();
+
+        dialogue.speakerType = NPC_Data.speakerType;
+        dialogue.speakerName = NPC_Data.npcName;
+        dialogue.speakerIcon = NPC_Data.npcSprite;
+        dialogue.dialogue = "Generating...";
+
+        PlayerController.Instance.dialogueManager.ShowDialogue(dialogue, npc.minPitch, npc.maxPitch);
+
         string promptTitle;
         string promptContent;
         string additionalPrompts = string.Empty;
 
-        if (!string.IsNullOrEmpty(user_Input))
+        if (option != null)
         {
             promptTitle = "Here is the player's input:";
-            promptContent = user_Input;
+            promptContent = option.OptionTitle;
+            additionalPrompts += ". For additional context: " + option.WorldContext + ". ";
 
             if (!string.IsNullOrEmpty(previousContext))
-                additionalPrompts = "Your previous response was : " + "~" + previousContext + "~";
+                additionalPrompts += "Your previous response was : " + "~" + previousContext + "~";
         }
         else
         {
@@ -135,7 +144,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             promptContent = "The player remains silent.";
 
             if (!string.IsNullOrEmpty(previousContext))
-                additionalPrompts = "Your previous response was : " + "~" + previousContext + "~";
+                additionalPrompts += "Your previous response was : " + "~" + previousContext + "~";
         }
 
         string prompt = GetFinalPromptString(promptTitle, promptContent, additionalPrompts);
@@ -167,6 +176,8 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
     IEnumerator OpenCommandPrompt(string command, bool EndConvo)
     {
+        isGenerating = true;
+
         string AI_Output = "";
 
         ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/k {command}")
@@ -199,7 +210,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         process.BeginErrorReadLine();
         process.BeginOutputReadLine();
 
-        UnityEngine.Debug.Log("Sent!");
+        UnityEngine.Debug.Log("Sent: \n" + command);
 
         while (!process.HasExited)
         {
@@ -208,9 +219,10 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
         if (process.HasExited && AI_Output.Contains("</result>"))
         {
+            isGenerating = false;
             previousContext = ExtractContent(AI_Output);
             if (!EndConvo)
-                OnFinishGeneratingResponse?.Invoke();
+                OnFinishGeneratingResponse?.Invoke(previousContext);
         }
 
         if (analyseText)
@@ -232,14 +244,6 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         {
             AI_Sentiment_Analysis.SendPredictionText(ExtractContent(AI_Output));
             analyseText = false;
-        }
-
-        if (EndConvo)
-        {
-            yield return new WaitUntil(() => EndTextFinished);
-            yield return new WaitForSeconds(5);
-            npc.OnLeaveConvo();
-            OnFinishGeneratingResponse?.Invoke();
         }
     }
 

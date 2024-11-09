@@ -9,7 +9,7 @@ public class BaseNPC : MonoBehaviour, IInteractable
     protected PlayerController player;
 
     [SerializeField] private SimpleAnimation keycodeUI;
-    [SerializeField] private List<Dialogue> dialogues;
+    [SerializeField] protected List<Dialogue> dialogues;
     [SerializeField] private List<PopupDialogue> popupDialogues;
 
     public UnityEvent InteractEvent;
@@ -31,6 +31,11 @@ public class BaseNPC : MonoBehaviour, IInteractable
             if (dialogue.playOnAwake)
                 PlayerController.Instance.dialogueManager.ShowDialoguePopup(dialogue, minPitch, maxPitch);
         }
+    }
+
+    public virtual NPC_Dialogue_Generator GetDialogueGenerator()
+    {
+        return null;
     }
 
     public virtual void OnEnterRange()

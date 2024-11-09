@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using static DialogueManager;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -41,6 +42,7 @@ public class DialogueManager : MonoBehaviour
         public struct DialogueChoice
         {
             public string choice;
+            public DialogueOptionData optionData;
             public int nextDialogueIndex;
         }
 
@@ -54,7 +56,7 @@ public class DialogueManager : MonoBehaviour
         public bool breakAfterDialogue;
         public DialogueEvent onDialogueDone;
         [TextArea(1, 10)] public string dialogue;
-        public List<DialogueChoice> playerChoices;
+        public List<DialogueChoice> playerChoices = new();
         public Transform questDestination;
 
         public void SetIsShown(bool shown)
@@ -98,7 +100,7 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private DialoguePopup dialoguePopup;
 
-    [SerializeField] private TypewriterEffect npcDialogue;
+    public TypewriterEffect npcDialogue;
     [SerializeField] private QuestPointer questPointer;
 
     [SerializeField] private Image playerPortrait;
@@ -115,10 +117,16 @@ public class DialogueManager : MonoBehaviour
 
     private Dialogue currentDialogue;
     private bool canShowNextDialogue;
+    public bool lockShowNextDialogue = false;
 
     private void Awake()
     {
         Instance = this;
+    }
+
+    public void SetNPC(BaseNPC npc)
+    {
+        currentNPC = npc;
     }
 
     public void SetTalkingNPC(BaseNPC npc)
@@ -136,7 +144,7 @@ public class DialogueManager : MonoBehaviour
 
     public void CheckShowChoices()
     {
-        if (currentDialogue.playerChoices.Count == 0 || dialogueChoiceParent.childCount > 0)
+        if (currentDialogue.playerChoices.Count == 0)
             return;
 
         // Show player choices
@@ -148,6 +156,14 @@ public class DialogueManager : MonoBehaviour
 
     public void ShowNextDialogue()
     {
+        if (lockShowNextDialogue)
+        {
+            if (dalogueChoices.Count == 0 && !currentNPC.GetDialogueGenerator().isGenerating)
+                npcDialogue.Skip();
+
+            return;
+        }
+
         if (!canShowNextDialogue)
         {
             if (dalogueChoices.Count == 0)
@@ -235,7 +251,11 @@ public class DialogueManager : MonoBehaviour
 
             dialogueChoice.OnSelectEvent += (currentChoice) => 
             {
-                ShowDialogue(currentNPC.GetDialogueFromIndex(currentChoice.nextDialogueIndex), currentNPC.minPitch, currentNPC.maxPitch);
+                if (currentChoice.nextDialogueIndex != -1 || currentChoice.optionData == null)
+                    ShowDialogue(currentNPC.GetDialogueFromIndex(currentChoice.nextDialogueIndex), currentNPC.minPitch, currentNPC.maxPitch);
+                else
+                    currentNPC.GetDialogueGenerator().AI_Chat_Response(currentChoice.optionData);
+
                 foreach (DialogueChoice dialogue in dalogueChoices)
                     dialogue.ReturnToPool();
 
