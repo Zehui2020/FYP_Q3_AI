@@ -27,7 +27,7 @@ public class TypewriterEffect : MonoBehaviour
         maxPitch = max;
     }
 
-    public void ShowMessage(string speaker, string message)
+    public void ShowMessage(string speaker, string message, float lingerDuration)
     {
         if (TypeRoutine != null)
             StopCoroutine(TypeRoutine);
@@ -35,10 +35,10 @@ public class TypewriterEffect : MonoBehaviour
         dialogueText.text = string.Empty;
         if (speakerName != null)
             speakerName.text = speaker;
-        TypeRoutine = StartCoroutine(TypeWriterTMP(message));
+        TypeRoutine = StartCoroutine(TypeWriterTMP(message, lingerDuration));
     }
 
-    public void ShowMessage(string speaker, string message, float min, float max)
+    public void ShowMessage(string speaker, string message, float min, float max, float lingerDuration)
     {
         if (TypeRoutine != null)
             StopCoroutine(TypeRoutine);
@@ -48,7 +48,7 @@ public class TypewriterEffect : MonoBehaviour
             speakerName.text = speaker;
         minPitch = min;
         maxPitch = max;
-        TypeRoutine = StartCoroutine(TypeWriterTMP(message));
+        TypeRoutine = StartCoroutine(TypeWriterTMP(message, lingerDuration));
     }
 
     public void Skip()
@@ -61,7 +61,7 @@ public class TypewriterEffect : MonoBehaviour
         dialogueText.text = messageToDisplay;
     }
 
-    private IEnumerator TypeWriterTMP(string message)
+    private IEnumerator TypeWriterTMP(string message, float lingerDuration)
     {
         messageToDisplay = message;
 
@@ -90,6 +90,8 @@ public class TypewriterEffect : MonoBehaviour
                 yield return new WaitForSeconds(timeBtwChars);
             }
         }
+
+        yield return new WaitForSeconds(lingerDuration);
 
         messageToDisplay = string.Empty;
         OnFinishTyping?.Invoke();

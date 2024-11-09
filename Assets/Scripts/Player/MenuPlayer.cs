@@ -11,6 +11,7 @@ public class MenuPlayer : MonoBehaviour
 
     public UnityEvent OnPickupButton;
     public UnityEvent OnDropButton;
+    public UnityEvent OnLaunchButton;
 
     private void Update()
     {
@@ -33,7 +34,10 @@ public class MenuPlayer : MonoBehaviour
         collision.TryGetComponent<WorldSpaceButton>(out currentButton);
 
         if (collision.CompareTag("Pipe") && heldButton != null)
+        {
+            OnLaunchButton?.Invoke();
             heldButton.LaunchButton(launchButtonPos);
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)

@@ -14,6 +14,7 @@ public class ComfyPromptCtr : MonoBehaviour
 {
     [TextArea(3, 100)] public string promptJson;
     public UnityEvent<string> OnQueuePrompt;
+    public UnityEvent StartPrompt;
 
     public void QueuePrompt(string prompt)
     {
@@ -36,6 +37,8 @@ public class ComfyPromptCtr : MonoBehaviour
 
     private IEnumerator QueuePromptCoroutine(string positivePrompt)
     {
+        StartPrompt?.Invoke();
+
         string url = "http://127.0.0.1:8188/prompt";
         string promptText = GeneratePromptJson();
         promptText = promptText.Replace("Pprompt", positivePrompt);
@@ -65,6 +68,8 @@ public class ComfyPromptCtr : MonoBehaviour
     }
     private IEnumerator QueuePromptCoroutineWithControlNet(string positivePrompt, string controlNetImage)
     {
+        StartPrompt?.Invoke();
+
         string url = "http://127.0.0.1:8188/prompt";
         string promptText = GeneratePromptJsonWithControlNet(GetControlNetJson(controlNetImage));
         promptText = promptText.Replace("Pprompt", positivePrompt);
@@ -155,5 +160,6 @@ public class ComfyPromptCtr : MonoBehaviour
     private void OnDisable()
     {
         OnQueuePrompt = null;
+        StartPrompt = null;
     }
 }

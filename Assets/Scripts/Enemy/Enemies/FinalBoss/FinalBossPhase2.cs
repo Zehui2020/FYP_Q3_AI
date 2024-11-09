@@ -54,6 +54,7 @@ public class FinalBossPhase2 : Enemy
     private int moveCounter;
 
     private Coroutine Deciding;
+    private Coroutine LaserRoutine;
 
     private readonly int IdleAnim = Animator.StringToHash("BossP2Idle");
     private readonly int LaserAnim = Animator.StringToHash("BossP2Laser");
@@ -73,7 +74,7 @@ public class FinalBossPhase2 : Enemy
 
         laserVFX.enabled = false;
 
-        OnDieEvent += (die) => { ChangeState(State.Die); };
+        OnDieEvent += (die) => { ChangeState(State.Die); StopAllCoroutines(); laserVFX.enabled = false; };
     }
 
     public void InitBarUI()
@@ -108,10 +109,18 @@ public class FinalBossPhase2 : Enemy
                 animator.Play(SummonArmsAnim);
                 break;
             case State.SummonPillars:
+                if (LaserRoutine != null)
+                {
+                    StopCoroutine(LaserRoutine);
+                    LaserRoutine = null;
+                    laserVFX.enabled = false;
+                }
+
                 ApplyImmune(1000000, ImmuneType.BossImmune);
                 animator.Play(SummonPillarAnim);
                 break;
             case State.Die:
+                StopAllCoroutines();
                 cutscene.EnterCutscene();
                 break;
         }
@@ -203,7 +212,7 @@ public class FinalBossPhase2 : Enemy
 
     public void DoLaserAttack()
     {
-        StartCoroutine(LaserSwipeRoutine());
+        LaserRoutine = StartCoroutine(LaserSwipeRoutine());
     }
     private IEnumerator LaserSwipeRoutine()
     {
@@ -254,6 +263,7 @@ public class FinalBossPhase2 : Enemy
 
         laserVFX.enabled = false;
         animator.Play(LaserEndAnim, 0, 0);
+        LaserRoutine = null;
     }
 
     public void SummonShockwaves()

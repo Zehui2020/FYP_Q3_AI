@@ -31,7 +31,7 @@ public class DialoguePopup : MonoBehaviour
         SetCanvasEnabled(true);
         animator.SetTrigger("show");
         characterIcon.sprite = currentDialogue.speakerIcon;
-        dialogueText.ShowMessage(currentDialogue.speakerName, currentDialogue.dialogue, min, max);
+        dialogueText.ShowMessage(currentDialogue.speakerName, currentDialogue.dialogue, min, max, dialogue.Value.lingerDuration);
         currentDialogue.onDialogueDone.InvokeEvent();
 
         if (currentDialogue.questDestination != null)

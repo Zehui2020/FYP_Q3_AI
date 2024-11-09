@@ -9,7 +9,6 @@ public class TutorialGuide : BaseNPC
 
     private NPC_Dialogue_Generator aiManager;
     private TextAnalysis textAnalysis;
-    public bool isTutorialGuide;
 
     // Start is called before the first frame update
     private void Awake()
@@ -30,8 +29,7 @@ public class TutorialGuide : BaseNPC
                 this.tree = tree;
         }
 
-        if (!isTutorialGuide)
-            aiManager.InitAIManager(tree.npcData);
+        aiManager.InitAIManager(tree.npcData);
     }
 
     public override NPC_Dialogue_Generator GetDialogueGenerator()

@@ -1,4 +1,6 @@
 using DesignPatterns.ObjectPool;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -76,6 +78,8 @@ public class DialogueManager : MonoBehaviour
     {
         public bool showOnce;
         public bool playOnAwake;
+        public bool sequenceDependent;
+        public float lingerDuration;
         [HideInInspector] public bool isShown;
 
         public string speakerName;
@@ -118,6 +122,9 @@ public class DialogueManager : MonoBehaviour
     private Dialogue currentDialogue;
     private bool canShowNextDialogue;
     public bool lockShowNextDialogue = false;
+
+    private int previousIndex = 0;
+    private Coroutine DelayRoutine;
 
     private void Awake()
     {
@@ -210,7 +217,7 @@ public class DialogueManager : MonoBehaviour
             }
 
             dialogueBox.SetActive(true);
-            npcDialogue.ShowMessage(dialogue.speakerName, dialogue.dialogue, min, max);
+            npcDialogue.ShowMessage(dialogue.speakerName, dialogue.dialogue, min, max, 0);
             playerPortrait.color = hideColor;
             npcPortrait.color = showColor;
         }
@@ -231,8 +238,62 @@ public class DialogueManager : MonoBehaviour
         if (currentNPC == null)
             return;
 
-        dialoguePopup.ShowDialoguePopup(currentNPC.GetDialoguePopupFromIndex(index), currentNPC.minPitch, currentNPC.maxPitch);
+        PopupDialogue? dialogue = currentNPC.PeekDialoguePopupFromIndex(index);
+
+        if (dialogue != null)
+        {
+            if (dialogue.Value.sequenceDependent && index - 1 == previousIndex)
+            {
+                dialogue = currentNPC.GetDialoguePopupFromIndex(index);
+                dialoguePopup.ShowDialoguePopup(dialogue, currentNPC.minPitch, currentNPC.maxPitch);
+                previousIndex = index;
+            }
+            else if (!dialogue.Value.sequenceDependent)
+            {
+                dialogue = currentNPC.GetDialoguePopupFromIndex(index);
+                dialoguePopup.ShowDialoguePopup(dialogue, currentNPC.minPitch, currentNPC.maxPitch);
+                previousIndex = index;
+            }
+        }
     }
+    public void ShowDialoguePopupWithDelay(int index)
+    {
+        if (DelayRoutine != null)
+            StopCoroutine(DelayRoutine);
+
+        DelayRoutine = StartCoroutine(ShowDialoguePopupDelay(index));
+    }
+    private IEnumerator ShowDialoguePopupDelay(int index)
+    {
+        yield return new WaitForSeconds(10f);
+
+        if (currentNPC == null)
+        {
+            DelayRoutine = null;
+            yield break;
+        }
+
+        PopupDialogue? dialogue = currentNPC.PeekDialoguePopupFromIndex(index);
+
+        if (dialogue != null)
+        {
+            if (dialogue.Value.sequenceDependent && index - 1 == previousIndex)
+            {
+                dialogue = currentNPC.GetDialoguePopupFromIndex(index);
+                dialoguePopup.ShowDialoguePopup(dialogue, currentNPC.minPitch, currentNPC.maxPitch);
+                previousIndex = index;
+            }
+            else if (!dialogue.Value.sequenceDependent)
+            {
+                dialogue = currentNPC.GetDialoguePopupFromIndex(index);
+                dialoguePopup.ShowDialoguePopup(dialogue, currentNPC.minPitch, currentNPC.maxPitch);
+                previousIndex = index;
+            }
+        }
+
+        DelayRoutine = null;
+    }
+
     public void ShowDialoguePopup(PopupDialogue dialogue, float min, float max)
     {
         dialoguePopup.ShowDialoguePopup(dialogue, min, max);

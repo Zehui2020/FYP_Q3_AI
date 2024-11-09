@@ -1,0 +1,1252 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1955375657529287216
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 238386805435219644}
+  - component: {fileID: 6173180344191736183}
+  - component: {fileID: 1810013716346848931}
+  - component: {fileID: 1154225900051296833}
+  m_Layer: 9
+  m_Name: E
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &238386805435219644
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955375657529287216}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.005, y: 0.005, z: 0.005}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4231072577414683472}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &6173180344191736183
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955375657529287216}
+  m_CullTransparentMesh: 1
+--- !u!114 &1810013716346848931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955375657529287216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -296267544, guid: 2187bd2b65ec5df4d9818eed93d4493a, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1154225900051296833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955375657529287216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2397971fae9a7b741acd7f2886d9d576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: -296267544, guid: 2187bd2b65ec5df4d9818eed93d4493a, type: 3}
+  - {fileID: 1721091202, guid: 2187bd2b65ec5df4d9818eed93d4493a, type: 3}
+  interval: 0.5
+  loop: 1
+  showOnStart: 0
+--- !u!1 &3298218367878874054
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4231072577414683472}
+  - component: {fileID: 862059650257345764}
+  - component: {fileID: 4047273818247395862}
+  m_Layer: 9
+  m_Name: WorldCanvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4231072577414683472
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3298218367878874054}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 238386805435219644}
+  m_Father: {fileID: 5371162146620658717}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 1.87}
+  m_SizeDelta: {x: 3, y: 2}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!223 &862059650257345764
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3298218367878874054}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: -983140795
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &4047273818247395862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3298218367878874054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 1
+--- !u!1 &3599804103456407765
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3078177640297987125}
+  m_Layer: 0
+  m_Name: Blocks
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3078177640297987125
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3599804103456407765}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.27, y: 4.93, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 801534459024837496}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3873934319317449716
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3766872012733204328}
+  m_Layer: 0
+  m_Name: Pipe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3766872012733204328
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3873934319317449716}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 15.38, y: 4.13, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 801534459024837496}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4147123489682902612
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6173917322375596543}
+  m_Layer: 0
+  m_Name: Chest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6173917322375596543
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4147123489682902612}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.93, y: 8.47, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 801534459024837496}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5856686836362584176
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9167698807342259746}
+  - component: {fileID: 5461205964257737290}
+  m_Layer: 0
+  m_Name: Light2D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9167698807342259746
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856686836362584176}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.226, y: 0.307, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5371162146620658717}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5461205964257737290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856686836362584176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ComponentVersion: 1
+  m_LightType: 3
+  m_BlendStyleIndex: 0
+  m_FalloffIntensity: 0.553
+  m_Color: {r: 0.97735846, g: 0.7457398, b: 0, a: 1}
+  m_Intensity: 1.46
+  m_LightVolumeIntensity: 1
+  m_LightVolumeIntensityEnabled: 0
+  m_ApplyToSortingLayers: 000000003b03e41e457666c5299b9b234b8335683bcaad4723658643
+  m_LightCookieSprite: {fileID: 0}
+  m_DeprecatedPointLightCookieSprite: {fileID: 0}
+  m_LightOrder: 0
+  m_AlphaBlendOnOverlap: 0
+  m_OverlapOperation: 0
+  m_NormalMapDistance: 3
+  m_NormalMapQuality: 2
+  m_UseNormalMap: 0
+  m_ShadowIntensityEnabled: 0
+  m_ShadowIntensity: 0.75
+  m_ShadowVolumeIntensityEnabled: 0
+  m_ShadowVolumeIntensity: 0.75
+  m_LocalBounds:
+    m_Center: {x: 0, y: -0.00000011920929, z: 0}
+    m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
+  m_PointLightInnerAngle: 360
+  m_PointLightOuterAngle: 360
+  m_PointLightInnerRadius: 0
+  m_PointLightOuterRadius: 5.78
+  m_ShapeLightParametricSides: 5
+  m_ShapeLightParametricAngleOffset: 0
+  m_ShapeLightParametricRadius: 1
+  m_ShapeLightFalloffSize: 0.5
+  m_ShapeLightFalloffOffset: {x: 0, y: 0}
+  m_ShapePath:
+  - {x: -0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: 0.5, z: 0}
+  - {x: -0.5, y: 0.5, z: 0}
+--- !u!1 &6355019066851379689
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3715587883552969919}
+  m_Layer: 0
+  m_Name: Guide
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3715587883552969919
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6355019066851379689}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.54, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 801534459024837496}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6726936387400649745
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4749150629662506342}
+  m_Layer: 0
+  m_Name: Door
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4749150629662506342
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6726936387400649745}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 22.04, y: 6.06, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 801534459024837496}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7185401326516626557
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 212898134461849502}
+  m_Layer: 0
+  m_Name: Weapons
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &212898134461849502
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7185401326516626557}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.227, y: 1.389, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 801534459024837496}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7447951940262950988
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5371162146620658717}
+  - component: {fileID: 4649762735452621142}
+  - component: {fileID: 1372935903541649966}
+  - component: {fileID: 7472462258911931212}
+  - component: {fileID: 6984625899661119473}
+  m_Layer: 0
+  m_Name: TutorialGuide
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5371162146620658717
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7447951940262950988}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.967, y: -1.01, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4231072577414683472}
+  - {fileID: 9167698807342259746}
+  - {fileID: 801534459024837496}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &4649762735452621142
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7447951940262950988}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -983140795
+  m_SortingLayer: 2
+  m_SortingOrder: 0
+  m_Sprite: {fileID: -908846564, guid: f1d38e55e2b145945872a7197049dca8, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 4.875, y: 4.875}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
+--- !u!95 &1372935903541649966
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7447951940262950988}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a7eb90b7cb40a074e8367dbe9b59905a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!61 &7472462258911931212
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7447951940262950988}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.023426354}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 5, y: 5}
+    newSize: {x: 4.875, y: 4.875}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 5, y: 2.0727587}
+  m_EdgeRadius: 0
+--- !u!114 &6984625899661119473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7447951940262950988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82d8ab310eb9c014eb9ea430c6ce065f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keycodeUI: {fileID: 1154225900051296833}
+  dialogues:
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 8d024d4116f90614f81a9f44bca63dae, type: 3}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "This dim underground is no place for one like yourself\u2026but I
+      suppose duty leads us to the most unusual places. Welcome to my humble domain,
+      how may I serve you?"
+    playerChoices:
+    - choice: A cyclops? Who are you?
+      optionData: {fileID: 0}
+      nextDialogueIndex: 1
+    - choice: 'A scourge threatens my home. '
+      optionData: {fileID: 0}
+      nextDialogueIndex: 2
+    - choice: 'Will you help me? '
+      optionData: {fileID: 0}
+      nextDialogueIndex: 3
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 8d024d4116f90614f81a9f44bca63dae, type: 3}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "I mean you no harm, adventurer, nor can you bring any to me. I am
+      Tiresias, a traveler of sorts\u2026though a more apt description would be \u201Crefugee\u201D.
+      What I am or was is of no importance. Now, I merely function as a guide."
+    playerChoices:
+    - choice: A cyclops? Who are you?
+      optionData: {fileID: 0}
+      nextDialogueIndex: 1
+    - choice: 'A scourge threatens my home. '
+      optionData: {fileID: 0}
+      nextDialogueIndex: 2
+    - choice: 'Will you help me? '
+      optionData: {fileID: 0}
+      nextDialogueIndex: 3
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 8d024d4116f90614f81a9f44bca63dae, type: 3}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Yes... This \u201Cscourge\u201D is not from your world, it came from
+      mine. I do apologize, we were never meant to be here but\u2026after our world
+      was destroyed we found ourselves here, lost and without purpose. Of course,
+      \u201Cit\u201D found a new one."
+    playerChoices:
+    - choice: A cyclops? Who are you?
+      optionData: {fileID: 0}
+      nextDialogueIndex: 1
+    - choice: 'A scourge threatens my home. '
+      optionData: {fileID: 0}
+      nextDialogueIndex: 2
+    - choice: 'Will you help me? '
+      optionData: {fileID: 0}
+      nextDialogueIndex: 3
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 8d024d4116f90614f81a9f44bca63dae, type: 3}
+    breakAfterDialogue: 1
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: WorldSpaceButtonController, Assembly-CSharp
+            m_MethodName: SpawnButtons
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    dialogue: "I can help transport you to where \u201Cit\u201D has been, but creating
+      a direct path would require closer exposure to \u201Cits\u201D tracks. Behind
+      me are clues to potential locations, take your pick and I\u2019ll send you
+      on your way."
+    playerChoices: []
+    questDestination: {fileID: 3078177640297987125}
+  - showOnce: 0
+    isLoopingDialogue: 1
+    isShown: 0
+    speakerType: 1
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 8d024d4116f90614f81a9f44bca63dae, type: 3}
+    breakAfterDialogue: 1
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Go ahead and pick the locations. Take your time, this is a safe place.
+    playerChoices: []
+    questDestination: {fileID: 3078177640297987125}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 8d024d4116f90614f81a9f44bca63dae, type: 3}
+    breakAfterDialogue: 1
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_MethodName: SetActive
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+            m_MethodName: ShowDialoguePopup
+            m_Mode: 3
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 5
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+    dialogue: Monsters plague every nook and cranny of the locations you chose. I
+      offer you a collection of weapons to aid in your pursuit. Go ahead, feel free
+      to test them as you please.
+    playerChoices: []
+    questDestination: {fileID: 212898134461849502}
+  - showOnce: 0
+    isLoopingDialogue: 1
+    isShown: 0
+    speakerType: 1
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 8d024d4116f90614f81a9f44bca63dae, type: 3}
+    breakAfterDialogue: 1
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Hmm... I'd recommend finishing up the tasks at hand first.
+    playerChoices: []
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 8d024d4116f90614f81a9f44bca63dae, type: 3}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Are you ready to save your home?
+    playerChoices:
+    - choice: "I\u2019m ready."
+      optionData: {fileID: 0}
+      nextDialogueIndex: 8
+    questDestination: {fileID: 0}
+  - showOnce: 0
+    isLoopingDialogue: 0
+    isShown: 0
+    speakerType: 1
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 8d024d4116f90614f81a9f44bca63dae, type: 3}
+    breakAfterDialogue: 0
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_MethodName: SetActive
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 4
+              m_FloatArgument: 0
+              m_StringArgument: activate
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 11400000, guid: b33e3ea1f4612984a98d70266f2a4d4a, type: 2}
+            m_TargetAssemblyTypeName: PlayerPrefs, Assembly-CSharp
+            m_MethodName: SetExperienceTutrial
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 4
+              m_FloatArgument: 0
+              m_StringArgument: activate
+              m_BoolArgument: 1
+            m_CallState: 2
+    dialogue: "Go to the Door at the end of the room. On the other side, you will
+      find yourself in a cavern deep underground. Your \u201Cscourge\u2019s\u201D
+      trail begins there. Visibility will be low so be cautious. Good luck."
+    playerChoices: []
+    questDestination: {fileID: 4749150629662506342}
+  popupDialogues:
+  - showOnce: 0
+    playOnAwake: 1
+    sequenceDependent: 1
+    lingerDuration: 0
+    isShown: 0
+    speakerName: ???
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "Adventurer in the dark, step forth\u2026"
+    questDestination: {fileID: 3715587883552969919}
+  - showOnce: 1
+    playOnAwake: 0
+    sequenceDependent: 1
+    lingerDuration: 0
+    isShown: 0
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Now, feed it into the <b>Pipe</b> on your right.
+    questDestination: {fileID: 3766872012733204328}
+  - showOnce: 1
+    playOnAwake: 0
+    sequenceDependent: 1
+    lingerDuration: 5
+    isShown: 0
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Any combination of clues will do. When you are satisfied, hit the <color=red>Red
+      Button</color> (by <b>Pressing [LMB]</b> to attack) to proceed. If you wish
+      to reset the location, hit the <color=#00FFFF>Blue Button</color>.
+    questDestination: {fileID: 178735797888618978}
+  - showOnce: 1
+    playOnAwake: 0
+    sequenceDependent: 1
+    lingerDuration: 0
+    isShown: 0
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: Well done! Now do the same for the second location.
+    questDestination: {fileID: 0}
+  - showOnce: 1
+    playOnAwake: 0
+    sequenceDependent: 1
+    lingerDuration: 0
+    isShown: 0
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls: []
+    dialogue: "If you\u2019re done with your selection, return to me so we may brush
+      up on the <b>Basics</b>."
+    questDestination: {fileID: 3715587883552969919}
+  - showOnce: 1
+    playOnAwake: 0
+    sequenceDependent: 1
+    lingerDuration: 1
+    isShown: 0
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+            m_MethodName: ShowDialoguePopupWithDelay
+            m_Mode: 3
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 8
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    dialogue: I see you're carry a <b>Longsword</b>. A heroic staple, well-rounded
+      and easy to learn.
+    questDestination: {fileID: 0}
+  - showOnce: 1
+    playOnAwake: 0
+    sequenceDependent: 0
+    lingerDuration: 1
+    isShown: 0
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+            m_MethodName: ShowDialoguePopupWithDelay
+            m_Mode: 3
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 8
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    dialogue: "Daggers, a rogue\u2019s favorite toy, utilizing quick stabs and slashes
+      to quickly apply Status Effects."
+    questDestination: {fileID: 0}
+  - showOnce: 1
+    playOnAwake: 0
+    sequenceDependent: 0
+    lingerDuration: 0
+    isShown: 0
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+            m_MethodName: ShowDialoguePopupWithDelay
+            m_Mode: 3
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 8
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    dialogue: The Axe, favored by lumbermen and executioners. Slow, but Impactful!
+    questDestination: {fileID: 0}
+  - showOnce: 1
+    playOnAwake: 0
+    sequenceDependent: 0
+    lingerDuration: 5
+    isShown: 0
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+            m_MethodName: ShowDialoguePopupWithDelay
+            m_Mode: 3
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 9
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    dialogue: "The monsters you\u2019ll face will often have a <color=#00FFFF>Shield
+      Bar</color> and a <color=red>Health Bar</color>. Breaking their shield fully
+      sends them into a <color=yellow>Breached State</color>, making them more vulnerable
+      to damage."
+    questDestination: {fileID: 4008504155320214991}
+  - showOnce: 1
+    playOnAwake: 0
+    sequenceDependent: 0
+    lingerDuration: 5
+    isShown: 0
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_MethodName: SetActive
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+    dialogue: During your journey, you may find Chests, left behind by other adventurers.
+      They may vary, each with their own useful loot and cost to open. Try opening
+      the chest above us.
+    questDestination: {fileID: 6173917322375596543}
+  - showOnce: 1
+    playOnAwake: 0
+    sequenceDependent: 0
+    lingerDuration: 3
+    isShown: 0
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_MethodName: SetActive
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+            m_MethodName: ShowDialoguePopupWithDelay
+            m_Mode: 3
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 11
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+    dialogue: <color=orange>Health potions</color>. Consume them wisely. <color=red>Items</color>
+      will be automatically picked up while <color=orange>Abilities and Consumables</color>
+      have to be interacted with to pick up.
+    questDestination: {fileID: 0}
+  - showOnce: 1
+    playOnAwake: 0
+    sequenceDependent: 0
+    lingerDuration: 0
+    isShown: 0
+    speakerName: T1R3SAI5
+    speakerIcon: {fileID: 21300000, guid: 66413fc19aa79a54fb69cbdf371ba008, type: 3}
+    onDialogueDone:
+      playOnce: 0
+      onDialogueDone:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_MethodName: SetActive
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
+            m_MethodName: ShowNextDialogue
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+    dialogue: "When you\u2019re ready, come and we will speak again."
+    questDestination: {fileID: 3715587883552969919}
+  InteractEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  minPitch: 0
+  maxPitch: 0
+--- !u!1 &7739378705613315758
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 178735797888618978}
+  m_Layer: 0
+  m_Name: ConfirmButton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &178735797888618978
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7739378705613315758}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 11.35, y: 3.24, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 801534459024837496}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7842661291834652089
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 801534459024837496}
+  m_Layer: 0
+  m_Name: PointsOfInterest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &801534459024837496
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7842661291834652089}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3715587883552969919}
+  - {fileID: 3078177640297987125}
+  - {fileID: 3766872012733204328}
+  - {fileID: 178735797888618978}
+  - {fileID: 212898134461849502}
+  - {fileID: 4008504155320214991}
+  - {fileID: 6173917322375596543}
+  - {fileID: 4749150629662506342}
+  m_Father: {fileID: 5371162146620658717}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8357285196895653781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4008504155320214991}
+  m_Layer: 0
+  m_Name: Dummy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4008504155320214991
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8357285196895653781}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.19, y: 2.25, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 801534459024837496}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

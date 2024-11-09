@@ -56,7 +56,7 @@ public class ShopkeeperUIManager : MonoBehaviour
             yield return null;
 
         shopkeeperOutput.gameObject.SetActive(true);
-        shopkeeperOutput.ShowMessage("Constance", output);
+        shopkeeperOutput.ShowMessage("Constance", output, 0);
     }
 
     public void OnLeaveShopkeeper()

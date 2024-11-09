@@ -107,4 +107,8 @@ public class BaseNPC : MonoBehaviour, IInteractable
 
         return popupDialogues[index];
     }
+    public PopupDialogue? PeekDialoguePopupFromIndex(int index)
+    {
+        return popupDialogues[index];
+    }
 }
