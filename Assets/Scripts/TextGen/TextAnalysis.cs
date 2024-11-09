@@ -16,7 +16,7 @@ public class TextAnalysis : MonoBehaviour
     private bool threadStarted = false;
     private Vector3 SentimentAnalysisResponse;
 
-    public event System.Action<float> OnMoodChanged;
+    public event System.Action<float, Vector3> OnMoodChanged;
 
     public void OnAnalysisEnabled()
     {
@@ -107,37 +107,37 @@ public class TextAnalysis : MonoBehaviour
 
         if (Mood_Meter < 60)
         {
-            OnMoodChanged?.Invoke(0.95f);
+            OnMoodChanged?.Invoke(0.95f, SentimentAnalysisResponse);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter >= 60 && Mood_Meter < 70)
         {
-            OnMoodChanged?.Invoke(0.9f);
+            OnMoodChanged?.Invoke(0.9f, SentimentAnalysisResponse);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter >= 70 && Mood_Meter < 80)
         {
-            OnMoodChanged?.Invoke(0.8f);
+            OnMoodChanged?.Invoke(0.8f, SentimentAnalysisResponse);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter >= 80 && Mood_Meter < 90)
         {
-            OnMoodChanged?.Invoke(0.7f);
+            OnMoodChanged?.Invoke(0.7f, SentimentAnalysisResponse);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter >= 90 && Mood_Meter < 100)
         {
-            OnMoodChanged?.Invoke(0.6f);
+            OnMoodChanged?.Invoke(0.6f, SentimentAnalysisResponse);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }
         else if (Mood_Meter == 100)
         {
-            OnMoodChanged?.Invoke(0.5f);
+            OnMoodChanged?.Invoke(0.5f, SentimentAnalysisResponse);
             Debug.Log("Mood Change: " + Mood_Meter_Change);
             Debug.Log("Mood Meter: " + Mood_Meter);
         }

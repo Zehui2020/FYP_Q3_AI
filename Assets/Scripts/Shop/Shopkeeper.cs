@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Shopkeeper : MonoBehaviour, IInteractable
 {
     private ShopkeeperUIManager uiManager;
     private ShopkeeperAIManager aiManager;
     private TextAnalysis textAnalysis;
+
+    [SerializeField] private Image shopkeeperSprite;
 
     [SerializeField] private List<ShopItemData> allShopItems;
     [SerializeField] private int shopItemAmount;
@@ -19,6 +22,20 @@ public class Shopkeeper : MonoBehaviour, IInteractable
     [SerializeField] private int rerollCost;
     [SerializeField] private int incrementRerollCost;
     [SerializeField] private float incrementModifier;
+
+    [System.Serializable]
+    public struct Expression
+    {
+        public enum ExpressionType
+        {
+            Happy,
+            Angry,
+            Neutral
+        }
+        public ExpressionType expressionType;
+        public Sprite expression;
+    }
+    [SerializeField] private List<Expression> expressions = new();
 
     private void Awake()
     {
@@ -119,8 +136,24 @@ public class Shopkeeper : MonoBehaviour, IInteractable
         return itemsToSpawn;
     }
 
-    public void OnMoodChanged(float modifier)
+    public void OnMoodChanged(float modifier, Vector3 results)
     {
+        if (results.x >= 88f && results.z <= 12f)
+            AssignExpression(Expression.ExpressionType.Happy);
+        else if (results.z >= 10f && results.z > results.y)
+            AssignExpression(Expression.ExpressionType. Neutral);
+        else
+            AssignExpression(Expression.ExpressionType.Angry);
+
         uiManager.ApplyDiscount(modifier);
+    }
+
+    private void AssignExpression(Expression.ExpressionType expressionType)
+    {
+        foreach (Expression expression in expressions)
+        {
+            if (expression.expressionType == expressionType)
+                shopkeeperSprite.sprite = expression.expression;
+        }
     }
 }
