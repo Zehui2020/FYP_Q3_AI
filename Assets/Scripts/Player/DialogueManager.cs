@@ -195,6 +195,10 @@ public class DialogueManager : MonoBehaviour
 
         ShowDialogue(currentNPC.GetNextDialogue(), currentNPC.minPitch, currentNPC.maxPitch);
     }
+    public void ShowDialogueOfIndex(int index)
+    {
+        ShowDialogue(currentNPC.GetDialogueFromIndex(index), currentNPC.minPitch, currentNPC.maxPitch);
+    }
 
     public void ShowDialogue(Dialogue dialogue, float min, float max)
     {

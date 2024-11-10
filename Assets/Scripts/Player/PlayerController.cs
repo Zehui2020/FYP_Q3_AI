@@ -35,7 +35,9 @@ public class PlayerController : PlayerStats
 
     private Coroutine hurtRoutine;
 
+    [SerializeField] private PlayerPrefs playerPrefs;
     [SerializeField] public Canvas playerCanvas;
+    [SerializeField] private Animator optionsMenu;
     [SerializeField] public DialogueManager dialogueManager;
     [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
     [SerializeField] private MinimapController minimapController;
@@ -135,11 +137,14 @@ public class PlayerController : PlayerStats
             timerText.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape))
+            TogglePauseMenu();
+
         // Console
-        if (Input.GetKeyDown(KeyCode.Backslash))
+        if (Input.GetKeyDown(KeyCode.Backslash) && playerPrefs.developerMode)
             ConsoleManager.Instance.SetConsole();
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return) && playerPrefs.developerMode)
             ConsoleManager.Instance.OnInputCommand();
 
         if (currentState == PlayerStates.ShadowBound)
@@ -225,7 +230,7 @@ public class PlayerController : PlayerStats
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
 
-        if (ConsoleManager.Instance.gameObject.activeInHierarchy)
+        if (ConsoleManager.Instance.gameObject.activeInHierarchy && playerPrefs.developerMode)
             return;
 
         if (movementController.currentState == MovementState.Knockback ||
@@ -1070,6 +1075,20 @@ public class PlayerController : PlayerStats
             abilityController.HandleAbilityPickUp(ability, ability.abilityCharges);
         else if (shopItemData is WeaponData weapon)
             combatController.ChangeWeapon(weapon);
+    }
+
+    public void TogglePauseMenu()
+    {
+        if (!optionsMenu.gameObject.activeInHierarchy)
+        {
+            optionsMenu.gameObject.SetActive(true);
+            Time.timeScale = 0;
+        }
+        else
+        {
+            optionsMenu.SetTrigger("exit");
+            Time.timeScale = 1;
+        }
     }
 
     // For console

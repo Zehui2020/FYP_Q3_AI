@@ -14,30 +14,44 @@ public class Door : MonoBehaviour, IInteractable
     [SerializeField] private bool endingDoor;
     [SerializeField] private bool portalDoor;
     [SerializeField] private bool shakeOnAppear;
+    [SerializeField] private bool cutsceneOnAppear;
 
     [SerializeField] private string baseSceneName;
 
-    [SerializeField] private ParticleManager appearPS;
-
+    [SerializeField] private List<ParticleManager> appearPS;
+    [SerializeField] private CutsceneGroup entranceCutscene;
+    
     private IEnumerator Start()
     {
         if (shakeOnAppear)
         {
+            animator.SetTrigger("appear");
+
+            if (cutsceneOnAppear)
+                entranceCutscene.EnterCutscene();
+            
             float timer = 2f;
             float tragetPosY = transform.position.y;
 
             transform.position = new Vector3(transform.position.x, transform.position.y - 3f, transform.position.z);
-            PlayerController.Instance.playerEffectsController.ShakeCamera(5, 5, 2f);
-            appearPS.PlayAll();
+            PlayerController.Instance.playerEffectsController.ShakeCamera(5, 10, 2f);
+
+            foreach (ParticleManager particle in appearPS)
+                particle.PlayAll();
 
             while (timer > 0)
             {
                 timer -= Time.deltaTime;
                 transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, tragetPosY, transform.position.z), Time.deltaTime * 2f);
+
+                if (timer <= 1f)
+                    appearPS[1].StopAll();
+
                 yield return null;
             }
 
-            appearPS.StopAll();
+            foreach (ParticleManager particle in appearPS)
+                particle.StopAll();
         }
     }
 

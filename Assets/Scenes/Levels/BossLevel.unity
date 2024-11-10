@@ -43774,6 +43774,14 @@ PrefabInstance:
       propertyPath: shakeOnAppear
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 495365511622002749, guid: 86d530a28d4d99a439742af9f6956792, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 495365511622002749, guid: 86d530a28d4d99a439742af9f6956792, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.1333334
+      objectReference: {fileID: 0}
     - target: {fileID: 4820102909102417710, guid: 86d530a28d4d99a439742af9f6956792, type: 3}
       propertyPath: m_Name
       value: Door
@@ -44098,7 +44106,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1620799378555067749, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
       propertyPath: m_GravityScale
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1743186797064178402, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
       propertyPath: m_AnchorMax.y
@@ -44525,6 +44533,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9104656562831867184, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
+      propertyPath: optionsMenu
+      value: 
+      objectReference: {fileID: 1577164526}
+    - target: {fileID: 9104656562831867184, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
       propertyPath: proceduralMapGenerator
       value: 
       objectReference: {fileID: 0}
@@ -44557,6 +44569,11 @@ PrefabInstance:
 --- !u!4 &1577164525 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 821536947639854210, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
+  m_PrefabInstance: {fileID: 1577164524}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1577164526 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2845353065724045430, guid: 4f59719ebe413f6499270b14a34904bc, type: 3}
   m_PrefabInstance: {fileID: 1577164524}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1582876020
@@ -44652,8 +44669,8 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 1
-  m_LookAt: {fileID: 1863348673}
-  m_Follow: {fileID: 1863348673}
+  m_LookAt: {fileID: 946378916}
+  m_Follow: {fileID: 946378916}
   m_Lens:
     FieldOfView: 40
     OrthographicSize: 6
