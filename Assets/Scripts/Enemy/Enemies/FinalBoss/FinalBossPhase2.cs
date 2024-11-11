@@ -75,6 +75,8 @@ public class FinalBossPhase2 : Enemy
         laserVFX.enabled = false;
 
         OnDieEvent += (die) => { ChangeState(State.Die); StopAllCoroutines(); laserVFX.enabled = false; };
+
+        AudioManager.Instance.FadeSound(true, Sound.SoundName.BossP2BGM, 1.0f, 0.3f);
     }
 
     public void InitBarUI()
@@ -206,9 +208,6 @@ public class FinalBossPhase2 : Enemy
 
     public override void UpdateEnemy()
     {
-        if (!AudioManager.Instance.CheckIfSoundPlaying(Sound.SoundName.BossP2BGM))
-            AudioManager.Instance.Play(Sound.SoundName.BossP2BGM);
-
         base.UpdateEnemy();
     }
 
