@@ -98,12 +98,15 @@ public class FinalBossPhase2 : Enemy
                 break;
             case State.LaserAttack:
                 animator.Play(LaserAnim);
+                AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP2Roar);
                 break;
             case State.SmashAttack:
                 animator.Play(SmashAnim);
+                AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP2Roar);
                 break;
             case State.PunchAttack:
                 animator.Play(PunchAnim);
+                AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP2Roar);
                 break;
             case State.SummonArms:
                 animator.Play(SummonArmsAnim);
@@ -257,6 +260,8 @@ public class FinalBossPhase2 : Enemy
                 }
             }
 
+            if (!AudioManager.Instance.CheckIfSoundPlaying(Sound.SoundName.BossP2Laser))
+                AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP2Laser);
             elapsed += Time.deltaTime;
             yield return null;
         }
@@ -268,6 +273,7 @@ public class FinalBossPhase2 : Enemy
 
     public void SummonShockwaves()
     {
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP2Roar);
         player.playerEffectsController.ShakeCamera(10f, 4f, 0.6f);
 
         Shockwave shockwave = ObjectPool.Instance.GetPooledObject("Shockwave", true) as Shockwave;
@@ -278,6 +284,7 @@ public class FinalBossPhase2 : Enemy
 
     public void SummonArms()
     {
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP2Summon);
         for (int i = 0; i < armsToSummon; i++)
         {
             ShadowHand shadowHand = ObjectPool.Instance.GetPooledObject("ShadowHand", true) as ShadowHand;
@@ -288,6 +295,7 @@ public class FinalBossPhase2 : Enemy
 
     private void SummonPillars()
     {
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP2Summon);
         float randX = Random.Range(pillarSpawnPoint[0].position.x, pillarSpawnPoint[1].position.x);
         Instantiate(shadowPillar, new Vector3(randX, pillarSpawnPoint[1].position.y, 0), Quaternion.identity);
         levelManager.ChangeRandomTheme();
@@ -306,6 +314,7 @@ public class FinalBossPhase2 : Enemy
     {
         int randNum = Random.Range(0, 2);
 
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP2Punch);
         BossPunchHand bossPunchHand = ObjectPool.Instance.GetPooledObject("BossPunchHand", true) as BossPunchHand;
         bossPunchHand.InitHand(this, handPunchSpawnPoint[randNum].position.x < player.transform.position.x ? Vector3.left : Vector3.right);
         bossPunchHand.transform.position = handPunchSpawnPoint[randNum].position;
@@ -313,6 +322,7 @@ public class FinalBossPhase2 : Enemy
     public void PunchEnd()
     {
         animator.Play(PunchEndAnim, 0, 0);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP2Roar);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
