@@ -20,6 +20,8 @@ public class TargetButton : Enemy
     {
         buttonAnimator.SetTrigger("down");
 
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.GenerationButton);
+
         switch (buttonType)
         { 
             case ButtonType.StartButton:

@@ -23,6 +23,7 @@ public class WorldSpaceButton : MonoBehaviour
 
     public void PickupButton(Transform parent)
     {
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.GenerationBlock);
         buttonRB.isKinematic = true;
 
         followParent.enabled = true;
@@ -45,6 +46,7 @@ public class WorldSpaceButton : MonoBehaviour
         if (isLaunched)
             return;
 
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.GenerationPipe);
         followParent.enabled = false;
         isLaunched = true;
         transform.parent = null;

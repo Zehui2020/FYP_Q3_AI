@@ -379,6 +379,7 @@ public class FinalBossPhase2 : Enemy
         if (!collision.collider.CompareTag("Crystal"))
             return;
 
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.CrystalExplode);
         ApplyImmune(100, ImmuneType.None);
         prevSegmentMinHealth = segmentMinHealth;
 
