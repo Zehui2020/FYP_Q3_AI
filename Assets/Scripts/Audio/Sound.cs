@@ -95,8 +95,8 @@ public class Sound
         Frozen,
         Dazed,
 
-        ButtonHover,
-        ButtonClick,
+        SettingsOpenClick,
+        AbilityClick,
         DialogHover,
         DialogClick,
         AbilitySelect,
@@ -132,6 +132,12 @@ public class Sound
         BossP1PunchRelease,
         BossP1Jump,
         BossP1Land,
+
+        MainMenuHover,
+        MainMenuClick,
+        SettingsHover,
+        SettingsClick,
+        SettingsSlide,
 
     }
     public SoundName name;

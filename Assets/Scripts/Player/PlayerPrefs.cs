@@ -19,10 +19,12 @@ public class PlayerPrefs : ScriptableObject
     public void SetDetailedDescrpition(bool detailed)
     {
         detailedDescription = detailed;
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.SettingsClick);
     }
     public void SetDeveloperMode(bool devMode)
     {
         developerMode = devMode;
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.SettingsClick);
     }
 
     public void ResetPrefs()

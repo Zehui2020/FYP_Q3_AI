@@ -148,6 +148,7 @@ public class FinalBossPhase1 : Enemy
 
             dagger.OnReleased += () => { bossDaggers.Remove(dagger); };
             bossDaggers.Add(dagger);
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP1Summon);
 
             yield return new WaitForSeconds(0.5f);
         }

@@ -41,6 +41,8 @@ public class MixerManager : MonoBehaviour
         float volume = masterSlider.value > 0 ? Mathf.Log10(masterSlider.value) * 20 : -80f;
         SetVolume("Master", volume);
         playerSettings.masterVolume = masterSlider.value;
+        if (!AudioManager.Instance.CheckIfSoundPlaying(Sound.SoundName.SettingsSlide))
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.SettingsSlide);
     }
 
     public void SetBGMVolume()
@@ -48,6 +50,8 @@ public class MixerManager : MonoBehaviour
         float volume = bgmSlider.value > 0 ? Mathf.Log10(bgmSlider.value) * 20 + 5 : -80f;
         SetVolume("BGM", volume);
         playerSettings.bgmVolume = bgmSlider.value;
+        if (!AudioManager.Instance.CheckIfSoundPlaying(Sound.SoundName.SettingsSlide))
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.SettingsSlide);
     }
 
     public void SetSFXVolume()
@@ -55,6 +59,8 @@ public class MixerManager : MonoBehaviour
         float volume = sfxSlider.value > 0 ? Mathf.Log10(sfxSlider.value) * 20 : -80f;
         SetVolume("SFX", volume);
         playerSettings.sfxVolume = sfxSlider.value;
+        if (!AudioManager.Instance.CheckIfSoundPlaying(Sound.SoundName.SettingsSlide))
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.SettingsSlide);
     }
 
     public void ResetVolume()
