@@ -41,7 +41,7 @@ public class ComfyPropsManager : ComfyManager
         Debug.Log(propsRecieved);
         Debug.Log(propDatas.Count);
 
-        if (propsRecieved >= propDatas.Count)
+        if (propsRecieved >= propDatas.Count - 1)
         {
             OnFinishAllProps?.Invoke();
             Destroy(gameObject);
