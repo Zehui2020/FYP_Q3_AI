@@ -11,6 +11,7 @@ public class Door : MonoBehaviour, IInteractable
     [HideInInspector] public GameObject icon;
     private bool isActivated = false;
 
+    [SerializeField] private bool exitDoor;
     [SerializeField] private bool endingDoor;
     [SerializeField] private bool portalDoor;
     [SerializeField] private bool shakeOnAppear;
@@ -94,6 +95,11 @@ public class Door : MonoBehaviour, IInteractable
 
     private IEnumerator TeleportRoutine()
     {
+        SceneLoader.Instance.FadeOut();
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.TeleportStart);
+
+        yield return new WaitForSecondsRealtime(1);
+
         if (!endingDoor)
         {
             if (portalDoor)
@@ -103,16 +109,15 @@ public class Door : MonoBehaviour, IInteractable
                 else
                     SceneLoader.Instance.LoadScene(baseSceneName + GameData.Instance.levelCount);
             }
+            else if (exitDoor)
+            {
+                SceneLoader.Instance.LoadScene(nextLevel);
+            }
 
             GameData.Instance.levelCount++;
         }
         else
             GameData.Instance.ResetData();
-
-        SceneLoader.Instance.FadeOut();
-        AudioManager.Instance.PlayOneShot(Sound.SoundName.TeleportStart);
-        yield return new WaitForSecondsRealtime(1);
-        SceneLoader.Instance.LoadScene(nextLevel);
     }
 
     public void OnLeaveRange()

@@ -25,7 +25,10 @@ public class SimpleAnimation : MonoBehaviour
             Hide();
             return;
         }
+    }
 
+    private void OnEnable()
+    {
         if (loop)
             loopRoutine = StartCoroutine(LoopRoutine());
     }
@@ -53,16 +56,15 @@ public class SimpleAnimation : MonoBehaviour
     public void StopAnimation()
     {
         if (loopRoutine != null)
-        {
             StopCoroutine(loopRoutine);
-            loopRoutine = null;
-        }
+
+        loopRoutine = null;
     }
 
     public void ResumeAnimation()
     {
         StopAnimation();
-        if (loop && isActiveAndEnabled)
+        if (loop)
             loopRoutine = StartCoroutine(LoopRoutine());
     }
 
