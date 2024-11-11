@@ -145,6 +145,9 @@ public class Sound
         BossP2Slam,
         BossP2Summon,
 
+        BossP1BGM,
+        BossP2BGM,
+
     }
     public SoundName name;
 
