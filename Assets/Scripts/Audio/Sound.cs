@@ -139,6 +139,12 @@ public class Sound
         SettingsClick,
         SettingsSlide,
 
+        BossP2Roar,
+        BossP2Laser,
+        BossP2Punch,
+        BossP2Slam,
+        BossP2Summon,
+
     }
     public SoundName name;
 
