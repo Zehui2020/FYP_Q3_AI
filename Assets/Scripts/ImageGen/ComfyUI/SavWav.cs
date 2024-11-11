@@ -17,6 +17,8 @@ public static class SavWav
 
 		Debug.Log(filepath);
 
+		Directory.CreateDirectory(Path.GetDirectoryName(filepath));
+
 		using (var fileStream = CreateEmpty(filepath)) {
 
 			ConvertAndWrite(fileStream, clip);

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ComfyPropsManager : ComfyManager
 {
@@ -14,6 +15,8 @@ public class ComfyPropsManager : ComfyManager
     [SerializeField] private int propsRecieved = 0;
     [SerializeField] private List<PropData> propDatas;
     [SerializeField] private bool queueOnStart;
+
+    public UnityEvent OnFinishAllProps;
 
     private void Start()
     {
@@ -40,6 +43,7 @@ public class ComfyPropsManager : ComfyManager
 
         if (propsRecieved >= propDatas.Count)
         {
+            OnFinishAllProps?.Invoke();
             Destroy(gameObject);
             return false;
         }

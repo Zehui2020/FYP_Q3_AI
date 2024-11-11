@@ -1,5 +1,7 @@
 using UnityEngine.Audio;
 using UnityEngine;
+using UnityEngine.Networking;
+using System.Collections;
 
 public class AudioManager : MonoBehaviour
 {
@@ -19,19 +21,7 @@ public class AudioManager : MonoBehaviour
         InitSoundList(walkingSounds);
 
         // Play BGM for the level
-
-        AudioClip bgm = WavUtility.ToAudioClip(GameData.Instance.currentLevel);
-        if (bgm != null)
-        {
-            Sound s = new Sound();
-            s.source = gameObject.AddComponent<AudioSource>();
-            s.clip = bgm;
-            s.loop = true;
-            InitAudioSource(s.source, s);
-            s.source.Play();
-
-            Debug.Log("BGM LOADED!");
-        }
+        LoadBGM();
     }
 
     private void InitSoundList(Sound[] sounds)
@@ -203,5 +193,42 @@ public class AudioManager : MonoBehaviour
     {
         Sound s = FindSound(sound);
         s.source.pitch = newPitch;
+    }
+
+    public void LoadBGM()
+    {
+        StartCoroutine(LoadBGMAudioRoutine());
+    }
+    private IEnumerator LoadBGMAudioRoutine()
+    {
+        string audioURL = "file://" + Application.persistentDataPath + "/" + GameData.Instance.currentLevel + ".wav";
+
+        Debug.Log("Image URL: " + audioURL);
+
+        using (UnityWebRequest webRequest = UnityWebRequestMultimedia.GetAudioClip(audioURL, AudioType.UNKNOWN))
+        {
+            yield return webRequest.SendWebRequest();
+
+            if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                // Get the downloaded texture
+                AudioClip bgm = ((DownloadHandlerAudioClip)webRequest.downloadHandler).audioClip;
+                if (bgm != null)
+                {
+                    Sound s = new Sound();
+                    s.source = gameObject.AddComponent<AudioSource>();
+                    s.clip = bgm;
+                    s.loop = true;
+                    InitAudioSource(s.source, s);
+                    s.source.Play();
+
+                    Debug.Log("BGM LOADED!");
+                }
+            }
+            else
+            {
+                Debug.LogError("Audio download failed: " + webRequest.error);
+            }
+        }
     }
 }
