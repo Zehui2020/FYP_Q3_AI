@@ -51,6 +51,7 @@ public class FinalBossPhase2 : Enemy
     [Header("Others")]
     [SerializeField] private CutsceneGroup cutscene;
     [SerializeField] private VisualEffect laserVFX;
+    [SerializeField] private LineRenderer lineRenderer;
     private int moveCounter;
 
     private Coroutine Deciding;
@@ -222,13 +223,48 @@ public class FinalBossPhase2 : Enemy
     }
     private IEnumerator LaserSwipeRoutine()
     {
-        laserVFX.enabled = true;
+        float trackTimer = 2.08f;
         float timer = 5f;
         float elapsed = 0f;
 
         Vector2 dirToPlayer = (player.transform.position - laserStartPoint.position).normalized;
         float startAngle = Utility.GetAngleFromDirection(dirToPlayer);
         float targetAngle = transform.position.x < player.transform.position.x ? 200 : -200;
+
+        while (trackTimer > 0)
+        {
+            float t = elapsed / 1.08f;
+            trackTimer -= Time.deltaTime;
+
+            dirToPlayer = (player.transform.position - laserStartPoint.position).normalized;
+            startAngle = Utility.GetAngleFromDirection(dirToPlayer);
+            targetAngle = transform.position.x < player.transform.position.x ? 200 : -200;
+            float currentAngle = Mathf.Lerp(startAngle, targetAngle, t);
+
+            RaycastHit2D[] hits = Physics2D.RaycastAll(
+                laserStartPoint.position,
+                Utility.GetDirectionFromAngle(currentAngle)
+            );
+
+            foreach (RaycastHit2D hit in hits)
+            {
+                if (Utility.CheckLayer(hit.collider.gameObject, groundLayer))
+                {
+                    lineRenderer.SetPosition(0, laserStartPoint.position);
+                    lineRenderer.SetPosition(1, hit.point);
+
+                    break;
+                }
+            }
+
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        elapsed = 0;
+        laserVFX.enabled = true;
+        lineRenderer.enabled = false;
 
         while (elapsed < timer)
         {
@@ -245,8 +281,15 @@ public class FinalBossPhase2 : Enemy
                 System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
                 RaycastHit2D lastHit = hits[hits.Length - 1];
 
-                laserVFX.SetVector3("StartPosition_position", laserStartPoint.position);
-                laserVFX.SetVector3("EndPosition_position", lastHit.point);
+                foreach (RaycastHit2D hit in hits)
+                {
+                    if (Utility.CheckLayer(hit.collider.gameObject, groundLayer))
+                    {
+                        laserVFX.SetVector3("StartPosition_position", laserStartPoint.position);
+                        laserVFX.SetVector3("EndPosition_position", hit.point);
+                        break;
+                    }
+                }
 
                 foreach (RaycastHit2D hit in hits)
                 {

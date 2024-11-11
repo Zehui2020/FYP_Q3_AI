@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4080234251246424608
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 742543880587039023}
+  - component: {fileID: 8026812867544499672}
+  - component: {fileID: 788019651244670313}
+  - component: {fileID: 6081323935147693111}
+  - component: {fileID: 6974720534146894426}
+  m_Layer: 0
+  m_Name: AudioGeneration
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &742543880587039023
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4080234251246424608}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8026812867544499672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4080234251246424608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2423692857df3c64b9d0ddd50df4f4f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  comfyWebsocket: {fileID: 788019651244670313}
+  promptCtr: {fileID: 6081323935147693111}
+  imageCtr: {fileID: 0}
+  imageSaver: {fileID: 0}
+  fileName: 
+  audioPrompts:
+  - Pprompt: cave ambiance, water dripping
+    filename: Cave
+  - Pprompt: wind howling, blizzard, wind whooshing, outdoors
+    filename: Mountain
+  - Pprompt: forest, bird chirping, leaves rustling
+    filename: Forest
+  - Pprompt: cave ambiance, water dripping, both sides, light wind, echoing
+    filename: Boss
+  queueOnStart: 0
+  comfyAudioCtr: {fileID: 6974720534146894426}
+--- !u!114 &788019651244670313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4080234251246424608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ebcfd1775a21944b232b6724737c2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  response: 
+  comfyImageCtr: {fileID: 0}
+  comfyAudioCtr: {fileID: 6974720534146894426}
+  promptID: 
+  currentProgress: 0
+  maxProgress: 0
+  isAudio: 1
+  saveImageAfter: 0
+--- !u!114 &6081323935147693111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4080234251246424608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f79945781b6eb3b469512ff72c92081f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptJson: "{\r\n  \"3\": {\r\n    \"inputs\": {\r\n      \"text\": \"Pprompt\",\r\n     
+    \"clip\": [\r\n        \"11\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
+    \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\": \"CLIP Text Encode
+    (Prompt)\"\r\n    }\r\n  },\r\n  \"7\": {\r\n    \"inputs\": {\r\n      \"seconds\":
+    90,\r\n      \"batch_size\": 1\r\n    },\r\n    \"class_type\": \"EmptyLatentAudio\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"EmptyLatentAudio\"\r\n    }\r\n  },\r\n  \"8\":
+    {\r\n    \"inputs\": {\r\n      \"text\": \"distortion, static, peaks, hissing,
+    hiss\",\r\n      \"clip\": [\r\n        \"11\",\r\n        0\r\n      ]\r\n   
+    },\r\n    \"class_type\": \"CLIPTextEncode\",\r\n    \"_meta\": {\r\n      \"title\":
+    \"CLIP Text Encode (Prompt)\"\r\n    }\r\n  },\r\n  \"11\": {\r\n    \"inputs\":
+    {\r\n      \"clip_name\": \"t5_base.safetensors\",\r\n      \"type\": \"stable_audio\"\r\n   
+    },\r\n    \"class_type\": \"CLIPLoader\",\r\n    \"_meta\": {\r\n      \"title\":
+    \"Load CLIP\"\r\n    }\r\n  },\r\n  \"12\": {\r\n    \"inputs\": {\r\n      \"ckpt_name\":
+    \"stable_audio_open_1.0.safetensors\"\r\n    },\r\n    \"class_type\": \"CheckpointLoaderSimple\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"Load Checkpoint\"\r\n    }\r\n  },\r\n  \"49\":
+    {\r\n    \"inputs\": {\r\n      \"samples\": [\r\n        \"51\",\r\n       
+    0\r\n      ],\r\n      \"vae\": [\r\n        \"12\",\r\n        2\r\n      ]\r\n   
+    },\r\n    \"class_type\": \"VAEDecodeAudio\",\r\n    \"_meta\": {\r\n      \"title\":
+    \"VAEDecodeAudio\"\r\n    }\r\n  },\r\n  \"51\": {\r\n    \"inputs\": {\r\n     
+    \"seed\": 331674255288978,\r\n      \"steps\": 100,\r\n      \"cfg\": 7,\r\n     
+    \"sampler_name\": \"euler\",\r\n      \"scheduler\": \"normal\",\r\n      \"denoise\":
+    1,\r\n      \"model\": [\r\n        \"12\",\r\n        0\r\n      ],\r\n     
+    \"positive\": [\r\n        \"3\",\r\n        0\r\n      ],\r\n      \"negative\":
+    [\r\n        \"8\",\r\n        0\r\n      ],\r\n      \"latent_image\": [\r\n       
+    \"7\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\": \"KSampler\",\r\n   
+    \"_meta\": {\r\n      \"title\": \"KSampler\"\r\n    }\r\n  },\r\n  \"63\": {\r\n   
+    \"inputs\": {\r\n      \"filename_prefix\": \"audio/ComfyUI\",\r\n      \"audio\":
+    [\r\n        \"49\",\r\n        0\r\n      ]\r\n    },\r\n    \"class_type\":
+    \"SaveAudio\",\r\n    \"_meta\": {\r\n      \"title\": \"SaveAudio\"\r\n    }\r\n 
+    }\r\n}"
+  OnQueuePrompt:
+    m_PersistentCalls:
+      m_Calls: []
+  StartPrompt:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &6974720534146894426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4080234251246424608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dd0e3a416007fe499ad8ac4c78952b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isControlNet: 0
+  comfyAudioFilePath: C:\ComfyUI_windows_portable\ComfyUI\output\audio
+  OnRecieveAudio:
+    m_PersistentCalls:
+      m_Calls: []
