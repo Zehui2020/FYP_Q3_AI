@@ -1110,10 +1110,10 @@ MonoBehaviour:
   m_UpdateMethod: 2
   m_Targets:
   - target: {fileID: 1822931130}
-    weight: 0
+    weight: 1
     radius: 4.8
   - target: {fileID: 8822606073086239408}
-    weight: 1
+    weight: 0
     radius: 4.8
 --- !u!4 &335604515
 Transform:
@@ -1124,7 +1124,7 @@ Transform:
   m_GameObject: {fileID: 335604511}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16, y: 4.18, z: 0}
+  m_LocalPosition: {x: -24.23, y: 4.82, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1678,25 +1678,7 @@ CompositeCollider2D:
   m_GeometryType: 0
   m_GenerationType: 0
   m_EdgeRadius: 0
-  m_ColliderPaths:
-  - m_Collider: {fileID: 548039307}
-    m_ColliderPaths:
-    - - X: -200000000
-        Y: 70000000
-      - X: -210000000
-        Y: 70000000
-      - X: -210000000
-        Y: 410000000
-      - X: -320000000
-        Y: 410000000
-      - X: -320000000
-        Y: 20000000
-      - X: -700000000
-        Y: 20000000
-      - X: -700000000
-        Y: 10000000
-      - X: -200000000
-        Y: 10000000
+  m_ColliderPaths: []
   m_CompositePaths:
     m_Paths:
     - - {x: -20.000029, y: 1}
@@ -44687,8 +44669,8 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 1
-  m_LookAt: {fileID: 335604515}
-  m_Follow: {fileID: 335604515}
+  m_LookAt: {fileID: 1863348673}
+  m_Follow: {fileID: 1863348673}
   m_Lens:
     FieldOfView: 40
     OrthographicSize: 6
@@ -44738,7 +44720,7 @@ Transform:
   m_GameObject: {fileID: 1629713482}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.677778, y: 3.300001, z: -14.8}
+  m_LocalPosition: {x: -0.32222176, y: 3.300001, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -44966,7 +44948,7 @@ Transform:
   m_GameObject: {fileID: 1706829451}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.677779, y: 3.300001, z: -14.8}
+  m_LocalPosition: {x: -0.32222113, y: 3.300001, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -45259,7 +45241,7 @@ Transform:
   m_GameObject: {fileID: 1863348672}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -24.23, y: 4.82, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -45282,10 +45264,10 @@ MonoBehaviour:
   m_UpdateMethod: 2
   m_Targets:
   - target: {fileID: 1822931130}
-    weight: 1
+    weight: 0
     radius: 4.8
   - target: {fileID: 190381414}
-    weight: 0
+    weight: 1
     radius: 4.8
 --- !u!95 &1863348675
 Animator:

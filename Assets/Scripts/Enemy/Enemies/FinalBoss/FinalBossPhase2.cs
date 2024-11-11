@@ -125,6 +125,7 @@ public class FinalBossPhase2 : Enemy
             case State.Die:
                 StopAllCoroutines();
                 cutscene.EnterCutscene();
+                AudioManager.Instance.FadeSound(false, Sound.SoundName.BossP2BGM, 1.0f, 0);
                 break;
         }
     }
@@ -205,6 +206,9 @@ public class FinalBossPhase2 : Enemy
 
     public override void UpdateEnemy()
     {
+        if (!AudioManager.Instance.CheckIfSoundPlaying(Sound.SoundName.BossP2BGM))
+            AudioManager.Instance.Play(Sound.SoundName.BossP2BGM);
+
         base.UpdateEnemy();
     }
 
@@ -274,6 +278,7 @@ public class FinalBossPhase2 : Enemy
     public void SummonShockwaves()
     {
         AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP2Roar);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP2Slam);
         player.playerEffectsController.ShakeCamera(10f, 4f, 0.6f);
 
         Shockwave shockwave = ObjectPool.Instance.GetPooledObject("Shockwave", true) as Shockwave;
