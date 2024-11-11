@@ -16,6 +16,7 @@ public class Crystal : BaseStats
 
     private void LaunchCrystal()
     {
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.CrystalHit);
         Vector2 dir = transform.position.x < PlayerController.Instance.transform.position.x ? leftDir : rightDir;
         rb.AddForce(dir * hitForce, ForceMode2D.Impulse);
     }
