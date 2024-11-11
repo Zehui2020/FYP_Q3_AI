@@ -14,12 +14,15 @@ public class ImageLoading : MonoBehaviour
     private int previousProgress;
 
     private Coroutine fadeOutRoutine;
-    private Coroutine loadRoutine;
-
     private Animator animator;
 
-    private void Awake()
+    public void InitImageLoading()
     {
+        animator = GetComponent<Animator>();
+        comfyWebsocket.InitWebsocket();
+
+        DontDestroyOnLoad(gameObject);
+
         GameData.Instance.OnLoadingQueueChanged += (enqueue, title) =>
         {
             if (enqueue)
@@ -34,76 +37,64 @@ public class ImageLoading : MonoBehaviour
                     fadeOutRoutine = null;
                     animator.SetBool("fadeIn", true);
                 }
-
-                if (loadRoutine == null)
-                    loadRoutine = StartCoroutine(StartLoading());
             }
         };
     }
 
-    private void Start()
+    private void LateUpdate()
     {
-        animator = GetComponent<Animator>();
-        comfyWebsocket.InitWebsocket();
+        if (GameData.Instance.loadingQueue.Count == 0)
+        {
+            Debug.Log("NOTHING  IN Q");
+            return;
+        }
 
-        DontDestroyOnLoad(gameObject);
+        currentImage.text = "Generating:\n" + GameData.Instance.loadingQueue.Peek();
+        SetSliderValue();
     }
 
-    private IEnumerator StartLoading()
+    private void SetSliderValue()
     {
-        while (true)
+        int currentProgress = Utility.ParseJsonValue(comfyWebsocket.response, "value");
+        int maxProgress = Utility.ParseJsonValue(comfyWebsocket.response, "max");
+
+        if (currentProgress <= 0 || maxProgress <= 1)
         {
-            currentImage.text = "Generating:\n" + GameData.Instance.loadingQueue.Peek();
-            int currentProgress = Utility.ParseJsonValue(comfyWebsocket.response, "value");
-            int maxProgress = Utility.ParseJsonValue(comfyWebsocket.response, "max");
+            loadingSlider.value = 0;
+            loadingSlider.maxValue = 100;
+        }
+        else
+        {
+            loadingSlider.value = currentProgress;
+            loadingSlider.maxValue = maxProgress;
+        }
 
-            if (currentProgress <= 0 || maxProgress <= 1)
+        if (currentProgress != previousProgress)
+        {
+            previousProgress = currentProgress;
+            if (fadeOutRoutine != null)
             {
-                loadingSlider.value = 0;
-                loadingSlider.maxValue = 100;
+                StopCoroutine(fadeOutRoutine);
+                fadeOutRoutine = null;
+                animator.SetBool("fadeIn", true);
             }
-            else
+        }
+
+        if (GameData.Instance.loadingQueue.Count != 0)
+        {
+            if (GameData.Instance.loadingQueue.Peek() == previousPrompt)
             {
-                loadingSlider.value = currentProgress;
-                loadingSlider.maxValue = maxProgress;
+                if (fadeOutRoutine == null)
+                    fadeOutRoutine = StartCoroutine(FadeRoutine());
             }
+        }
 
-            if (currentProgress != previousProgress)
-            {
-                previousProgress = currentProgress;
-                if (fadeOutRoutine != null)
-                {
-                    StopCoroutine(fadeOutRoutine);
-                    fadeOutRoutine = null;
-                    animator.SetBool("fadeIn", true);
-                }
-            }
-
-            if (GameData.Instance.loadingQueue.Count != 0)
-            {
-                if (GameData.Instance.loadingQueue.Peek() == previousPrompt)
-                {
-                    if (fadeOutRoutine == null)
-                        fadeOutRoutine = StartCoroutine(FadeRoutine());
-                }
-            }
-
-            if (loadingSlider.value == loadingSlider.maxValue)
-            {
-                Debug.Log("De Q: " + GameData.Instance.loadingQueue.Peek());
-                GameData.Instance.DequeueLoading();
-                loadingSlider.value = 0;
-                loadingSlider.maxValue = 100;
-
-                if (GameData.Instance.loadingQueue.Count > 0)
-                    loadRoutine = StartCoroutine(StartLoading());
-                else
-                    loadRoutine = null;
-
-                yield break;
-            }
-
-            yield return null;
+        if (loadingSlider.value == loadingSlider.maxValue)
+        {
+            Debug.Log("De Q: " + GameData.Instance.loadingQueue.Peek());
+            GameData.Instance.DequeueLoading();
+            loadingSlider.value = 0;
+            loadingSlider.maxValue = 100;
         }
     }
 

@@ -25,6 +25,24 @@ public class GameData : MonoBehaviour
     public event System.Action<bool, string> OnLoadingQueueChanged;
     private bool canDequeue = true;
 
+    [SerializeField] private ImageLoading imageLoading;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        currentLevel = "Cave";
+
+        imageLoading.InitImageLoading();
+
+        DontDestroyOnLoad(gameObject);
+    }
+
     public void EnqueueLoading(string title)
     {
         loadingQueue.Enqueue(title);
@@ -46,19 +64,6 @@ public class GameData : MonoBehaviour
         canDequeue = true;
     }
 
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        currentLevel = "Cave";
-
-        DontDestroyOnLoad(gameObject);
-    }
 
     private void Update()
     {
