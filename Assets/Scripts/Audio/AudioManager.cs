@@ -227,7 +227,19 @@ public class AudioManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Audio download failed: " + webRequest.error);
+                // Get the downloaded texture
+                AudioClip bgm = Resources.Load<AudioClip>(GameData.Instance.currentLevel);
+                if (bgm != null)
+                {
+                    Sound s = new Sound();
+                    s.source = gameObject.AddComponent<AudioSource>();
+                    s.clip = bgm;
+                    s.loop = true;
+                    InitAudioSource(s.source, s);
+                    s.source.Play();
+
+                    Debug.Log("BGM LOADED THROUGH RESOURCES!");
+                }
             }
         }
     }
