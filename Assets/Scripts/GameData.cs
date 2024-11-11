@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,7 +21,30 @@ public class GameData : MonoBehaviour
     public string choseThemes;
     public string currentLevel;
 
-    public Queue<string> currentlyLoadingImage = new();
+    public Queue<string> loadingQueue = new();
+    public event System.Action<bool, string> OnLoadingQueueChanged;
+    private bool canDequeue = true;
+
+    public void EnqueueLoading(string title)
+    {
+        loadingQueue.Enqueue(title);
+        OnLoadingQueueChanged?.Invoke(true, title);
+    }
+    public void DequeueLoading()
+    {
+        if (!canDequeue)
+            return;
+
+        canDequeue = false;
+        loadingQueue.Dequeue();
+        OnLoadingQueueChanged?.Invoke(false, string.Empty);
+        StartCoroutine(DequeueRoutine());
+    }
+    private IEnumerator DequeueRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+        canDequeue = true;
+    }
 
     private void Awake()
     {
@@ -76,7 +100,14 @@ public class GameData : MonoBehaviour
         choseThemes = string.Empty;
         currentLevel = string.Empty;
 
-        currentlyLoadingImage.Clear();
+        loadingQueue.Clear();
         itemStats.ResetStats();
+
+        OnLoadingQueueChanged = null;
+    }
+
+    private void OnApplicationQuit()
+    {
+        ResetData();
     }
 }

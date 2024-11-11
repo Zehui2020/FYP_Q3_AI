@@ -201,6 +201,9 @@ public class AudioManager : MonoBehaviour
     }
     private IEnumerator LoadBGMAudioRoutine()
     {
+        if (GameData.Instance == null)
+            yield break;
+
         string audioURL = "file://" + Application.persistentDataPath + "/" + GameData.Instance.currentLevel + ".wav";
 
         Debug.Log("Image URL: " + audioURL);

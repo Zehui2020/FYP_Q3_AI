@@ -15,9 +15,6 @@ public class ComfyWebsocket : MonoBehaviour
     public ComfyAudioCtr comfyAudioCtr;
     public string promptID;
 
-    [HideInInspector] public int currentProgress = -1;
-    [HideInInspector] public int maxProgress = -1;
-
     [SerializeField] private bool isAudio;
     [SerializeField] private bool saveImageAfter = true;
 
@@ -53,17 +50,6 @@ public class ComfyWebsocket : MonoBehaviour
             response = stringBuilder.ToString();
             //Debug.Log("Received: " + response);
 
-            if (ParsePromptID(response).Equals(promptID))
-            {
-                currentProgress = Utility.ParseJsonValue(response, "value");
-                maxProgress = Utility.ParseJsonValue(response, "max");
-            }
-            else
-            {
-                currentProgress = 0;
-                maxProgress = 0;
-            }
-
             if (response.Contains("\"queue_remaining\": 0") && promptID != string.Empty && promptID != "0")
             {
                 if (saveImageAfter)
@@ -72,8 +58,6 @@ public class ComfyWebsocket : MonoBehaviour
                 if (isAudio)
                     comfyAudioCtr.RequestFileName(promptID);
 
-                currentProgress = 0;
-                maxProgress = 0;
                 response = string.Empty;
             }
         }

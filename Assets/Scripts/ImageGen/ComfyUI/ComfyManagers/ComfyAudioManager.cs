@@ -37,7 +37,7 @@ public class ComfyAudioManager : ComfyManager
 
         promptCtr.QueuePrompt(audioPrompts[audioPromptIndex].Pprompt);
         fileName = audioPrompts[audioPromptIndex].filename;
-        GameData.Instance.currentlyLoadingImage.Enqueue(fileName + ".wav");
+        GameData.Instance.EnqueueLoading(fileName + ".wav");
     }
 
     public void OnRecieveAudio(string promptID, AudioClip audio)

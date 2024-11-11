@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using UnityEngine.Events;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 
 public class NPC_Dialogue_Generator : MonoBehaviour
 {
@@ -169,7 +168,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
         string AI_Output = "";
 
-        ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/k {command}")
+        ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/c {command}")
         {
             RedirectStandardOutput = true,
             RedirectStandardError = true,
@@ -206,7 +205,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             yield return null;
         }
 
-        if (process.HasExited && AI_Output.Contains("</result>"))
+        if (AI_Output.Contains("</result>"))
         {
             isGenerating = false;
             previousContext = ExtractContent(AI_Output);
@@ -223,7 +222,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         UnityEngine.Debug.Log("Result: " + AI_Output);
         UnityEngine.Debug.Log(speedString);
 
-        if (process != null)
+        if (process != null && !process.HasExited)
         {
             process.Kill();
             process = null;
@@ -249,5 +248,10 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         {
             return text;
         }
+    }
+
+    private void OnDisable()
+    {
+        OnFinishGeneratingResponse = null;
     }
 }

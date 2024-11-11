@@ -157,7 +157,7 @@ public class ShopkeeperAIManager : MonoBehaviour
     {
         string AI_Output = "";
 
-        ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/k {command}")
+        ProcessStartInfo startInfo = new ProcessStartInfo("cmd.exe", $"/c {command}")
         {
             RedirectStandardOutput = true,
             RedirectStandardError = true,

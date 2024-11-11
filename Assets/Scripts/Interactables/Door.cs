@@ -108,13 +108,13 @@ public class Door : MonoBehaviour, IInteractable
                     SceneLoader.Instance.LoadScene("BossLevel");
                 else
                     SceneLoader.Instance.LoadScene(baseSceneName + GameData.Instance.levelCount);
+
+                GameData.Instance.levelCount++;
             }
             else if (exitDoor)
             {
                 SceneLoader.Instance.LoadScene(nextLevel);
             }
-
-            GameData.Instance.levelCount++;
         }
         else
             GameData.Instance.ResetData();

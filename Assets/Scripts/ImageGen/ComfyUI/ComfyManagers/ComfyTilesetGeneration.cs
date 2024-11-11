@@ -36,7 +36,7 @@ public class ComfyTilesetGeneration : ComfyManager
         if (finalPrompt == string.Empty)
             finalPrompt = setPrompts + ", dirt themed";
 
-        GameData.Instance.currentlyLoadingImage.Enqueue(playerBGPrompts[tilesetRecieved] + "_Tileset");
+        GameData.Instance.EnqueueLoading(playerBGPrompts[tilesetRecieved] + "_Tileset");
 
         Debug.Log("Tileset Theme: " + finalPrompt);
 

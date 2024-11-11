@@ -68,8 +68,8 @@ public class ComfyBGManager : ComfyManager
     public void QueueBGPrompt()
     {
         PromptData.BGPrompt bgPrompt = allPromptDatas[currentLevelPrompt].GetBGPrompt((PromptData.BGPrompt.Type)bgRecievedCounter, bgPrompts[currentLevelPrompt]);
+        GameData.Instance.EnqueueLoading(bgPrompt.keywords + "_" + bgPrompt.type.ToString());
         promptCtr.QueuePromptWithControlNet(allPromptDatas[currentLevelPrompt].GetPromptJSON(bgPrompt.bgType), bgPrompt.prompt, bgPrompt.referenceImage);
-        GameData.Instance.currentlyLoadingImage.Enqueue(bgPrompt.keywords + "_" + bgPrompt.type.ToString());
     }
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
