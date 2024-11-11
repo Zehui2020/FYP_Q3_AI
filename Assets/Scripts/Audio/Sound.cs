@@ -154,6 +154,10 @@ public class Sound
         CrystalExplode,
         DoorAppear,
 
+        GenerationButton,
+        GenerationBlock,
+        GenerationPipe,
+
     }
     public SoundName name;
 
