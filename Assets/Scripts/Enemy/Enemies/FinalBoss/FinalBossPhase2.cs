@@ -223,6 +223,8 @@ public class FinalBossPhase2 : Enemy
     }
     private IEnumerator LaserSwipeRoutine()
     {
+        lineRenderer.enabled = true;
+
         float trackTimer = 2.08f;
         float timer = 5f;
         float elapsed = 0f;

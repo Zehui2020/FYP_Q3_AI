@@ -20,6 +20,8 @@ public class ImageLoading : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         comfyWebsocket.InitWebsocket();
+
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Update()

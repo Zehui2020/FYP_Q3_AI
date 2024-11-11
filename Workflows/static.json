@@ -1,22 +1,22 @@
 {
   "3": {
     "inputs": {
-      "seed": 471013842958786,
+      "seed": 790082378636327,
       "steps": 20,
-      "cfg": 7,
-      "sampler_name": "euler",
+      "cfg": 10,
+      "sampler_name": "dpm_2",
       "scheduler": "normal",
       "denoise": 1,
       "model": [
-        "60",
+        "46",
         0
       ],
       "positive": [
-        "12",
+        "64",
         0
       ],
       "negative": [
-        "12",
+        "64",
         1
       ],
       "latent_image": [
@@ -31,7 +31,7 @@
   },
   "4": {
     "inputs": {
-      "ckpt_name": "anyloraCheckpoint_bakedvaeBlessedFp16.safetensors"
+      "ckpt_name": "pixelArtDiffusionXL_spriteShaper.safetensors"
     },
     "class_type": "CheckpointLoaderSimple",
     "_meta": {
@@ -40,8 +40,8 @@
   },
   "5": {
     "inputs": {
-      "width": 1024,
-      "height": 1024,
+      "width": 1920,
+      "height": 1920,
       "batch_size": 1
     },
     "class_type": "EmptyLatentImage",
@@ -53,7 +53,7 @@
     "inputs": {
       "text": "Pprompt",
       "clip": [
-        "60",
+        "4",
         1
       ]
     },
@@ -66,7 +66,7 @@
     "inputs": {
       "text": "",
       "clip": [
-        "60",
+        "4",
         1
       ]
     },
@@ -91,16 +91,56 @@
       "title": "VAE Decode"
     }
   },
-  "11": {
+  "24": {
     "inputs": {
-      "control_net_name": "control_v11p_sd15_canny.pth"
+      "filename_prefix": "ComfyUI",
+      "images": [
+        "35",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "35": {
+    "inputs": {
+      "pixel_size": 4,
+      "image": [
+        "8",
+        0
+      ]
+    },
+    "class_type": "Pixelization",
+    "_meta": {
+      "title": "Pixelization"
+    }
+  },
+  "46": {
+    "inputs": {
+      "tiling": "enable",
+      "copy_model": "Modify in place",
+      "model": [
+        "4",
+        0
+      ]
+    },
+    "class_type": "SeamlessTile",
+    "_meta": {
+      "title": "Seamless Tile"
+    }
+  },
+  "63": {
+    "inputs": {
+      "control_net_name": "controlnet-canny-sdxl-1.0\\diffusion_pytorch_model.bin"
     },
     "class_type": "ControlNetLoader",
     "_meta": {
       "title": "Load ControlNet Model"
     }
   },
-  "12": {
+  "64": {
     "inputs": {
       "strength": 1,
       "start_percent": 0,
@@ -114,88 +154,40 @@
         0
       ],
       "control_net": [
-        "11",
+        "63",
         0
       ],
       "image": [
-        "59",
+        "66",
         0
+      ],
+      "vae": [
+        "4",
+        2
       ]
     },
     "class_type": "ControlNetApplyAdvanced",
     "_meta": {
-      "title": "Apply ControlNet (Advanced)"
+      "title": "Apply ControlNet"
     }
   },
-  "13": {
+  "65": {
     "inputs": {
       "image": "placeholder.png",
       "upload": "image"
     },
     "class_type": "LoadImage",
     "_meta": {
-      "title": "Input"
+      "title": "Load Image"
     }
   },
-  "16": {
+  "66": {
     "inputs": {
-      "images": [
-        "59",
-        0
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "Preview Image"
-    }
-  },
-  "24": {
-    "inputs": {
-      "filename_prefix": "ComfyUI",
-      "images": [
-        "61",
-        0
-      ]
-    },
-    "class_type": "SaveImage",
-    "_meta": {
-      "title": "Save Image"
-    }
-  },
-  "35": {
-    "inputs": {
-      "pixel_size": 2,
+      "low_threshold": 100,
+      "high_threshold": 200,
+      "resolution": 1920,
       "image": [
-        "8",
-        0
-      ]
-    },
-    "class_type": "Pixelization",
-    "_meta": {
-      "title": "Pixelization"
-    }
-  },
-  "46": {
-    "inputs": {
-      "tiling": "x_only",
-      "copy_model": "Modify in place",
-      "model": [
-        "4",
-        0
-      ]
-    },
-    "class_type": "SeamlessTile",
-    "_meta": {
-      "title": "Seamless Tile"
-    }
-  },
-  "59": {
-    "inputs": {
-      "low_threshold": 0,
-      "high_threshold": 255,
-      "resolution": 1024,
-      "image": [
-        "13",
+        "65",
         0
       ]
     },
@@ -204,41 +196,16 @@
       "title": "Canny Edge"
     }
   },
-  "60": {
+  "67": {
     "inputs": {
-      "lora_name": "PixelScenery.safetensors",
-      "strength_model": 1,
-      "strength_clip": 1,
-      "model": [
-        "46",
-        0
-      ],
-      "clip": [
-        "4",
-        1
-      ]
-    },
-    "class_type": "LoraLoader",
-    "_meta": {
-      "title": "Load LoRA"
-    }
-  },
-  "61": {
-    "inputs": {
-      "width": 1920,
-      "height": 1920,
-      "interpolation": "nearest",
-      "method": "stretch",
-      "condition": "always",
-      "multiple_of": 0,
-      "image": [
-        "35",
+      "images": [
+        "66",
         0
       ]
     },
-    "class_type": "ImageResize+",
+    "class_type": "PreviewImage",
     "_meta": {
-      "title": "🔧 Image Resize"
+      "title": "Preview Image"
     }
   }
 }

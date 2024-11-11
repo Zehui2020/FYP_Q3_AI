@@ -1,14 +1,14 @@
 {
   "3": {
     "inputs": {
-      "seed": 390653800406070,
+      "seed": 705781619534298,
       "steps": 20,
-      "cfg": 7,
+      "cfg": 10,
       "sampler_name": "euler",
       "scheduler": "normal",
       "denoise": 1,
       "model": [
-        "62",
+        "46",
         0
       ],
       "positive": [
@@ -31,7 +31,7 @@
   },
   "4": {
     "inputs": {
-      "ckpt_name": "anyloraCheckpoint_bakedvaeBlessedFp16.safetensors"
+      "ckpt_name": "pixelArtDiffusionXL_spriteShaper.safetensors"
     },
     "class_type": "CheckpointLoaderSimple",
     "_meta": {
@@ -40,8 +40,8 @@
   },
   "5": {
     "inputs": {
-      "width": 1024,
-      "height": 1024,
+      "width": 1920,
+      "height": 1920,
       "batch_size": 1
     },
     "class_type": "EmptyLatentImage",
@@ -53,7 +53,7 @@
     "inputs": {
       "text": "Pprompt",
       "clip": [
-        "62",
+        "4",
         1
       ]
     },
@@ -66,7 +66,7 @@
     "inputs": {
       "text": "",
       "clip": [
-        "62",
+        "4",
         1
       ]
     },
@@ -93,7 +93,7 @@
   },
   "11": {
     "inputs": {
-      "control_net_name": "control_v11p_sd15_canny.pth"
+      "control_net_name": "controlnet-canny-sdxl-1.0\\diffusion_pytorch_model.bin"
     },
     "class_type": "ControlNetLoader",
     "_meta": {
@@ -137,18 +137,6 @@
       "title": "Input"
     }
   },
-  "16": {
-    "inputs": {
-      "images": [
-        "58",
-        0
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "Preview Image"
-    }
-  },
   "24": {
     "inputs": {
       "filename_prefix": "ComfyUI",
@@ -164,7 +152,7 @@
   },
   "35": {
     "inputs": {
-      "pixel_size": 2,
+      "pixel_size": 4,
       "image": [
         "8",
         0
@@ -219,8 +207,8 @@
   },
   "45": {
     "inputs": {
-      "width": 1024,
-      "height": 1024,
+      "width": 1920,
+      "height": 1920,
       "interpolation": "nearest",
       "method": "stretch",
       "condition": "always",
@@ -277,9 +265,9 @@
     "inputs": {
       "low_threshold": 0,
       "high_threshold": 255,
-      "resolution": 1024,
+      "resolution": 1920,
       "image": [
-        "58",
+        "13",
         0
       ]
     },
@@ -298,39 +286,6 @@
     "class_type": "PreviewImage",
     "_meta": {
       "title": "Preview Image"
-    }
-  },
-  "58": {
-    "inputs": {
-      "coarse": "disable",
-      "resolution": 1024,
-      "image": [
-        "13",
-        0
-      ]
-    },
-    "class_type": "LineArtPreprocessor",
-    "_meta": {
-      "title": "Realistic Lineart"
-    }
-  },
-  "62": {
-    "inputs": {
-      "lora_name": "PixelScenery.safetensors",
-      "strength_model": 1,
-      "strength_clip": 1,
-      "model": [
-        "46",
-        0
-      ],
-      "clip": [
-        "4",
-        1
-      ]
-    },
-    "class_type": "Load Lora",
-    "_meta": {
-      "title": "Load Lora"
     }
   },
   "65": {
@@ -360,7 +315,7 @@
     },
     "class_type": "ImageResize+",
     "_meta": {
-      "title": "🔧 Image Resize"
+      "title": "□ Image Resize"
     }
   }
 }
