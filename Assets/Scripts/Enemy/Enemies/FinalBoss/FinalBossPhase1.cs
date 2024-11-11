@@ -72,6 +72,8 @@ public class FinalBossPhase1 : Enemy
         };
 
         cutscene.CutsceneEnd.AddListener(() => { ChangeState(State.Walk); });
+
+        AudioManager.Instance.FadeSound(true, Sound.SoundName.BossP1BGM, 1.0f, 0.3f);
     }
 
     public void ChangeState(State newState)
@@ -125,6 +127,7 @@ public class FinalBossPhase1 : Enemy
                 nextPhase.SetActive(true); 
                 transform.parent.gameObject.SetActive(false);
                 dieCutscene.EnterCutscene();
+                AudioManager.Instance.FadeSound(false, Sound.SoundName.BossP1BGM, 1.0f, 0);
                 break;
         }
     }
