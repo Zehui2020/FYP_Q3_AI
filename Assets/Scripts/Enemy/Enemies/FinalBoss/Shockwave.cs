@@ -28,8 +28,6 @@ public class Shockwave : PooledObject
             shockwave.OnTriggerEnter.AddListener(OnEnterTrigger);
         }
 
-        AudioManager.Instance.Play(Sound.SoundName.BossShockwave);
-
         this.thrower = thrower;
         this.damage = damage;
     }

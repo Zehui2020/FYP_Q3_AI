@@ -108,7 +108,7 @@ public class AbilityController : MonoBehaviour
         AbilityPickUp ability = Instantiate(abilityPickUpPrefab);
         ability.transform.position = transform.position;
         ability.InitPickup(swapAbility, swapAbility.abilityCharges);
-        AudioManager.Instance.PlayOneShot(Sound.SoundName.ButtonClick);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.AbilityClick);
 
         swappingAbility = false;
         swapAbility = null;
@@ -121,7 +121,7 @@ public class AbilityController : MonoBehaviour
         AbilityPickUp ability = Instantiate(abilityPickUpPrefab);
         ability.transform.position = transform.position;
         ability.InitPickup(abilities[i], charges[i]);
-        AudioManager.Instance.PlayOneShot(Sound.SoundName.ButtonClick);
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.AbilityClick);
         // add ability
         abilities[i] = swapAbility;
         charges[i] = swapAbilityCharges;

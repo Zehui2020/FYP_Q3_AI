@@ -18,7 +18,8 @@ public class PlayerController : PlayerStats
         Map,
         Shop,
         ShadowBound,
-        Transition
+        Transition,
+        Settings
     }
     public PlayerStates currentState;
 
@@ -137,8 +138,11 @@ public class PlayerController : PlayerStats
             timerText.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !abilityController.swappingAbility)
             TogglePauseMenu();
+
+        if (currentState == PlayerStates.Settings)
+            return;
 
         // Console
         if (Input.GetKeyDown(KeyCode.Backslash) && playerPrefs.developerMode)
@@ -207,14 +211,14 @@ public class PlayerController : PlayerStats
         if (health <= 0)
             return;
 
+        if (currentState == PlayerStates.Ability)
+            return;
+
         // abilities
         if (abilityController != null && !abilityController.swappingAbility)
             for (int i = 0; i < abilityController.abilities.Count; i++)
                 if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
                     abilityController.HandleAbility(i);
-
-        if (currentState == PlayerStates.Ability)
-            return;
 
         if (Input.GetKeyDown(KeyCode.Tab) && movementController.currentState != MovementState.LedgeGrab)
         {
@@ -1079,14 +1083,17 @@ public class PlayerController : PlayerStats
 
     public void TogglePauseMenu()
     {
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.SettingsOpenClick);
         if (!optionsMenu.gameObject.activeInHierarchy)
         {
             optionsMenu.gameObject.SetActive(true);
+            ChangeState(PlayerStates.Settings);
             Time.timeScale = 0;
         }
         else
         {
             optionsMenu.SetTrigger("exit");
+            ChangeState(PlayerStates.Movement);
             Time.timeScale = 1;
         }
     }
