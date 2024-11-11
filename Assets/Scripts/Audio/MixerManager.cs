@@ -23,44 +23,56 @@ public class MixerManager : MonoBehaviour
     private void Start()
     {
         SetSliders();
-        SetMasterVolume();
-        SetBGMVolume();
-        SetSFXVolume();
+        SetMasterVolume(false);
+        SetBGMVolume(false);
+        SetSFXVolume(false);
     }
 
     private void OnEnable()
     {
         SetSliders();
-        SetMasterVolume();
-        SetBGMVolume();
-        SetSFXVolume();
+        SetMasterVolume(false);
+        SetBGMVolume(false);
+        SetSFXVolume(false);
     }
 
-    public void SetMasterVolume()
+    public void SetMasterVolume(bool playSound)
     {
         float volume = masterSlider.value > 0 ? Mathf.Log10(masterSlider.value) * 20 : -80f;
         SetVolume("Master", volume);
         playerSettings.masterVolume = masterSlider.value;
-        if (!AudioManager.Instance.CheckIfSoundPlaying(Sound.SoundName.SettingsSlide))
-            AudioManager.Instance.PlayOneShot(Sound.SoundName.SettingsSlide);
+        PlaySlideAudio(playSound);
     }
 
-    public void SetBGMVolume()
+    public void SetBGMVolume(bool playSound)
     {
         float volume = bgmSlider.value > 0 ? Mathf.Log10(bgmSlider.value) * 20 + 5 : -80f;
         SetVolume("BGM", volume);
         playerSettings.bgmVolume = bgmSlider.value;
-        if (!AudioManager.Instance.CheckIfSoundPlaying(Sound.SoundName.SettingsSlide))
-            AudioManager.Instance.PlayOneShot(Sound.SoundName.SettingsSlide);
+        PlaySlideAudio(playSound);
     }
 
-    public void SetSFXVolume()
+    public void SetSFXVolume(bool playSound)
     {
         float volume = sfxSlider.value > 0 ? Mathf.Log10(sfxSlider.value) * 20 : -80f;
         SetVolume("SFX", volume);
         playerSettings.sfxVolume = sfxSlider.value;
+        PlaySlideAudio(playSound);
+    }
+
+    public void PlaySlideAudio(bool playSound)
+    {
+        if (!playSound && AudioManager.Instance.CheckIfSoundPlaying(Sound.SoundName.SettingsSlide))
+        {
+            AudioManager.Instance.Stop(Sound.SoundName.SettingsSlide);
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.MainMenuClick);
+        }
+
+        if (!playSound)
+            return;
+
         if (!AudioManager.Instance.CheckIfSoundPlaying(Sound.SoundName.SettingsSlide))
-            AudioManager.Instance.PlayOneShot(Sound.SoundName.SettingsSlide);
+            AudioManager.Instance.Play(Sound.SoundName.SettingsSlide);
     }
 
     public void ResetVolume()
@@ -71,9 +83,9 @@ public class MixerManager : MonoBehaviour
         bgmSlider.value = 1;
         sfxSlider.value = 1;
 
-        SetMasterVolume();
-        SetBGMVolume();
-        SetSFXVolume();
+        SetMasterVolume(false);
+        SetBGMVolume(false);
+        SetSFXVolume(false);
     }
 
     public void SetSliders()

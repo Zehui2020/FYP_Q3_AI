@@ -53,7 +53,8 @@ public class MapTileController : MonoBehaviour
     {
         // store tiles
         for (int i = 0; i < objList.Count; i++)
-            CheckTileNeighbours(objList[i]);
+            if (objList[i] != null)
+                CheckTileNeighbours(objList[i]);
     }
 
     private void CheckTileNeighbours(GameObject tile)

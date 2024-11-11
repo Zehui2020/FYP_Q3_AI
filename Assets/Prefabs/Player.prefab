@@ -21737,7 +21737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c62858c91aa674ca7cded3de99ef30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundsToPlay: 4800000049000000
+  soundsToPlay: 690000006a000000
 --- !u!114 &5790953501676531928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38263,7 +38263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c62858c91aa674ca7cded3de99ef30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundsToPlay: 4800000049000000
+  soundsToPlay: 690000006a000000
 --- !u!114 &689818292997981242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49713,7 +49713,7 @@ MonoBehaviour:
   playerEffectsController: {fileID: 2556495245541027178}
   playerPrefs: {fileID: 11400000, guid: b33e3ea1f4612984a98d70266f2a4d4a, type: 2}
   playerCanvas: {fileID: 8430749502062861929}
-  optionsMenu: {fileID: 3609593130148764429}
+  optionsMenu: {fileID: 2845353065724045430}
   dialogueManager: {fileID: 7936762347331481332}
   proceduralMapGenerator: {fileID: 0}
   minimapController: {fileID: 7438444404127039696}
@@ -56674,6 +56674,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8914746024630744950}
   - component: {fileID: 2103929019617893187}
+  - component: {fileID: 3350480018820321671}
   m_Layer: 5
   m_Name: SFX
   m_TagString: Untagged
@@ -56757,15 +56758,44 @@ MonoBehaviour:
       - m_Target: {fileID: 3100836890758297948}
         m_TargetAssemblyTypeName: MixerManager, Assembly-CSharp
         m_MethodName: SetSFXVolume
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &3350480018820321671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4231520330720410690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3100836890758297948}
+          m_TargetAssemblyTypeName: MixerManager, Assembly-CSharp
+          m_MethodName: PlaySlideAudio
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &4235858199408433003
 GameObject:
   m_ObjectHideFlags: 0
@@ -57176,7 +57206,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c62858c91aa674ca7cded3de99ef30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundsToPlay: 4800000049000000
+  soundsToPlay: 690000006a000000
 --- !u!114 &5466040933811531517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57416,7 +57446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c62858c91aa674ca7cded3de99ef30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundsToPlay: 4800000049000000
+  soundsToPlay: 690000006a000000
 --- !u!114 &3745094889800329840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68731,6 +68761,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4728023175033745276}
   - component: {fileID: 285970778113288342}
+  - component: {fileID: 8199314836100360061}
   m_Layer: 5
   m_Name: Master
   m_TagString: Untagged
@@ -68814,15 +68845,44 @@ MonoBehaviour:
       - m_Target: {fileID: 3100836890758297948}
         m_TargetAssemblyTypeName: MixerManager, Assembly-CSharp
         m_MethodName: SetMasterVolume
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &8199314836100360061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4875617730047464692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3100836890758297948}
+          m_TargetAssemblyTypeName: MixerManager, Assembly-CSharp
+          m_MethodName: PlaySlideAudio
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &5001614007918600082
 GameObject:
   m_ObjectHideFlags: 0
@@ -69394,7 +69454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c62858c91aa674ca7cded3de99ef30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundsToPlay: 4800000049000000
+  soundsToPlay: 690000006a000000
 --- !u!114 &7275962642206117223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86495,7 +86555,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c62858c91aa674ca7cded3de99ef30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundsToPlay: 4800000049000000
+  soundsToPlay: 6900000048000000
 --- !u!114 &5576430319634927753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92751,7 +92811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c62858c91aa674ca7cded3de99ef30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundsToPlay: 4800000049000000
+  soundsToPlay: 690000006a000000
 --- !u!114 &7705091835322549584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114364,6 +114424,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5133409335927918418}
   - component: {fileID: 297319078563834023}
+  - component: {fileID: 229912024925475517}
   m_Layer: 5
   m_Name: BGM
   m_TagString: Untagged
@@ -114447,15 +114508,44 @@ MonoBehaviour:
       - m_Target: {fileID: 3100836890758297948}
         m_TargetAssemblyTypeName: MixerManager, Assembly-CSharp
         m_MethodName: SetBGMVolume
-        m_Mode: 1
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
+--- !u!114 &229912024925475517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9067278109711171285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3100836890758297948}
+          m_TargetAssemblyTypeName: MixerManager, Assembly-CSharp
+          m_MethodName: PlaySlideAudio
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &9084649611964360339
 GameObject:
   m_ObjectHideFlags: 0
