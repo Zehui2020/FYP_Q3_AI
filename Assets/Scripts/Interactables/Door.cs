@@ -28,7 +28,10 @@ public class Door : MonoBehaviour, IInteractable
             animator.SetTrigger("appear");
 
             if (cutsceneOnAppear)
+            {
+                AudioManager.Instance.PlayOneShot(Sound.SoundName.EmergeFromGround);
                 entranceCutscene.EnterCutscene();
+            }
             
             float timer = 2f;
             float tragetPosY = transform.position.y;
@@ -55,16 +58,27 @@ public class Door : MonoBehaviour, IInteractable
         }
     }
 
+    public void PlaySigilAudio()
+    {
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.SigilLight);
+    }
+
+    public void PlayActivateAudio()
+    {
+        if (isActivated)
+            return;
+
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.DoorAppear);
+        foreach (AudioSource source in audioSources)
+            source.Play();
+
+        isActivated = true;
+    }
+
     public void OnEnterRange()
     {
         keycodeUI.Show();
         animator.SetTrigger("activate");
-
-        if (!isActivated)
-            foreach (AudioSource source in audioSources)
-                source.Play();
-
-        isActivated = true;
 
         if (icon != null)
             icon.SetActive(true);

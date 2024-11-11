@@ -148,6 +148,12 @@ public class Sound
         BossP1BGM,
         BossP2BGM,
 
+        EmergeFromGround,
+        SigilLight,
+        CrystalHit,
+        CrystalExplode,
+        DoorAppear,
+
     }
     public SoundName name;
 
