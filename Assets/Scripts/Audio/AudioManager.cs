@@ -17,6 +17,21 @@ public class AudioManager : MonoBehaviour
         Instance = this;
         InitSoundList(sounds);
         InitSoundList(walkingSounds);
+
+        // Play BGM for the level
+
+        AudioClip bgm = WavUtility.ToAudioClip(GameData.Instance.currentLevel);
+        if (bgm != null)
+        {
+            Sound s = new Sound();
+            s.source = gameObject.AddComponent<AudioSource>();
+            s.clip = bgm;
+            s.loop = true;
+            InitAudioSource(s.source, s);
+            s.source.Play();
+
+            Debug.Log("BGM LOADED!");
+        }
     }
 
     private void InitSoundList(Sound[] sounds)

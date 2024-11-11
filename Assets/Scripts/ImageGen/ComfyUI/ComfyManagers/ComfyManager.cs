@@ -13,10 +13,10 @@ public class ComfyManager : MonoBehaviour
     public virtual void InitManager()
     {
         DontDestroyOnLoad(this);
-        comfyWebsocket.InitWebsocket();
 
-        promptCtr.OnQueuePrompt.AddListener(SetCurrentPromptID);
-        imageCtr.OnRecieveImage.AddListener((promptID, texture) => { OnRecieveImage(promptID, texture); });
+        comfyWebsocket?.InitWebsocket();
+        promptCtr?.OnQueuePrompt.AddListener(SetCurrentPromptID);
+        imageCtr?.OnRecieveImage.AddListener((promptID, texture) => { OnRecieveImage(promptID, texture); });
     }
 
     public virtual void SetCurrentPromptID(string promptID)

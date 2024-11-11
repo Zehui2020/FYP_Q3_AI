@@ -27,7 +27,6 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     private bool introFinished;
     private bool hasIntroduced;
     private bool analyseText;
-    private bool EndTextFinished;
 
     public UnityEvent<string> OnFinishGeneratingResponse;
 
@@ -36,7 +35,6 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         introFinished = false;
         analyseText = false;
         hasIntroduced = false;
-        EndTextFinished = false;
         NPC_Data = npc;
 
         AI_Chat_Introduction();
@@ -163,7 +161,6 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         introFinished = true;
         hasIntroduced = false;
         analyseText = false;
-        EndTextFinished = false;
     }
 
     IEnumerator OpenCommandPrompt(string command, bool EndConvo)

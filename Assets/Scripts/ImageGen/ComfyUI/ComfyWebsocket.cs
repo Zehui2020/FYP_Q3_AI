@@ -12,11 +12,13 @@ public class ComfyWebsocket : MonoBehaviour
 
     [HideInInspector] public string response;
     public ComfyImageCtr comfyImageCtr;
+    public ComfyAudioCtr comfyAudioCtr;
     public string promptID;
 
     [HideInInspector] public int currentProgress = -1;
     [HideInInspector] public int maxProgress = -1;
 
+    [SerializeField] private bool isAudio;
     [SerializeField] private bool saveImageAfter = true;
 
     public async void InitWebsocket()
@@ -66,6 +68,9 @@ public class ComfyWebsocket : MonoBehaviour
             {
                 if (saveImageAfter)
                     comfyImageCtr.RequestFileName(promptID);
+
+                if (isAudio)
+                    comfyAudioCtr.RequestFileName(promptID);
 
                 currentProgress = 0;
                 maxProgress = 0;
