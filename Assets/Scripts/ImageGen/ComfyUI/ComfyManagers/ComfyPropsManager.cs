@@ -32,7 +32,7 @@ public class ComfyPropsManager : ComfyManager
         if (propsRecieved >= propDatas.Count)
             return;
 
-        GameData.Instance.EnqueueLoading(propDatas[propsRecieved].fileName + "_Prop");
+        GameData.Instance.EnqueueLoading(propDatas[propsRecieved].fileName + "_Prop", false);
         promptCtr.QueuePromptWithControlNet(propDatas[propsRecieved].prompt, propDatas[propsRecieved].referenceImage);
     }
 

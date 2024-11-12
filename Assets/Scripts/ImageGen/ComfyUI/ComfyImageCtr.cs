@@ -10,8 +10,18 @@ public class ComfyImageCtr: MonoBehaviour
     private string currentID;
     [SerializeField] private bool isControlNet;
 
+    public void SetCurrentID(string currentID)
+    {
+        this.currentID = currentID;
+    }
+
     public void RequestFileName(string id)
     {
+        Debug.Log("currentID: " + currentID + " imageID: " + id);
+
+        if (currentID != id)
+            return;
+
         StartCoroutine(RequestFileNameRoutine(id));
     }
 
@@ -36,8 +46,6 @@ public class ComfyImageCtr: MonoBehaviour
                     Debug.LogError(": HTTP Error: " + webRequest.error);
                     break;
                 case UnityWebRequest.Result.Success:
-                    //Debug.Log(":\nReceived: " + webRequest.downloadHandler.text);
-                    currentID = promptID;
                     string imageURL = "http://127.0.0.1:8188/view?filename=" + ExtractFilename(webRequest.downloadHandler.text);
                     Debug.Log(imageURL);
                     StartCoroutine(DownloadImage(imageURL));

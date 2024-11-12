@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 742543880587039023}
   - component: {fileID: 8026812867544499672}
-  - component: {fileID: 788019651244670313}
   - component: {fileID: 6081323935147693111}
   - component: {fileID: 6974720534146894426}
   m_Layer: 0
@@ -47,7 +46,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2423692857df3c64b9d0ddd50df4f4f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  comfyWebsocket: {fileID: 788019651244670313}
   promptCtr: {fileID: 6081323935147693111}
   imageCtr: {fileID: 0}
   imageSaver: {fileID: 0}
@@ -63,24 +61,6 @@ MonoBehaviour:
     filename: Boss
   queueOnStart: 0
   comfyAudioCtr: {fileID: 6974720534146894426}
---- !u!114 &788019651244670313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4080234251246424608}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7ebcfd1775a21944b232b6724737c2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  response: 
-  comfyImageCtr: {fileID: 0}
-  comfyAudioCtr: {fileID: 6974720534146894426}
-  promptID: 
-  isAudio: 1
-  saveImageAfter: 0
 --- !u!114 &6081323935147693111
 MonoBehaviour:
   m_ObjectHideFlags: 0

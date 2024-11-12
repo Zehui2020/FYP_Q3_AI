@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8816099899107724647}
   - component: {fileID: 1329634201744609800}
   - component: {fileID: 3961002236856498753}
-  - component: {fileID: 6799923746978944399}
   - component: {fileID: 4185232602645434897}
   m_Layer: 0
   m_Name: BGGeneration
@@ -48,7 +47,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da2eb37168d650040927e77fef7bdd86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  comfyWebsocket: {fileID: 6799923746978944399}
   promptCtr: {fileID: 3961002236856498753}
   imageCtr: {fileID: 1329634201744609800}
   imageSaver: {fileID: 4185232602645434897}
@@ -62,7 +60,7 @@ MonoBehaviour:
   queueLevelData: 0
   allPromptDatas:
   - {fileID: 11400000, guid: ff378708ffa553e48a3b97620bf1e291, type: 2}
-  - {fileID: 11400000, guid: 263fdfef690660b4f8a042053d844d3c, type: 2}
+  - {fileID: 11400000, guid: ff378708ffa553e48a3b97620bf1e291, type: 2}
   bgPrompts: []
 --- !u!114 &1329634201744609800
 MonoBehaviour:
@@ -97,69 +95,20 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
-        m_MethodName: ShowDialoguePopup
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-        m_MethodName: SetTrigger
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
-          m_FloatArgument: 0
-          m_StringArgument: activate
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-        m_MethodName: set_enabled
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 4
-          m_FloatArgument: 0
-          m_StringArgument: activate
-          m_BoolArgument: 1
-        m_CallState: 2
---- !u!114 &6799923746978944399
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4141570620904400709}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7ebcfd1775a21944b232b6724737c2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  comfyImageCtr: {fileID: 1329634201744609800}
-  promptID: 
-  currentProgress: 0
-  maxProgress: 0
+  StartPrompt:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4185232602645434897
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -63,7 +63,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             //additionalPrompts+
             promptTitle + " <</SYS>> {" + promptContent + "} [/INST]" + '"';
 
-        return $"cd {NPC_Data.llamaDirectory} && llama-cli -m {NPC_Data.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt} -ngl 20000000 -t 5";
+        return $"cd {NPC_Data.llamaDirectory} && llama-cli -m {NPC_Data.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt} -ngl 0 -t 5";
     }
 
     public void AI_Chat_Introduction()
@@ -164,6 +164,9 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
     IEnumerator OpenCommandPrompt(string command, bool EndConvo)
     {
+        if (process != null)
+            process.Kill();
+
         isGenerating = true;
 
         string AI_Output = "";

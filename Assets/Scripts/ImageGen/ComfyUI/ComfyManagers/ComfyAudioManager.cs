@@ -19,9 +19,9 @@ public class ComfyAudioManager : ComfyManager
 
     private void Start()
     {
+        InitManager();
         comfyAudioCtr.OnRecieveAudio.AddListener(OnRecieveAudio);
 
-        InitManager();
         if (queueOnStart)
             QueueAudio();
     }
@@ -37,7 +37,7 @@ public class ComfyAudioManager : ComfyManager
 
         promptCtr.QueuePrompt(audioPrompts[audioPromptIndex].Pprompt);
         fileName = audioPrompts[audioPromptIndex].filename;
-        GameData.Instance.EnqueueLoading(fileName + ".wav");
+        GameData.Instance.EnqueueLoading(fileName + ".wav", false);
     }
 
     public void OnRecieveAudio(string promptID, AudioClip audio)

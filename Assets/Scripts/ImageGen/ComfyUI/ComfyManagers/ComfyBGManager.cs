@@ -50,8 +50,6 @@ public class ComfyBGManager : ComfyManager
             }
         }
 
-        Debug.Log("Q DATA: " + queueLevelData);
-
         if (queueLevelData != allPromptDatas.Count - 1)
         {
             buttonController.InitController(allPromptDatas[queueLevelData]);
@@ -69,8 +67,9 @@ public class ComfyBGManager : ComfyManager
 
     public void QueueBGPrompt()
     {
+        GameData.Instance.DequeueLoading();
         PromptData.BGPrompt bgPrompt = allPromptDatas[currentLevelPrompt].GetBGPrompt((PromptData.BGPrompt.Type)bgRecievedCounter, bgPrompts[currentLevelPrompt]);
-        GameData.Instance.EnqueueLoading(bgPrompt.keywords + "_" + bgPrompt.type.ToString());
+        GameData.Instance.EnqueueLoading(bgPrompt.keywords + "_" + bgPrompt.type.ToString(), true);
         promptCtr.QueuePromptWithControlNet(allPromptDatas[currentLevelPrompt].GetPromptJSON(bgPrompt.bgType), bgPrompt.prompt, bgPrompt.referenceImage);
     }
 
@@ -83,6 +82,12 @@ public class ComfyBGManager : ComfyManager
 
         if (base.OnRecieveImage(promptID, texture))
         {
+            if (GameData.Instance.isBackground && GameData.Instance.promptIDQueue.Count >= 2)
+            {
+                GameData.Instance.DequeuePromptID();
+                GameData.Instance.isBackground = false;
+            }
+
             if (bgRecievedCounter >= (int)PromptData.BGPrompt.Type.Middleground)
             {
                 if (startGenerating)
@@ -94,7 +99,6 @@ public class ComfyBGManager : ComfyManager
                     if (currentLevelPrompt >= allPromptDatas.Count)
                     {
                         tilesetGeneration.InitTilesetGeneration(allPromptDatas, bgPrompts);
-                        tilesetGeneration.QueueTilesetPrompt();
                         Destroy(gameObject);
                         return true;
                     }

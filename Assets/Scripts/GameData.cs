@@ -21,8 +21,11 @@ public class GameData : MonoBehaviour
     public string choseThemes;
     public string currentLevel;
 
+    public Queue<string> promptIDQueue = new();
     public Queue<string> loadingQueue = new();
+
     public event System.Action<bool, string> OnLoadingQueueChanged;
+    public bool isBackground = false;
     private bool canDequeue = true;
 
     [SerializeField] private ImageLoading imageLoading;
@@ -43,15 +46,33 @@ public class GameData : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void EnqueueLoading(string title)
+    public void EnqueuePromptID(string promptID)
     {
+        Debug.Log("EN Q ID: " + promptID);
+        promptIDQueue.Enqueue(promptID);
+    }
+    public string DequeuePromptID()
+    {
+        Debug.Log("DE Q ID: " + promptIDQueue.Peek());
+        return promptIDQueue.Dequeue();
+    }
+
+    public void EnqueueLoading(string title, bool isBackground)
+    {
+        Debug.Log("EN Q: " + title);
+
         loadingQueue.Enqueue(title);
         OnLoadingQueueChanged?.Invoke(true, title);
+
+        if (isBackground)
+            this.isBackground = isBackground;
     }
     public void DequeueLoading()
     {
         if (!canDequeue)
             return;
+
+        Debug.Log("DE Q: " + loadingQueue.Peek());
 
         canDequeue = false;
         loadingQueue.Dequeue();

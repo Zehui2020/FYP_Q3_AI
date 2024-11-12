@@ -29,7 +29,6 @@ public class ImageLoading : MonoBehaviour
             {
                 loadingSlider.value = 0;
                 loadingSlider.maxValue = 100;
-                Debug.Log("En Q: " + title);
                 previousPrompt = title;
                 if (fadeOutRoutine != null)
                 {
@@ -58,12 +57,7 @@ public class ImageLoading : MonoBehaviour
         int currentProgress = Utility.ParseJsonValue(comfyWebsocket.response, "value");
         int maxProgress = Utility.ParseJsonValue(comfyWebsocket.response, "max");
 
-        if (currentProgress <= 0 || maxProgress <= 1)
-        {
-            loadingSlider.value = 0;
-            loadingSlider.maxValue = 100;
-        }
-        else
+        if (currentProgress > 0 && maxProgress > 1)
         {
             loadingSlider.value = currentProgress;
             loadingSlider.maxValue = maxProgress;
@@ -87,14 +81,6 @@ public class ImageLoading : MonoBehaviour
                 if (fadeOutRoutine == null)
                     fadeOutRoutine = StartCoroutine(FadeRoutine());
             }
-        }
-
-        if (loadingSlider.value == loadingSlider.maxValue)
-        {
-            Debug.Log("De Q: " + GameData.Instance.loadingQueue.Peek());
-            GameData.Instance.DequeueLoading();
-            loadingSlider.value = 0;
-            loadingSlider.maxValue = 100;
         }
     }
 

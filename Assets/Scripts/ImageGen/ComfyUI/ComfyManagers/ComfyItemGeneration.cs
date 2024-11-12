@@ -37,7 +37,7 @@ public class ComfyItemGenration : ComfyManager
 
         promptCtr.QueuePromptWithControlNet(itemPrompts[currentPromptIndex].Pprompt, itemPrompts[currentPromptIndex].controlNetImage);
         fileName = itemPrompts[currentPromptIndex].filename.ToString();
-        GameData.Instance.EnqueueLoading(fileName + "_Icon");
+        GameData.Instance.EnqueueLoading(fileName + "_Icon", false);
     }
 
     public override bool OnRecieveImage(string promptID, Texture2D texture)
