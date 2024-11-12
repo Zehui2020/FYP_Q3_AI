@@ -28,8 +28,6 @@ public class ComfyBGManager : ComfyManager
             buttonController.SpawnButtons();
             queueLevelData++;
         }
-
-        uiManager.SetStartingPrompt(2);
     }
 
     public bool StartBGGeneration()
@@ -50,7 +48,7 @@ public class ComfyBGManager : ComfyManager
             }
         }
 
-        if (queueLevelData != allPromptDatas.Count)
+        if (queueLevelData != allPromptDatas.Count - 1)
         {
             buttonController.InitController(allPromptDatas[queueLevelData]);
             buttonController.SpawnButtons();

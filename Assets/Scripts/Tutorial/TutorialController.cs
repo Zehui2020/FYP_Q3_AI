@@ -5,10 +5,12 @@ using UnityEngine;
 public class TutorialController : MonoBehaviour
 {
     [SerializeField] private Animator animator;
+    [SerializeField] private Animator cutsceneBar;
 
     private void Awake()
     {
         Time.timeScale = 0;
+        cutsceneBar.SetBool("isShowing", true);
     }
 
     public void StartFade()
@@ -19,5 +21,6 @@ public class TutorialController : MonoBehaviour
     public void ResumeGame()
     {
         Time.timeScale = 1;
+        cutsceneBar.SetBool("isShowing", false);
     }
 }
