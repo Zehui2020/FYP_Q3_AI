@@ -1,4 +1,5 @@
 using DesignPatterns.ObjectPool;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class Shockwave : PooledObject
     [SerializeField] private List<Rigidbody2D> rbs;
     [SerializeField] private List<ShockwaveChild> shockwaves;
     [SerializeField] private SpriteRenderer sr;
+    [SerializeField] private AudioSource audioSource;
 
     private BaseStats thrower;
     private float damage;
@@ -30,6 +32,14 @@ public class Shockwave : PooledObject
 
         this.thrower = thrower;
         this.damage = damage;
+
+        StartCoroutine(lifetimeRoutine());
+    }
+
+    private IEnumerator lifetimeRoutine()
+    {
+        yield return new WaitForSecondsRealtime(5);
+        ReleaseShockwave();
     }
 
     public void OnEnterTrigger(Collider2D collision)
@@ -47,7 +57,7 @@ public class Shockwave : PooledObject
 
         rbs[0].transform.localPosition = Vector2.zero;
         rbs[1].transform.localPosition = Vector2.zero;
-
+       
         Release();
         gameObject.SetActive(false);
     }

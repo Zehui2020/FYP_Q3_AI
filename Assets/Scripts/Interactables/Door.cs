@@ -28,11 +28,10 @@ public class Door : MonoBehaviour, IInteractable
         {
             animator.SetTrigger("appear");
 
+            AudioManager.Instance.PlayOneShot(Sound.SoundName.EmergeFromGround);
+
             if (cutsceneOnAppear)
-            {
-                AudioManager.Instance.PlayOneShot(Sound.SoundName.EmergeFromGround);
                 entranceCutscene.EnterCutscene();
-            }
             
             float timer = 2f;
             float tragetPosY = transform.position.y;
