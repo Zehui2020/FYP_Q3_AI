@@ -333,7 +333,8 @@ public class BaseStats : MonoBehaviour
     public void Heal(int amount)
     {
         // Sentient Algae
-        amount *= itemStats.algaeHealingMultiplier;
+        if (itemStats.algaeHealingMultiplier >= 1)
+            amount *= itemStats.algaeHealingMultiplier;
 
         health += amount;
         if (health > maxHealth)
