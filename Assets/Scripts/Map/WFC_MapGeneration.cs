@@ -10,6 +10,7 @@ public class WFC_MapGeneration : MonoBehaviour
     [SerializeField] private GameObject fogPrefab;
     [SerializeField] private GameObject doorPrefab;
     [SerializeField] private GameObject portalPrefab;
+    [SerializeField] private GameObject emptyTilePrefab;
     [Header("Background & Tilemap")]
     [SerializeField] private TilemapManager tilemapManager;
     [SerializeField] private ParallaxEffect[] bgs;
@@ -231,7 +232,10 @@ public class WFC_MapGeneration : MonoBehaviour
             // check tile available up with top edge border tiles
             Vector2 pos = tilePos - Vector2.up;
             if (mapTileList[(int)pos.x + (int)(pos.y * mapSize.x)].name.Contains("XU"))
-                break;
+            {
+                mapTileList.Add(InstantiateTile(emptyTilePrefab, tilePos * mapTileSize, true).GetComponent<MapTile>());
+                continue;
+            }
             List<GameObject> availableTiles = GetAvailableBorderTilesList(tilePos - Vector2.up, Vector2.up);
             // choose random tile
             GameObject tileToSet = availableTiles[Random.Range(0, availableTiles.Count)];
@@ -284,30 +288,43 @@ public class WFC_MapGeneration : MonoBehaviour
         // top left corner
         if (TLCornerTilePrefabs.Count > 0)
         {
-            corner = InstantiateTile(TLCornerTilePrefabs[Random.Range(0, TLCornerTilePrefabs.Count)], new Vector2(-1, mapSize.y) * mapTileSize, true);
             // set room
-            mapTileList.Add(corner.GetComponent<MapTile>());
+            mapTileList.Add(
+                InstantiateTile(TLCornerTilePrefabs[Random.Range(0, TLCornerTilePrefabs.Count)], 
+                new Vector2(-1, mapSize.y) * mapTileSize, 
+                true
+                ).GetComponent<MapTile>());
         }
+        else
+            mapTileList.Add(InstantiateTile(emptyTilePrefab, new Vector2(-1, mapSize.y) * mapTileSize, true).GetComponent<MapTile>());
         if (TRCornerTilePrefabs.Count > 0)
         {
-            // top right corner
-            corner = InstantiateTile(TRCornerTilePrefabs[Random.Range(0, TRCornerTilePrefabs.Count)], new Vector2(mapSize.x, mapSize.y) * mapTileSize, true);
             // set room
-            mapTileList.Add(corner.GetComponent<MapTile>());
+            mapTileList.Add(
+                InstantiateTile(TRCornerTilePrefabs[Random.Range(0, TRCornerTilePrefabs.Count)], 
+                new Vector2(mapSize.x, mapSize.y) * mapTileSize, 
+                true
+                ).GetComponent<MapTile>());
         }
+        else
+            mapTileList.Add(InstantiateTile(emptyTilePrefab, new Vector2(mapSize.x, mapSize.y) * mapTileSize, true).GetComponent<MapTile>());
         if (BLCornerTilePrefabs.Count > 0)
         {
-            // bottom left corner
-            corner = InstantiateTile(BLCornerTilePrefabs[Random.Range(0, BLCornerTilePrefabs.Count)], new Vector2(-1, -1) * mapTileSize, true);
             // set room
-            mapTileList.Add(corner.GetComponent<MapTile>());
+            mapTileList.Add(
+                InstantiateTile(BLCornerTilePrefabs[Random.Range(0, BLCornerTilePrefabs.Count)], 
+                new Vector2(-1, -1) * mapTileSize, 
+                true
+                ).GetComponent<MapTile>());
         }
         if (BRCornerTilePrefabs.Count > 0)
         {
-            // bottom right corner
-            corner = InstantiateTile(BRCornerTilePrefabs[Random.Range(0, BRCornerTilePrefabs.Count)], new Vector2(mapSize.x, -1) * mapTileSize, true);
             // set room
-            mapTileList.Add(corner.GetComponent<MapTile>());
+            mapTileList.Add(
+                InstantiateTile(BRCornerTilePrefabs[Random.Range(0, BRCornerTilePrefabs.Count)], 
+                new Vector2(mapSize.x, -1) * mapTileSize, 
+                true
+                ).GetComponent<MapTile>());
         }
 
         PlaceSolidBorderTiles();

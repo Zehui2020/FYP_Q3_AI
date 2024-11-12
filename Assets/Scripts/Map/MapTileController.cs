@@ -51,6 +51,7 @@ public class MapTileController : MonoBehaviour
 
     private void AddTilesToSort(List<GameObject> objList)
     {
+        RemoveNullObjects(objList);
         // store tiles
         for (int i = 0; i < objList.Count; i++)
             if (objList[i] != null)
@@ -82,9 +83,11 @@ public class MapTileController : MonoBehaviour
 
     private void SetTileContraints(List<GameObject> objList, bool setToSelf)
     {
+        RemoveNullObjects(objList);
         // set tiles
         for (int i = 0; i < objList.Count; i++)
-            SetTileNeighbours(objList[i].GetComponent<MapTile>(), setToSelf);
+            if (objList[i] != null)
+                SetTileNeighbours(objList[i].GetComponent<MapTile>(), setToSelf);
     }
 
     private void SetTileNeighbours(MapTile tileToSet, bool setToSelf)
@@ -125,5 +128,17 @@ public class MapTileController : MonoBehaviour
             if (tileToSet.availableTilesRight.Contains(tileToSet.gameObject))
                 tileToSet.availableTilesRight.Remove(tileToSet.gameObject);
         }
+    }
+
+    private void RemoveNullObjects(List<GameObject> objList)
+    {
+        List<GameObject> objToRemove = new();
+
+        for (int i = 0; i < objList.Count; i++)
+            if (objList[i] == null)
+                objToRemove.Add(objList[i]);
+
+        for (int i = 0; i < objToRemove.Count; i++)
+            objList.Remove(objToRemove[i]);
     }
 }
