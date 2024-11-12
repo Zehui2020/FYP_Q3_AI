@@ -25,6 +25,10 @@ public class ShopkeeperUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI rerollCost;
     [SerializeField] private List<RectTransform> rerollRects;
 
+    [Header("Audio")]
+    [SerializeField] private float minPitch = 0.6f;
+    [SerializeField] private float maxPitch = 0.8f;
+
     public bool isInteracting = false;
     private List<ShopItem> shopItems = new();
     private PlayerController player;
@@ -56,7 +60,7 @@ public class ShopkeeperUIManager : MonoBehaviour
             yield return null;
 
         shopkeeperOutput.gameObject.SetActive(true);
-        shopkeeperOutput.ShowMessage("Constance", output, 0);
+        shopkeeperOutput.ShowMessage("Constance", output, minPitch, maxPitch, 0);
     }
 
     public void OnLeaveShopkeeper()

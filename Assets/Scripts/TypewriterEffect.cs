@@ -27,17 +27,6 @@ public class TypewriterEffect : MonoBehaviour
         maxPitch = max;
     }
 
-    public void ShowMessage(string speaker, string message, float lingerDuration)
-    {
-        if (TypeRoutine != null)
-            StopCoroutine(TypeRoutine);
-
-        dialogueText.text = string.Empty;
-        if (speakerName != null)
-            speakerName.text = speaker;
-        TypeRoutine = StartCoroutine(TypeWriterTMP(message, lingerDuration));
-    }
-
     public void ShowMessage(string speaker, string message, float min, float max, float lingerDuration)
     {
         if (TypeRoutine != null)
