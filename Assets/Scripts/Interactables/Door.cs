@@ -116,7 +116,10 @@ public class Door : MonoBehaviour, IInteractable
             }
         }
         else
+        {
             GameData.Instance.ResetData();
+            SceneLoader.Instance.LoadScene(nextLevel);
+        }
     }
 
     public void OnLeaveRange()

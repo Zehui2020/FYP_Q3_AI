@@ -138,12 +138,6 @@ public class PlayerController : PlayerStats
             timerText.text = string.Format("{0:00}:{1:00}:{2:00}", ts.Hours, ts.Minutes, ts.Seconds);
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) && !abilityController.swappingAbility)
-            TogglePauseMenu();
-
-        if (currentState == PlayerStates.Settings)
-            return;
-
         // Console
         if (Input.GetKeyDown(KeyCode.Backslash) && playerPrefs.developerMode)
             ConsoleManager.Instance.SetConsole();
@@ -179,6 +173,12 @@ public class PlayerController : PlayerStats
         }
 
         if (currentState == PlayerStates.Shop)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Escape) && !abilityController.swappingAbility)
+            TogglePauseMenu();
+
+        if (currentState == PlayerStates.Settings)
             return;
 
         if (currentState == PlayerStates.Dialogue)
