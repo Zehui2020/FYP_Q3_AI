@@ -99830,18 +99830,18 @@ PrefabInstance:
     - target: {fileID: 1384724921161408469, guid: a77b392888bea954086b295da4e3c2e9, type: 3}
       propertyPath: OnFinishAllAbilities.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1581719765}
+      objectReference: {fileID: 1021256069}
     - target: {fileID: 1384724921161408469, guid: a77b392888bea954086b295da4e3c2e9, type: 3}
       propertyPath: OnFinishAllAbilities.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1384724921161408469, guid: a77b392888bea954086b295da4e3c2e9, type: 3}
       propertyPath: OnFinishAllAbilities.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: QueueItems
+      value: QueueBGPrompt
       objectReference: {fileID: 0}
     - target: {fileID: 1384724921161408469, guid: a77b392888bea954086b295da4e3c2e9, type: 3}
       propertyPath: OnFinishAllAbilities.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ComfyItemGenration, Assembly-CSharp
+      value: ComfyBGManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1384724921161408469, guid: a77b392888bea954086b295da4e3c2e9, type: 3}
       propertyPath: OnFinishAllAbilities.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -110747,6 +110747,34 @@ PrefabInstance:
       propertyPath: allPromptDatas.Array.data[2]
       value: 
       objectReference: {fileID: 11400000, guid: ff378708ffa553e48a3b97620bf1e291, type: 2}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1581719765}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: QueueItems
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ComfyItemGenration, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

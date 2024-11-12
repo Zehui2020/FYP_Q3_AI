@@ -25,7 +25,6 @@ public class GameData : MonoBehaviour
     public Queue<string> loadingQueue = new();
 
     public event System.Action<bool, string> OnLoadingQueueChanged;
-    public bool isBackground = false;
     private bool canDequeue = true;
 
     [SerializeField] private ImageLoading imageLoading;
@@ -63,9 +62,6 @@ public class GameData : MonoBehaviour
 
         loadingQueue.Enqueue(title);
         OnLoadingQueueChanged?.Invoke(true, title);
-
-        if (isBackground)
-            this.isBackground = isBackground;
     }
     public void DequeueLoading()
     {

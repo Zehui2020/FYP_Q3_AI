@@ -4,6 +4,7 @@ public class ComfyManager : MonoBehaviour
 {
     public ComfyPromptCtr promptCtr;
     public ComfyImageCtr imageCtr;
+    public ComfyAudioCtr audioCtr;
     public ImageSaver imageSaver;
 
     protected string promptID;
@@ -20,7 +21,8 @@ public class ComfyManager : MonoBehaviour
     public virtual void SetCurrentPromptID(string promptID)
     {
         this.promptID = promptID;
-        imageCtr.SetCurrentID(promptID);
+        imageCtr?.SetCurrentID(promptID);
+        audioCtr?.SetCurrentID(promptID);
         GameData.Instance.EnqueuePromptID(promptID);
     }
 

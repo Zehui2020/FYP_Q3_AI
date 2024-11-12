@@ -8,9 +8,19 @@ public class ComfyTilesetGeneration : ComfyManager
     private List<PromptData> promptData;
     [SerializeField] private int tilesetRecieved = 0;
 
+    [SerializeField] private bool queueOnStart;
+
     private List<string> playerBGPrompts;
 
     public UnityEvent OnFnishTileset;
+
+    private void Start()
+    {
+        if (queueOnStart)
+        {
+            OnFnishTileset?.Invoke();
+        }
+    }
 
     public void InitTilesetGeneration(List<PromptData> promptData, List<string> playerBGPrompts)
     {
