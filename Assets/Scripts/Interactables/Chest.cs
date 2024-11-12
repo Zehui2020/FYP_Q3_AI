@@ -44,6 +44,7 @@ public class Chest : MonoBehaviour, IInteractable
     private bool isOpened = false;
 
     [SerializeField] private Animator uiAnimator;
+    [SerializeField] private Animator chestAnimator;
     [SerializeField] private GameObject minimapIndicator;
 
     public bool OnInteract()
@@ -61,6 +62,7 @@ public class Chest : MonoBehaviour, IInteractable
 
         OnChestOpen?.Invoke();
         minimapIndicator.SetActive(false);
+        chestAnimator.SetTrigger("open");
 
         if (chestType.type == ChestType.Type.FixedItem)
         {
