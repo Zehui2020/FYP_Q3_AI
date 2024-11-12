@@ -250,8 +250,22 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        if (process != null)
+            process.Kill();
+    }
+
     private void OnDisable()
     {
         OnFinishGeneratingResponse = null;
+        if (process != null)
+            process.Kill();
+    }
+
+    private void OnDestroy()
+    {
+        if (process != null)
+            process.Kill();
     }
 }

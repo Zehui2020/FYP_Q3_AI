@@ -259,4 +259,16 @@ public class ShopkeeperAIManager : MonoBehaviour
         if (process != null)
             process.Kill();
     }
+
+    private void OnDisable()
+    {
+        if (process != null)
+            process.Kill();
+    }
+
+    private void OnDestroy()
+    {
+        if (process != null)
+            process.Kill();
+    }
 }

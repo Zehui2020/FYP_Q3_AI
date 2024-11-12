@@ -1,14 +1,13 @@
 using System;
 using System.IO;
 using UnityEngine;
-using System.Collections.Generic;
-using System.Net;
 
 public static class SavWav 
 {
 	const int HEADER_SIZE = 44;
 
-	public static bool Save(string filename, AudioClip clip) {
+	public static bool Save(string filename, AudioClip clip) 
+	{
 		if (!filename.ToLower().EndsWith(".wav")) {
 			filename += ".wav";
 		}
@@ -22,50 +21,10 @@ public static class SavWav
 		using (var fileStream = CreateEmpty(filepath)) {
 
 			ConvertAndWrite(fileStream, clip);
-
 			WriteHeader(fileStream, clip);
 		}
 
 		return true;
-	}
-
-    public static AudioClip TrimSilence(AudioClip clip, float min) {
-		var samples = new float[clip.samples];
-
-		clip.GetData(samples, 0);
-
-		return TrimSilence(new List<float>(samples), min, clip.channels, clip.frequency);
-	}
-
-	public static AudioClip TrimSilence(List<float> samples, float min, int channels, int hz) {
-		return TrimSilence(samples, min, channels, hz, false);
-	}
-
-	public static AudioClip TrimSilence(List<float> samples, float min, int channels, int hz, bool stream)
-	{
-		int i;
-
-		for (i=0; i<samples.Count; i++) {
-			if (Mathf.Abs(samples[i]) > min) {
-				break;
-			}
-		}
-
-		samples.RemoveRange(0, i);
-
-		for (i=samples.Count - 1; i>0; i--) {
-			if (Mathf.Abs(samples[i]) > min) {
-				break;
-			}
-		}
-
-		samples.RemoveRange(i, samples.Count - i);
-
-		var clip = AudioClip.Create("TempClip", samples.Count, channels, hz, stream);
-
-		clip.SetData(samples.ToArray(), 0);
-
-		return clip;
 	}
 
 	static FileStream CreateEmpty(string filepath) {
