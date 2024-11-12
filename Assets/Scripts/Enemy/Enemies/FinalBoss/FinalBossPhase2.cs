@@ -129,6 +129,7 @@ public class FinalBossPhase2 : Enemy
                 StopAllCoroutines();
                 cutscene.EnterCutscene();
                 AudioManager.Instance.FadeSound(false, Sound.SoundName.BossP2BGM, 1.0f, 0);
+                AudioManager.Instance.PlayOneShot(Sound.SoundName.BossP2Roar);
                 break;
         }
     }
