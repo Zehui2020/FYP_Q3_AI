@@ -48,7 +48,7 @@ public class ComfyBGManager : ComfyManager
             }
         }
 
-        if (queueLevelData != allPromptDatas.Count - 1)
+        if (queueLevelData != allPromptDatas.Count)
         {
             buttonController.InitController(allPromptDatas[queueLevelData]);
             buttonController.SpawnButtons();

@@ -18,6 +18,9 @@ public class TargetButton : Enemy
 
     public override bool TakeDamage(BaseStats attacker, Damage damage, bool isCrit, Vector3 closestPoint, DamagePopup.DamageType damageType)
     {
+        if (damage.damage <= 0)
+            return false;
+
         buttonAnimator.SetTrigger("down");
 
         AudioManager.Instance.PlayOneShot(Sound.SoundName.GenerationButton);
