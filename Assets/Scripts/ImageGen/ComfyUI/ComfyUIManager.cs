@@ -35,7 +35,7 @@ public class ComfyUIManager : MonoBehaviour
 
     public void SetStartingPrompt(int levelNumber)
     {
-        title.text = "Choose Your Themes!\n Theme " + (levelNumber - 1).ToString() + ":";
+        title.text = "Choose Your Themes!\n Theme " + (levelNumber).ToString() + ":";
         promptText.text = setPrompts;
     }
 }

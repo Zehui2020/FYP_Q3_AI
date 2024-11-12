@@ -20,13 +20,15 @@ public class ComfyBGManager : ComfyManager
 
     private void Start()
     {
+        queueLevelData = 0;
+
         InitManager();
 
+        uiManager.SetStartingPrompt(queueLevelData + 1);
         buttonController.InitController(allPromptDatas[queueLevelData]);
         if (playerPrefs.experiencedTutorial)
         {
             buttonController.SpawnButtons();
-            queueLevelData++;
         }
     }
 
@@ -48,7 +50,9 @@ public class ComfyBGManager : ComfyManager
             }
         }
 
-        if (queueLevelData != allPromptDatas.Count)
+        Debug.Log("Q DATA: " + queueLevelData);
+
+        if (queueLevelData != allPromptDatas.Count - 1)
         {
             buttonController.InitController(allPromptDatas[queueLevelData]);
             buttonController.SpawnButtons();
