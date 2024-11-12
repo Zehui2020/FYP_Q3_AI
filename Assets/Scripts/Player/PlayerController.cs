@@ -191,22 +191,25 @@ public class PlayerController : PlayerStats
             return;
         }
 
-        if (currentState == PlayerStates.Map)
+        if (minimapController != null)
         {
-            if (Input.GetKeyUp(KeyCode.Tab))
+            if (currentState == PlayerStates.Map)
             {
-                minimapController.ChangeView(false, true);
-                ChangeState(PlayerStates.Movement);
+                if (Input.GetKeyUp(KeyCode.Tab))
+                {
+                    minimapController.ChangeView(false, true);
+                    ChangeState(PlayerStates.Movement);
+                }
+                else
+                {
+                    playerRB.velocity = Vector3.zero;
+                    playerRB.isKinematic = true;
+                }
+                return;
             }
             else
-            {
-                playerRB.velocity = Vector3.zero;
-                playerRB.isKinematic = true;
-            }
-            return;
+                playerRB.isKinematic = false;
         }
-        else
-            playerRB.isKinematic = false;
 
         if (health <= 0)
             return;
@@ -220,7 +223,9 @@ public class PlayerController : PlayerStats
                 if (i < 9 && Input.GetKeyDown((i + 1).ToString()))
                     abilityController.HandleAbility(i);
 
-        if (Input.GetKeyDown(KeyCode.Tab) && movementController.currentState != MovementState.LedgeGrab)
+        if (Input.GetKeyDown(KeyCode.Tab) && 
+            movementController.currentState != MovementState.LedgeGrab && 
+            minimapController != null)
         {
             minimapController.ChangeView(true, true);
             ChangeState(PlayerStates.Map);
