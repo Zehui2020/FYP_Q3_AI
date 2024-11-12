@@ -26,7 +26,7 @@ public class Dummy : Enemy
     {
         yield return new WaitForSecondsRealtime(3f);
 
-        Heal(maxHealth);
+        Heal(10000);
         uiController.SetCanvasActive(true);
     }
 }
