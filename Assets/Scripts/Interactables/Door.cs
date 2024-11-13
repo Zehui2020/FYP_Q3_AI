@@ -65,14 +65,14 @@ public class Door : MonoBehaviour, IInteractable
 
     public void PlayActivateAudio()
     {
-        if (isActivated)
-            return;
-
         AudioManager.Instance.PlayOneShot(Sound.SoundName.DoorAppear);
+        isActivated = true;
+    }
+
+    public void PlayIdleAudio()
+    {
         foreach (AudioSource source in audioSources)
             source.Play();
-
-        isActivated = true;
     }
 
     public void OnEnterRange()
