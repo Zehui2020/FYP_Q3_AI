@@ -40,7 +40,7 @@ public class GameData : MonoBehaviour
         Instance = this;
         currentLevel = "Cave";
 
-        imageLoading.InitImageLoading();
+        imageLoading?.InitImageLoading();
 
         DontDestroyOnLoad(gameObject);
     }

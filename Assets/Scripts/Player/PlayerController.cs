@@ -80,6 +80,9 @@ public class PlayerController : PlayerStats
 
     private void Start()
     {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
+
         gameData = GameData.Instance;
         movementController = GetComponent<MovementController>();
         combatController = GetComponent<CombatController>();
@@ -955,6 +958,7 @@ public class PlayerController : PlayerStats
             case PlayerStates.Movement:
                 movementController.ResumePlayer();
                 movementController.ChangeState(MovementState.Idle);
+                Cursor.visible = false;
                 break;
             case PlayerStates.Hurt:
                 if (hurtRoutine != null)
@@ -966,6 +970,11 @@ public class PlayerController : PlayerStats
             case PlayerStates.Shop:
             case PlayerStates.Dialogue:
             case PlayerStates.Ability:
+                if (currentState == PlayerStates.Map ||
+                   currentState == PlayerStates.Shop ||
+                   currentState == PlayerStates.Dialogue)
+                    Cursor.visible = true;
+
                 movementController.StopPlayer();
                 movementController.ChangeState(MovementState.Idle);
                 break;
