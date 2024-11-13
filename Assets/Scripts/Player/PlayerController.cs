@@ -178,7 +178,7 @@ public class PlayerController : PlayerStats
         if (currentState == PlayerStates.Shop)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Escape) && !abilityController.swappingAbility)
+        if (Input.GetKeyDown(KeyCode.Escape) && !abilityController.swappingAbility && movementController.currentState != MovementState.LedgeGrab)
             TogglePauseMenu();
 
         if (Time.timeScale == 0)
