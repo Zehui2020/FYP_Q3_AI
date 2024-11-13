@@ -12,6 +12,18 @@ public class MapTile : MonoBehaviour
     [SerializeField] public Transform chestTransform;
     [SerializeField] public Transform doorTransform;
 
+    public WFC_MapGeneration mapGen;
+    public bool resetTiles;
+
+    private void Update()
+    {
+        if (resetTiles)
+        {
+            mapGen.ConfigureTile(this);
+            resetTiles = false;
+        }
+    }
+
     public void InitializeTile() // for debugging
     {
         foreach (Transform obj in GetComponentsInChildren<Transform>())

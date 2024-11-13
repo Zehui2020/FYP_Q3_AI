@@ -346,6 +346,16 @@ public class WFC_MapGeneration : MonoBehaviour
         return newTile.gameObject;
     }
 
+    public void ConfigureTile(MapTile newTile)
+    {
+        for (int i = 0; i < tileSprites.Count; i++)
+        {
+            Tile tile = ScriptableObject.CreateInstance<Tile>();
+            tile.sprite = tileSprites[i];
+            newTile.InitializeTile(tilemapManager.targetTiles[i], tile);
+        }
+    }
+
     private void PlaceSolidBorderTiles()
     {
         for (int i = -solidTileBorderThickness - 1; i < mapSize.x + solidTileBorderThickness + 1; i++)
