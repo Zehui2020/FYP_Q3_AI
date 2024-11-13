@@ -969,12 +969,12 @@ public class PlayerController : PlayerStats
             case PlayerStates.Map:
             case PlayerStates.Shop:
             case PlayerStates.Dialogue:
+            case PlayerStates.Settings:
+                movementController.StopPlayer();
+                movementController.ChangeState(MovementState.Idle);
+                Cursor.visible = true;
+                break;
             case PlayerStates.Ability:
-                if (currentState == PlayerStates.Map ||
-                   currentState == PlayerStates.Shop ||
-                   currentState == PlayerStates.Dialogue)
-                    Cursor.visible = true;
-
                 movementController.StopPlayer();
                 movementController.ChangeState(MovementState.Idle);
                 break;
