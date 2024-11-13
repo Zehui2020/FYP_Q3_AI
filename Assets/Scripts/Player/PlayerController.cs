@@ -126,6 +126,9 @@ public class PlayerController : PlayerStats
 
     private void Update()
     {
+        if (Time.timeScale == 0)
+            return;
+
         // Timer
         if (gameData.timer <= 3600f)
         {
@@ -358,7 +361,7 @@ public class PlayerController : PlayerStats
 
     private void FixedUpdate()
     {
-        if (health <= 0 || currentState == PlayerStates.ShadowBound)
+        if (health <= 0 || currentState == PlayerStates.ShadowBound || Time.timeScale == 0)
             return;
 
         movementController.MovePlayer(movementSpeedMultiplier.GetTotalModifier());
