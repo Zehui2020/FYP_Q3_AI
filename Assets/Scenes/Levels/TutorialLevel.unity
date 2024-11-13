@@ -73259,7 +73259,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2124839740}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -110458,7 +110458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: StartPrompt.m_PersistentCalls.m_Calls.Array.size
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3961002236856498753, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnQueuePrompt.m_PersistentCalls.m_Calls.Array.size
@@ -110673,7 +110673,19 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: ff378708ffa553e48a3b97620bf1e291, type: 2}
     - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
@@ -110681,20 +110693,84 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 551826017}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 551826017}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1581719765}
     - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowDialoguePopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ShowNextDialogue
       objectReference: {fileID: 0}
     - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: QueueItems
       objectReference: {fileID: 0}
     - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: DialogueManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: DialogueManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: ComfyItemGenration, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: activate
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_StringArgument
+      value: activate
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
+      propertyPath: OnStartBGGen.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8816099899107724647, guid: f426f571ee0a8a142ac03c69231606ee, type: 3}
       propertyPath: OnFinishBGGen.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -145991,3 +146067,4 @@ SceneRoots:
   - {fileID: 805098226}
   - {fileID: 871713715}
   - {fileID: 1244954343}
+  - {fileID: 276802227}
