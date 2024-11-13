@@ -65,9 +65,15 @@ public class FinalBossPhase1 : Enemy
     {
         base.InitializeEnemy();
         OnBreached += (amount) => {
+            if (health <= 0) 
+                return;
+
             animator.Play(IdleAnim);
         };
         OnParry += (baseStats) => {
+            if (health <= 0)
+                return;
+
             animator.Play(IdleAnim);
         };
 

@@ -779,7 +779,6 @@ public class PlayerController : PlayerStats
 
                 float dynamightDamage = CalculateDamageDealt(enemy, DamageSource.Item, out bool dynamightCrit, out DamagePopup.DamageType dynamightDamageType);
                 enemy.TakeDamage(this, new Damage(DamageSource.Item, dynamightDamage), dynamightCrit, enemy.transform.position, dynamightDamageType);
-
             }
             AudioManager.Instance.PlayOneShot(Sound.SoundName.DynaMight);
 

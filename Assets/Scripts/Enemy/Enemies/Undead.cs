@@ -43,8 +43,8 @@ public class Undead : Enemy
 
         onFinishIdle += () => { ChangeState(State.Patrol); };
         onPlayerInChaseRange += () => { ChangeState(State.Chase); };
-        OnBreached += (multiplier) => { animator.Play(RestAnim); };
-        OnParry += (stat) => { animator.Play(RestAnim); };
+        OnBreached += (multiplier) => { if (health <= 0) return; animator.Play(RestAnim); };
+        OnParry += (stat) => { if (health <= 0) return; animator.Play(RestAnim); };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
 
         audioProxy.PlayAudioOneShot(Sound.SoundName.UndeadLoop);
