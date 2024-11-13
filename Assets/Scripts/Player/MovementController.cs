@@ -404,9 +404,7 @@ public class MovementController : MonoBehaviour
 
     private void HandleLedgeGrab()
     {
-        if (currentState == MovementState.Plunge ||
-            currentState == MovementState.Grapple ||
-            currentState == MovementState.GrappleIdle)
+        if (currentState != MovementState.Falling)
             return;
 
         Vector2 dir;
