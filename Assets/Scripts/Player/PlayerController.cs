@@ -40,6 +40,7 @@ public class PlayerController : PlayerStats
     [SerializeField] public Canvas playerCanvas;
     [SerializeField] private Animator optionsMenu;
     [SerializeField] public DialogueManager dialogueManager;
+    [SerializeField] public DialoguePopup dialoguePopup;
     [SerializeField] private WFC_MapGeneration proceduralMapGenerator;
     [SerializeField] private MinimapController minimapController;
     [SerializeField] public PortalController portalController;

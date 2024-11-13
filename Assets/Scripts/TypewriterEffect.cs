@@ -66,7 +66,8 @@ public class TypewriterEffect : MonoBehaviour
                 dialogueText.text += message[i];
             }
 
-            if (PlayerController.Instance.dialogueManager.GetComponent<Canvas>().enabled)
+            if (PlayerController.Instance.dialogueManager.GetComponent<Canvas>().enabled ||
+                PlayerController.Instance.dialoguePopup.GetComponent<Canvas>().enabled)
             {
                 AudioManager.Instance.RandomiseAudioPitch(Sound.SoundName.Dialog, minPitch, maxPitch);
                 AudioManager.Instance.PlayOneShot(Sound.SoundName.Dialog);
