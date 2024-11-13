@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ImageLoading : MonoBehaviour
@@ -42,6 +43,12 @@ public class ImageLoading : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         if (GameData.Instance.loadingQueue.Count == 0)
         {
             Debug.Log("NOTHING  IN Q");

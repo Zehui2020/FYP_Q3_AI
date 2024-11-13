@@ -225,11 +225,9 @@ public class ShopkeeperAIManager : MonoBehaviour
         UnityEngine.Debug.Log("Result: " + AI_Output);
         UnityEngine.Debug.Log(speedString);
 
-        if (process != null)
-        {
+        if (process != null && !process.HasExited)
             process.Kill();
-            process = null;
-        }
+        process = null;
     }
 
     string ExtractContent(string text)
@@ -256,19 +254,22 @@ public class ShopkeeperAIManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
+        process = null;
     }
 
     private void OnDisable()
     {
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
+        process = null;
     }
 
     private void OnDestroy()
     {
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
+        process = null;
     }
 }

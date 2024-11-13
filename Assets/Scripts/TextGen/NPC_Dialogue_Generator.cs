@@ -98,6 +98,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             dialogue.speakerType = NPC_Data.speakerType;
             dialogue.speakerName = NPC_Data.npcName;
             dialogue.speakerIcon = NPC_Data.npcSprite;
+            dialogue.breakAfterDialogue = false;
             dialogue.dialogue = "Best of luck out there adventurer!";
 
             PlayerController.Instance.dialogueManager.ShowDialogue(dialogue, npc.minPitch, npc.maxPitch);
@@ -110,6 +111,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         dialogue.speakerType = NPC_Data.speakerType;
         dialogue.speakerName = NPC_Data.npcName;
         dialogue.speakerIcon = NPC_Data.npcSprite;
+        dialogue.breakAfterDialogue = false;
         dialogue.dialogue = "Generating...";
 
         PlayerController.Instance.dialogueManager.ShowDialogue(dialogue, npc.minPitch, npc.maxPitch);
@@ -164,7 +166,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
     IEnumerator OpenCommandPrompt(string command, bool EndConvo)
     {
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
 
         isGenerating = true;
@@ -226,10 +228,8 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         UnityEngine.Debug.Log(speedString);
 
         if (process != null && !process.HasExited)
-        {
             process.Kill();
-            process = null;
-        }
+        process = null;
 
         if (analyseText)
         {
@@ -255,20 +255,20 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
     }
 
     private void OnDisable()
     {
         OnFinishGeneratingResponse = null;
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
     }
 
     private void OnDestroy()
     {
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
     }
 }
