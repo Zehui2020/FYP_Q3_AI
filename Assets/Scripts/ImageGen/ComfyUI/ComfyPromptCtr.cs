@@ -62,7 +62,6 @@ public class ComfyPromptCtr : MonoBehaviour
 
             ResponseData data = JsonUtility.FromJson<ResponseData>(request.downloadHandler.text);
             Debug.Log("Prompt ID: " + data.prompt_id);
-            GetComponent<ComfyWebsocket>().promptID = data.prompt_id;
             OnQueuePrompt?.Invoke(data.prompt_id);
         }
     }
@@ -93,7 +92,6 @@ public class ComfyPromptCtr : MonoBehaviour
 
             ResponseData data = JsonUtility.FromJson<ResponseData>(request.downloadHandler.text);
             Debug.Log("Prompt ID: " + data.prompt_id);
-            GetComponent<ComfyWebsocket>().promptID = data.prompt_id;
             OnQueuePrompt?.Invoke(data.prompt_id);
         }
     }

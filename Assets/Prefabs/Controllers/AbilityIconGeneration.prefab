@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5598983628920781535}
   - component: {fileID: 1384724921161408469}
-  - component: {fileID: 8987447130618922182}
   - component: {fileID: 1513873782195069741}
   - component: {fileID: 3176223847242601650}
   - component: {fileID: 4170830757020336803}
@@ -48,7 +47,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e34d192afd704144d898c7b6f083ab82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  comfyWebsocket: {fileID: 8987447130618922182}
   promptCtr: {fileID: 1513873782195069741}
   imageCtr: {fileID: 3176223847242601650}
   imageSaver: {fileID: 4170830757020336803}
@@ -98,24 +96,23 @@ MonoBehaviour:
     filename: 12
   - Pprompt: pixel art, health potion, red
     controlNetImage: ability_health_potion
-    filename: 12
+    filename: 0
   queueOnStart: 1
---- !u!114 &8987447130618922182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4615715677142435710}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7ebcfd1775a21944b232b6724737c2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  comfyImageCtr: {fileID: 3176223847242601650}
-  promptID: 
-  currentProgress: 0
-  maxProgress: 0
+  OnFinishAllAbilities:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: ComfyItemGenration, Assembly-CSharp
+        m_MethodName: QueueItems
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1513873782195069741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,6 +202,9 @@ MonoBehaviour:
     \"ModelSamplingDiscrete\",\r\n    \"_meta\": {\r\n      \"title\": \"ModelSamplingDiscrete\"\r\n   
     }\r\n  }\r\n}"
   OnQueuePrompt:
+    m_PersistentCalls:
+      m_Calls: []
+  StartPrompt:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &3176223847242601650

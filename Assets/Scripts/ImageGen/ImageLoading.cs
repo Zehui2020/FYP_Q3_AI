@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ImageLoading : MonoBehaviour
@@ -29,7 +30,6 @@ public class ImageLoading : MonoBehaviour
             {
                 loadingSlider.value = 0;
                 loadingSlider.maxValue = 100;
-                Debug.Log("En Q: " + title);
                 previousPrompt = title;
                 if (fadeOutRoutine != null)
                 {
@@ -43,6 +43,12 @@ public class ImageLoading : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         if (GameData.Instance.loadingQueue.Count == 0)
         {
             Debug.Log("NOTHING  IN Q");
@@ -58,12 +64,7 @@ public class ImageLoading : MonoBehaviour
         int currentProgress = Utility.ParseJsonValue(comfyWebsocket.response, "value");
         int maxProgress = Utility.ParseJsonValue(comfyWebsocket.response, "max");
 
-        if (currentProgress <= 0 || maxProgress <= 1)
-        {
-            loadingSlider.value = 0;
-            loadingSlider.maxValue = 100;
-        }
-        else
+        if (currentProgress > 0 && maxProgress > 1)
         {
             loadingSlider.value = currentProgress;
             loadingSlider.maxValue = maxProgress;
@@ -87,14 +88,6 @@ public class ImageLoading : MonoBehaviour
                 if (fadeOutRoutine == null)
                     fadeOutRoutine = StartCoroutine(FadeRoutine());
             }
-        }
-
-        if (loadingSlider.value == loadingSlider.maxValue)
-        {
-            Debug.Log("De Q: " + GameData.Instance.loadingQueue.Peek());
-            GameData.Instance.DequeueLoading();
-            loadingSlider.value = 0;
-            loadingSlider.maxValue = 100;
         }
     }
 

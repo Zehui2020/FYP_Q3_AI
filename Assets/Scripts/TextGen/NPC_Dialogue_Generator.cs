@@ -63,7 +63,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             //additionalPrompts+
             promptTitle + " <</SYS>> {" + promptContent + "} [/INST]" + '"';
 
-        return $"cd {NPC_Data.llamaDirectory} && llama-cli -m {NPC_Data.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt} -ngl 20000000 -t 5";
+        return $"cd {NPC_Data.llamaDirectory} && llama-cli -m {NPC_Data.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt} -ngl 0 -t 5";
     }
 
     public void AI_Chat_Introduction()
@@ -98,6 +98,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             dialogue.speakerType = NPC_Data.speakerType;
             dialogue.speakerName = NPC_Data.npcName;
             dialogue.speakerIcon = NPC_Data.npcSprite;
+            dialogue.breakAfterDialogue = false;
             dialogue.dialogue = "Best of luck out there adventurer!";
 
             PlayerController.Instance.dialogueManager.ShowDialogue(dialogue, npc.minPitch, npc.maxPitch);
@@ -110,6 +111,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         dialogue.speakerType = NPC_Data.speakerType;
         dialogue.speakerName = NPC_Data.npcName;
         dialogue.speakerIcon = NPC_Data.npcSprite;
+        dialogue.breakAfterDialogue = false;
         dialogue.dialogue = "Generating...";
 
         PlayerController.Instance.dialogueManager.ShowDialogue(dialogue, npc.minPitch, npc.maxPitch);
@@ -164,6 +166,9 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
     IEnumerator OpenCommandPrompt(string command, bool EndConvo)
     {
+        if (process != null && !process.HasExited)
+            process.Kill();
+
         isGenerating = true;
 
         string AI_Output = "";
@@ -223,10 +228,8 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         UnityEngine.Debug.Log(speedString);
 
         if (process != null && !process.HasExited)
-        {
             process.Kill();
-            process = null;
-        }
+        process = null;
 
         if (analyseText)
         {
@@ -252,20 +255,20 @@ public class NPC_Dialogue_Generator : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
     }
 
     private void OnDisable()
     {
         OnFinishGeneratingResponse = null;
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
     }
 
     private void OnDestroy()
     {
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
     }
 }

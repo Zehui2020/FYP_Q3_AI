@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using static PromptData;
 
 public class ComfyBGManager : ComfyManager
@@ -17,6 +18,9 @@ public class ComfyBGManager : ComfyManager
 
     [SerializeField] private List<PromptData> allPromptDatas = new();
     [SerializeField] private List<string> bgPrompts = new();
+
+    public UnityEvent OnStartBGGen;
+    public UnityEvent OnFinishBGGen;
 
     private void Start()
     {
@@ -50,8 +54,6 @@ public class ComfyBGManager : ComfyManager
             }
         }
 
-        Debug.Log("Q DATA: " + queueLevelData);
-
         if (queueLevelData != allPromptDatas.Count - 1)
         {
             buttonController.InitController(allPromptDatas[queueLevelData]);
@@ -61,16 +63,17 @@ public class ComfyBGManager : ComfyManager
             return false;
         }
 
-        startGenerating = true;
-        QueueBGPrompt();
+        OnStartBGGen?.Invoke();
 
         return true;
     }
 
     public void QueueBGPrompt()
     {
+        startGenerating = true;
+        GameData.Instance.DequeueLoading();
         PromptData.BGPrompt bgPrompt = allPromptDatas[currentLevelPrompt].GetBGPrompt((PromptData.BGPrompt.Type)bgRecievedCounter, bgPrompts[currentLevelPrompt]);
-        GameData.Instance.EnqueueLoading(bgPrompt.keywords + "_" + bgPrompt.type.ToString());
+        GameData.Instance.EnqueueLoading(bgPrompt.keywords + "_" + bgPrompt.type.ToString(), true);
         promptCtr.QueuePromptWithControlNet(allPromptDatas[currentLevelPrompt].GetPromptJSON(bgPrompt.bgType), bgPrompt.prompt, bgPrompt.referenceImage);
     }
 
@@ -93,8 +96,8 @@ public class ComfyBGManager : ComfyManager
                     // If all level BGs done
                     if (currentLevelPrompt >= allPromptDatas.Count)
                     {
+                        OnFinishBGGen?.Invoke();
                         tilesetGeneration.InitTilesetGeneration(allPromptDatas, bgPrompts);
-                        tilesetGeneration.QueueTilesetPrompt();
                         Destroy(gameObject);
                         return true;
                     }

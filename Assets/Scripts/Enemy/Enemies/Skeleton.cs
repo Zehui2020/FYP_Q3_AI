@@ -38,8 +38,16 @@ public class Skeleton : Enemy
         onReachWaypoint += () => { ChangeState(State.Idle); };
         onFinishIdle += () => { ChangeState(State.Patrol); };
         onPlayerInChaseRange += () => { ChangeState(State.Deciding); };
-        OnBreached += (multiplier) => { animator.Play(IdleAnim); };
-        OnParry += (stat) => { animator.Play(IdleAnim); };
+        OnBreached += (multiplier) => {
+            if (health <= 0)
+                return; 
+            animator.Play(IdleAnim); 
+        };
+        OnParry += (stat) => {
+            if (health <= 0)
+                return; 
+            animator.Play(IdleAnim); 
+        };
         onHitEvent += (target, damage, crit, pos) => { if (CheckHurt()) ChangeState(State.Hurt); };
     }
 

@@ -3,6 +3,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ComfyWebsocket : MonoBehaviour
 {
@@ -11,12 +12,7 @@ public class ComfyWebsocket : MonoBehaviour
     private ClientWebSocket ws = new ClientWebSocket();
 
     [HideInInspector] public string response;
-    public ComfyImageCtr comfyImageCtr;
-    public ComfyAudioCtr comfyAudioCtr;
-    public string promptID;
-
-    [SerializeField] private bool isAudio;
-    [SerializeField] private bool saveImageAfter = true;
+    public UnityEvent<string> OnGetResult;
 
     public async void InitWebsocket()
     {
@@ -50,26 +46,14 @@ public class ComfyWebsocket : MonoBehaviour
             response = stringBuilder.ToString();
             //Debug.Log("Received: " + response);
 
-            if (response.Contains("\"queue_remaining\": 0") && promptID != string.Empty && promptID != "0")
+            if (response.Contains("\"queue_remaining\": 0")  && !response.Contains("sid"))
             {
-                if (saveImageAfter)
-                    comfyImageCtr.RequestFileName(promptID);
-
-                if (isAudio)
-                    comfyAudioCtr.RequestFileName(promptID);
-
+                Debug.Log("Received: " + response);
+                OnGetResult?.Invoke(GameData.Instance.DequeuePromptID());
+                GameData.Instance.DequeueLoading();
                 response = string.Empty;
             }
         }
-    }
-
-
-    private string ParsePromptID(string json)
-    {
-        string promptIdKey = "\"prompt_id\": \"";
-        int startIndex = json.IndexOf(promptIdKey) + promptIdKey.Length;
-        int endIndex = json.IndexOf("\"", startIndex);
-        return json.Substring(startIndex, endIndex - startIndex);
     }
 
     void OnDestroy()

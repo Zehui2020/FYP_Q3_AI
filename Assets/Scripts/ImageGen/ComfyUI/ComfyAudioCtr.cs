@@ -12,8 +12,16 @@ public class ComfyAudioCtr : MonoBehaviour
 
     public UnityEvent<string, AudioClip> OnRecieveAudio;
 
+    public void SetCurrentID(string currentID)
+    {
+        this.currentID = currentID;
+    }
+
     public void RequestFileName(string id)
     {
+        if (currentID != id)
+            return;
+        
         StartCoroutine(RequestFileNameRoutine(id));
     }
 

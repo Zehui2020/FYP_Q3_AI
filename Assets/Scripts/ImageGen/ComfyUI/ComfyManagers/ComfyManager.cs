@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class ComfyManager : MonoBehaviour
 {
-    public ComfyWebsocket comfyWebsocket;
     public ComfyPromptCtr promptCtr;
     public ComfyImageCtr imageCtr;
+    public ComfyAudioCtr audioCtr;
     public ImageSaver imageSaver;
 
     protected string promptID;
@@ -14,7 +14,6 @@ public class ComfyManager : MonoBehaviour
     {
         DontDestroyOnLoad(this);
 
-        comfyWebsocket?.InitWebsocket();
         promptCtr?.OnQueuePrompt.AddListener(SetCurrentPromptID);
         imageCtr?.OnRecieveImage.AddListener((promptID, texture) => { OnRecieveImage(promptID, texture); });
     }
@@ -22,6 +21,9 @@ public class ComfyManager : MonoBehaviour
     public virtual void SetCurrentPromptID(string promptID)
     {
         this.promptID = promptID;
+        imageCtr?.SetCurrentID(promptID);
+        audioCtr?.SetCurrentID(promptID);
+        GameData.Instance.EnqueuePromptID(promptID);
     }
 
     public virtual bool OnRecieveImage(string promptID, Texture2D texture)

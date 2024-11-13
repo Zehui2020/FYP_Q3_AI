@@ -32,7 +32,7 @@ public class ComfyPropsManager : ComfyManager
         if (propsRecieved >= propDatas.Count)
             return;
 
-        GameData.Instance.EnqueueLoading(propDatas[propsRecieved].fileName + "_Prop");
+        GameData.Instance.EnqueueLoading(propDatas[propsRecieved].fileName + "_Prop", false);
         promptCtr.QueuePromptWithControlNet(propDatas[propsRecieved].prompt, propDatas[propsRecieved].referenceImage);
     }
 
@@ -41,7 +41,7 @@ public class ComfyPropsManager : ComfyManager
         Debug.Log(propsRecieved);
         Debug.Log(propDatas.Count);
 
-        if (propsRecieved >= propDatas.Count - 1)
+        if (propsRecieved >= propDatas.Count)
         {
             OnFinishAllProps?.Invoke();
             Destroy(gameObject);

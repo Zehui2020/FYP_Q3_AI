@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ComfyTilesetGeneration : ComfyManager
 {
@@ -7,7 +8,19 @@ public class ComfyTilesetGeneration : ComfyManager
     private List<PromptData> promptData;
     [SerializeField] private int tilesetRecieved = 0;
 
+    [SerializeField] private bool queueOnStart;
+
     private List<string> playerBGPrompts;
+
+    public UnityEvent OnFnishTileset;
+
+    private void Start()
+    {
+        if (queueOnStart)
+        {
+            OnFnishTileset?.Invoke();
+        }
+    }
 
     public void InitTilesetGeneration(List<PromptData> promptData, List<string> playerBGPrompts)
     {
@@ -19,7 +32,11 @@ public class ComfyTilesetGeneration : ComfyManager
     public void QueueTilesetPrompt()
     {
         if (tilesetRecieved >= promptData.Count)
+        {
+            OnFnishTileset?.Invoke();
+            Destroy(gameObject);
             return;
+        }
 
         string finalPrompt = string.Empty;
         string controlnetImage = string.Empty;
@@ -36,7 +53,7 @@ public class ComfyTilesetGeneration : ComfyManager
         if (finalPrompt == string.Empty)
             finalPrompt = setPrompts + ", dirt themed";
 
-        GameData.Instance.EnqueueLoading(playerBGPrompts[tilesetRecieved] + "_Tileset");
+        GameData.Instance.EnqueueLoading(playerBGPrompts[tilesetRecieved] + "_Tileset", false);
 
         Debug.Log("Tileset Theme: " + finalPrompt);
 

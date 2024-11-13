@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4669132284300597017}
   - component: {fileID: 8806196999414827142}
-  - component: {fileID: 2661525801501936454}
   - component: {fileID: 2505023775370818175}
   - component: {fileID: 2686420497923583905}
   - component: {fileID: 1685083019309393866}
@@ -48,7 +47,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6498f3cdf39e90846a35bc8524ec6a5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  comfyWebsocket: {fileID: 2661525801501936454}
   promptCtr: {fileID: 2505023775370818175}
   imageCtr: {fileID: 2686420497923583905}
   imageSaver: {fileID: 1685083019309393866}
@@ -192,24 +190,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &2661525801501936454
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4344038791873354257}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7ebcfd1775a21944b232b6724737c2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  response: 
-  comfyImageCtr: {fileID: 2686420497923583905}
-  promptID: 
-  currentProgress: 0
-  maxProgress: 0
-  saveImageAfter: 1
 --- !u!114 &2505023775370818175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,6 +279,9 @@ MonoBehaviour:
     \"ModelSamplingDiscrete\",\r\n    \"_meta\": {\r\n      \"title\": \"ModelSamplingDiscrete\"\r\n   
     }\r\n  }\r\n}"
   OnQueuePrompt:
+    m_PersistentCalls:
+      m_Calls: []
+  StartPrompt:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &2686420497923583905

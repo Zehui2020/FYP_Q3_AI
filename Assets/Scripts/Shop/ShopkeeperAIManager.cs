@@ -71,7 +71,7 @@ public class ShopkeeperAIManager : MonoBehaviour
             //additionalPrompts+
             promptTitle + " <</SYS>> {" + promptContent + "} [/INST]" + '"';
 
-        return $"cd {shopkeeperData.llamaDirectory} && llama-cli -m {shopkeeperData.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt} -ngl 20000000 -t 5";
+        return $"cd {shopkeeperData.llamaDirectory} && llama-cli -m {shopkeeperData.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt} -ngl 0 -t 5";
     }
 
     public void AI_Chat_Introduction()
@@ -225,11 +225,9 @@ public class ShopkeeperAIManager : MonoBehaviour
         UnityEngine.Debug.Log("Result: " + AI_Output);
         UnityEngine.Debug.Log(speedString);
 
-        if (process != null)
-        {
+        if (process != null && !process.HasExited)
             process.Kill();
-            process = null;
-        }
+        process = null;
     }
 
     string ExtractContent(string text)
@@ -256,19 +254,22 @@ public class ShopkeeperAIManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
+        process = null;
     }
 
     private void OnDisable()
     {
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
+        process = null;
     }
 
     private void OnDestroy()
     {
-        if (process != null)
+        if (process != null && !process.HasExited)
             process.Kill();
+        process = null;
     }
 }
