@@ -123903,6 +123903,7 @@ GameObject:
   - component: {fileID: 8430749502062861929}
   - component: {fileID: 1495136134285409928}
   - component: {fileID: 813994118717281536}
+  - component: {fileID: 588995269077434804}
   m_Layer: 6
   m_Name: Canvas
   m_TagString: Untagged
@@ -124002,6 +124003,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!225 &588995269077434804
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9163394293333031417}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &9203548315995188479
 GameObject:
   m_ObjectHideFlags: 0
@@ -124118,11 +124131,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1844926800252955543, guid: 00b9758f3608a7e41b5b9cc499a2f49e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1844926800252955543, guid: 00b9758f3608a7e41b5b9cc499a2f49e, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1844926800252955543, guid: 00b9758f3608a7e41b5b9cc499a2f49e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -124175,6 +124188,10 @@ PrefabInstance:
     - target: {fileID: 4296241027124825361, guid: 00b9758f3608a7e41b5b9cc499a2f49e, type: 3}
       propertyPath: m_Name
       value: StatusEffectUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 7619374155236437128, guid: 00b9758f3608a7e41b5b9cc499a2f49e, type: 3}
+      propertyPath: m_fontSize
+      value: 53.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

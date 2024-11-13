@@ -98,6 +98,11 @@ public class ConsoleManager : MonoBehaviour
         {
             PlayerController.Instance.transform.position = FindObjectOfType<Shopkeeper>().transform.position;
         }
+        else if (command.Equals("/UI"))
+        {
+            int a = PlayerController.Instance.playerCanvas.GetComponent<CanvasGroup>().alpha == 0 ? 1 : 0;
+            PlayerController.Instance.playerCanvas.GetComponent<CanvasGroup>().alpha = a;
+        }
 
         //else if (command.Equals("/win"))
         //{
