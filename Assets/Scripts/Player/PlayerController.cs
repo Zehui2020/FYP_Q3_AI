@@ -129,9 +129,6 @@ public class PlayerController : PlayerStats
 
     private void Update()
     {
-        if (Time.timeScale == 0)
-            return;
-
         // Timer
         if (gameData.timer <= 3600f)
         {
@@ -183,6 +180,9 @@ public class PlayerController : PlayerStats
 
         if (Input.GetKeyDown(KeyCode.Escape) && !abilityController.swappingAbility)
             TogglePauseMenu();
+
+        if (Time.timeScale == 0)
+            return;
 
         if (currentState == PlayerStates.Settings)
             return;

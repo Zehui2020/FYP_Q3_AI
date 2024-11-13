@@ -283,8 +283,7 @@ public class WFC_MapGeneration : MonoBehaviour
             // set room
             mapTileList.Add(InstantiateTile(tileToSet, tilePos * mapTileSize, true).GetComponent<MapTile>());
         }
-        // place corners
-        GameObject corner;
+
         // top left corner
         if (TLCornerTilePrefabs.Count > 0)
         {

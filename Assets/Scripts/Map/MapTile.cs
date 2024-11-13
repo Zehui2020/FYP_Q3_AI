@@ -16,9 +16,9 @@ public class MapTile : MonoBehaviour
     {
         foreach (Transform obj in GetComponentsInChildren<Transform>())
         {
-            if (obj.name.Contains("Chest"))
+            if (obj.name.Contains("Chest") && chestTransform == null)
                 chestTransform = obj;
-            if (obj.name.Contains("Door"))
+            if (obj.name.Contains("Door") && doorTransform == null)
                 doorTransform = obj;
         }
     }
@@ -32,9 +32,9 @@ public class MapTile : MonoBehaviour
 
         foreach (Transform obj in GetComponentsInChildren<Transform>())
         {
-            if (obj.name.Contains("Chest"))
+            if (obj.name.Contains("Chest") && chestTransform == null)
                 chestTransform = obj;
-            if (obj.name.Contains("Door"))
+            if (obj.name.Contains("Door") && doorTransform == null)
                 doorTransform = obj;
         }
     }
