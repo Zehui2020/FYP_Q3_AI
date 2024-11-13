@@ -27,25 +27,20 @@ public class NPC_Dialogue_Generator : MonoBehaviour
     private bool hasIntroduced;
     private bool analyseText;
 
+    [SerializeField] private string endingGreeting = "Best of luck out there adventurer!";
+
     public UnityEvent<string> OnFinishGeneratingResponse;
 
-    public void InitAIManager(NPCData npc)
+    public void InitAIManager(NPCData npc, bool isEndingNPC)
     {
         introFinished = false;
         analyseText = false;
         hasIntroduced = false;
         NPC_Data = npc;
 
-        AI_Chat_Introduction();
+        AI_Chat_Introduction(isEndingNPC);
     }
 
-    public void EnterNPCDialogue()
-    {
-        if (introFinished && !hasIntroduced)
-        {
-            AI_Chat_Introduction();
-        }
-    }
     private string GetFinalPromptString(string promptTitle, string promptContent, string additionalPrompts)
     {
         string AI_Gen_Prompt =
@@ -60,13 +55,13 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             "Here are a few examples of what your output should look like: " +
             "<result>" + NPC_Data.AI_Example_Output_1 + "</result> " +
             "<result>" + NPC_Data.AI_Example_Output_2 + "</result> " +
-            //additionalPrompts+
+            additionalPrompts +
             promptTitle + " <</SYS>> {" + promptContent + "} [/INST]" + '"';
 
         return $"cd {NPC_Data.llamaDirectory} && llama-cli -m {NPC_Data.modelDirectory} --no-display-prompt -p {AI_Gen_Prompt} -ngl 0 -t 5";
     }
 
-    public void AI_Chat_Introduction()
+    public void AI_Chat_Introduction(bool isEndingNPC)
     {
         if (hasIntroduced)
             return;
@@ -81,9 +76,20 @@ public class NPC_Dialogue_Generator : MonoBehaviour
         }
         else
         {
-            prompt = GetFinalPromptString("Here is the input:",
-            "The same adventurer/player came back for another conversation. You've already met them before, address them with familiarity.", string.Empty);
-            StartCoroutine(OpenCommandPrompt(prompt, false));
+            if (!isEndingNPC)
+            {
+                prompt = GetFinalPromptString("Here is the input:", 
+                    "The same adventurer/player came back for another conversation. You've already met them before, address them with familiarity.", string.Empty);
+                StartCoroutine(OpenCommandPrompt(prompt, false));
+            }
+            else
+            {
+                prompt = GetFinalPromptString("Here is the input:",
+                "The same adventurer/player came back from a perilous adeventure and finally cleansed the world of a great evil. " +
+                "You've meticulously guided him throught his adventure and you should thank him. But as a twist, you should mention that the evil hasn't been " +
+                "fully cleansed and there are still other worlds that require his help. You should address them with familiarity.", string.Empty);
+                StartCoroutine(OpenCommandPrompt(prompt, false));
+            }
         }
 
         hasIntroduced = true;
@@ -99,7 +105,7 @@ public class NPC_Dialogue_Generator : MonoBehaviour
             dialogue.speakerName = NPC_Data.npcName;
             dialogue.speakerIcon = NPC_Data.npcSprite;
             dialogue.breakAfterDialogue = false;
-            dialogue.dialogue = "Best of luck out there adventurer!";
+            dialogue.dialogue = endingGreeting;
 
             PlayerController.Instance.dialogueManager.ShowDialogue(dialogue, npc.minPitch, npc.maxPitch);
 

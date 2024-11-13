@@ -5,6 +5,7 @@ using UnityEngine;
 public class TutorialGuide : BaseNPC
 {
     [SerializeField] private List<NPC_Dialogue_Tree> trees = new();
+    [SerializeField] private bool isEndingNPC = false;
     private NPC_Dialogue_Tree tree;
 
     private NPC_Dialogue_Generator aiManager;
@@ -23,13 +24,21 @@ public class TutorialGuide : BaseNPC
     {
         base.InitNPC();
 
-        foreach (NPC_Dialogue_Tree tree in trees)
+        if (!isEndingNPC)
         {
-            if (tree.restLevel == GameData.Instance.levelCount)
+            foreach (NPC_Dialogue_Tree tree in trees)
+            {
+                if (tree.restLevel == GameData.Instance.levelCount)
+                    this.tree = tree;
+            }
+        }
+        else
+        {
+            foreach (NPC_Dialogue_Tree tree in trees)
                 this.tree = tree;
         }
 
-        aiManager.InitAIManager(tree.npcData);
+        aiManager.InitAIManager(tree.npcData, isEndingNPC);
     }
 
     public override NPC_Dialogue_Generator GetDialogueGenerator()
