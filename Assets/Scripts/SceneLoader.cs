@@ -55,6 +55,8 @@ public class SceneLoader : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(0.5f);
 
+        if (sceneName == "MainMenu")
+            Cursor.visible = true;
         SceneManager.LoadSceneAsync(sceneName);
         Time.timeScale = 1.0f;
 
