@@ -15,6 +15,7 @@ public class ComfyAbilityGeneration : ComfyManager
     public List<ItemPrompt> itemPrompts = new();
     private int currentPromptIndex = 0;
 
+    [SerializeField] private PlayerPrefs playerPrefs;
     [SerializeField] private bool queueOnStart = false;
     private bool finishedGenerating = false;
 
@@ -23,7 +24,7 @@ public class ComfyAbilityGeneration : ComfyManager
     private void Start()
     {
         InitManager();
-        if (queueOnStart)
+        if (queueOnStart && !playerPrefs.offImageGen)
             QueueItems();
     }
 

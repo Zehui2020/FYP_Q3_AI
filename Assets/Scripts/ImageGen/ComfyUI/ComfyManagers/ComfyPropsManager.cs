@@ -30,7 +30,11 @@ public class ComfyPropsManager : ComfyManager
     public void QueuePropPrompt()
     {
         if (propsRecieved >= propDatas.Count)
+        {
+            OnFinishAllProps?.Invoke();
+            Destroy(gameObject);
             return;
+        }
 
         GameData.Instance.EnqueueLoading(propDatas[propsRecieved].fileName + "_Prop", false);
         promptCtr.QueuePromptWithControlNet(propDatas[propsRecieved].prompt, propDatas[propsRecieved].referenceImage);
