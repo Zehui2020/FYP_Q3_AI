@@ -531,7 +531,7 @@ public class PlayerController : PlayerStats
 
         if (extraLives <= 0)
         {
-            SceneLoader.Instance.LoadScene("LobbyLevel");
+            SceneLoader.Instance.LoadScene("MainMenu");
             yield break;
         }
 
