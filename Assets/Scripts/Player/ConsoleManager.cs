@@ -103,7 +103,14 @@ public class ConsoleManager : MonoBehaviour
             int a = PlayerController.Instance.playerCanvas.GetComponent<CanvasGroup>().alpha == 0 ? 1 : 0;
             PlayerController.Instance.playerCanvas.GetComponent<CanvasGroup>().alpha = a;
         }
-
+        else if (command.Equals("/kill"))
+        {
+            Enemy[] enemies = FindObjectsOfType<Enemy>();
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.TakeTrueDamage(new BaseStats.Damage(10000000000));
+            }
+        }
         //else if (command.Equals("/win"))
         //{
         //    LevelManager.Instance.LoadScene("WinScreen");
