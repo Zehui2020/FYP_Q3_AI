@@ -57,6 +57,7 @@ public class SceneLoader : MonoBehaviour
 
         if (sceneName == "MainMenu")
             Cursor.visible = true;
+
         SceneManager.LoadSceneAsync(sceneName);
         Time.timeScale = 1.0f;
 

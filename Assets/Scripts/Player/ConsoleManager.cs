@@ -111,6 +111,11 @@ public class ConsoleManager : MonoBehaviour
                 enemy.TakeTrueDamage(new BaseStats.Damage(10000000000));
             }
         }
+        else if (command.Equals("/Q"))
+        {
+            SceneLoader.Instance.LoadScene("MainMenu");
+            AudioManager.Instance.StopAllSounds();
+        }
         //else if (command.Equals("/win"))
         //{
         //    LevelManager.Instance.LoadScene("WinScreen");

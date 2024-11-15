@@ -15,6 +15,7 @@ public class PlayerPrefs : ScriptableObject
     public void SetExperienceTutrial(bool experiencedTutorial)
     {
         this.experiencedTutorial = experiencedTutorial;
+        AudioManager.Instance.PlayOneShot(Sound.SoundName.SettingsClick);
     }
 
     public void SetDetailedDescrpition(bool detailed)
